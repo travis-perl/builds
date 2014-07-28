@@ -1,0 +1,64 @@
+{
+   "abstract" : "Find the path to your perl",
+   "author" : [
+      "Leon Timmermans <leont@cpan.org>, Randy Sims <randys@thepierianspring.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.005, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Devel-FindPerl",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "ExtUtils::Config" : "0.007"
+         },
+         "requires" : {
+            "Carp" : "0",
+            "Cwd" : "0",
+            "Exporter" : "5.57",
+            "File::Basename" : "0",
+            "File::Spec" : "0",
+            "File::Spec::Functions" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open2" : "0",
+            "IPC::Open3" : "0",
+            "Scalar::Util" : "0",
+            "Test::More" : "0",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "Devel::FindPerl" : {
+         "file" : "lib/Devel/FindPerl.pm",
+         "version" : "0.012"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=Devel-FindPerl"
+      },
+      "repository" : {
+         "url" : "git://github.com/Leont/devel-findperl.git"
+      }
+   },
+   "version" : "0.012"
+}

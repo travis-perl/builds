@@ -1,0 +1,14 @@
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Array.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Code.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Defined.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Hash.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Indexed.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Item.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/List.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Number.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Ref.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Scalar.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/String.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Undef.pm
+/home/travis/.perlbrew/libs/5.16.3@dzil/lib/perl5/Moose/Autobox/Value.pm
