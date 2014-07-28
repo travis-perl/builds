@@ -1,0 +1,11 @@
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/Cwd.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/Cygwin.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/Epoc.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/Functions.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/Mac.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/OS2.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/Unix.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/VMS.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/File/Spec/Win32.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@dbic/lib/perl5/x86_64-linux-thread-multi/auto/Cwd/Cwd.so
