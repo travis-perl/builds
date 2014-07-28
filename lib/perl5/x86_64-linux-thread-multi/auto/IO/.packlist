@@ -1,0 +1,12 @@
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Dir.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/File.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Handle.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Pipe.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Poll.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Seekable.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Select.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Socket.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Socket/INET.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/IO/Socket/UNIX.pm
+/home/travis/.perlbrew/libs/5.8.8-thr@cat/lib/perl5/x86_64-linux-thread-multi/auto/IO/IO.so
