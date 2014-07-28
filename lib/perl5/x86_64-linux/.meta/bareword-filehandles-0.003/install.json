@@ -1,0 +1,1 @@
+{"version":"0.003","provides":{"bareword::filehandles":{"version":"0.003","file":"lib/bareword/filehandles.pm"},"inc::BarewordFilehandlesMakeMaker":{"file":"inc/BarewordFilehandlesMakeMaker.pm"}},"pathname":"I/IL/ILMARI/bareword-filehandles-0.003.tar.gz","name":"bareword::filehandles","target":"bareword::filehandles","dist":"bareword-filehandles-0.003"}
