@@ -1,0 +1,11 @@
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Basic.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Dashes.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/GLD.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Meta/Attribute.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Meta/Attribute/NoGetopt.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Meta/Attribute/Trait.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Meta/Attribute/Trait/NoGetopt.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/OptionTypeMap.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/ProcessedArgv.pm
+/home/travis/.perlbrew/libs/5.10.0@cat/lib/perl5/MooseX/Getopt/Strict.pm
