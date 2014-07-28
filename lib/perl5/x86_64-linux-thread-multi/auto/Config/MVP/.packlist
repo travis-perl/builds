@@ -1,0 +1,11 @@
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Assembler.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Assembler/WithBundles.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Error.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Reader.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Reader/Findable.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Reader/Findable/ByExtension.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Reader/Finder.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Reader/Hash.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Section.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@dzil/lib/perl5/Config/MVP/Sequence.pm
