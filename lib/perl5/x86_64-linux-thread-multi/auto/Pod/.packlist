@@ -1,0 +1,11 @@
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/bin/pod2man
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/bin/pod2text
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/lib/perl5/Pod/Man.pm
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/lib/perl5/Pod/ParseLink.pm
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/lib/perl5/Pod/Text.pm
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/lib/perl5/Pod/Text/Color.pm
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/lib/perl5/Pod/Text/Overstrike.pm
+/home/travis/.perlbrew/libs/5.8.9-thr@moo/lib/perl5/Pod/Text/Termcap.pm
+none/perlpodstyle.0
+none/pod2man.0
+none/pod2text.0
