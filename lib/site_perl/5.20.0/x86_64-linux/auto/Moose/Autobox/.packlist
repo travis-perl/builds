@@ -1,0 +1,14 @@
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Array.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Code.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Defined.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Hash.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Indexed.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Item.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/List.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Number.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Ref.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Scalar.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/String.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Undef.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Moose/Autobox/Value.pm

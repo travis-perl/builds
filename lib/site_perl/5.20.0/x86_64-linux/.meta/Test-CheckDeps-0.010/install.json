@@ -1,0 +1,1 @@
+{"pathname":"L/LE/LEONT/Test-CheckDeps-0.010.tar.gz","provides":{"Test::CheckDeps":{"file":"lib/Test/CheckDeps.pm","version":"0.010"}},"dist":"Test-CheckDeps-0.010","target":"Test::CheckDeps","version":"0.010","name":"Test::CheckDeps"}

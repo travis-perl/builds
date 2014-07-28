@@ -1,0 +1,77 @@
+{
+   "abstract" : "Parse cpanfile",
+   "author" : [
+      "Tatsuhiko Miyagawa"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Milla version v1.0.4, Dist::Zilla version 4.300037, CPAN::Meta::Converter version 2.132140, CPAN::Meta::Converter version 2.140640",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Module-CPANfile",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {}
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "Pod::Usage" : "0"
+         },
+         "requires" : {
+            "CPAN::Meta" : "2.12091",
+            "CPAN::Meta::Prereqs" : "2.12091"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0.88"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/miyagawa/cpanfile/issues"
+      },
+      "homepage" : "https://github.com/miyagawa/cpanfile",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/miyagawa/cpanfile.git",
+         "web" : "https://github.com/miyagawa/cpanfile"
+      }
+   },
+   "version" : "1.0002",
+   "x_contributors" : [
+      "Atsushi Kato <ktat@cpan.org>",
+      "David Golden <dagolden@cpan.org>",
+      "David Steinbrunner <dsteinbrunner@pobox.com>",
+      "Masahiro Honma <hiratara@cpan.org>",
+      "Michiel Beijen <michiel.beijen@gmail.com>",
+      "grtodd <gtodd@iciti.ca>",
+      "ikasam_a <masaki.nakagawa@gmail.com>"
+   ]
+}

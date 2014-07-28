@@ -1,0 +1,4 @@
+/home/travis/perl5/perlbrew/perls/5.20/bin/scandeps.pl
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Module/ScanDeps.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Module/ScanDeps/Cache.pm
+/home/travis/perl5/perlbrew/perls/5.20/lib/site_perl/5.20.0/Module/ScanDeps/DataFeed.pm

@@ -1,0 +1,32 @@
+{
+   "abstract" : "Remove POD from Perl code",
+   "author" : [
+      "Thomas Klausner <domm@zsi.at>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4206",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Pod-Strip",
+   "prereqs" : {
+      "runtime" : {
+         "requires" : {
+            "Pod::Simple" : "3.00",
+            "Test::More" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "Pod::Strip" : {
+         "file" : "lib/Pod/Strip.pm",
+         "version" : "1.02"
+      }
+   },
+   "release_status" : "stable",
+   "version" : "1.02"
+}
