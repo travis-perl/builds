@@ -1,0 +1,1 @@
+{"dist":"LWP-Protocol-https-6.04","target":"LWP::Protocol::https","pathname":"G/GA/GAAS/LWP-Protocol-https-6.04.tar.gz","provides":{"LWP::Protocol::https":{"file":"lib/LWP/Protocol/https.pm","version":"6.04"},"LWP::Protocol::https::Socket":{"file":"lib/LWP/Protocol/https.pm","version":"6.04"}},"name":"LWP::Protocol::https","version":"6.04"}

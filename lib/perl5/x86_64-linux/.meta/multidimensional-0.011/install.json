@@ -1,0 +1,1 @@
+{"dist":"multidimensional-0.011","target":"multidimensional","pathname":"I/IL/ILMARI/multidimensional-0.011.tar.gz","name":"multidimensional","provides":{"multidimensional":{"file":"lib/multidimensional.pm","version":"0.011"},"MyTest":{"file":"t/lib/MyTest.pm"},"inc::MultidimensionalMakeMaker":{"file":"inc/MultidimensionalMakeMaker.pm"}},"version":"0.011"}
