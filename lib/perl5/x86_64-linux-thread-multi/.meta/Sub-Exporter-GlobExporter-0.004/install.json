@@ -1,0 +1,1 @@
+{"provides":{"TestGlob":{"file":"t/lib/TestGlob.pm"},"Sub::Exporter::GlobExporter":{"version":"0.004","file":"lib/Sub/Exporter/GlobExporter.pm"}},"target":"Sub::Exporter::GlobExporter","version":"0.004","name":"Sub::Exporter::GlobExporter","dist":"Sub-Exporter-GlobExporter-0.004","pathname":"R/RJ/RJBS/Sub-Exporter-GlobExporter-0.004.tar.gz"}
