@@ -1,0 +1,1 @@
+{"target":"Class::Accessor::Chained::Fast","name":"Class::Accessor::Chained","pathname":"R/RC/RCLAMP/Class-Accessor-Chained-0.01.tar.gz","provides":{"Class::Accessor::Chained::Fast":{"file":"lib/Class/Accessor/Chained/Fast.pm"},"Class::Accessor::Chained":{"file":"lib/Class/Accessor/Chained.pm","version":"0.01"}},"version":"0.01","dist":"Class-Accessor-Chained-0.01"}
