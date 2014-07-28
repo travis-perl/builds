@@ -1,0 +1,378 @@
+=head1 NAME
+
+Catalyst::Delta - Overview of changes between versions of Catalyst
+
+=head1 DESCRIPTION
+
+This is an overview of the user-visible changes to Catalyst between major
+Catalyst releases.
+
+=head2 VERSION 5.90060+
+
+=head3 Catalyst::Log object autoflush on by default
+
+Starting in 5.90065, the Catalyst::Log object has 'autoflush' which is on
+by default. This causes all messages to be written to the log immediately
+instead of at the end of startup and then at the end of each request. In
+order to access the old behavior, you must now call:
+
+  $c->log->autoflush(0);
+
+=head3 Deprecate Catalyst::Utils::ensure_class_loaded
+
+Going forward we recommend you use L<Module::Runtime>.  In fact we will
+be converting all uses of L<Class::Load> to L<Module::Runtime>.  We will
+also convert L<Catalyst::Utils\ensure_class_loaded> to be based on
+L<Module::Runtime> to allow some time for you to update code, however at
+some future point this method will be removed so you should stop
+using it now.
+
+=head3 Support passing Body filehandles directly to your Plack server.
+
+We changed the way we return body content (from response) to whatever
+Plack handler you are using (Starman, FastCGI, etc.)  We no longer
+always use the streaming interface for the cases when the body is a
+simple scalar, object or filehandle like.  In those cases we now just
+pass the simple response on to the plack handler.  This might lead to
+some minor differences in how streaming is handled.  For example, you
+might notice that streaming starts properly supporting chunked encoding when
+on a server that supports that, or that previously missing headers
+(possible content-length) might appear suddenly correct.  Also, if you
+are using middleware like L<Plack::Middleware::XSendfile> and are using
+a filehandle that sets a readable path, your server might now correctly
+handle the file (rather than as before where Catalyst would stream it
+very likely very slowly).
+
+In other words, some things might be meaninglessly different and some
+things that were broken codewise but worked because of Catalyst being
+incorrect might suddenly be really broken.  The behavior is now more
+correct in that Catalyst plays better with features that Plack offers
+but if you are making heavy use of the streaming interface there could
+be some differences so you should test carefully (this is probably not
+the vast majority of people).  In particular if you are developing
+using one server but deploying using a different one, differences in
+what those server do with streaming should be noted.
+
+Please see note below about changes to filehandle support and existing
+Plack middleware to aid in backwards compatibility.
+
+=head3 Distinguish between body null versus undef.
+
+We also now more carefully distingush the different between a body set
+to '' and a body that is undef.  This might lead to situations where
+again you'll get a content-length were you didn't get one before or
+where a supporting server will start chunking output.  If this is an
+issue you can apply the middleware L<Plack::Middleware::BufferedStreaming>
+or report specific problems to the dev team.
+
+=head3 More Catalyst Middleware
+
+We have started migrating code in Catalyst to equivilent Plack
+Middleware when such exists and is correct to do so.  For example we now use
+L<Plack::Middleware::ContentLength> to determine content length of a response
+when none is provided.  This replaces similar code inlined with L<Catalyst>
+The main advantages to doing this is 1) more similar Catalyst core that is 
+focused on the Catalyst special sauce, 2) Middleware is more broadly shared
+so we benefit from better collaboration with developers outside Catalyst, 3)
+In the future you'll be able to change or trim the middleware stack to get
+additional performance when you don't need all the checks and constraints.
+
+=head3 Deprecate Filehandle like objects that do read but not getline
+
+We also deprecated setting the response body to an object that does 'read'
+but not 'getline'.  If you are using a custom IO-Handle like object for
+response you should verify that 'getline' is supported in your interface.
+Unless we here this case is a major issue for people, we will be removing support
+in a near future release of Catalyst.  When the code encounters this it
+will issue a warning.  You also may run into this issue with L<MogileFS::Client>
+which does read but not getline.  For now we will just warn when encountering
+such an object and fallback to the previous behavior (where L<Catalyst::Engine>
+itself unrolls the filehandle and performs blocking streams).  However
+this backwards compatibility will be removed in an upcoming release so you should either
+rewrite your custom filehandle objects to support getline or start using the 
+middleware that adapts read for getline L<Plack::Middleware::AdaptFilehandleRead>.
+
+=head3 Response->headers become read-only after finalizing
+
+Once the response headers are finalized, trying to change them is not allowed
+(in the past you could change them and this would lead to unexpected results).
+
+=head3 Officially deprecate L<Catalyst::Engine::PSGI>
+
+L<Catalyst::Engine::PSGI> is also officially no longer supported.  We will
+no long run test cases against this and can remove backwards compatibility code for it
+as deemed necessary for the evolution of the platform.  You should simply
+discontinue use of this engine, as L<Catalyst> has been PSGI at the core for
+several years.
+
+=head3 Officially deprecate finding the PSGI $env anyplace other than Request
+
+A few early releases of Cataplack had the PSGI $env in L<Catalyst::Engine>.
+Code has been maintained here for backwards compatibility reasons.  This is no
+longer supported and will be removed in upcoming release, so you should update
+your code and / or upgrade to a newer version of L<Catalyst>
+
+=head3 Deprecate setting Response->body after using write/write_fh
+
+Setting $c->res->body to a filehandle after using $c->res->write or
+$c->res->write_fh is no longer considered allowed, since we can't send
+the filehandle to the underlying Plack handler.  For now we will continue
+to support setting body to a simple value since this is possible, but at
+some future release a choice to use streaming indicates that you will do
+so for the rest of the request.
+
+
+=head2 VERSION 5.90053
+
+We are now clarifying the behavior of log, plugins and configuration during
+the setup phase.  Since Plugins might require a log during setup, setup_log
+must run BEFORE setup_plugins.   This has the unfortunate side effect that
+anyone using the popular ConfigLoader plugin will not be able to supply
+configuration to custom logs since the configuration is not yet finalized
+when setup_log is run (when using ConfigLoader, which is a plugin and is
+not loaded until later.)
+
+As a workaround, you can supply custom log configuration directly into
+the configuration:
+
+    package MyApp;
+    use Catalyst;
+
+    __PACKAGE__->config(
+      my_custom_log_info => { %custom_args },
+    );
+
+    __PACKAGE__->setup;
+
+If you wish to configure the custom logger differently based on ENV, you can
+try:
+
+    package MyApp;
+
+    use Catalyst;
+    use Catalyst::Utils;
+
+    __PACKAGE__->config(
+      Catalyst::Utils::merge_hashes(
+        +{ my_custom_log_info => { %base_custom_args } },
+        +{ do __PACKAGE__->path_to( $ENV{WHICH_CONF}."_conf.pl") },
+      ),
+    );
+
+    __PACKAGE__->setup;
+
+Or create a standalone Configuration class that does the right thing.
+
+Basically if you want to configure a logger via Catalyst global configuration
+you can't use ConfigLoader because it will always be loaded too late to be of
+any use.  Patches and workaround options welcomed!
+
+=head2 VERSION 5.9XXXX 'cataplack'
+
+The Catalyst::Engine sub-classes have all been removed and deprecated,
+to be replaced with Plack handlers.
+
+Plack is an implementation of the L<PSGI> specification, which is
+a standard interface between web servers and application frameworks.
+
+This should be no different for developers, and you should not have to
+migrate your applications unless you are using a custom engine already.
+
+This change benefits Catalyst significantly by reducing the amount of
+code inside the framework, and means that the framework gets upstream
+bug fixes in L<Plack>, and automatically gains support for any web server
+which a L<PSGI> compliant handler is written for.
+
+It also allows you more flexibility with your application, and allows
+the use of cross web framework 'middleware'.
+
+Developers are recommended to read L<Catalyst::Upgrading> for notes about
+upgrading, especially if you are using an unusual deployment method.
+
+Documentation for how to take advantage of L<PSGI> can be found in
+L<Catalyst::PSGI>, and information about deploying your application
+has been moved to L<Catalyst::Manual::Deployment>.
+
+=head3 Updated modules:
+
+A number of modules have been updated to pass their tests or not
+produce deprecation warnings with the latest version of Catalyst.
+It is recommended that you upgrade any of these that you are using
+after installing this version of Catalyst.
+
+These extensions are:
+
+=over
+
+=item L<Catalyst::Engine::HTTP::Prefork>
+
+This is now deprecated, see L<Catalyst::Upgrading>.
+
+=item L<Test::WWW::Mechanize::Catalyst>
+
+Has been updated to not produce deprecation warnings, upgrade recommended.
+
+=item Catalyst::ActionRole::ACL
+
+Has been updated to fix failing tests (although older versions still
+function perfectly with this version of Catalyst).
+
+=item Catalyst::Plugin::Session::Store::DBIC
+
+Has been updated to fix failing tests (although older versions still
+function perfectly with this version of Catalyst).
+
+=item Catalyst::Plugin::Authentication
+
+Has been updated to fix failing tests (although older versions still
+function perfectly with this version of Catalyst).
+
+=back
+
+=head1 PREVIOUS VERSIONS
+
+=head2 VERSION 5.8XXXX 'catamoose'
+
+=head3 Deprecations
+
+Please see L<Catalyst::Upgrading> for a full description of how changes in the
+framework may affect your application.
+
+Below is a brief list of features which have been deprecated in this release:
+
+=over
+
+=item ::[MVC]:: style naming scheme has been deprecated and will warn
+
+=item NEXT is deprecated for all applications and components, use MRO::Compat
+
+=item Dispatcher methods which are an implementation detail made private, public versions now warn.
+
+=item MyApp->plugin method is deprecated, use L<Catalyst::Model::Adaptor> instead.
+
+=item __PACKAGE__->mk_accessors() is supported for backwards compatibility only, use Moose attributes instead in new code.
+
+=item Use of Catalyst::Base now warns
+
+=back
+
+=head3 New features
+
+=head3 Dispatcher
+
+=over
+
+=item Fix forwarding to Catalyst::Action objects.
+
+=item Add the dispatch_type method
+
+=back
+
+=head3 Restarter
+
+The development server restarter has been improved to be compatible with
+immutable Moose classes, and also to optionally use 
+L<B::Hooks::OP::Check::StashChange> to handle more complex application layouts
+correctly.
+
+=head3 $c->uri_for_action method.
+
+Give a private path to the Catalyst action you want to create a URI for.
+
+=head3 Logging
+
+Log levels have been made additive.
+
+=head3 L<Catalyst::Test>
+
+=over
+
+=item Change to use L<Sub::Exporter>.
+
+=item Support mocking multiple virtual hosts
+
+=item New methods like action_ok and action_redirect to write more compact tests
+
+=back
+
+=head3 Catalyst::Response
+
+=over
+
+=item *
+
+New print method which prints @data to the output stream, separated by $,.  
+This lets you pass the response object to functions that want to write to an 
+L<IO::Handle>.
+
+=item *
+
+Added code method as an alias for C<< $res->status >>
+
+=back
+
+=head3 Consequences of the Moose back end
+
+=over
+
+=item *
+
+Components are fully compatible with Moose, and all Moose features, such as
+method modifiers, attributes, roles, BUILD and BUILDARGS methods are fully
+supported and may be used in components and applications.
+
+=item *
+
+Many reusable extensions which would previously have been plugins or base 
+classes are better implemented as Moose roles.
+
+=item *
+
+L<MooseX::MethodAttributes::Role::AttrContainer::Inheritable> is used to contain action
+attributes. This means that attributes are represented in the MOP, and
+decouples action creation from attributes.
+
+=item *
+
+There is a reasonable API in Catalyst::Controller for working with
+and registering actions, allowing a controller sub-class to replace
+subroutine attributes for action declarations with an alternate
+syntax.
+
+=item *
+
+Refactored capturing of $app from L<Catalyst::Controller> into
+L<Catalyst::Component::ApplicationAttribute> for easier reuse in other
+components.
+
+=item *
+
+Your application class is forced to become immutable at the end of compilation.
+
+=back
+
+=head3 Bug fixes
+
+=over
+
+=item *
+
+Don't ignore SIGCHLD while handling requests with the development server, so that
+system() and other ways of creating child processes work as expected.
+
+=item *
+
+Fixes for FastCGI when used with IIS 6.0
+
+=item *
+
+Fix a bug in uri_for which could cause it to generate paths with multiple 
+slashes in them.
+
+=item *
+
+Fix a bug in Catalyst::Stats, stopping garbage being inserted into
+the stats if a user calls begin => but no end
+
+=back
+
