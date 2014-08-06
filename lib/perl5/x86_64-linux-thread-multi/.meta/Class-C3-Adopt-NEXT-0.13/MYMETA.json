@@ -5,7 +5,7 @@
       "Tomas Doran <bobtfish@bobtfish.net>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 2.101241, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Dist::Zilla version 2.101241, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
