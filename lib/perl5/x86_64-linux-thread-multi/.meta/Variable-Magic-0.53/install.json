@@ -1,1 +1,1 @@
-{"pathname":"V/VP/VPIT/Variable-Magic-0.53.tar.gz","dist":"Variable-Magic-0.53","target":"Variable::Magic","name":"Variable::Magic","provides":{"Variable::Magic":{"version":"0.53","file":"lib/Variable/Magic.pm"}},"version":"0.53"}
+{"provides":{"Variable::Magic":{"file":"lib/Variable/Magic.pm","version":"0.53"}},"pathname":"V/VP/VPIT/Variable-Magic-0.53.tar.gz","version":"0.53","dist":"Variable-Magic-0.53","target":"Variable::Magic","name":"Variable::Magic"}

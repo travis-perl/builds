@@ -3,7 +3,7 @@ BEGIN {
   $MooseX::Getopt::Meta::Attribute::AUTHORITY = 'cpan:STEVAN';
 }
 # ABSTRACT: Optional meta attribute for custom option names
-$MooseX::Getopt::Meta::Attribute::VERSION = '0.63';
+$MooseX::Getopt::Meta::Attribute::VERSION = '0.65';
 use Moose;
 use Moose::Util::TypeConstraints;
 use namespace::autoclean;
@@ -24,15 +24,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc
-
 =head1 NAME
 
 MooseX::Getopt::Meta::Attribute - Optional meta attribute for custom option names
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 SYNOPSIS
 

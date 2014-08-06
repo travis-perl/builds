@@ -1,1 +1,1 @@
-{"version":"0.04","provides":{"Sub::Identify":{"file":"lib/Sub/Identify.pm","version":"0.04"}},"name":"Sub::Identify","target":"Sub::Identify","dist":"Sub-Identify-0.04","pathname":"R/RG/RGARCIA/Sub-Identify-0.04.tar.gz"}
+{"provides":{"Sub::Identify":{"version":"0.04","file":"lib/Sub/Identify.pm"}},"version":"0.04","pathname":"R/RG/RGARCIA/Sub-Identify-0.04.tar.gz","name":"Sub::Identify","dist":"Sub-Identify-0.04","target":"Sub::Identify"}
