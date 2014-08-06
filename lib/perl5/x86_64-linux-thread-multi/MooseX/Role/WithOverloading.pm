@@ -1,13 +1,11 @@
 package MooseX::Role::WithOverloading;
-# git description: v0.12-2-gf2d211c
-
 BEGIN {
   $MooseX::Role::WithOverloading::AUTHORITY = 'cpan:FLORA';
 }
-{
-  $MooseX::Role::WithOverloading::VERSION = '0.13';
-}
+# git description: v0.13-31-g055b57e
+$MooseX::Role::WithOverloading::VERSION = '0.14';
 # ABSTRACT: Roles which support overloading
+# KEYWORDS: moose extension role operator overload overloading
 
 use XSLoader;
 use Moose::Role ();
@@ -20,24 +18,22 @@ use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToInstance'
 
 use namespace::clean;
 
-XSLoader::load(__PACKAGE__, our $VERSION);
+XSLoader::load(
+    __PACKAGE__,
+    $MooseX::Role::WithOverloading::{VERSION}
+    ? ${ $MooseX::Role::WithOverloading::{VERSION} }
+    : ()
+);
 
-Moose::Exporter->setup_import_methods(also => 'Moose::Role');
-
-sub init_meta {
-    my ($class, %opts) = @_;
-    my $meta = Moose::Role->init_meta(%opts);
-
-    return Moose::Util::MetaRole::apply_metaroles(
-        for            => $meta,
-        role_metaroles => {
-            role                    => [MetaRole],
-            application_to_class    => [ToClass],
-            application_to_role     => [ToRole],
-            application_to_instance => [ToInstance],
-        },
-    );
-}
+Moose::Exporter->setup_import_methods(
+    also           => 'Moose::Role',
+    role_metaroles => {
+        role                    => [MetaRole],
+        application_to_class    => [ToClass],
+        application_to_role     => [ToRole],
+        application_to_instance => [ToInstance],
+    },
+);
 
 1;
 
@@ -45,11 +41,15 @@ __END__
 
 =pod
 
-=encoding utf-8
+=encoding UTF-8
 
 =head1 NAME
 
 MooseX::Role::WithOverloading - Roles which support overloading
+
+=head1 VERSION
+
+version 0.14
 
 =head1 SYNOPSIS
 
@@ -81,11 +81,11 @@ MooseX::Role::WithOverloading - Roles which support overloading
 =head1 DESCRIPTION
 
 MooseX::Role::WithOverloading allows you to write a L<Moose::Role> which
-defines overloaded operators and allows those operator overloadings to be
-composed into the classes/roles/instances it's compiled to, while plain
+defines overloaded operators and allows those overload methods to be
+composed into the classes/roles/instances it's compiled to, where plain
 L<Moose::Role>s would lose the overloading.
 
-=for Pod::Coverage init_meta
+=for stopwords metaclasses
 
 =head1 AUTHORS
 
@@ -103,9 +103,31 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Florian Ragwitz.
+This software is copyright (c) 2014 by Florian Ragwitz.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+=head1 CONTRIBUTORS
+
+=over 4
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Tomas Doran (t0m) <t0m@state51.co.uk>
+
+=back
 
 =cut
