@@ -1,1 +1,1 @@
-{"provides":{"PadWalker":{"version":"1.98","file":"PadWalker.pm"}},"target":"PadWalker","version":"1.98","name":"PadWalker","dist":"PadWalker-1.98","pathname":"R/RO/ROBIN/PadWalker-1.98.tar.gz"}
+{"dist":"PadWalker-1.98","pathname":"R/RO/ROBIN/PadWalker-1.98.tar.gz","provides":{"PadWalker":{"file":"PadWalker.pm","version":"1.98"}},"target":"PadWalker","version":"1.98","name":"PadWalker"}
