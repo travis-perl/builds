@@ -4,9 +4,7 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Addis_Ababa.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Algiers.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Asmara.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Bamako.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Bangui.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Banjul.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Bissau.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Blantyre.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Brazzaville.pm
@@ -14,13 +12,10 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Cairo.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Casablanca.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Ceuta.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Conakry.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Dakar.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Dar_es_Salaam.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Djibouti.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Douala.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/El_Aaiun.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Freetown.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Gaborone.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Harare.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Johannesburg.pm
@@ -30,7 +25,6 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Kinshasa.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Lagos.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Libreville.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Lome.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Luanda.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Lubumbashi.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Lusaka.pm
@@ -43,10 +37,7 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Nairobi.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Ndjamena.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Niamey.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Nouakchott.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Ouagadougou.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Porto_Novo.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Sao_Tome.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Tripoli.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Tunis.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Africa/Windhoek.pm
@@ -206,8 +197,8 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Beirut.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Bishkek.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Brunei.pm
+/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Chita.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Choibalsan.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Chongqing.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Colombo.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Damascus.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Dhaka.pm
@@ -215,7 +206,6 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Dubai.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Dushanbe.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Gaza.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Harbin.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Hebron.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Ho_Chi_Minh.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Hong_Kong.pm
@@ -227,7 +217,6 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Kabul.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Kamchatka.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Karachi.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Kashgar.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Kathmandu.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Khandyga.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Kolkata.pm
@@ -257,6 +246,7 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Seoul.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Shanghai.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Singapore.pm
+/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Srednekolymsk.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Taipei.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Tashkent.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Tbilisi.pm
@@ -279,7 +269,6 @@
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Atlantic/Madeira.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Atlantic/Reykjavik.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Atlantic/South_Georgia.pm
-/home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Atlantic/St_Helena.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Atlantic/Stanley.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Adelaide.pm
 /home/travis/.perlbrew/libs/5.10.1-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Brisbane.pm
