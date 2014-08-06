@@ -1,1 +1,1 @@
-{"provides":{"MRO::Compat":{"file":"lib/MRO/Compat.pm","version":"0.12"}},"target":"MRO::Compat","pathname":"B/BO/BOBTFISH/MRO-Compat-0.12.tar.gz","name":"MRO::Compat","version":"0.12","dist":"MRO-Compat-0.12"}
+{"pathname":"B/BO/BOBTFISH/MRO-Compat-0.12.tar.gz","target":"MRO::Compat","name":"MRO::Compat","version":"0.12","dist":"MRO-Compat-0.12","provides":{"MRO::Compat":{"file":"lib/MRO/Compat.pm","version":"0.12"}}}
