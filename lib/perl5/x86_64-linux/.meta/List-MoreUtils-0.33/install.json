@@ -1,1 +1,1 @@
-{"provides":{"List::MoreUtils":{"file":"lib/List/MoreUtils.pm","version":"0.33"}},"version":"0.33","pathname":"A/AD/ADAMK/List-MoreUtils-0.33.tar.gz","name":"List::MoreUtils","dist":"List-MoreUtils-0.33","target":"List::MoreUtils"}
+{"pathname":"A/AD/ADAMK/List-MoreUtils-0.33.tar.gz","dist":"List-MoreUtils-0.33","target":"List::MoreUtils","provides":{"List::MoreUtils":{"version":"0.33","file":"lib/List/MoreUtils.pm"}},"version":"0.33","name":"List::MoreUtils"}
