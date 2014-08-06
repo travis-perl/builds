@@ -4,7 +4,7 @@
       "Gtk2-Perl Team <gtk-perl-list at gnome dot org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.86, CPAN::Meta::Converter version 2.133380",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.141520",
    "keywords" : [
       "XS",
       "XS extensions",
@@ -73,5 +73,5 @@
       },
       "x_MailingList" : "https://mail.gnome.org/mailman/listinfo/gtk-perl-list"
    },
-   "version" : "0.308"
+   "version" : "0.309"
 }
