@@ -1,0 +1,16 @@
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Builder.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Builder/IO/Scalar.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Builder/Module.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Builder/Tester.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Builder/Tester/Color.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/More.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Simple.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Test/Tutorial.pod
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Builder.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Builder::IO::Scalar.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Builder::Module.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Builder::Tester.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Builder::Tester::Color.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::More.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Simple.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Test::Tutorial.0

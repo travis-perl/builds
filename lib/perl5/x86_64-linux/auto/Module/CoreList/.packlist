@@ -1,0 +1,8 @@
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/bin/corelist
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Module/CoreList.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Module/CoreList.pod
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Module/CoreList/TieHashDelta.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/lib/perl5/Module/CoreList/Utils.pm
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man1/corelist.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Module::CoreList.0
+/home/travis/.perlbrew/libs/5.6.2@base-5.6/man/man3/Module::CoreList::Utils.0
