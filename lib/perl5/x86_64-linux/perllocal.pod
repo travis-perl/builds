@@ -1,4 +1,4 @@
-=head2 Mon Jul 28 13:04:51 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Wed Aug  6 18:44:44 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 13:04:52 2014: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Wed Aug  6 18:44:45 2014: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
