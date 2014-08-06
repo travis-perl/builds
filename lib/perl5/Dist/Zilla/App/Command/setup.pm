@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::setup;
 # ABSTRACT: set up a basic global config file
-$Dist::Zilla::App::Command::setup::VERSION = '5.019';
+$Dist::Zilla::App::Command::setup::VERSION = '5.020';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -162,7 +162,7 @@ Dist::Zilla::App::Command::setup - set up a basic global config file
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 SYNOPSIS
 

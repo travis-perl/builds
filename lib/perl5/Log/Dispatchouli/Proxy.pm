@@ -1,33 +1,30 @@
 use strict;
 use warnings;
 package Log::Dispatchouli::Proxy;
-{
-  $Log::Dispatchouli::Proxy::VERSION = '2.009';
-}
 # ABSTRACT: a simple wrapper around Log::Dispatch
-
+$Log::Dispatchouli::Proxy::VERSION = '2.010';
 use Params::Util qw(_ARRAY0 _HASH0);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =head1 DESCRIPTION
+#pod
+#pod A Log::Dispatchouli::Proxy object is the child of a L<Log::Dispatchouli> logger
+#pod (or another proxy) and relays log messages to its parent.  It behaves almost
+#pod identically to a Log::Dispatchouli logger, and you should refer there for more
+#pod of its documentation.
+#pod
+#pod Here are the differences:
+#pod
+#pod =begin :list
+#pod
+#pod * You can't create a proxy with C<< ->new >>, only by calling C<< ->proxy >> on an existing logger or proxy.
+#pod
+#pod * C<set_debug> will set a value for the proxy; if none is set, C<get_debug> will check the parent's setting; C<clear_debug> will clear any set value on this proxy
+#pod
+#pod * C<log_debug> messages will be redispatched to C<log> (bug to the 'debug' logging level) to prevent parent loggers from dropping them due to C<debug> setting differences
+#pod
+#pod =end :list
+#pod
+#pod =cut
 
 sub _new {
   my ($class, $arg) = @_;
@@ -147,7 +144,7 @@ Log::Dispatchouli::Proxy - a simple wrapper around Log::Dispatch
 
 =head1 VERSION
 
-version 2.009
+version 2.010
 
 =head1 DESCRIPTION
 

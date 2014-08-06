@@ -1,1 +1,1 @@
-{"pathname":"L/LE/LEONT/File-Slurp-Tiny-0.003.tar.gz","provides":{"File::Slurp::Tiny":{"version":"0.003","file":"lib/File/Slurp/Tiny.pm"}},"version":"0.003","target":"File::Slurp::Tiny","dist":"File-Slurp-Tiny-0.003","name":"File::Slurp::Tiny"}
+{"version":"0.003","pathname":"L/LE/LEONT/File-Slurp-Tiny-0.003.tar.gz","provides":{"File::Slurp::Tiny":{"file":"lib/File/Slurp/Tiny.pm","version":"0.003"}},"target":"File::Slurp::Tiny","dist":"File-Slurp-Tiny-0.003","name":"File::Slurp::Tiny"}
