@@ -167,30 +167,20 @@ do{ my $x = [
        {},
        {},
        {
-         'license_creation' => {
-                                 'requires' => {
-                                                 'Software::License' => '0.103009'
-                                               },
-                                 'description' => 'Create licenses automatically in distributions'
-                               },
-         'dist_authoring' => {
-                               'recommends' => {
-                                                 'Pod::Readme' => '0.04',
-                                                 'Module::Signature' => '0.21'
-                                               },
-                               'description' => 'Create new distributions',
-                               'requires' => {
-                                               'Archive::Tar' => '1.09'
-                                             }
-                             },
          'PPM_support' => {
                             'description' => 'Generate PPM files for distributions'
                           },
+         'HTML_support' => {
+                             'requires' => {
+                                             'Pod::Html' => 0
+                                           },
+                             'description' => 'Create HTML documentation'
+                           },
          'inc_bundling_support' => {
                                      'description' => 'Bundle Module::Build in inc/',
                                      'requires' => {
-                                                     'ExtUtils::Installed' => '1.999',
-                                                     'ExtUtils::Install' => '1.54'
+                                                     'ExtUtils::Install' => '1.54',
+                                                     'ExtUtils::Installed' => '1.999'
                                                    }
                                    },
          'manpage_support' => {
@@ -199,12 +189,22 @@ do{ my $x = [
                                               },
                                 'description' => 'Create Unix man pages'
                               },
-         'HTML_support' => {
-                             'description' => 'Create HTML documentation',
-                             'requires' => {
-                                             'Pod::Html' => 0
-                                           }
-                           }
+         'license_creation' => {
+                                 'requires' => {
+                                                 'Software::License' => '0.103009'
+                                               },
+                                 'description' => 'Create licenses automatically in distributions'
+                               },
+         'dist_authoring' => {
+                               'recommends' => {
+                                                 'Module::Signature' => '0.21',
+                                                 'Pod::Readme' => '0.04'
+                                               },
+                               'requires' => {
+                                               'Archive::Tar' => '1.09'
+                                             },
+                               'description' => 'Create new distributions'
+                             }
        }
      ];
 $x; }
