@@ -1,1 +1,1 @@
-{"version":"0.08","provides":{"List::AllUtils":{"version":"0.08","file":"lib/List/AllUtils.pm"}},"name":"List::AllUtils","pathname":"D/DR/DROLSKY/List-AllUtils-0.08.tar.gz","target":"List::AllUtils","dist":"List-AllUtils-0.08"}
+{"name":"List::AllUtils","pathname":"D/DR/DROLSKY/List-AllUtils-0.08.tar.gz","dist":"List-AllUtils-0.08","provides":{"List::AllUtils":{"file":"lib/List/AllUtils.pm","version":"0.08"}},"version":"0.08","target":"List::AllUtils"}

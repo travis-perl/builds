@@ -3,8 +3,8 @@ package B::Hooks::OP::Check::Install::Files;
 $self = {
           'inc' => '',
           'deps' => [],
-          'typemaps' => [],
-          'libs' => ''
+          'libs' => '',
+          'typemaps' => []
         };
 
 

@@ -1,12 +1,14 @@
-package MooseX::Role::Parameterized::Meta::Role::Parameterizable;
-use Moose;
-extends 'Moose::Meta::Role';
-
-our $VERSION = '1.02';
-
+package MooseX::Role::Parameterized::Meta::Trait::Parameterizable;
+BEGIN {
+  $MooseX::Role::Parameterized::Meta::Trait::Parameterizable::AUTHORITY = 'cpan:SARTAK';
+}
+# ABSTRACT: trait for parameterizable roles
+$MooseX::Role::Parameterized::Meta::Trait::Parameterizable::VERSION = '1.07';
+use Moose::Role;
 use MooseX::Role::Parameterized::Meta::Role::Parameterized;
 use MooseX::Role::Parameterized::Parameters;
 use Module::Runtime 'use_module';
+use namespace::autoclean;
 
 has parameterized_role_metaclass => (
     is      => 'ro',
@@ -30,6 +32,7 @@ has parameters_metaclass => (
         add_parameter        => 'add_attribute',
         construct_parameters => 'new_object',
     },
+    predicate => '_has_parameters_metaclass',
 );
 
 has role_generator => (
@@ -76,7 +79,11 @@ sub generate_role {
 
     local $MooseX::Role::Parameterized::CURRENT_METACLASS = $role;
 
-    $self->apply_parameterizable_role($role);
+    # The generate_role method is being called directly by things like
+    # MooseX::ClassCompositor. We don't want to force such modules to pass
+    # this arg so we default to something sane.
+    my $orig_apply = $args{orig_apply} || Moose::Meta::Role->can('apply');
+    $self->$orig_apply($role);
 
     $self->role_generator->($parameters,
         operating_on => $role,
@@ -97,7 +104,8 @@ sub _role_for_combination {
     );
 }
 
-sub apply {
+around apply => sub {
+    my $orig     = shift;
     my $self     = shift;
     my $consumer = shift;
     my %args     = @_;
@@ -105,36 +113,62 @@ sub apply {
     my $role = $self->generate_role(
         consumer   => $consumer,
         parameters => \%args,
+        orig_apply => $orig,
     );
 
     $role->apply($consumer, %args);
-}
+};
 
-sub apply_parameterizable_role {
-    my $self = shift;
+around reinitialize => sub {
+    my $orig  = shift;
+    my $class = shift;
+    my ($pkg) = @_;
+    my $meta  = blessed($pkg) ? $pkg : find_meta($pkg);
 
-    $self->SUPER::apply(@_);
-}
+    my $meta_meta = $meta->meta;
 
-__PACKAGE__->meta->make_immutable;
-no Moose;
+    my %p;
+    if ( $meta_meta->can('does_role') && $meta_meta->does_role(__PACKAGE__) ) {
+        %p = map { $_ => $meta->$_ }
+            qw( parameterized_role_metaclass parameters_class );
+        $p{parameters_metaclass} = $meta->parameters_metaclass
+            if $meta->_has_parameters_metaclass;
+        $p{role_generator} = $meta->role_generator
+            if $meta->has_role_generator;
+    }
+
+    my $new = $class->$orig(
+        @_,
+        %p,
+    );
+
+    return $new;
+};
 
 1;
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
 =head1 NAME
 
-MooseX::Role::Parameterized::Meta::Role::Parameterizable - metaclass for parameterizable roles
+MooseX::Role::Parameterized::Meta::Trait::Parameterizable - trait for parameterizable roles
+
+=head1 VERSION
+
+version 1.07
 
 =head1 DESCRIPTION
 
-This is the metaclass for parameterizable roles, roles that have
-their parameters currently unbound. These are the roles that you
-use L<Moose/with>, but instead of composing the parameterizable
-role, we construct a new parameterized role
-(L<MooseX::Role::Parameterized::Meta::Role::Parameterized>) and use
-that new parameterized instead.
+This is the trait that is applied to the metaclass for parameterizable roles,
+roles that have their parameters currently unbound. These are the roles that
+you use L<Moose/with>, but instead of composing the parameterizable role, we
+construct a new parameterized role
+(L<MooseX::Role::Parameterized::Meta::Role::Parameterized>) and use that new
+parameterized role instead.
 
 =head1 ATTRIBUTES
 
@@ -148,7 +182,7 @@ The name of the class that will be used to construct the parameters object.
 
 =head2 parameters_metaclass
 
-A metaclass representing this roles's parameters. It will be an anonymous
+A metaclass representing this role's parameters. It will be an anonymous
 subclass of L</parameters_class>. Each call to
 L<MooseX::Role::Parameters/parameter> adds an attribute to this metaclass.
 
@@ -179,11 +213,11 @@ The arguments are those specified by the consumer as parameter values.
 
 This method generates and returns a new instance of
 L</parameterized_role_metaclass>. It can take any combination of
-three named parameters:
+three named arguments:
 
 =over 4
 
-=item arguments
+=item parameters
 
 A hashref of parameters for the role, same as would be passed in at a "with"
 statement.
@@ -195,6 +229,8 @@ we generate an anonymous role.
 
 =item consumer
 
+=for stopwords metaobject
+
 A consumer metaobject, if available.
 
 =back
@@ -204,5 +240,15 @@ A consumer metaobject, if available.
 Overrides L<Moose::Meta::Role/apply> to automatically generate the
 parameterized role.
 
-=cut
+=head1 AUTHOR
 
+Shawn M Moore <code@sartak.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2008 by Shawn M Moore.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
