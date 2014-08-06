@@ -1,4 +1,4 @@
-=head2 Mon Jul 28 12:19:18 2014: C<Module> L<Test::Most|Test::Most>
+=head2 Wed Aug  6 18:19:07 2014: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.33>
+C<VERSION: 0.34>
 
 =item *
 
