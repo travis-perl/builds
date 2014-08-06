@@ -2,9 +2,10 @@ package MooseX::Getopt;
 BEGIN {
   $MooseX::Getopt::AUTHORITY = 'cpan:STEVAN';
 }
-# git description: v0.62-2-g67fadd8
-$MooseX::Getopt::VERSION = '0.63';
+# git description: v0.64-2-gc7ba3f9
+$MooseX::Getopt::VERSION = '0.65';
 # ABSTRACT: A Moose role for processing command line options
+# KEYWORDS: moose extension command line options attributes executable flags switches arguments
 
 use Moose::Role 0.56;
 use namespace::autoclean;
@@ -19,21 +20,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc Brandon Devin Austin Drew Taylor
-Florian Ragwitz Gordon Irving Hans Dieter L Pearcey Hinrik Örn Sigurðsson
-Jesse Luehrs John Goulah Jonathan Swartz Black Justin Hunter Karen
-Etheridge Nelo Onyiah Ricardo SIGNES Ryan D Chris Johnson Shlomi Fish Todd
-Hepler Tomas Doran Yuval Prather Kogman Ævar Arnfjörð Bjarmason Dagfinn
-Ilmari Mannsåker Damien Krotkine DWIM metaclass configfile Str subtype
-customizations
-
 =head1 NAME
 
 MooseX::Getopt - A Moose role for processing command line options
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 SYNOPSIS
 
@@ -140,6 +133,8 @@ L<MooseX::Getopt::ProcessedArgv> object. C<new_with_options> uses this
 method internally, so modifying this method via subclasses/roles will affect
 C<new_with_options>.
 
+=for stopwords DWIM metaclass
+
 This module attempts to DWIM as much as possible with the command line
 parameters by introspecting your class's attributes. It will use the name
 of your attribute as the command line option, and if there is a type
@@ -168,6 +163,8 @@ to have the leading underscore in their name, you can do this:
 This will mean that Getopt will not handle a --foo parameter, but your
 code can still call the C<foo> method.
 
+=for stopwords configfile
+
 If your class also uses a configfile-loading role based on
 L<MooseX::ConfigFromFile>, such as L<MooseX::SimpleConfig>,
 L<MooseX::Getopt>'s C<new_with_options> will load the configfile
@@ -194,6 +191,8 @@ which would enable the following command line options:
 
   % my_script.pl --verbose
   % my_script.pl --noverbose
+
+=for stopwords Str
 
 =item I<Int>, I<Float>, I<Str>
 
@@ -235,6 +234,8 @@ which would enable the following command line options:
 =back
 
 =head2 Custom Type Constraints
+
+=for stopwords subtype
 
 It is possible to create custom type constraint to option spec
 mappings if you need them. The process is fairly simple (but a
@@ -286,6 +287,8 @@ C<=s@>).
 
 =head2 More Customization Options
 
+=for stopwords customizations
+
 See L<Getopt::Long/Configuring Getopt::Long> for many other customizations you
 can make to how options are parsed. Simply C<use Getopt::Long qw(:config
 other_options...)> in your class to set these.
@@ -306,6 +309,8 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
+
+=for stopwords Brandon L Black Chris Prather Dagfinn Ilmari Mannsåker Damien Krotkine Devin Austin Drew Taylor Florian Ragwitz Gordon Irving Hans Dieter Pearcey Hinrik Örn Sigurðsson Jesse Luehrs John Goulah Jonathan Swartz Justin Hunter Karen Etheridge Nelo Onyiah Olaf Alders Ricardo SIGNES Ryan D Johnson Shlomi Fish Stevan Little Todd Hepler Tomas Doran Yuval Kogman Ævar Arnfjörð Bjarmason
 
 =over 4
 
@@ -372,6 +377,10 @@ Karen Etheridge <ether@cpan.org>
 =item *
 
 Nelo Onyiah <nelo.onyiah@gmail.com>
+
+=item *
+
+Olaf Alders <olaf@wundersolutions.com>
 
 =item *
 

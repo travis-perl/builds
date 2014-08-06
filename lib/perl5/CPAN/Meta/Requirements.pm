@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package CPAN::Meta::Requirements;
-our $VERSION = '2.125'; # VERSION
+our $VERSION = '2.120351'; # VERSION
 # ABSTRACT: a set of version requirements for a CPAN dist
 
 
@@ -10,50 +10,19 @@ use Scalar::Util ();
 use version 0.77 (); # the ->parse method
 
 
-my @valid_options = qw( bad_version_hook );
-
 sub new {
-  my ($class, $options) = @_;
-  $options ||= {};
-  Carp::croak "Argument to $class\->new() must be a hash reference"
-    unless ref $options eq 'HASH';
-  my %self = map {; $_ => $options->{$_}} @valid_options;
-
-  return bless \%self => $class;
+  my ($class) = @_;
+  return bless {} => $class;
 }
 
 sub _version_object {
   my ($self, $version) = @_;
 
-  my $vobj;
-
-  eval {
-    $vobj  = (! defined $version)                ? version->parse(0)
+  $version = (! defined $version)                ? version->parse(0)
            : (! Scalar::Util::blessed($version)) ? version->parse($version)
            :                                       $version;
-  };
 
-  if ( my $err = $@ ) {
-    my $hook = $self->{bad_version_hook};
-    $vobj = eval { $hook->($version) }
-      if ref $hook eq 'CODE';
-    unless (Scalar::Util::blessed($vobj) && $vobj->isa("version")) {
-      $err =~ s{ at .* line \d+.*$}{};
-      die "Can't convert '$version': $err";
-    }
-  }
-
-  # ensure no leading '.'
-  if ( $vobj =~ m{\A\.} ) {
-    $vobj = version->parse("0$vobj");
-  }
-
-  # ensure normal v-string form
-  if ( $vobj->is_qv ) {
-    $vobj = version->parse($vobj->normal);
-  }
-
-  return $vobj;
+  return $version;
 }
 
 
@@ -114,14 +83,6 @@ sub clear_requirement {
   delete $self->{requirements}{ $module };
 
   return $self;
-}
-
-
-sub requirements_for_module {
-  my ($self, $module) = @_;
-  my $entry = $self->__entry_for($module);
-  return unless $entry;
-  return $entry->as_string;
 }
 
 
@@ -192,42 +153,25 @@ my %methods_for_op = (
   '<'  => [ qw(add_maximum add_exclusion) ],
 );
 
-sub add_string_requirement {
-  my ($self, $module, $req) = @_;
-
-  Carp::confess("No requirement string provided for $module")
-    unless defined $req && length $req;
-
-  my @parts = split qr{\s*,\s*}, $req;
-
-
-  for my $part (@parts) {
-    my ($op, $ver) = $part =~ m{\A\s*(==|>=|>|<=|<|!=)\s*(.*)\z};
-
-    if (! defined $op) {
-      $self->add_minimum($module => $part);
-    } else {
-      Carp::confess("illegal requirement string: $req")
-        unless my $methods = $methods_for_op{ $op };
-
-      $self->$_($module => $ver) for @$methods;
-    }
-  }
-}
-
-
 sub from_string_hash {
   my ($class, $hash) = @_;
 
   my $self = $class->new;
 
   for my $module (keys %$hash) {
-    my $req = $hash->{$module};
-    unless ( defined $req && length $req ) {
-      $req = 0;
-      Carp::carp("Undefined requirement for $module treated as '0'");
+    my @parts = split qr{\s*,\s*}, $hash->{ $module };
+    for my $part (@parts) {
+      my ($op, $ver) = split /\s+/, $part, 2;
+
+      if (! defined $ver) {
+        $self->add_minimum($module => $op);
+      } else {
+        Carp::confess("illegal requirement string: $hash->{ $module }")
+          unless my $methods = $methods_for_op{ $op };
+
+        $self->$_($module => $ver) for @$methods;
+      }
     }
-    $self->add_string_requirement($module, $req);
   }
 
   return $self;
@@ -430,13 +374,9 @@ sub from_string_hash {
 }
 
 1;
-# vim: ts=2 sts=2 sw=2 et:
 
 __END__
-
 =pod
-
-=encoding utf-8
 
 =head1 NAME
 
@@ -444,7 +384,7 @@ CPAN::Meta::Requirements - a set of version requirements for a CPAN dist
 
 =head1 VERSION
 
-version 2.125
+version 2.120351
 
 =head1 SYNOPSIS
 
@@ -476,21 +416,8 @@ exceptions.
 
   my $req = CPAN::Meta::Requirements->new;
 
-This returns a new CPAN::Meta::Requirements object.  It takes an optional
-hash reference argument.  The following keys are supported:
-
-=over 4
-
-=item *
-
-<bad_version_hook> -- if provided, when a version cannot be parsed into
-
-a version object, this code reference will be called with the invalid version
-string as an argument.  It must return a valid version object.
-
-=back
-
-All other keys are ignored.
+This returns a new CPAN::Meta::Requirements object.  It ignores any arguments
+given.
 
 =head2 add_minimum
 
@@ -575,16 +502,6 @@ This removes the requirement for a given module from the object.
 
 This method returns the requirements object.
 
-=head2 requirements_for_module
-
-  $req->requirements_for_module( $module );
-
-This returns a string containing the version requirements for a given module in
-the format described in L<CPAN::Meta::Spec> or undef if the given module has no
-requirements. This should only be used for informational purposes such as error
-messages and should not be interpreted or used for comparison (see
-L</accepts_module> instead.)
-
 =head2 required_modules
 
 This method returns a list of all the modules for which requirements have been
@@ -648,37 +565,6 @@ C<$hashref> would contain:
     'Xyzzy'        => '== 6.01',
   }
 
-=head2 add_string_requirement
-
-  $req->add_string_requirement('Library::Foo' => '>= 1.208, <= 2.206');
-
-This method parses the passed in string and adds the appropriate requirement
-for the given module.  It understands version ranges as described in the
-L<CPAN::Meta::Spec/Version Ranges>. For example:
-
-=over 4
-
-=item 1.3
-
-=item >= 1.3
-
-=item <= 1.3
-
-=item == 1.3
-
-=item != 1.3
-
-=item > 1.3
-
-=item < 1.3
-
-=item >= 1.3, != 1.5, <= 2.0
-
-A version number without an operator is equivalent to specifying a minimum
-(C<E<gt>=>).  Extra whitespace is allowed.
-
-=back
-
 =head2 from_string_hash
 
   my $req = CPAN::Meta::Requirements->from_string_hash( \%hash );
@@ -686,25 +572,6 @@ A version number without an operator is equivalent to specifying a minimum
 This is an alternate constructor for a CPAN::Meta::Requirements object.  It takes
 a hash of module names and version requirement strings and returns a new
 CPAN::Meta::Requirements object.
-
-=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
-
-=head1 SUPPORT
-
-=head2 Bugs / Feature Requests
-
-Please report any bugs or feature requests through the issue tracker
-at L<https://github.com/dagolden/CPAN-Meta-Requirements/issues>.
-You will be notified automatically of any progress on your issue.
-
-=head2 Source Code
-
-This is open source software.  The code repository is available for
-public review and contribution under the terms of the license.
-
-L<https://github.com/dagolden/CPAN-Meta-Requirements>
-
-  git clone https://github.com/dagolden/CPAN-Meta-Requirements.git
 
 =head1 AUTHORS
 
@@ -728,3 +595,4 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
