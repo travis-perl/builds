@@ -153,7 +153,7 @@ dbmopen	Objects	I/O	create binding on a tied dbm file
 defined	Misc	test whether a value, variable, or function is defined
 delete	HASH	deletes a value from a hash
 die	Flow	I/O	raise an exception or bail out
-do	Modules	Flow	turn a BLOCK into a TERM
+do	Flow	Modules	turn a BLOCK into a TERM
 dump	Flow	create an immediate core dump
 each	HASH	ARRAY	retrieve the next key/value pair from a hash
 endgrent	User	be done using group file
@@ -207,8 +207,8 @@ glob	File	expand filenames using wildcards
 gmtime	Time	convert UNIX time into record or string using Greenwich time
 goto	Flow	create spaghetti code
 grep	LIST	locate elements in a list test true against a given criterion
-hex	Math	String	convert a string to a hexadecimal number
-import	Modules	Namespace	patch a module's namespace into your own
+hex	String	Math	convert a string to a hexadecimal number
+import	Namespace	Modules	patch a module's namespace into your own
 index	String	find a substring within a string
 int	Math	get the integer portion of a number
 ioctl	File	system-dependent device control system call
@@ -237,13 +237,13 @@ msgsnd	SysV	send a SysV IPC message to a message queue
 my	Namespace	declare and assign a local variable (lexical scoping)
 next	Flow	iterate a block prematurely
 no	Modules	unimport some module symbols or semantics at compile time
-oct	Math	String	convert a string to an octal number
+oct	String	Math	convert a string to an octal number
 open	File	open a file, pipe, or descriptor
 opendir	File	open a directory
 ord	String	find a character's numeric representation
 our	Namespace	declare and assign a package variable (lexical scoping)
 pack	Binary	String	convert a list into a binary representation
-package	Objects	Modules	Namespace	declare a separate global namespace
+package	Namespace	Objects	Modules	declare a separate global namespace
 __PACKAGE__	Flow	the current package
 pipe	Process	open a pair of connected filehandles
 pop	ARRAY	remove the last element from an array and return it
@@ -271,7 +271,7 @@ rename	File	change a filename
 require	Modules	load in external functions from a library at runtime
 reset	Misc	clear all variables of a given name
 return	Flow	get out of a function early
-reverse	LIST	String	flip a string or a list
+reverse	String	LIST	flip a string or a list
 rewinddir	I/O	reset directory handle
 rindex	String	right-to-left substring search
 rmdir	File	remove a directory
@@ -328,7 +328,7 @@ telldir	I/O	get current seekpointer on a directory handle
 tie	Objects	bind a variable to an object class
 tied	Objects	get a reference to the object underlying a tied variable
 time	Time	return number of seconds since 1970
-times	Time	Process	return elapsed time for self and child processes
+times	Process	Time	return elapsed time for self and child processes
 tr///	String	transliterate a string
 truncate	I/O	shorten a file
 uc	String	return upper-case version of a string
@@ -339,7 +339,7 @@ unlink	File	remove one link to a file
 unpack	Binary	LIST	convert binary structure into normal perl variables
 unshift	ARRAY	prepend more elements to the beginning of a list
 untie	Objects	break a tie binding to a variable
-use	Objects	Modules	Namespace	load in a module at compile time and import its namespace
+use	Namespace	Objects	Modules	load in a module at compile time and import its namespace
 utime	File	set a file's last access and modify times
 values	HASH	ARRAY	return a list of the values in a hash
 vec	Binary	test or set particular bits in a string
