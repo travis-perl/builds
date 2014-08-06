@@ -1,1 +1,1 @@
-{"version":"0.08","target":"Class::Data::Inheritable","provides":{"Class::Data::Inheritable":{"version":"0.08","file":"lib/Class/Data/Inheritable.pm"}},"dist":"Class-Data-Inheritable-0.08","pathname":"T/TM/TMTM/Class-Data-Inheritable-0.08.tar.gz","name":"Class::Data::Inheritable"}
+{"dist":"Class-Data-Inheritable-0.08","provides":{"Class::Data::Inheritable":{"version":"0.08","file":"lib/Class/Data/Inheritable.pm"}},"version":"0.08","target":"Class::Data::Inheritable","name":"Class::Data::Inheritable","pathname":"T/TM/TMTM/Class-Data-Inheritable-0.08.tar.gz"}

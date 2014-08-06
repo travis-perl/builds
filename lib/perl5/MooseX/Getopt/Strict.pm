@@ -3,7 +3,7 @@ BEGIN {
   $MooseX::Getopt::Strict::AUTHORITY = 'cpan:STEVAN';
 }
 # ABSTRACT: only make options for attributes with the Getopt metaclass
-$MooseX::Getopt::Strict::VERSION = '0.63';
+$MooseX::Getopt::Strict::VERSION = '0.65';
 use Moose::Role;
 use namespace::autoclean;
 
@@ -25,15 +25,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc
-
 =head1 NAME
 
 MooseX::Getopt::Strict - only make options for attributes with the Getopt metaclass
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 DESCRIPTION
 
