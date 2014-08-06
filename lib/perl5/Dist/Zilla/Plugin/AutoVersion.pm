@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::AutoVersion;
 # ABSTRACT: take care of numbering versions so you don't have to
-$Dist::Zilla::Plugin::AutoVersion::VERSION = '5.019';
+$Dist::Zilla::Plugin::AutoVersion::VERSION = '5.020';
 use Moose;
 with(
   'Dist::Zilla::Role::VersionProvider',
@@ -8,8 +8,6 @@ with(
 );
 
 use namespace::autoclean;
-
-use DateTime 0.44 (); # CLDR fixes
 
 #pod =head1 DESCRIPTION
 #pod
@@ -69,6 +67,11 @@ has format => (
 sub provide_version {
   my ($self) = @_;
 
+  # TODO declare this as a 'develop' prereq as we want it in
+  # `dzil listdeps --author`
+  require DateTime;
+  DateTime->VERSION('0.44'); # CLDR fixes
+
   my $now = DateTime->now(time_zone => $self->time_zone);
 
   my $version = $self->fill_in_string(
@@ -112,7 +115,7 @@ Dist::Zilla::Plugin::AutoVersion - take care of numbering versions so you don't 
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 DESCRIPTION
 

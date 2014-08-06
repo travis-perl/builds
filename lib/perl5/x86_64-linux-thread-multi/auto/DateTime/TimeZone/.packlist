@@ -355,6 +355,7 @@
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Indian/Mayotte.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Indian/Reunion.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Local.pm
+/home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Local/Android.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Local/Unix.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Local/VMS.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/DateTime/TimeZone/Local/Win32.pm
