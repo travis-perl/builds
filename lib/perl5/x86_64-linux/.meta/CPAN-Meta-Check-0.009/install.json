@@ -1,1 +1,1 @@
-{"dist":"CPAN-Meta-Check-0.009","target":"CPAN::Meta::Check","name":"CPAN::Meta::Check","version":"0.009","provides":{"CPAN::Meta::Check":{"file":"lib/CPAN/Meta/Check.pm","version":"0.009"}},"pathname":"L/LE/LEONT/CPAN-Meta-Check-0.009.tar.gz"}
+{"name":"CPAN::Meta::Check","pathname":"L/LE/LEONT/CPAN-Meta-Check-0.009.tar.gz","provides":{"CPAN::Meta::Check":{"file":"lib/CPAN/Meta/Check.pm","version":"0.009"}},"version":"0.009","dist":"CPAN-Meta-Check-0.009","target":"CPAN::Meta::Check"}
