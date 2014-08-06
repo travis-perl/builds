@@ -1,18 +1,18 @@
 {
-   "abstract" : "Provide core functions to autoboxed scalars, arrays and hashes.",
+   "abstract" : "unknown",
    "author" : [
-      "Scott Walters scott@slowass.net"
+      "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.68, CPAN::Meta::Converter version 2.131560, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "ExtUtils::MakeMaker version 6.92, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.142060",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "autobox-Core",
+   "name" : "Test-Most",
    "no_index" : {
       "directory" : [
          "t",
@@ -27,24 +27,27 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.46"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
          "requires" : {
+            "Exception::Class" : "1.14",
+            "Test::Deep" : "0.106",
+            "Test::Differences" : "0.61",
+            "Test::Exception" : "0.31",
+            "Test::Harness" : "3.21",
             "Test::More" : "0.88",
-            "autobox" : "2.71"
+            "Test::Warn" : "0.23"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "bugtracker" : {
-         "web" : "http://github.com/scrottie/autobox-Core/issues"
-      },
       "repository" : {
-         "url" : "http://github.com/scrottie/autobox-Core"
+         "type" : "git",
+         "web" : "https://github.com/Ovid/test--most"
       }
    },
-   "version" : "1.27"
+   "version" : "0.34"
 }
