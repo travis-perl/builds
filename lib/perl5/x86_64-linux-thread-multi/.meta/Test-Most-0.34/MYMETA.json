@@ -4,7 +4,7 @@
       "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.92, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "unknown"
    ],
@@ -21,6 +21,11 @@
    },
    "prereqs" : {
       "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
          }
@@ -44,5 +49,5 @@
          "web" : "https://github.com/Ovid/test--most"
       }
    },
-   "version" : "0.33"
+   "version" : "0.34"
 }
