@@ -1,7 +1,7 @@
 /home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized.pm
 /home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Extending.pod
-/home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Meta/Role/Parameterizable.pm
 /home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Meta/Role/Parameterized.pm
+/home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Meta/Trait/Parameterizable.pm
 /home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Meta/Trait/Parameterized.pm
 /home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Parameters.pm
 /home/travis/.perlbrew/libs/5.12.5@cat/lib/perl5/MooseX/Role/Parameterized/Tutorial.pod
