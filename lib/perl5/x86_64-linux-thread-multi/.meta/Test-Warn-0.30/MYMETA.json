@@ -4,7 +4,7 @@
       "Alexandr Ciornii <alexchorny@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.78, CPAN::Meta::Converter version 2.131490, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.78, CPAN::Meta::Converter version 2.131490, CPAN::Meta::Converter version 2.142060",
    "keywords" : [
       "testing",
       "warnings"

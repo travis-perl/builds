@@ -1,1 +1,1 @@
-{"dist":"Class-Singleton-1.4","target":"Class::Singleton","name":"Class::Singleton","pathname":"A/AB/ABW/Class-Singleton-1.4.tar.gz","version":"1.4","provides":{"Class::Singleton":{"file":"lib/Class/Singleton.pm","version":"1.4"}}}
+{"provides":{"Class::Singleton":{"file":"lib/Class/Singleton.pm","version":"1.4"}},"dist":"Class-Singleton-1.4","name":"Class::Singleton","target":"Class::Singleton","pathname":"A/AB/ABW/Class-Singleton-1.4.tar.gz","version":"1.4"}

@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Local;
-$DateTime::TimeZone::Local::VERSION = '1.71';
+$DateTime::TimeZone::Local::VERSION = '1.72';
 use strict;
 use warnings;
 
@@ -34,6 +34,7 @@ sub TimeZone {
         NetWare => 'Win32',
         symbian => 'Win32',
         dos     => 'OS2',
+        android => 'Android',
         cygwin  => 'Unix',
     );
 
@@ -90,13 +91,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::TimeZone::Local - Determine the local system's time zone
 
 =head1 VERSION
 
-version 1.71
+version 1.72
 
 =head1 SYNOPSIS
 

@@ -4,7 +4,7 @@
       "Damian Conway (damian@conway.org)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -31,7 +31,8 @@
          "version" : "0.24"
       },
       "Hook::LexWrap::Cleanup" : {
-         "file" : "lib/Hook/LexWrap.pm"
+         "file" : "lib/Hook/LexWrap.pm",
+         "version" : "0"
       }
    },
    "release_status" : "stable",
