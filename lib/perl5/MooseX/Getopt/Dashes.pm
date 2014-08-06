@@ -3,7 +3,7 @@ BEGIN {
   $MooseX::Getopt::Dashes::AUTHORITY = 'cpan:STEVAN';
 }
 # ABSTRACT: convert underscores in attribute names to dashes
-$MooseX::Getopt::Dashes::VERSION = '0.63';
+$MooseX::Getopt::Dashes::VERSION = '0.65';
 use Moose::Role;
 with 'MooseX::Getopt';
 use namespace::autoclean;
@@ -28,15 +28,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc
-
 =head1 NAME
 
 MooseX::Getopt::Dashes - convert underscores in attribute names to dashes
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 SYNOPSIS
 
@@ -64,7 +62,7 @@ version 0.63
 
 =head1 DESCRIPTION
 
-This is a version of C<MooseX::Getopt> which converts underscores in
+This is a version of L<MooseX::Getopt> which converts underscores in
 attribute names to dashes when generating command line flags.
 
 You can selectively disable this on a per-attribute basis by supplying

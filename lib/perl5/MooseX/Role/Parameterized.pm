@@ -1,22 +1,38 @@
 package MooseX::Role::Parameterized;
+BEGIN {
+  $MooseX::Role::Parameterized::AUTHORITY = 'cpan:SARTAK';
+}
+# git description: v1.06-3-gc3ce56c
+$MooseX::Role::Parameterized::VERSION = '1.07';
+# ABSTRACT: roles with composition parameters
+# KEYWORDS: moose extension parameter role arguments dynamic
+
 use 5.008001;
-use Moose::Role ();
+use Moose 2.0300 ();
 use Moose::Exporter;
 use Carp 'confess';
 use Moose::Util 'find_meta';
+use namespace::clean;
 
-use MooseX::Role::Parameterized::Meta::Role::Parameterizable;
+use MooseX::Role::Parameterized::Meta::Trait::Parameterizable;
 
-our $VERSION = '1.02';
 our $CURRENT_METACLASS;
 
 sub current_metaclass { $CURRENT_METACLASS }
 
+my $meta_lookup = sub {
+    my $for = shift;
+    current_metaclass() || find_meta($for);
+};
+
 Moose::Exporter->setup_import_methods(
-    also        => 'Moose::Role',
-    with_caller => ['parameter', 'role'],
-    with_meta   => ['method'],
-    meta_lookup => sub { current_metaclass || find_meta(shift) },
+    also           => 'Moose::Role',
+    with_caller    => [ 'parameter', 'role' ],
+    with_meta      => [ 'method', 'with' ],
+    meta_lookup    => $meta_lookup,
+    role_metaroles => {
+        role => ['MooseX::Role::Parameterized::Meta::Trait::Parameterizable'],
+    },
 );
 
 sub parameter {
@@ -48,14 +64,6 @@ sub role (&) {
     find_meta($caller)->role_generator($role_generator);
 }
 
-sub init_meta {
-    my $self = shift;
-    my %options = @_;
-    $options{metaclass} ||= 'MooseX::Role::Parameterized::Meta::Role::Parameterizable';
-
-    return Moose::Role->init_meta(%options);
-}
-
 sub method {
     my $meta = shift;
     my $name = shift;
@@ -70,13 +78,27 @@ sub method {
     $meta->add_method($name => $method);
 }
 
+sub with {
+    local $CURRENT_METACLASS = undef;
+    Moose::Role::with(@_);
+}
+
+
 1;
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
 =head1 NAME
 
 MooseX::Role::Parameterized - roles with composition parameters
+
+=head1 VERSION
+
+version 1.07
 
 =head1 SYNOPSIS
 
@@ -120,11 +142,6 @@ MooseX::Role::Parameterized - roles with composition parameters
 
     with Counter => { name => 'zapped' };
 
-=head1 L<MooseX::Role::Parameterized::Tutorial>
-
-B<Stop!> If you're new here, please read
-L<MooseX::Role::Parameterized::Tutorial> for a much gentler introduction.
-
 =head1 DESCRIPTION
 
 Your parameterized role consists of two new things: parameter declarations
@@ -159,6 +176,15 @@ The benefits of using an object are similar to the benefits of using Moose. You
 get an easy way to specify lazy defaults, type constraint, delegation, and so
 on. You get to use MooseX modules.
 
+=for Pod::Coverage current_metaclass method parameter role with
+
+=head1 L<MooseX::Role::Parameterized::Tutorial>
+
+B<Stop!> If you're new here, please read
+L<MooseX::Role::Parameterized::Tutorial> for a much gentler introduction.
+
+=for stopwords metaobject
+
 You also get the usual introspective and intercessory abilities that come
 standard with the metaobject protocol. Ambitious users should be able to add
 traits to the parameters metaclass to further customize behavior. Please let
@@ -169,10 +195,6 @@ me know if you're doing anything viciously complicated with this extension. :)
 You must use this syntax to declare methods in the role block:
 C<< method NAME => sub { ... }; >>. This is due to a limitation in Perl. In
 return though you can use parameters I<in your methods>!
-
-=head1 AUTHOR
-
-Shawn M Moore, C<sartak@gmail.com>
 
 =head1 SEE ALSO
 
@@ -190,14 +212,71 @@ L<http://jjnapiorkowski.typepad.com/modern-perl/2010/08/parameterized-roles-and-
 
 L<http://sartak.org/talks/yapc-asia-2009/(parameterized)-roles/>
 
+=for stopwords Joose
+
 L<https://github.com/SamuraiJack/JooseX-Role-Parameterized> - this extension ported to JavaScript's Joose
+
+=head1 AUTHOR
+
+Shawn M Moore <code@sartak.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007-2010 Infinity Interactive
+This software is copyright (c) 2008 by Shawn M Moore.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=head1 CONTRIBUTORS
+
+=for stopwords Chris Weyl Csson Dave Rolsky Florian Ragwitz Jesse Luehrs Karen Etheridge Oliver Charles Ricardo Signes Robert 'phaylon' Sedlacek Todd Hepler Yuval Kogman
+
+=over 4
+
+=item *
+
+Chris Weyl <cweyl@alumni.drew.edu>
+
+=item *
+
+Csson <erik.carlsson@live.com>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Oliver Charles <oliver.g.charles@googlemail.com>
+
+=item *
+
+Ricardo Signes <rjbs@cpan.org>
+
+=item *
+
+Robert 'phaylon' Sedlacek <rs@474.at>
+
+=item *
+
+Todd Hepler <thepler@employees.org>
+
+=item *
+
+Yuval Kogman <nothingmuch@woobling.org>
+
+=back
 
 =cut
-

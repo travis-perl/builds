@@ -2,11 +2,8 @@ package MooseX::Role::WithOverloading::Meta::Role::Application::ToRole;
 BEGIN {
   $MooseX::Role::WithOverloading::Meta::Role::Application::ToRole::AUTHORITY = 'cpan:FLORA';
 }
-{
-  $MooseX::Role::WithOverloading::Meta::Role::Application::ToRole::VERSION = '0.13';
-}
 # ABSTRACT: Roles which support overloading
-
+$MooseX::Role::WithOverloading::Meta::Role::Application::ToRole::VERSION = '0.14';
 use Moose::Role;
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToClass';
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToInstance';
@@ -38,11 +35,15 @@ __END__
 
 =pod
 
-=encoding utf-8
+=encoding UTF-8
 
 =head1 NAME
 
 MooseX::Role::WithOverloading::Meta::Role::Application::ToRole - Roles which support overloading
+
+=head1 VERSION
+
+version 0.14
 
 =head1 AUTHORS
 
@@ -60,7 +61,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Florian Ragwitz.
+This software is copyright (c) 2014 by Florian Ragwitz.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

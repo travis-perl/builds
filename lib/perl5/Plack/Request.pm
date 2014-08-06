@@ -2,7 +2,7 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = '1.0030';
+our $VERSION = '1.0031';
 
 use HTTP::Headers;
 use Carp ();
@@ -33,6 +33,7 @@ sub user        { $_[0]->env->{REMOTE_USER} }
 sub request_uri { $_[0]->env->{REQUEST_URI} }
 sub path_info   { $_[0]->env->{PATH_INFO} }
 sub path        { $_[0]->env->{PATH_INFO} || '/' }
+sub query_string{ $_[0]->env->{QUERY_STRING} }
 sub script_name { $_[0]->env->{SCRIPT_NAME} }
 sub scheme      { $_[0]->env->{'psgi.url_scheme'} }
 sub secure      { $_[0]->scheme eq 'https' }
@@ -85,18 +86,10 @@ sub _parse_query {
     my @query;
     my $query_string = $self->env->{QUERY_STRING};
     if (defined $query_string) {
-        if ($query_string =~ /=/) {
-            # Handle  ?foo=bar&bar=foo type of query
-            @query =
-                map { s/\+/ /g; URI::Escape::uri_unescape($_) }
-                map { /=/ ? split(/=/, $_, 2) : ($_ => '')}
-                split(/[&;]/, $query_string);
-        } else {
-            # Handle ...?dog+bones type of query
-            @query =
-                map { (URI::Escape::uri_unescape($_), '') }
-                split(/\+/, $query_string, -1);
-        }
+        @query =
+            map { s/\+/ /g; URI::Escape::uri_unescape($_) }
+            map { /=/ ? split(/=/, $_, 2) : ($_ => '')}
+            split(/[&;]/, $query_string);
     }
 
     Hash::MultiValue->new(@query);
@@ -417,6 +410,11 @@ Similar to C<path_info> but returns C</> in case it is empty. In other
 words, it returns the virtual path of the request URI after C<<
 $req->base >>. See L</"DISPATCHING"> for details.
 
+=item query_string
+
+Returns B<QUERY_STRING> in the environment. This is the undecoded
+query string in the request URI.
+
 =item script_name
 
 Returns B<SCRIPT_NAME> in the environment. This is the absolute path
@@ -459,7 +457,7 @@ strings that are sent by clients and are URI decoded.
 If there are multiple cookies with the same name in the request, this
 method will ignore the duplicates and return only the first value. If
 that causes issues for you, you may have to use modules like
-CGI::Simple::Cookie to parse C<$request->header('Cookies')> by
+CGI::Simple::Cookie to parse C<<$request->header('Cookies')>> by
 yourself.
 
 =item query_parameters
