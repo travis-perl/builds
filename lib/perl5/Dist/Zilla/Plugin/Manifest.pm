@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Manifest;
 # ABSTRACT: build a MANIFEST file
-$Dist::Zilla::Plugin::Manifest::VERSION = '5.019';
+$Dist::Zilla::Plugin::Manifest::VERSION = '5.020';
 use Moose;
 use Moose::Autobox;
 with 'Dist::Zilla::Role::FileGatherer';
@@ -72,7 +72,7 @@ Dist::Zilla::Plugin::Manifest - build a MANIFEST file
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 DESCRIPTION
 

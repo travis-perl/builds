@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Local::Win32;
-$DateTime::TimeZone::Local::Win32::VERSION = '1.71';
+$DateTime::TimeZone::Local::Win32::VERSION = '1.72';
 use strict;
 use warnings;
 
@@ -263,13 +263,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::TimeZone::Local::Win32 - Determine the local system's time zone on Windows
 
 =head1 VERSION
 
-version 1.71
+version 1.72
 
 =head1 SYNOPSIS
 

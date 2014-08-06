@@ -1,1 +1,1 @@
-{"target":"Hook::LexWrap","pathname":"C/CH/CHORNY/Hook-LexWrap-0.24.tar.gz","version":"0.24","name":"Hook::LexWrap","dist":"Hook-LexWrap-0.24","provides":{"Hook::LexWrap":{"file":"lib/Hook/LexWrap.pm","version":"0.24"}}}
+{"provides":{"Hook::LexWrap":{"file":"lib/Hook/LexWrap.pm","version":"0.24"}},"pathname":"C/CH/CHORNY/Hook-LexWrap-0.24.tar.gz","target":"Hook::LexWrap","name":"Hook::LexWrap","version":"0.24","dist":"Hook-LexWrap-0.24"}
