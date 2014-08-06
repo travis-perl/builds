@@ -4,7 +4,7 @@ use warnings;
 
 package Git::Wrapper;
 #ABSTRACT: Wrap git(7) command-line interface
-$Git::Wrapper::VERSION = '0.034';
+$Git::Wrapper::VERSION = '0.035';
 our $DEBUG=0;
 
 # Prevent ANSI color with extreme prejudice
@@ -103,7 +103,7 @@ sub RUN {
     print STDERR join(' ',@cmd),"\n" if $DEBUG;
 
     # Prevent commands from running interactively
-    local $ENV{GIT_EDITOR} = '';
+    local $ENV{GIT_EDITOR} = ' ';
 
     my $pid = IPC::Open3::open3($wtr, $rdr, $err, @cmd);
     print $wtr $stdin
@@ -390,7 +390,7 @@ Git::Wrapper - Wrap git(7) command-line interface
 
 =head1 VERSION
 
-version 0.034
+version 0.035
 
 =head1 SYNOPSIS
 

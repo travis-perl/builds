@@ -1,7 +1,7 @@
 use strict;
 package Dist::Zilla::App::Tester;
 # ABSTRACT: testing library for Dist::Zilla::App
-$Dist::Zilla::App::Tester::VERSION = '5.019';
+$Dist::Zilla::App::Tester::VERSION = '5.020';
 use parent 'App::Cmd::Tester::CaptureExternal';
 use App::Cmd::Tester 0.306 (); # result_class, ->app
 
@@ -43,7 +43,7 @@ sub test_dzil {
 
 {
   package Dist::Zilla::App::Tester::Result;
-$Dist::Zilla::App::Tester::Result::VERSION = '5.019';
+$Dist::Zilla::App::Tester::Result::VERSION = '5.020';
 BEGIN { our @ISA = qw(App::Cmd::Tester::Result); }
 
   sub tempdir {
@@ -92,7 +92,7 @@ Dist::Zilla::App::Tester - testing library for Dist::Zilla::App
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 AUTHOR
 
