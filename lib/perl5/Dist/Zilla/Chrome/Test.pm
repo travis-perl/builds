@@ -1,6 +1,6 @@
 package Dist::Zilla::Chrome::Test;
 # ABSTRACT: the chrome used by Dist::Zilla::Tester
-$Dist::Zilla::Chrome::Test::VERSION = '5.019';
+$Dist::Zilla::Chrome::Test::VERSION = '5.020';
 use Moose;
 
 use MooseX::Types::Moose qw(ArrayRef HashRef Str);
@@ -87,7 +87,7 @@ Dist::Zilla::Chrome::Test - the chrome used by Dist::Zilla::Tester
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 ATTRIBUTES
 

@@ -1,6 +1,6 @@
 package Git::Wrapper::Log;
 # ABSTRACT: Log line of the Git
-$Git::Wrapper::Log::VERSION = '0.034';
+$Git::Wrapper::Log::VERSION = '0.035';
 use 5.006;
 use strict;
 use warnings;
@@ -48,7 +48,7 @@ Git::Wrapper::Log - Log line of the Git
 
 =head1 VERSION
 
-version 0.034
+version 0.035
 
 =head1 METHODS
 
