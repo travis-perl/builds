@@ -1,7 +1,6 @@
 package Dist::Zilla::Plugin::ModuleBuild;
 # ABSTRACT: build a Build.PL that uses Module::Build
-$Dist::Zilla::Plugin::ModuleBuild::VERSION = '5.019';
-use List::MoreUtils qw(any uniq);
+$Dist::Zilla::Plugin::ModuleBuild::VERSION = '5.020';
 use Moose;
 use Moose::Autobox;
 with (
@@ -14,7 +13,6 @@ use namespace::autoclean;
 
 use CPAN::Meta::Requirements 2.121; # requirements_for_module
 use Dist::Zilla::File::InMemory;
-use List::MoreUtils qw(any uniq);
 use Data::Dumper;
 
 #pod =head1 DESCRIPTION
@@ -28,7 +26,7 @@ use Data::Dumper;
 #pod
 #pod B<Optional:> Specify the minimum version of L<Module::Build> to depend on.
 #pod
-#pod Defaults to 0.3601
+#pod Defaults to 0.3601 if a sharedir is being used, otherwise 0.28.
 #pod
 #pod =attr mb_class
 #pod
@@ -47,7 +45,11 @@ use Data::Dumper;
 has 'mb_version' => (
   isa => 'Str',
   is  => 'rw',
-  default => '0.3601',
+  lazy => 1,
+  default => sub {
+    my $self = shift;
+    keys %{$self->zilla->_share_dir_map} ? '0.3601' : '0.28';
+  },
 );
 
 has 'mb_class' => (
@@ -233,7 +235,7 @@ Dist::Zilla::Plugin::ModuleBuild - build a Build.PL that uses Module::Build
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 DESCRIPTION
 
@@ -246,7 +248,7 @@ L<Module::Build>.
 
 B<Optional:> Specify the minimum version of L<Module::Build> to depend on.
 
-Defaults to 0.3601
+Defaults to 0.3601 if a sharedir is being used, otherwise 0.28.
 
 =head2 mb_class
 
