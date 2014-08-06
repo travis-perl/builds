@@ -4,7 +4,7 @@
       "Robert \"phaylon\" Sedlacek <rs@474.at>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.013, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Dist::Zilla version 5.013, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
@@ -51,7 +51,7 @@
             "Pod::Weaver::Section::Contributors" : "0",
             "Test::CPAN::Changes" : "0.19",
             "Test::CPAN::Meta" : "0",
-            "Test::CleanNamespaces" : ">= 0.04, != 0.06",
+            "Test::CleanNamespaces" : 0,
             "Test::Kwalitee" : "1.12",
             "Test::More" : "0.94",
             "Test::NoTabs" : "0",

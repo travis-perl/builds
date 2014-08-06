@@ -3,7 +3,7 @@ BEGIN {
   $MooseX::Getopt::ProcessedArgv::AUTHORITY = 'cpan:STEVAN';
 }
 # ABSTRACT: MooseX::Getopt::ProcessedArgv - Class containing the results of process_argv
-$MooseX::Getopt::ProcessedArgv::VERSION = '0.63';
+$MooseX::Getopt::ProcessedArgv::VERSION = '0.65';
 use Moose;
 use namespace::autoclean;
 
@@ -23,20 +23,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc Brandon Devin Austin Drew Taylor
-Florian Ragwitz Gordon Irving Hans Dieter L Pearcey Hinrik Örn Sigurðsson
-Jesse Luehrs John Goulah Jonathan Swartz Black Justin Hunter Karen
-Etheridge Nelo Onyiah Ricardo SIGNES Ryan D Chris Johnson Shlomi Fish Todd
-Hepler Tomas Doran Yuval Prather Kogman Ævar Arnfjörð Bjarmason Dagfinn
-Ilmari Mannsåker Damien Krotkine
-
 =head1 NAME
 
 MooseX::Getopt::ProcessedArgv - MooseX::Getopt::ProcessedArgv - Class containing the results of process_argv
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 SYNOPSIS
 
