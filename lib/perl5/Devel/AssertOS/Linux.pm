@@ -2,11 +2,25 @@ package Devel::AssertOS::Linux;
 
 use Devel::CheckOS;
 
-$VERSION = '1.2';
+$VERSION = '1.3';
 
-sub os_is { $^O =~ /^linux$/i ? 1 : 0; }
+
+sub subtypes { qw(Android) }
+sub matches { ('Linux', subtypes()) }
+
+sub os_is {
+    (
+        # order is important
+        Devel::CheckOS::os_is(subtypes()) ||
+        $^O =~ /^linux$/i
+    ) ? 1 : 0;
+}
 
 Devel::CheckOS::die_unsupported() unless(os_is());
+
+sub expn {
+    "The operating system has a Linux kernel"
+}
 
 =head1 COPYRIGHT and LICENCE
 
