@@ -1,1 +1,1 @@
-{"dist":"Class-Unload-0.08","pathname":"I/IL/ILMARI/Class-Unload-0.08.tar.gz","target":"Class::Unload","version":"0.08","provides":{"Class::Unload":{"file":"lib/Class/Unload.pm","version":"0.08"}},"name":"Class::Unload"}
+{"dist":"Class-Unload-0.08","version":"0.08","pathname":"I/IL/ILMARI/Class-Unload-0.08.tar.gz","name":"Class::Unload","target":"Class::Unload","provides":{"Class::Unload":{"file":"lib/Class/Unload.pm","version":"0.08"}}}

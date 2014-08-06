@@ -1,1 +1,1 @@
-{"name":"Lingua::EN::FindNumber","provides":{"Lingua::EN::FindNumber":{"version":"1.30","file":"lib/Lingua/EN/FindNumber.pm"}},"pathname":"N/NE/NEILB/Lingua-EN-FindNumber-1.30.tar.gz","version":"1.30","dist":"Lingua-EN-FindNumber-1.30","target":"Lingua::EN::FindNumber"}
+{"dist":"Lingua-EN-FindNumber-1.30","version":"1.30","target":"Lingua::EN::FindNumber","pathname":"N/NE/NEILB/Lingua-EN-FindNumber-1.30.tar.gz","name":"Lingua::EN::FindNumber","provides":{"Lingua::EN::FindNumber":{"version":"1.30","file":"lib/Lingua/EN/FindNumber.pm"}}}

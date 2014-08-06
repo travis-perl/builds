@@ -1,1 +1,1 @@
-{"target":"Test::Exception","pathname":"A/AD/ADIE/Test-Exception-0.32.tar.gz","provides":{"Test::Exception":{"version":"0.32","file":"lib/Test/Exception.pm"}},"dist":"Test-Exception-0.32","version":"0.32","name":"Test::Exception"}
+{"target":"Test::Exception","name":"Test::Exception","dist":"Test-Exception-0.32","version":"0.32","pathname":"A/AD/ADIE/Test-Exception-0.32.tar.gz","provides":{"Test::Exception":{"version":"0.32","file":"lib/Test/Exception.pm"}}}
