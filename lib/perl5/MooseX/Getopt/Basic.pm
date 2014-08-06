@@ -3,7 +3,7 @@ BEGIN {
   $MooseX::Getopt::Basic::AUTHORITY = 'cpan:STEVAN';
 }
 # ABSTRACT: MooseX::Getopt::Basic - role to implement the Getopt::Long functionality
-$MooseX::Getopt::Basic::VERSION = '0.63';
+$MooseX::Getopt::Basic::VERSION = '0.65';
 use Moose::Role;
 
 use MooseX::Getopt::OptionTypeMap;
@@ -277,15 +277,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc
-
 =head1 NAME
 
 MooseX::Getopt::Basic - MooseX::Getopt::Basic - role to implement the Getopt::Long functionality
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 SYNOPSIS
 
