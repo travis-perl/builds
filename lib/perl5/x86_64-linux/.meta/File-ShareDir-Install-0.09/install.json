@@ -1,1 +1,1 @@
-{"target":"File::ShareDir::Install","provides":{"File::ShareDir::Install":{"version":"0.09","file":"lib/File/ShareDir/Install.pm"}},"dist":"File-ShareDir-Install-0.09","version":"0.09","name":"File::ShareDir::Install","pathname":"G/GW/GWYN/File-ShareDir-Install-0.09.tar.gz"}
+{"version":"0.09","target":"File::ShareDir::Install","dist":"File-ShareDir-Install-0.09","name":"File::ShareDir::Install","pathname":"G/GW/GWYN/File-ShareDir-Install-0.09.tar.gz","provides":{"File::ShareDir::Install":{"file":"lib/File/ShareDir/Install.pm","version":"0.09"}}}

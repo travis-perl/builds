@@ -4,7 +4,7 @@
       "Ricardo SIGNES <rjbs@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.017, CPAN::Meta::Converter version 2.141170, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141520, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -156,10 +156,10 @@
       },
       "x_mailing_list" : "http://www.listbox.com/subscribe/?list_id=139292"
    },
-   "version" : "5.019",
+   "version" : "5.020",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.019011"
+         "version" : "5.021002"
       },
       "plugins" : [
          {
@@ -173,7 +173,7 @@
                }
             },
             "name" : "@Filter/Git::GatherDir",
-            "version" : "2.022"
+            "version" : "2.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::CheckPrereqsIndexed",
@@ -183,7 +183,7 @@
          {
             "class" : "Dist::Zilla::Plugin::CheckExtraTests",
             "name" : "@Filter/CheckExtraTests",
-            "version" : "0.021"
+            "version" : "0.022"
          },
          {
             "class" : "Dist::Zilla::Plugin::PromptIfStale",
@@ -199,7 +199,7 @@
                }
             },
             "name" : "@Filter/RJBS-Outdated",
-            "version" : "0.023"
+            "version" : "0.024"
          },
          {
             "class" : "Dist::Zilla::Plugin::PromptIfStale",
@@ -213,62 +213,62 @@
                }
             },
             "name" : "@Filter/CPAN-Outdated",
-            "version" : "0.023"
+            "version" : "0.024"
          },
          {
             "class" : "Dist::Zilla::Plugin::PruneCruft",
             "name" : "@Filter/@Filter/PruneCruft",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::ManifestSkip",
             "name" : "@Filter/@Filter/ManifestSkip",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaYAML",
             "name" : "@Filter/@Filter/MetaYAML",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::License",
             "name" : "@Filter/@Filter/License",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Readme",
             "name" : "@Filter/@Filter/Readme",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::ExecDir",
             "name" : "@Filter/@Filter/ExecDir",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::ShareDir",
             "name" : "@Filter/@Filter/ShareDir",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Manifest",
             "name" : "@Filter/@Filter/Manifest",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::TestRelease",
             "name" : "@Filter/@Filter/TestRelease",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::ConfirmRelease",
             "name" : "@Filter/@Filter/ConfirmRelease",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::UploadToCPAN",
             "name" : "@Filter/@Filter/UploadToCPAN",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::MakeMaker",
@@ -278,12 +278,12 @@
                }
             },
             "name" : "@Filter/MakeMaker",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::AutoPrereqs",
             "name" : "@Filter/AutoPrereqs",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::NextVersion",
@@ -298,27 +298,27 @@
                }
             },
             "name" : "@Filter/Git::NextVersion",
-            "version" : "2.022"
+            "version" : "2.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::PkgVersion",
             "name" : "@Filter/PkgVersion",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaConfig",
             "name" : "@Filter/MetaConfig",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaJSON",
             "name" : "@Filter/MetaJSON",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::NextRelease",
             "name" : "@Filter/NextRelease",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::ChangesHasContent",
@@ -328,7 +328,7 @@
          {
             "class" : "Dist::Zilla::Plugin::PodSyntaxTests",
             "name" : "@Filter/PodSyntaxTests",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::ReportVersions::Tiny",
@@ -344,7 +344,7 @@
                }
             },
             "name" : "@Filter/TestMoreWithSubtests",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::PodWeaver",
@@ -478,7 +478,7 @@
                }
             },
             "name" : "@Filter/@Git/Check",
-            "version" : "2.022"
+            "version" : "2.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Commit",
@@ -501,7 +501,7 @@
                }
             },
             "name" : "@Filter/@Git/Commit",
-            "version" : "2.022"
+            "version" : "2.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Tag",
@@ -509,7 +509,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "5.019",
+                  "tag" : "5.020",
                   "tag_format" : "%v",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
@@ -519,7 +519,7 @@
                }
             },
             "name" : "@Filter/@Git/Tag",
-            "version" : "2.022"
+            "version" : "2.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Push",
@@ -536,22 +536,22 @@
                }
             },
             "name" : "@Filter/@Git/Push",
-            "version" : "2.022"
+            "version" : "2.023"
          },
          {
             "class" : "Dist::Zilla::Plugin::ModuleShareDirs",
             "name" : "ModuleShareDirs",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaNoIndex",
             "name" : "MetaNoIndex",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::MetaResources",
             "name" : "MetaResources",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
@@ -562,7 +562,7 @@
                }
             },
             "name" : "TestRequires",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
@@ -573,7 +573,7 @@
                }
             },
             "name" : "RuntimeRecommends",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
@@ -584,7 +584,7 @@
                }
             },
             "name" : "Prereqs",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::RemovePrereqs",
@@ -598,52 +598,52 @@
                }
             },
             "name" : "RemovePrereqs",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::CPANFile",
             "name" : "CPANFile",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":InstallModules",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":IncModules",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":TestFiles",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":ExecFiles",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":ShareFiles",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":MainModule",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":AllFiles",
-            "version" : "5.017"
+            "version" : "5.019"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
             "name" : ":NoFiles",
-            "version" : "5.017"
+            "version" : "5.019"
          }
       ],
       "zilla" : {
@@ -651,7 +651,7 @@
          "config" : {
             "is_trial" : "0"
          },
-         "version" : "5.017"
+         "version" : "5.019"
       }
    }
 }
