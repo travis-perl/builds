@@ -1,11 +1,8 @@
 use strict;
 use warnings;
 package Log::Dispatchouli;
-{
-  $Log::Dispatchouli::VERSION = '2.009';
-}
 # ABSTRACT: a simple wrapper around Log::Dispatch
-
+$Log::Dispatchouli::VERSION = '2.010';
 use Carp ();
 use File::Spec ();
 use Log::Dispatch;
@@ -18,117 +15,120 @@ require Log::Dispatchouli::Proxy;
 
 our @CARP_NOT = qw(Log::Dispatchouli::Proxy);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =head1 SYNOPSIS
+#pod
+#pod   my $logger = Log::Dispatchouli->new({
+#pod     ident     => 'stuff-purger',
+#pod     facility  => 'daemon',
+#pod     to_stdout => $opt->{print},
+#pod     debug     => $opt->{verbose}
+#pod   });
+#pod
+#pod   $logger->log([ "There are %s items left to purge...", $stuff_left ]);
+#pod
+#pod   $logger->log_debug("this is extra often-ignored debugging log");
+#pod
+#pod   $logger->log_fatal("Now we will die!!");
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod Log::Dispatchouli is a thin layer above L<Log::Dispatch> and meant to make it
+#pod dead simple to add logging to a program without having to think much about
+#pod categories, facilities, levels, or things like that.  It is meant to make
+#pod logging just configurable enough that you can find the logs you want and just
+#pod easy enough that you will actually log things.
+#pod
+#pod Log::Dispatchouli can log to syslog (if you specify a facility), standard error
+#pod or standard output, to a file, or to an array in memory.  That last one is
+#pod mostly useful for testing.
+#pod
+#pod In addition to providing as simple a way to get a handle for logging
+#pod operations, Log::Dispatchouli uses L<String::Flogger> to process the things to
+#pod be logged, meaning you can easily log data structures.  Basically: strings are
+#pod logged as is, arrayrefs are taken as (sprintf format, args), and subroutines
+#pod are called only if needed.  For more information read the L<String::Flogger>
+#pod docs.
+#pod
+#pod =head1 LOGGER PREFIX
+#pod
+#pod Log messages may be prepended with information to set context.  This can be set
+#pod at a logger level or per log item.  The simplest example is:
+#pod
+#pod   my $logger = Log::Dispatchouli->new( ... );
+#pod
+#pod   $logger->set_prefix("Batch 123: ");
+#pod
+#pod   $logger->log("begun processing");
+#pod
+#pod   # ...
+#pod
+#pod   $logger->log("finished processing");
+#pod
+#pod The above will log something like:
+#pod
+#pod   Batch 123: begun processing
+#pod   Batch 123: finished processing
+#pod
+#pod To pass a prefix per-message:
+#pod
+#pod   $logger->log({ prefix => 'Sub-Item 234: ' }, 'error!')
+#pod
+#pod   # Logs: Batch 123: Sub-Item 234: error!
+#pod
+#pod If the prefix is a string, it is prepended to each line of the message.  If it
+#pod is a coderef, it is called and passed the message to be logged.  The return
+#pod value is logged instead.
+#pod
+#pod L<Proxy loggers|/METHODS FOR PROXY LOGGERS> also have their own prefix
+#pod settings, which accumulate.  So:
+#pod
+#pod   my $proxy = $logger->proxy({ proxy_prefix => 'Subsystem 12: ' });
+#pod
+#pod   $proxy->set_prefix('Page 9: ');
+#pod
+#pod   $proxy->log({ prefix => 'Paragraph 6: ' }, 'Done.');
+#pod
+#pod ...will log...
+#pod
+#pod   Batch 123: Subsystem 12: Page 9: Paragraph 6: Done.
+#pod
+#pod =method new
+#pod
+#pod   my $logger = Log::Dispatchouli->new(\%arg);
+#pod
+#pod This returns a new logger, a Log::Dispatchouli object.
+#pod
+#pod Valid arguments are:
+#pod
+#pod   ident       - the name of the thing logging (mandatory)
+#pod   to_self     - log to the logger object for testing; default: false
+#pod   to_stdout   - log to STDOUT; default: false
+#pod   to_stderr   - log to STDERR; default: false
+#pod   facility    - to which syslog facility to send logs; default: none
+#pod
+#pod   to_file     - log to PROGRAM_NAME.YYYYMMDD in the log path; default: false
+#pod   log_file    - a leaf name for the file to log to with to_file
+#pod   log_path    - path in which to log to file; defaults to DISPATCHOULI_PATH
+#pod                 environment variable or, failing that, to your system's tmpdir
+#pod
+#pod   file_format - this optional coderef is passed the message to be logged
+#pod                 and returns the text to write out
+#pod
+#pod   log_pid     - if true, prefix all log entries with the pid; default: true
+#pod   fail_fatal  - a boolean; if true, failure to log is fatal; default: true
+#pod   muted       - a boolean; if true, only fatals are logged; default: false
+#pod   debug       - a boolean; if true, log_debug method is not a no-op
+#pod                 defaults to the truth of the DISPATCHOULI_DEBUG env var
+#pod   quiet_fatal - 'stderr' or 'stdout' or an arrayref of zero, one, or both
+#pod                 fatal log messages will not be logged to these
+#pod                 (default: stderr)
+#pod   config_id   - a name for this logger's config; rarely needed!
+#pod
+#pod The log path is either F</tmp> or the value of the F<DISPATCHOULI_PATH> env var.
+#pod
+#pod If the F<DISPATCHOULI_NOSYSLOG> env var is true, we don't log to syslog.
+#pod
+#pod =cut
 
 sub new {
   my ($class, $arg) = @_;
@@ -168,17 +168,19 @@ sub new {
       )
     );
 
+    my $format = $arg->{file_format} || sub {
+      # The time format returned here is subject to change. -- rjbs,
+      # 2008-11-21
+      return (localtime) . ' ' . $_[0] . "\n"
+    };
+
     $log->add(
       Log::Dispatch::File->new(
         name      => 'logfile',
         min_level => 'debug',
         filename  => $log_file,
         mode      => 'append',
-        callbacks => sub {
-          # The time format returned here is subject to change. -- rjbs,
-          # 2008-11-21
-          return (localtime) . ' ' . {@_}->{message} . "\n"
-        }
+        callbacks => sub { $format->({@_}->{message}) },
       )
     );
   }
@@ -243,21 +245,21 @@ sub new {
   return $self;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =method log
+#pod
+#pod   $logger->log(@messages);
+#pod
+#pod   $logger->log(\%arg, @messages);
+#pod
+#pod This method uses L<String::Flogger> on the input, then logs the result.  Each
+#pod message is flogged individually, then joined with spaces.
+#pod
+#pod If the first argument is a hashref, it will be used as extra arguments to
+#pod logging.  It may include a C<prefix> entry to preprocess the message by
+#pod prepending a string (if the prefix is a string) or calling a subroutine to
+#pod generate a new message (if the prefix is a coderef).
+#pod
+#pod =cut
 
 sub _join { shift; join q{ }, @{ $_[0] } }
 
@@ -300,16 +302,16 @@ sub log {
   return;
 }
 
-
-
-
-
-
-
-
-
-
-
+#pod =method log_fatal
+#pod
+#pod This behaves like the C<log> method, but will throw the logged string as an
+#pod exception after logging.
+#pod
+#pod This method can also be called as C<fatal>, to match other popular logging
+#pod interfaces.  B<If you want to override this method, you must override
+#pod C<log_fatal> and not C<fatal>>.
+#pod
+#pod =cut
 
 sub log_fatal {
   my ($self, @rest) = @_;
@@ -322,16 +324,16 @@ sub log_fatal {
   $self->log($arg, @rest);
 }
 
-
-
-
-
-
-
-
-
-
-
+#pod =method log_debug
+#pod
+#pod This behaves like the C<log> method, but will only log (at the debug level) if
+#pod the logger object has its debug property set to true.
+#pod
+#pod This method can also be called as C<debug>, to match other popular logging
+#pod interfaces.  B<If you want to override this method, you must override
+#pod C<log_debug> and not C<debug>>.
+#pod
+#pod =cut
 
 sub log_debug {
   my ($self, @rest) = @_;
@@ -345,150 +347,150 @@ sub log_debug {
   $self->log($arg, @rest);
 }
 
-
-
-
-
-
-
-
-
+#pod =method set_debug
+#pod
+#pod   $logger->set_debug($bool);
+#pod
+#pod This sets the logger's debug property, which affects the behavior of
+#pod C<log_debug>.
+#pod
+#pod =cut
 
 sub set_debug {
   return($_[0]->{debug} = $_[1] ? 1 : 0);
 }
 
-
-
-
-
-
-
+#pod =method get_debug
+#pod
+#pod This gets the logger's debug property, which affects the behavior of
+#pod C<log_debug>.
+#pod
+#pod =cut
 
 sub get_debug { return $_[0]->{debug} }
 
-
-
-
-
-
-
+#pod =method clear_debug
+#pod
+#pod This method does nothing, and is only useful for L<Log::Dispatchouli::Proxy>
+#pod objects.  See L<Methods for Proxy Loggers|/METHODS FOR PROXY LOGGERS>, below.
+#pod
+#pod =cut
 
 sub clear_debug { }
 
 sub mute   { $_[0]{muted} = 1 }
 sub unmute { $_[0]{muted} = 0 }
 
-
-
-
-
-
-
-
-
+#pod =method set_muted
+#pod
+#pod   $logger->set_muted($bool);
+#pod
+#pod This sets the logger's muted property, which affects the behavior of
+#pod C<log>.
+#pod
+#pod =cut
 
 sub set_muted {
   return($_[0]->{muted} = $_[1] ? 1 : 0);
 }
 
-
-
-
-
-
-
+#pod =method get_muted
+#pod
+#pod This gets the logger's muted property, which affects the behavior of
+#pod C<log>.
+#pod
+#pod =cut
 
 sub get_muted { return $_[0]->{muted} }
 
-
-
-
-
-
-
+#pod =method clear_muted
+#pod
+#pod This method does nothing, and is only useful for L<Log::Dispatchouli::Proxy>
+#pod objects.  See L<Methods for Proxy Loggers|/METHODS FOR PROXY LOGGERS>, below.
+#pod
+#pod =cut
 
 sub clear_muted { }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =method get_prefix
+#pod
+#pod   my $prefix = $logger->get_prefix;
+#pod
+#pod This method returns the currently-set prefix for the logger, which may be a
+#pod string or code reference or undef.  See L<Logger Prefix|/LOGGER PREFIX>.
+#pod
+#pod =method set_prefix
+#pod
+#pod   $logger->set_prefix( $new_prefix );
+#pod
+#pod This method changes the prefix.  See L<Logger Prefix|/LOGGER PREFIX>.
+#pod
+#pod =method clear_prefix
+#pod
+#pod This method clears any set logger prefix.  (It can also be called as
+#pod C<unset_prefix>, but this is deprecated.  See L<Logger Prefix|/LOGGER PREFIX>.
+#pod
+#pod =cut
 
 sub get_prefix   { return $_[0]->{prefix}  }
 sub set_prefix   { $_[0]->{prefix} = $_[1] }
 sub clear_prefix { $_[0]->unset_prefix     }
 sub unset_prefix { undef $_[0]->{prefix}   }
 
-
-
-
-
-
+#pod =method ident
+#pod
+#pod This method returns the logger's ident.
+#pod
+#pod =cut
 
 sub ident { $_[0]{ident} }
 
-
-
-
-
-
-
-
-
+#pod =method config_id
+#pod
+#pod This method returns the logger's configuration id, which defaults to its ident.
+#pod This can be used to make two loggers equivalent in Log::Dispatchouli::Global so
+#pod that trying to reinitialize with a new logger with the same C<config_id> as the
+#pod current logger will not throw an exception, and will simply do no thing.
+#pod
+#pod =cut
 
 sub config_id { $_[0]{config_id} }
 
-
-
-
-
-
-
-
-
+#pod =head1 METHODS FOR SUBCLASSING
+#pod
+#pod =head2 string_flogger
+#pod
+#pod This method returns the thing on which F<flog> will be called to format log
+#pod messages.  By default, it just returns C<String::Flogger>
+#pod
+#pod =cut
 
 sub string_flogger { 'String::Flogger' }
 
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =head2 env_prefix
+#pod
+#pod This method should return a string used as a prefix to find environment
+#pod variables that affect the logger's behavior.  For example, if this method
+#pod returns C<XYZZY> then when checking the environment for a default value for the
+#pod C<debug> parameter, Log::Dispatchouli will first check C<XYZZY_DEBUG>, then
+#pod C<DISPATCHOULI_DEBUG>.
+#pod
+#pod By default, this method returns C<()>, which means no extra environment
+#pod variable is checked.
+#pod
+#pod =cut
 
 sub env_prefix { return; }
 
-
-
-
-
-
-
-
-
-
+#pod =head2 env_value
+#pod
+#pod   my $value = $logger->env_value('DEBUG');
+#pod
+#pod This method returns the value for the environment variable suffix given.  For
+#pod example, the example given, calling with C<DEBUG> will check
+#pod C<DISPATCHOULI_DEBUG>.
+#pod
+#pod =cut
 
 sub env_value {
   my ($self, $suffix) = @_;
@@ -503,19 +505,19 @@ sub env_value {
   return;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =head1 METHODS FOR TESTING
+#pod
+#pod =head2 new_tester
+#pod
+#pod   my $logger = Log::Dispatchouli->new_tester( \%arg );
+#pod
+#pod This returns a new logger that logs only C<to_self>.  It's useful in testing.
+#pod If no C<ident> arg is provided, one will be generated.  C<log_pid> is off by
+#pod default, but can be overridden.
+#pod
+#pod C<\%arg> is optional.
+#pod
+#pod =cut
 
 sub new_tester {
   my ($class, $arg) = @_;
@@ -533,12 +535,12 @@ sub new_tester {
   });
 }
 
-
-
-
-
-
-
+#pod =head2 events
+#pod
+#pod This method returns the arrayref of events logged to an array in memory (in the
+#pod logger).  If the logger is not logging C<to_self> this raises an exception.
+#pod
+#pod =cut
 
 sub events {
   Carp::confess "->events called on a logger not logging to self"
@@ -547,12 +549,12 @@ sub events {
   return $_[0]->{events};
 }
 
-
-
-
-
-
-
+#pod =head2 clear_events
+#pod
+#pod This method empties the current sequence of events logged into an array in
+#pod memory.  If the logger is not logging C<to_self> this raises an exception.
+#pod
+#pod =cut
 
 sub clear_events {
   Carp::confess "->events called on a logger not logging to self"
@@ -562,27 +564,27 @@ sub clear_events {
   return;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =head1 METHODS FOR PROXY LOGGERS
+#pod
+#pod =head2 proxy
+#pod
+#pod   my $proxy_logger = $logger->proxy( \%arg );
+#pod
+#pod This method returns a new proxy logger -- an instance of
+#pod L<Log::Dispatchouli::Proxy> -- which will log through the given logger, but
+#pod which may have some settings localized.
+#pod
+#pod C<%arg> is optional.  It may contain the following entries:
+#pod
+#pod =for :list
+#pod = proxy_prefix
+#pod This is a prefix that will be applied to anything the proxy logger logs, and
+#pod cannot be changed.
+#pod = debug
+#pod This can be set to true or false to change the proxy's "am I in debug mode?"
+#pod setting.  It can be changed or cleared later on the proxy.
+#pod
+#pod =cut
 
 sub proxy {
   my ($self, $arg) = @_;
@@ -597,58 +599,58 @@ sub proxy {
   });
 }
 
-
-
-
-
-
-
-
-
+#pod =head2 parent
+#pod
+#pod =head2 logger
+#pod
+#pod These methods return the logger itself.  (They're more useful when called on
+#pod proxy loggers.)
+#pod
+#pod =cut
 
 sub parent { $_[0] }
 sub logger { $_[0] }
 
-
-
-
-
-
-
+#pod =method dispatcher
+#pod
+#pod This returns the underlying Log::Dispatch object.  This is not the method
+#pod you're looking for.  Move along.
+#pod
+#pod =cut
 
 sub dispatcher   { $_[0]->{dispatcher} }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#pod =head1 METHODS FOR API COMPATIBILITY
+#pod
+#pod To provide compatibility with some other loggers, most specifically
+#pod L<Log::Contextual>, the following methods are provided.  You should not use
+#pod these methods without a good reason, and you should never subclass them.
+#pod Instead, subclass the methods they call.
+#pod
+#pod =begin :list
+#pod
+#pod = is_debug
+#pod
+#pod This method calls C<get_debug>.
+#pod
+#pod = is_info
+#pod
+#pod = is_fatal
+#pod
+#pod These methods return true.
+#pod
+#pod = info
+#pod
+#pod = fatal
+#pod
+#pod = debug
+#pod
+#pod These methods redispatch to C<log>, C<log_fatal>, and C<log_debug>
+#pod respectively.
+#pod
+#pod =end :list
+#pod
+#pod =cut
 
 sub is_debug { $_[0]->get_debug }
 sub is_info  { 1 }
@@ -663,13 +665,13 @@ use overload
   fallback => 1,
 ;
 
-
-
-
-
-
-
-
+#pod =head1 SEE ALSO
+#pod
+#pod =for :list
+#pod * L<Log::Dispatch>
+#pod * L<String::Flogger>
+#pod
+#pod =cut
 
 1;
 
@@ -685,7 +687,7 @@ Log::Dispatchouli - a simple wrapper around Log::Dispatch
 
 =head1 VERSION
 
-version 2.009
+version 2.010
 
 =head1 SYNOPSIS
 
@@ -741,6 +743,9 @@ Valid arguments are:
   log_file    - a leaf name for the file to log to with to_file
   log_path    - path in which to log to file; defaults to DISPATCHOULI_PATH
                 environment variable or, failing that, to your system's tmpdir
+
+  file_format - this optional coderef is passed the message to be logged
+                and returns the text to write out
 
   log_pid     - if true, prefix all log entries with the pid; default: true
   fail_fatal  - a boolean; if true, failure to log is fatal; default: true

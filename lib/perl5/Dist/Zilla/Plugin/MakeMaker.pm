@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MakeMaker;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.019';
+$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.020';
 use Moose;
 use Moose::Autobox;
 
@@ -24,16 +24,15 @@ use Dist::Zilla::Plugin::MakeMaker::Runner;
 #pod =attr eumm_version
 #pod
 #pod This option declares the version of ExtUtils::MakeMaker required to configure
-#pod and build the distribution.  It defaults to 6.30, which ensures a working
-#pod C<INSTALL_BASE>.  It can be safely set to earlier versions, although I<no
-#pod testing has been done to determine the minimum version actually required>.
+#pod and build the distribution.  There is no default, although one may be added if
+#pod it can be determined that the generated F<Makefile.PL> requires some specific
+#pod minimum.  I<No testing has been done on this front.>
 #pod
 #pod =cut
 
 has eumm_version => (
   isa => 'Str',
   is  => 'rw',
-  default => '6.30',
 );
 
 #pod =attr make_path
@@ -86,7 +85,7 @@ use warnings;
 
 {{ $perl_prereq ? qq[use $perl_prereq;] : ''; }}
 
-use ExtUtils::MakeMaker {{ $eumm_version }};
+use ExtUtils::MakeMaker {{ defined $eumm_version ? $eumm_version : '' }};
 
 {{ $share_dir_code{preamble} || '' }}
 
@@ -114,7 +113,7 @@ sub register_prereqs {
 
   $self->zilla->register_prereqs(
     { phase => 'configure' },
-    'ExtUtils::MakeMaker' => $self->eumm_version,
+    'ExtUtils::MakeMaker' => $self->eumm_version || 0,
   );
 
   return unless keys %{ $self->zilla->_share_dir_map };
@@ -186,23 +185,16 @@ sub write_makefile_args {
   $perl_prereq = version->parse($perl_prereq)->numify if $perl_prereq;
 
   my $prereqs_dump = sub {
-    $prereqs->requirements_for(@_)
-            ->clone
-            ->clear_requirement('perl')
-            ->as_string_hash;
+    $self->_normalize_eumm_versions(
+      $prereqs->requirements_for(@_)
+              ->clone
+              ->clear_requirement('perl')
+              ->as_string_hash
+    );
   };
 
-  my $build_prereq
-    = $prereqs->requirements_for(qw(build requires))
-    ->clone
-    ->clear_requirement('perl')
-    ->as_string_hash;
-
-  my $test_prereq
-    = $prereqs->requirements_for(qw(test requires))
-    ->clone
-    ->clear_requirement('perl')
-    ->as_string_hash;
+  my $build_prereq = $prereqs_dump->(qw(build requires));
+  my $test_prereq = $prereqs_dump->(qw(test requires));
 
   my %write_makefile_args = (
     DISTNAME  => $self->zilla->name,
@@ -226,6 +218,24 @@ sub write_makefile_args {
   return \%write_makefile_args;
 }
 
+sub _normalize_eumm_versions {
+  my ($self, $prereqs) = @_;
+  for my $v (values %$prereqs) {
+    if (version::is_strict($v)) {
+      my $version = version->parse($v);
+      if ($version->is_qv) {
+        if ((() = $v =~ /\./g) > 1) {
+          $v =~ s/^v//;
+        }
+        else {
+          $v = $version->numify;
+        }
+      }
+    }
+  }
+  return $prereqs;
+}
+
 sub _dump_as {
   my ($self, $ref, $name) = @_;
   require Data::Dumper;
@@ -239,10 +249,12 @@ sub _dump_as {
 sub fallback_prereq_pm {
   my $self = shift;
   my $fallback
-    = $self->zilla->prereqs->merged_requires
-    ->clone
-    ->clear_requirement('perl')
-    ->as_string_hash;
+    = $self->_normalize_eumm_versions(
+      $self->zilla->prereqs->merged_requires
+      ->clone
+      ->clear_requirement('perl')
+      ->as_string_hash
+    );
   return $self->_dump_as( $fallback, '*FallbackPrereqs' );
 }
 
@@ -315,7 +327,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 5.019
+version 5.020
 
 =head1 DESCRIPTION
 
@@ -328,9 +340,9 @@ plugin should also be loaded.
 =head2 eumm_version
 
 This option declares the version of ExtUtils::MakeMaker required to configure
-and build the distribution.  It defaults to 6.30, which ensures a working
-C<INSTALL_BASE>.  It can be safely set to earlier versions, although I<no
-testing has been done to determine the minimum version actually required>.
+and build the distribution.  There is no default, although one may be added if
+it can be determined that the generated F<Makefile.PL> requires some specific
+minimum.  I<No testing has been done on this front.>
 
 =head2 make_path
 
