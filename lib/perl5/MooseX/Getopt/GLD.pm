@@ -3,11 +3,11 @@ BEGIN {
   $MooseX::Getopt::GLD::AUTHORITY = 'cpan:STEVAN';
 }
 # ABSTRACT: A Moose role for processing command line options with Getopt::Long::Descriptive
-$MooseX::Getopt::GLD::VERSION = '0.63';
+$MooseX::Getopt::GLD::VERSION = '0.65';
 use strict;
 use warnings;
 use MooseX::Role::Parameterized;
-use Getopt::Long::Descriptive 0.081;
+use Getopt::Long::Descriptive 0.088;
 with 'MooseX::Getopt::Basic';
 use namespace::autoclean;
 
@@ -92,15 +92,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Stevan Little Infinity Interactive, Inc
-
 =head1 NAME
 
 MooseX::Getopt::GLD - A Moose role for processing command line options with Getopt::Long::Descriptive
 
 =head1 VERSION
 
-version 0.63
+version 0.65
 
 =head1 SYNOPSIS
 
