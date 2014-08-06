@@ -1,8 +1,13 @@
+#   MM_VMS.pm
+#   MakeMaker default methods for VMS
+#
+#   Author:  Charles Bailey  bailey@newman.upenn.edu
+
 package ExtUtils::MM_VMS;
 
 use strict;
 
-use ExtUtils::MakeMaker::Config;
+use Config;
 require Exporter;
 
 BEGIN {
@@ -14,15 +19,15 @@ BEGIN {
 }
 
 use File::Basename;
-
-our $VERSION = '6.98';
+use vars qw($Revision @ISA $VERSION);
+($VERSION) = '5.70';
+($Revision) = q$Revision: 1.110 $ =~ /Revision:\s+(\S+)/;
 
 require ExtUtils::MM_Any;
 require ExtUtils::MM_Unix;
-our @ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
+@ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
 
 use ExtUtils::MakeMaker qw($Verbose neatvalue);
-our $Revision = $ExtUtils::MakeMaker::Revision;
 
 
 =head1 NAME
@@ -104,7 +109,7 @@ package name.
 
 sub guess_name {
     my($self) = @_;
-    my($defname,$defpm,@pm,%xs);
+    my($defname,$defpm,@pm,%xs,$pm);
     local *PM;
 
     $defname = basename(fileify($ENV{'DEFAULT'}));
@@ -115,32 +120,31 @@ sub guess_name {
     # extension's name.  We'll use the name of a unique .pm file, or the
     # first .pm file with a matching .xs file.
     if (not -e "${defpm}.pm") {
-      @pm = glob('*.pm');
-      s/.pm$// for @pm;
+      @pm = map { s/.pm$//; $_ } glob('*.pm');
       if (@pm == 1) { ($defpm = $pm[0]) =~ s/.pm$//; }
       elsif (@pm) {
-        %xs = map { s/.xs$//; ($_,1) } glob('*.xs');  ## no critic
-        if (keys %xs) {
-            foreach my $pm (@pm) {
-                $defpm = $pm, last if exists $xs{$pm};
-            }
+        %xs = map { s/.xs$//; ($_,1) } glob('*.xs');
+        if (keys %xs) { 
+            foreach $pm (@pm) { 
+                $defpm = $pm, last if exists $xs{$pm}; 
+            } 
         }
       }
     }
-    if (open(my $pm, '<', "${defpm}.pm")){
-        while (<$pm>) {
+    if (open(PM,"${defpm}.pm")){
+        while (<PM>) {
             if (/^\s*package\s+([^;]+)/i) {
                 $defname = $1;
                 last;
             }
         }
-        print "Warning (non-fatal): Couldn't find package name in ${defpm}.pm;\n\t",
+        print STDOUT "Warning (non-fatal): Couldn't find package name in ${defpm}.pm;\n\t",
                      "defaulting package name to $defname\n"
-            if eof($pm);
-        close $pm;
+            if eof(PM);
+        close PM;
     }
     else {
-        print "Warning (non-fatal): Couldn't find ${defpm}.pm;\n\t",
+        print STDOUT "Warning (non-fatal): Couldn't find ${defpm}.pm;\n\t",
                      "defaulting package name to $defname\n";
     }
     $defname =~ s#[\d.\-_]+$##;
@@ -156,7 +160,7 @@ invoke Perl images.
 
 sub find_perl {
     my($self, $ver, $names, $dirs, $trace) = @_;
-    my($vmsfile,@sdirs,@snames,@cand);
+    my($name,$dir,$vmsfile,@sdirs,@snames,@cand);
     my($rslt);
     my($inabs) = 0;
     local *TCF;
@@ -188,40 +192,36 @@ sub find_perl {
     }
 
     # Image names containing Perl version use '_' instead of '.' under VMS
-    s/\.(\d+)$/_$1/ for @snames;
+    foreach $name (@snames) { $name =~ s/\.(\d+)$/_$1/; }
     if ($trace >= 2){
-        print "Looking for perl $ver by these names:\n";
-        print "\t@snames,\n";
-        print "in these dirs:\n";
-        print "\t@sdirs\n";
+	print "Looking for perl $ver by these names:\n";
+	print "\t@snames,\n";
+	print "in these dirs:\n";
+	print "\t@sdirs\n";
     }
-    foreach my $dir (@sdirs){
-        next unless defined $dir; # $self->{PERL_SRC} may be undefined
-        $inabs++ if $self->file_name_is_absolute($dir);
-        if ($inabs == 1) {
-            # We've covered relative dirs; everything else is an absolute
-            # dir (probably an installed location).  First, we'll try
-            # potential command names, to see whether we can avoid a long
-            # MCR expression.
-            foreach my $name (@snames) {
-                push(@cand,$name) if $name =~ /^[\w\-\$]+$/;
-            }
-            $inabs++; # Should happen above in next $dir, but just in case...
-        }
-        foreach my $name (@snames){
-            push @cand, ($name !~ m![/:>\]]!) ? $self->catfile($dir,$name)
-                                              : $self->fixpath($name,0);
-        }
+    foreach $dir (@sdirs){
+	next unless defined $dir; # $self->{PERL_SRC} may be undefined
+	$inabs++ if $self->file_name_is_absolute($dir);
+	if ($inabs == 1) {
+	    # We've covered relative dirs; everything else is an absolute
+	    # dir (probably an installed location).  First, we'll try potential
+	    # command names, to see whether we can avoid a long MCR expression.
+	    foreach $name (@snames) { push(@cand,$name) if $name =~ /^[\w\-\$]+$/; }
+	    $inabs++; # Should happen above in next $dir, but just in case . . .
+	}
+	foreach $name (@snames){
+	    if ($name !~ m![/:>\]]!) { push(@cand,$self->catfile($dir,$name)); }
+	    else                     { push(@cand,$self->fixpath($name,0));    }
+	}
     }
-    foreach my $name (@cand) {
-        print "Checking $name\n" if $trace >= 2;
-        # If it looks like a potential command, try it without the MCR
+    foreach $name (@cand) {
+	print "Checking $name\n" if ($trace >= 2);
+	# If it looks like a potential command, try it without the MCR
         if ($name =~ /^[\w\-\$]+$/) {
-            open(my $tcf, ">", "temp_mmvms.com")
-                or die('unable to open temp file');
-            print $tcf "\$ set message/nofacil/nosever/noident/notext\n";
-            print $tcf "\$ $name -e \"require $ver; print \"\"VER_OK\\n\"\"\"\n";
-            close $tcf;
+            open(TCF,">temp_mmvms.com") || die('unable to open temp file');
+            print TCF "\$ set message/nofacil/nosever/noident/notext\n";
+            print TCF "\$ $name -e \"require $ver; print \"\"VER_OK\\n\"\"\"\n";
+            close TCF;
             $rslt = `\@temp_mmvms.com` ;
             unlink('temp_mmvms.com');
             if ($rslt =~ /VER_OK/) {
@@ -229,40 +229,22 @@ sub find_perl {
                 return $name;
             }
         }
-        next unless $vmsfile = $self->maybe_command($name);
-        $vmsfile =~ s/;[\d\-]*$//;  # Clip off version number; we can use a newer version as well
-        print "Executing $vmsfile\n" if ($trace >= 2);
-        open(my $tcf, '>', "temp_mmvms.com")
-                or die('unable to open temp file');
-        print $tcf "\$ set message/nofacil/nosever/noident/notext\n";
-        print $tcf "\$ mcr $vmsfile -e \"require $ver; print \"\"VER_OK\\n\"\"\" \n";
-        close $tcf;
+	next unless $vmsfile = $self->maybe_command($name);
+	$vmsfile =~ s/;[\d\-]*$//;  # Clip off version number; we can use a newer version as well
+	print "Executing $vmsfile\n" if ($trace >= 2);
+        open(TCF,">temp_mmvms.com") || die('unable to open temp file');
+        print TCF "\$ set message/nofacil/nosever/noident/notext\n";
+        print TCF "\$ mcr $vmsfile -e \"require $ver; print \"\"VER_OK\\n\"\"\" \n";
+        close TCF;
         $rslt = `\@temp_mmvms.com`;
         unlink('temp_mmvms.com');
         if ($rslt =~ /VER_OK/) {
-            print "Using PERL=MCR $vmsfile\n" if $trace;
-            return "MCR $vmsfile";
-        }
+	    print "Using PERL=MCR $vmsfile\n" if $trace;
+	    return "MCR $vmsfile";
+	}
     }
-    print "Unable to find a perl $ver (by these names: @$names, in these dirs: @$dirs)\n";
+    print STDOUT "Unable to find a perl $ver (by these names: @$names, in these dirs: @$dirs)\n";
     0; # false and not empty
-}
-
-=item _fixin_replace_shebang (override)
-
-Helper routine for MM->fixin(), overridden because there's no such thing as an
-actual shebang line that will be interpreted by the shell, so we just prepend
-$Config{startperl} and preserve the shebang line argument for any switches it
-may contain.
-
-=cut
-
-sub _fixin_replace_shebang {
-    my ( $self, $file, $line ) = @_;
-
-    my ( undef, $arg ) = split ' ', $line, 2;
-
-    return $Config{startperl} . "\n" . $Config{sharpbang} . "perl $arg\n";
 }
 
 =item maybe_command (override)
@@ -281,68 +263,23 @@ sub maybe_command {
     return $file if -x $file && ! -d _;
     my(@dirs) = ('');
     my(@exts) = ('',$Config{'exe_ext'},'.exe','.com');
-
+    my($dir,$ext);
     if ($file !~ m![/:>\]]!) {
-        for (my $i = 0; defined $ENV{"DCL\$PATH;$i"}; $i++) {
-            my $dir = $ENV{"DCL\$PATH;$i"};
-            $dir .= ':' unless $dir =~ m%[\]:]$%;
-            push(@dirs,$dir);
-        }
-        push(@dirs,'Sys$System:');
-        foreach my $dir (@dirs) {
-            my $sysfile = "$dir$file";
-            foreach my $ext (@exts) {
-                return $file if -x "$sysfile$ext" && ! -d _;
-            }
-        }
+	for (my $i = 0; defined $ENV{"DCL\$PATH;$i"}; $i++) {
+	    $dir = $ENV{"DCL\$PATH;$i"};
+	    $dir .= ':' unless $dir =~ m%[\]:]$%;
+	    push(@dirs,$dir);
+	}
+	push(@dirs,'Sys$System:');
+	foreach $dir (@dirs) {
+	    my $sysfile = "$dir$file";
+	    foreach $ext (@exts) {
+		return $file if -x "$sysfile$ext" && ! -d _;
+	    }
+	}
     }
     return 0;
 }
-
-
-=item pasthru (override)
-
-VMS has $(MMSQUALIFIERS) which is a listing of all the original command line
-options.  This is used in every invocation of make in the VMS Makefile so
-PASTHRU should not be necessary.  Using PASTHRU tends to blow commands past
-the 256 character limit.
-
-=cut
-
-sub pasthru {
-    return "PASTHRU=\n";
-}
-
-
-=item pm_to_blib (override)
-
-VMS wants a dot in every file so we can't have one called 'pm_to_blib',
-it becomes 'pm_to_blib.' and MMS/K isn't smart enough to know that when
-you have a target called 'pm_to_blib' it should look for 'pm_to_blib.'.
-
-So in VMS its pm_to_blib.ts.
-
-=cut
-
-sub pm_to_blib {
-    my $self = shift;
-
-    my $make = $self->SUPER::pm_to_blib;
-
-    $make =~ s{^pm_to_blib :}{pm_to_blib.ts :}m;
-    $make =~ s{\$\(TOUCH\) pm_to_blib}{\$(TOUCH) pm_to_blib.ts};
-
-    $make = <<'MAKE' . $make;
-# Dummy target to match Unix target name; we use pm_to_blib.ts as
-# timestamp file to avoid repeated invocations under VMS
-pm_to_blib : pm_to_blib.ts
-	$(NOECHO) $(NOOP)
-
-MAKE
-
-    return $make;
-}
-
 
 =item perl_script (override)
 
@@ -359,7 +296,6 @@ sub perl_script {
     return "$file.pl" if -r "$file.pl";
     return '';
 }
-
 
 =item replace_manpage_separator
 
@@ -389,14 +325,14 @@ sub init_DEST {
     # Expand DEST variables.
     foreach my $var ($self->installvars) {
         my $destvar = 'DESTINSTALL'.$var;
-        $self->{$destvar} = $self->eliminate_macros($self->{$destvar});
+        $self->{$destvar} = File::Spec->eliminate_macros($self->{$destvar});
     }
 }
 
 
 =item init_DIRFILESEP
 
-No separator between a directory path and a filename on VMS.
+No seperator between a directory path and a filename on VMS.
 
 =cut
 
@@ -438,74 +374,74 @@ sub init_main {
         }
 
         $self->{DEFINE} = '';
-        if (@defs)  {
-            $self->{DEFINE}  = '/Define=(' . join(',',@defs)  . ')';
+        if (@defs)  { 
+            $self->{DEFINE}  = '/Define=(' . join(',',@defs)  . ')'; 
         }
-        if (@udefs) {
-            $self->{DEFINE} .= '/Undef=('  . join(',',@udefs) . ')';
+        if (@udefs) { 
+            $self->{DEFINE} .= '/Undef=('  . join(',',@udefs) . ')'; 
         }
     }
 }
 
-=item init_tools (override)
+=item init_others (override)
 
-Provide VMS-specific forms of various utility commands.
+Provide VMS-specific forms of various utility commands, then hand
+off to the default MM_Unix method.
 
-Sets DEV_NULL to nothing because I don't know how to do it on VMS.
+DEV_NULL should probably be overriden with something.
 
-Changes EQUALIZE_TIMESTAMP to set revision date of target file to
+Also changes EQUALIZE_TIMESTAMP to set revision date of target file to
 one second later than source file, since MMK interprets precisely
 equal revision dates for a source and target file as a sign that the
 target needs to be updated.
 
 =cut
 
-sub init_tools {
+sub init_others {
     my($self) = @_;
 
     $self->{NOOP}               = 'Continue';
     $self->{NOECHO}             ||= '@ ';
 
-    $self->{MAKEFILE}           ||= $self->{FIRST_MAKEFILE} || 'Descrip.MMS';
+    $self->{MAKEFILE}           ||= 'Descrip.MMS';
     $self->{FIRST_MAKEFILE}     ||= $self->{MAKEFILE};
     $self->{MAKE_APERL_FILE}    ||= 'Makeaperl.MMS';
-    $self->{MAKEFILE_OLD}       ||= $self->eliminate_macros('$(FIRST_MAKEFILE)_old');
-#
-#   If an extension is not specified, then MMS/MMK assumes an
-#   an extension of .MMS.  If there really is no extension,
-#   then a trailing "." needs to be appended to specify a
-#   a null extension.
-#
-    $self->{MAKEFILE} .= '.' unless $self->{MAKEFILE} =~ m/\./;
-    $self->{FIRST_MAKEFILE} .= '.' unless $self->{FIRST_MAKEFILE} =~ m/\./;
-    $self->{MAKE_APERL_FILE} .= '.' unless $self->{MAKE_APERL_FILE} =~ m/\./;
-    $self->{MAKEFILE_OLD} .= '.' unless $self->{MAKEFILE_OLD} =~ m/\./;
+    $self->{MAKEFILE_OLD}       ||= '$(FIRST_MAKEFILE)_old';
 
-    $self->{MACROSTART}         ||= '/Macro=(';
-    $self->{MACROEND}           ||= ')';
-    $self->{USEMAKEFILE}        ||= '/Descrip=';
+    $self->{ECHO}     ||= '$(PERLRUN) -le "print qq{@ARGV}"';
+    $self->{ECHO_N}   ||= '$(PERLRUN) -e  "print qq{@ARGV}"';
+    $self->{TOUCH}    ||= '$(PERLRUN) "-MExtUtils::Command" -e touch';
+    $self->{CHMOD}    ||= '$(PERLRUN) "-MExtUtils::Command" -e chmod'; 
+    $self->{RM_F}     ||= '$(PERLRUN) "-MExtUtils::Command" -e rm_f';
+    $self->{RM_RF}    ||= '$(PERLRUN) "-MExtUtils::Command" -e rm_rf';
+    $self->{TEST_F}   ||= '$(PERLRUN) "-MExtUtils::Command" -e test_f';
+    $self->{EQUALIZE_TIMESTAMP} ||= '$(PERLRUN) -we "open F,qq{>>$ARGV[1]};close F;utime(0,(stat($ARGV[0]))[9]+1,$ARGV[1])"';
 
-    $self->{EQUALIZE_TIMESTAMP} ||= '$(ABSPERLRUN) -we "open F,qq{>>$ARGV[1]};close F;utime(0,(stat($ARGV[0]))[9]+1,$ARGV[1])"';
-
-    $self->{MOD_INSTALL} ||=
+    $self->{MOD_INSTALL} ||= 
       $self->oneliner(<<'CODE', ['-MExtUtils::Install']);
-install([ from_to => {split(' ', <STDIN>)}, verbose => '$(VERBINST)', uninstall_shadows => '$(UNINST)', dir_mode => '$(PERM_DIR)' ]);
+install({split(' ',<STDIN>)}, '$(VERBINST)', 0, '$(UNINST)');
 CODE
 
-    $self->{UMASK_NULL} = '! ';
-
-    $self->SUPER::init_tools;
-
-    # Use the default shell
     $self->{SHELL}    ||= 'Posix';
 
-    # Redirection on VMS goes before the command, not after as on Unix.
-    # $(DEV_NULL) is used once and its not worth going nuts over making
-    # it work.  However, Unix's DEV_NULL is quite wrong for VMS.
-    $self->{DEV_NULL}   = '';
+    $self->{CP} = 'Copy/NoConfirm';
+    $self->{MV} = 'Rename/NoConfirm';
+    $self->{UMASK_NULL} = '! ';  
 
-    return;
+    $self->SUPER::init_others;
+
+    if ($self->{OBJECT} =~ /\s/) {
+        $self->{OBJECT} =~ s/(\\)?\n+\s+/ /g;
+        $self->{OBJECT} = $self->wraplist(
+            map $self->fixpath($_,0), split /,?\s+/, $self->{OBJECT}
+        );
+    }
+
+    $self->{LDFROM} = $self->wraplist(
+        map $self->fixpath($_,0), split /,?\s+/, $self->{LDFROM}
+    );
 }
+
 
 =item init_platform (override)
 
@@ -578,11 +514,11 @@ sub constants {
 
     # Cleanup paths for directories in MMS macros.
     foreach my $macro ( qw [
-            INST_BIN INST_SCRIPT INST_LIB INST_ARCHLIB
+            INST_BIN INST_SCRIPT INST_LIB INST_ARCHLIB 
             PERL_LIB PERL_ARCHLIB
             PERL_INC PERL_SRC ],
                         (map { 'INSTALL'.$_ } $self->installvars)
-                      )
+                      ) 
     {
         next unless defined $self->{$macro};
         next if $macro =~ /MAN/ && $self->{$macro} eq 'none';
@@ -590,8 +526,8 @@ sub constants {
     }
 
     # Cleanup paths for files in MMS macros.
-    foreach my $macro ( qw[LIBPERL_A FIRST_MAKEFILE MAKEFILE_OLD
-                           MAKE_APERL_FILE MYEXTLIB] )
+    foreach my $macro ( qw[LIBPERL_A FIRST_MAKEFILE MAKEFILE_OLD 
+                           MAKE_APERL_FILE MYEXTLIB] ) 
     {
         next unless defined $self->{$macro};
         $self->{$macro} = $self->fixpath($self->{$macro},0);
@@ -600,37 +536,19 @@ sub constants {
     # Fixup files for MMS macros
     # XXX is this list complete?
     for my $macro (qw/
-                   FULLEXT VERSION_FROM
+                   FULLEXT VERSION_FROM OBJECT LDFROM
 	      /	) {
         next unless defined $self->{$macro};
         $self->{$macro} = $self->fixpath($self->{$macro},0);
     }
 
 
-    for my $macro (qw/
-                   OBJECT LDFROM
-	      /	) {
-        next unless defined $self->{$macro};
-
-        # Must expand macros before splitting on unescaped whitespace.
-        $self->{$macro} = $self->eliminate_macros($self->{$macro});
-        if ($self->{$macro} =~ /(?<!\^)\s/) {
-            $self->{$macro} =~ s/(\\)?\n+\s+/ /g;
-            $self->{$macro} = $self->wraplist(
-                map $self->fixpath($_,0), split /,?(?<!\^)\s+/, $self->{$macro}
-            );
-        }
-        else {
-            $self->{$macro} = $self->fixpath($self->{$macro},0);
-        }
-    }
-
     for my $macro (qw/ XS MAN1PODS MAN3PODS PM /) {
         # Where is the space coming from? --jhi
         next unless $self ne " " && defined $self->{$macro};
         my %tmp = ();
         for my $key (keys %{$self->{$macro}}) {
-            $tmp{$self->fixpath($key,0)} =
+            $tmp{$self->fixpath($key,0)} = 
                                      $self->fixpath($self->{$macro}{$key},0);
         }
         $self->{$macro} = \%tmp;
@@ -644,9 +562,6 @@ sub constants {
         }
         $self->{$macro} = \@tmp;
     }
-
-    # mms/k does not define a $(MAKE) macro.
-    $self->{MAKE} = '$(MMS)$(MMSQUALIFIERS)';
 
     return $self->SUPER::constants;
 }
@@ -687,7 +602,7 @@ sub cflags {
     my($name,$sys,@m);
 
     ( $name = $self->{NAME} . "_cflags" ) =~ s/:/_/g ;
-    print "Unix shell script ".$Config{"$self->{'BASEEXT'}_cflags"}.
+    print STDOUT "Unix shell script ".$Config{"$self->{'BASEEXT'}_cflags"}.
          " required to modify CC command for $self->{'BASEEXT'}\n"
     if ($Config{$name});
 
@@ -809,6 +724,62 @@ sub const_cccmd {
 }
 
 
+=item tool_sxubpp (override)
+
+Use VMS-style quoting on xsubpp command line.
+
+=cut
+
+sub tool_xsubpp {
+    my($self) = @_;
+    return '' unless $self->needs_linking;
+
+    my $xsdir;
+    foreach my $dir (@INC) {
+        $xsdir = $self->catdir($dir, 'ExtUtils');
+        if( -r $self->catfile($xsdir, "xsubpp") ) {
+            last;
+        }
+    }
+
+    my $tmdir   = File::Spec->catdir($self->{PERL_LIB},"ExtUtils");
+    my(@tmdeps) = $self->catfile($tmdir,'typemap');
+    if( $self->{TYPEMAPS} ){
+	my $typemap;
+	foreach $typemap (@{$self->{TYPEMAPS}}){
+		if( ! -f  $typemap ){
+			warn "Typemap $typemap not found.\n";
+		}
+		else{
+			push(@tmdeps, $self->fixpath($typemap,0));
+		}
+	}
+    }
+    push(@tmdeps, "typemap") if -f "typemap";
+    my(@tmargs) = map("-typemap $_", @tmdeps);
+    if( exists $self->{XSOPT} ){
+	unshift( @tmargs, $self->{XSOPT} );
+    }
+
+    if ($Config{'ldflags'} && 
+        $Config{'ldflags'} =~ m!/Debug!i &&
+        (!exists($self->{XSOPT}) || $self->{XSOPT} !~ /linenumbers/)) {
+        unshift(@tmargs,'-nolinenumbers');
+    }
+
+
+    $self->{XSPROTOARG} = '' unless defined $self->{XSPROTOARG};
+
+    return "
+XSUBPPDIR = $xsdir
+XSUBPP = \$(PERLRUN) \$(XSUBPPDIR)xsubpp
+XSPROTOARG = $self->{XSPROTOARG}
+XSUBPPDEPS = @tmdeps
+XSUBPPARGS = @tmargs
+";
+}
+
+
 =item tools_other (override)
 
 Throw in some dubious extra macros for Makefile args.
@@ -824,8 +795,14 @@ sub tools_other {
     # than just typing the literal string.
     my $extra_tools = <<'EXTRA_TOOLS';
 
+# Assumes $(MMS) invokes MMS or MMK
+# (It is assumed in some cases later that the default makefile name
+# (Descrip.MMS for MM[SK]) is used.)
+USEMAKEFILE = /Descrip=
+USEMACROS = /Macro=(
+MACROEND = )
+
 # Just in case anyone is using the old macro.
-USEMACROS = $(MACROSTART)
 SAY = $(ECHO)
 
 EXTRA_TOOLS
@@ -843,7 +820,7 @@ VMSish defaults for some values.
 
   COMPRESS      compression command to          gzip
                 use for tarfiles
-  SUFFIX        suffix to put on                -gz
+  SUFFIX        suffix to put on                -gz 
                 compressed files
 
   SHAR          shar command to use             vms_share
@@ -866,10 +843,7 @@ sub init_dist {
 
     $self->SUPER::init_dist;
 
-    $self->{DISTVNAME} = "$self->{DISTNAME}-$self->{VERSION_SYM}"
-      unless $self->{ARGS}{DISTVNAME};
-
-    return;
+    $self->{DISTVNAME}    = "$self->{DISTNAME}-$self->{VERSION_SYM}";
 }
 
 =item c_o (override)
@@ -906,7 +880,7 @@ sub xs_c {
     return '' unless $self->needs_linking();
     '
 .xs.c :
-	$(XSUBPPRUN) $(XSPROTOARG) $(XSUBPPARGS) $(MMS$TARGET_NAME).xs >$(MMS$TARGET)
+	$(XSUBPP) $(XSPROTOARG) $(XSUBPPARGS) $(MMS$TARGET_NAME).xs >$(MMS$TARGET)
 ';
 }
 
@@ -921,7 +895,7 @@ sub xs_o {	# many makes are too dumb to use xs_c then c_o
     return '' unless $self->needs_linking();
     '
 .xs$(OBJ_EXT) :
-	$(XSUBPPRUN) $(XSPROTOARG) $(XSUBPPARGS) $(MMS$TARGET_NAME).xs >$(MMS$TARGET_NAME).c
+	$(XSUBPP) $(XSPROTOARG) $(XSUBPPARGS) $(MMS$TARGET_NAME).xs >$(MMS$TARGET_NAME).c
 	$(CCCMD) $(CCCDLFLAGS) $(MMS$TARGET_NAME).c
 ';
 }
@@ -930,7 +904,7 @@ sub xs_o {	# many makes are too dumb to use xs_c then c_o
 =item dlsyms (override)
 
 Create VMS linker options files specifying universal symbols for this
-extension's shareable image, and listing other shareable images or
+extension's shareable image, and listing other shareable images or 
 libraries to which it should be linked.
 
 =cut
@@ -969,43 +943,40 @@ $(BASEEXT).opt : Makefile.PL
 
     push @m, '	$(PERL) -e "print ""$(INST_STATIC)/Include=';
     if ($self->{OBJECT} =~ /\bBASEEXT\b/ or
-        $self->{OBJECT} =~ /\b$self->{BASEEXT}\b/i) {
+        $self->{OBJECT} =~ /\b$self->{BASEEXT}\b/i) { 
         push @m, ($Config{d_vms_case_sensitive_symbols}
 	           ? uc($self->{BASEEXT}) :'$(BASEEXT)');
     }
     else {  # We don't have a "main" object file, so pull 'em all in
-        # Upcase module names if linker is being case-sensitive
-        my($upcase) = $Config{d_vms_case_sensitive_symbols};
-        my(@omods) = split ' ', $self->eliminate_macros($self->{OBJECT});
-        for (@omods) {
-            s/\.[^.]*$//;         # Trim off file type
-            s[\$\(\w+_EXT\)][];   # even as a macro
-            s/.*[:>\/\]]//;       # Trim off dir spec
-            $_ = uc if $upcase;
-        };
-
-        my(@lines);
-        my $tmp = shift @omods;
-        foreach my $elt (@omods) {
-            $tmp .= ",$elt";
-            if (length($tmp) > 80) { push @lines, $tmp;  $tmp = ''; }
-        }
-        push @lines, $tmp;
-        push @m, '(', join( qq[, -\\n\\t"";" >>\$(MMS\$TARGET)\n\t\$(PERL) -e "print ""], @lines),')';
+       # Upcase module names if linker is being case-sensitive
+       my($upcase) = $Config{d_vms_case_sensitive_symbols};
+	my(@omods) = map { s/\.[^.]*$//;         # Trim off file type
+	                   s[\$\(\w+_EXT\)][];   # even as a macro
+	                   s/.*[:>\/\]]//;       # Trim off dir spec
+			   $upcase ? uc($_) : $_;
+	                 } split ' ', $self->eliminate_macros($self->{OBJECT});
+        my($tmp,@lines,$elt) = '';
+	$tmp = shift @omods;
+	foreach $elt (@omods) {
+	    $tmp .= ",$elt";
+		if (length($tmp) > 80) { push @lines, $tmp;  $tmp = ''; }
+	}
+	push @lines, $tmp;
+	push @m, '(', join( qq[, -\\n\\t"";" >>\$(MMS\$TARGET)\n\t\$(PERL) -e "print ""], @lines),')';
     }
-    push @m, '\n$(INST_STATIC)/Library\n"";" >>$(MMS$TARGET)',"\n";
+	push @m, '\n$(INST_STATIC)/Library\n"";" >>$(MMS$TARGET)',"\n";
 
     if (length $self->{LDLOADLIBS}) {
-        my($line) = '';
-        foreach my $lib (split ' ', $self->{LDLOADLIBS}) {
-            $lib =~ s%\$%\\\$%g;  # Escape '$' in VMS filespecs
-            if (length($line) + length($lib) > 160) {
-                push @m, "\t\$(PERL) -e \"print qq{$line}\" >>\$(MMS\$TARGET)\n";
-                $line = $lib . '\n';
-            }
-            else { $line .= $lib . '\n'; }
-        }
-        push @m, "\t\$(PERL) -e \"print qq{$line}\" >>\$(MMS\$TARGET)\n" if $line;
+	my($lib); my($line) = '';
+	foreach $lib (split ' ', $self->{LDLOADLIBS}) {
+	    $lib =~ s%\$%\\\$%g;  # Escape '$' in VMS filespecs
+	    if (length($line) + length($lib) > 160) {
+		push @m, "\t\$(PERL) -e \"print qq{$line}\" >>\$(MMS\$TARGET)\n";
+		$line = $lib . '\n';
+	    }
+	    else { $line .= $lib . '\n'; }
+	}
+	push @m, "\t\$(PERL) -e \"print qq{$line}\" >>\$(MMS\$TARGET)\n" if $line;
     }
 
     join('',@m);
@@ -1035,14 +1006,44 @@ INST_DYNAMIC_DEP = $inst_dynamic_dep
 
 ";
     push @m, '
-$(INST_DYNAMIC) : $(INST_STATIC) $(PERL_INC)perlshr_attr.opt $(INST_ARCHAUTODIR)$(DFSEP).exists $(EXPORT_LIST) $(PERL_ARCHIVE) $(INST_DYNAMIC_DEP)
+$(INST_DYNAMIC) : $(INST_STATIC) $(PERL_INC)perlshr_attr.opt $(INST_ARCHAUTODIR)$(DIRFILESEP).exists $(EXPORT_LIST) $(PERL_ARCHIVE) $(INST_DYNAMIC_DEP)
+	$(NOECHO) $(MKPATH) $(INST_ARCHAUTODIR)
 	If F$TrnLNm("',$shr,'").eqs."" Then Define/NoLog/User ',"$shr Sys\$Share:$shr.$Config{'dlext'}",'
 	Link $(LDFLAGS) /Shareable=$(MMS$TARGET)$(OTHERLDFLAGS) $(BASEEXT).opt/Option,$(PERL_INC)perlshr_attr.opt/Option
 ';
 
+    push @m, $self->dir_target('$(INST_ARCHAUTODIR)');
     join('',@m);
 }
 
+=item dynamic_bs (override)
+
+Use VMS-style quoting on Mkbootstrap command line.
+
+=cut
+
+sub dynamic_bs {
+    my($self, %attribs) = @_;
+    return '
+BOOTSTRAP =
+' unless $self->has_link_code();
+    '
+BOOTSTRAP = '."$self->{BASEEXT}.bs".'
+
+# As MakeMaker mkbootstrap might not write a file (if none is required)
+# we use touch to prevent make continually trying to remake it.
+# The DynaLoader only reads a non-empty file.
+$(BOOTSTRAP) : $(FIRST_MAKEFILE) '."$self->{BOOTDEP}".' $(INST_ARCHAUTODIR)$(DIRFILESEP).exists
+	$(NOECHO) $(ECHO) "Running mkbootstrap for $(NAME) ($(BSLOADLIBS))"
+	$(NOECHO) $(PERLRUN) -
+	-e "use ExtUtils::Mkbootstrap; Mkbootstrap(\'$(BASEEXT)\',\'$(BSLOADLIBS)\');"
+	$(NOECHO) $(TOUCH) $(MMS$TARGET)
+
+$(INST_BOOT) : $(BOOTSTRAP) $(INST_ARCHAUTODIR)$(DIRFILESEP).exists
+	$(NOECHO) $(RM_RF) $(INST_BOOT)
+	- $(CP) $(BOOTSTRAP) $(INST_BOOT)
+';
+}
 
 =item static_lib (override)
 
@@ -1059,10 +1060,10 @@ $(INST_STATIC) :
 	$(NOECHO) $(NOOP)
 ' unless ($self->{OBJECT} or @{$self->{C} || []} or $self->{MYEXTLIB});
 
-    my(@m);
+    my(@m,$lib);
     push @m,'
 # Rely on suffix rule for update action
-$(OBJECT) : $(INST_ARCHAUTODIR)$(DFSEP).exists
+$(OBJECT) : $(INST_ARCHAUTODIR)$(DIRFILESEP).exists
 
 $(INST_STATIC) : $(OBJECT) $(MYEXTLIB)
 ';
@@ -1076,39 +1077,297 @@ $(INST_STATIC) : $(OBJECT) $(MYEXTLIB)
     # 'cause it's a library and you can't stick them in other libraries.
     # In that case, we use $OBJECT instead and hope for the best
     if ($self->{MYEXTLIB}) {
-      push(@m,"\t",'Library/Object/Replace $(MMS$TARGET) $(OBJECT)',"\n");
+      push(@m,"\t",'Library/Object/Replace $(MMS$TARGET) $(OBJECT)',"\n"); 
     } else {
       push(@m,"\t",'Library/Object/Replace $(MMS$TARGET) $(MMS$SOURCE_LIST)',"\n");
     }
-
+    
     push @m, "\t\$(NOECHO) \$(PERL) -e 1 >\$(INST_ARCHAUTODIR)extralibs.ld\n";
-    foreach my $lib (split ' ', $self->{EXTRALIBS}) {
+    foreach $lib (split ' ', $self->{EXTRALIBS}) {
       push(@m,"\t",'$(NOECHO) $(PERL) -e "print qq{',$lib,'\n}" >>$(INST_ARCHAUTODIR)extralibs.ld',"\n");
     }
+    push @m, $self->dir_target('$(INST_ARCHAUTODIR)');
     join('',@m);
 }
 
 
-=item extra_clean_files
+=item processPL (override)
 
-Clean up some OS specific files.  Plus the temp file used to shorten
-a lot of commands.  And the name mangler database.
+Use VMS-style quoting on command line.
 
 =cut
 
-sub extra_clean_files {
-    return qw(
-              *.Map *.Dmp *.Lis *.cpp *.$(DLEXT) *.Opt $(BASEEXT).bso
-              .MM_Tmp cxx_repository
-             );
+sub processPL {
+    my($self) = @_;
+    return "" unless $self->{PL_FILES};
+    my(@m, $plfile);
+    foreach $plfile (sort keys %{$self->{PL_FILES}}) {
+        my $list = ref($self->{PL_FILES}->{$plfile})
+		? $self->{PL_FILES}->{$plfile}
+		: [$self->{PL_FILES}->{$plfile}];
+	foreach my $target (@$list) {
+	    my $vmsplfile = vmsify($plfile);
+	    my $vmsfile = vmsify($target);
+	    push @m, "
+all :: $vmsfile
+	\$(NOECHO) \$(NOOP)
+
+$vmsfile :: $vmsplfile
+",'	$(PERLRUNINST) '," $vmsplfile $vmsfile
+";
+	}
+    }
+    join "", @m;
+}
+
+=item installbin (override)
+
+Stay under DCL's 255 character command line limit once again by
+splitting potentially long list of files across multiple lines
+in C<realclean> target.
+
+=cut
+
+sub installbin {
+    my($self) = @_;
+    return '' unless $self->{EXE_FILES} && ref $self->{EXE_FILES} eq "ARRAY";
+    return '' unless @{$self->{EXE_FILES}};
+    my(@m, $from, $to, %fromto, @to);
+    my(@exefiles) = map { vmsify($_) } @{$self->{EXE_FILES}};
+    for $from (@exefiles) {
+	my($path) = '$(INST_SCRIPT)' . basename($from);
+	local($_) = $path;  # backward compatibility
+	$to = $self->libscan($path);
+	print "libscan($from) => '$to'\n" if ($Verbose >=2);
+	$fromto{$from} = vmsify($to);
+    }
+    @to = values %fromto;
+    push @m, "
+EXE_FILES = @exefiles
+
+pure_all :: @to
+	\$(NOECHO) \$(NOOP)
+
+realclean ::
+";
+
+    my $line = '';
+    foreach $to (@to) {
+	if (length($line) + length($to) > 80) {
+	    push @m, "\t\$(RM_F) $line\n";
+	    $line = $to;
+	}
+	else { $line .= " $to"; }
+    }
+    push @m, "\t\$(RM_F) $line\n\n" if $line;
+
+    while (($from,$to) = each %fromto) {
+	last unless defined $from;
+	my $todir;
+	if ($to =~ m#[/>:\]]#) {
+            $todir = dirname($to); 
+        }
+	else { 
+            ($todir = $to) =~ s/[^\)]+$//; 
+        }
+	$todir = $self->fixpath($todir,1);
+	push @m, "
+$to : $from \$(FIRST_MAKEFILE) ${todir}\$(DIRFILESEP).exists
+	\$(CP) $from $to
+
+", $self->dir_target($todir);
+    }
+    join "", @m;
+}
+
+=item subdir_x (override)
+
+Use VMS commands to change default directory.
+
+=cut
+
+sub subdir_x {
+    my($self, $subdir) = @_;
+    my(@m,$key);
+    $subdir = $self->fixpath($subdir,1);
+    push @m, '
+
+subdirs ::
+	olddef = F$Environment("Default")
+	Set Default ',$subdir,'
+	- $(MMS)$(MMSQUALIFIERS) all $(USEMACROS)$(PASTHRU)$(MACROEND)
+	Set Default \'olddef\'
+';
+    join('',@m);
+}
+
+=item clean (override)
+
+Split potentially long list of files across multiple commands (in
+order to stay under the magic command line limit).  Also use MM[SK]
+commands for handling subdirectories.
+
+=cut
+
+sub clean {
+    my($self, %attribs) = @_;
+    my(@m,$dir);
+    push @m, '
+# Delete temporary files but do not touch installed files. We don\'t delete
+# the Descrip.MMS here so that a later make realclean still has it to use.
+clean :: clean_subdirs
+';
+    push @m, '	$(RM_F) *.Map *.Dmp *.Lis *.cpp *.$(DLEXT) *$(OBJ_EXT) *$(LIB_EXT) *.Opt $(BOOTSTRAP) $(BASEEXT).bso .MM_Tmp
+';
+
+    my(@otherfiles) = values %{$self->{XS}}; # .c files from *.xs files
+    # Unlink realclean, $attribs{FILES} is a string here; it may contain
+    # a list or a macro that expands to a list.
+    if ($attribs{FILES}) {
+        my @filelist = ref $attribs{FILES} eq 'ARRAY'
+            ? @{$attribs{FILES}}
+            : split /\s+/, $attribs{FILES};
+
+	foreach my $word (@filelist) {
+	    if ($word =~ m#^\$\((.*)\)$# and 
+                ref $self->{$1} eq 'ARRAY') 
+            {
+		push(@otherfiles, @{$self->{$1}});
+	    }
+	    else { push(@otherfiles, $word); }
+	}
+    }
+    push(@otherfiles, qw[ blib $(MAKE_APERL_FILE) 
+                          perlmain.c pm_to_blib pm_to_blib.ts ]);
+    push(@otherfiles, $self->catfile('$(INST_ARCHAUTODIR)','extralibs.all'));
+    push(@otherfiles, $self->catfile('$(INST_ARCHAUTODIR)','extralibs.ld'));
+
+    # Occasionally files are repeated several times from different sources
+    { my(%of) = map { ($_ => 1) } @otherfiles; @otherfiles = keys %of; }
+    
+    my $line = '';
+    foreach my $file (@otherfiles) {
+	$file = $self->fixpath($file);
+	if (length($line) + length($file) > 80) {
+	    push @m, "\t\$(RM_RF) $line\n";
+	    $line = "$file";
+	}
+	else { $line .= " $file"; }
+    }
+    push @m, "\t\$(RM_RF) $line\n" if $line;
+    push(@m, "	$attribs{POSTOP}\n") if $attribs{POSTOP};
+    join('', @m);
 }
 
 
-=item zipfile_target
+=item clean_subdirs_target
 
-=item tarfile_target
+  my $make_frag = $MM->clean_subdirs_target;
 
-=item shdist_target
+VMS semantics for changing directories and rerunning make very different.
+
+=cut
+
+sub clean_subdirs_target {
+    my($self) = shift;
+
+    # No subdirectories, no cleaning.
+    return <<'NOOP_FRAG' unless @{$self->{DIR}};
+clean_subdirs :
+	$(NOECHO) $(NOOP)
+NOOP_FRAG
+
+
+    my $clean = "clean_subdirs :\n";
+
+    foreach my $dir (@{$self->{DIR}}) { # clean subdirectories first
+	$dir = $self->fixpath($dir,1);
+
+        $clean .= sprintf <<'MAKE_FRAG', $dir, $dir;
+	If F$Search("%s$(FIRST_MAKEFILE)").nes."" Then $(PERLRUN) -e "chdir '%s'; print `$(MMS)$(MMSQUALIFIERS) clean`;"
+MAKE_FRAG
+    }
+
+    return $clean;
+}
+
+
+=item realclean (override)
+
+Guess what we're working around?  Also, use MM[SK] for subdirectories.
+
+=cut
+
+sub realclean {
+    my($self, %attribs) = @_;
+    my(@m);
+    push(@m,'
+# Delete temporary files (via clean) and also delete installed files
+realclean :: clean
+');
+    foreach(@{$self->{DIR}}){
+	my($vmsdir) = $self->fixpath($_,1);
+	push(@m, '	If F$Search("'."$vmsdir".'$(FIRST_MAKEFILE)").nes."" Then \\',"\n\t",
+	      '$(PERL) -e "chdir ',"'$vmsdir'",'; print `$(MMS)$(MMSQUALIFIERS) realclean`;"',"\n");
+    }
+    push @m, "	\$(RM_RF) \$(INST_AUTODIR) \$(INST_ARCHAUTODIR)\n";
+    push @m, "	\$(RM_RF) \$(DISTVNAME)\n";
+    # We can't expand several of the MMS macros here, since they don't have
+    # corresponding %$self keys (i.e. they're defined in Descrip.MMS as a
+    # combination of macros).  In order to stay below DCL's 255 char limit,
+    # we put only 2 on a line.
+    my($file,$fcnt);
+    my(@files) = values %{$self->{PM}};
+    push @files, qw{ $(FIRST_MAKEFILE) $(MAKEFILE_OLD) };
+    if ($self->has_link_code) {
+	push(@files,qw{ $(INST_DYNAMIC) $(INST_STATIC) $(INST_BOOT) $(OBJECT) });
+    }
+
+    # Occasionally files are repeated several times from different sources
+    { my(%f) = map { ($_,1) } @files; @files = keys %f; }
+
+    my $line = '';
+    foreach $file (@files) {
+	if (length($line) + length($file) > 80 || ++$fcnt >= 2) {
+	    push @m, "\t\$(RM_F) $line\n";
+	    $line = "$file";
+	    $fcnt = 0;
+	}
+	else { $line .= " $file"; }
+    }
+    push @m, "\t\$(RM_F) $line\n" if $line;
+    if ($attribs{FILES}) {
+	my($word,$key,@filist,@allfiles);
+	if (ref $attribs{FILES} eq 'ARRAY') { @filist = @{$attribs{FILES}}; }
+	else { @filist = split /\s+/, $attribs{FILES}; }
+	foreach $word (@filist) {
+	    if (($key) = $word =~ m#^\$\((.*)\)$# and ref $self->{$key} eq 'ARRAY') {
+		push(@allfiles, @{$self->{$key}});
+	    }
+	    else { push(@allfiles, $word); }
+	}
+	$line = '';
+	# Occasionally files are repeated several times from different sources
+	{ my(%af) = map { ($_,1) } @allfiles; @allfiles = keys %af; }
+	foreach $file (@allfiles) {
+	    $file = $self->fixpath($file);
+	    if (length($line) + length($file) > 80) {
+		push @m, "\t\$(RM_RF) $line\n";
+		$line = "$file";
+	    }
+	    else { $line .= " $file"; }
+	}
+	push @m, "\t\$(RM_RF) $line\n" if $line;
+    }
+    push(@m, "	$attribs{POSTOP}\n")                     if $attribs{POSTOP};
+    join('', @m);
+}
+
+=item zipfile_target (o)
+
+=item tarfile_target (o)
+
+=item shdist_target (o)
 
 Syntax for invoking shar, tar and zip differs from that for Unix.
 
@@ -1152,6 +1411,25 @@ shdist : distdir
 MAKE_FRAG
 }
 
+=item dist_test (override)
+
+Use VMS commands to change default directory, and use VMS-style
+quoting on command line.
+
+=cut
+
+sub dist_test {
+    my($self) = @_;
+q{
+disttest : distdir
+	startdir = F$Environment("Default")
+	Set Default [.$(DISTVNAME)]
+	$(ABSPERLRUN) Makefile.PL
+	$(MMS)$(MMSQUALIFIERS)
+	$(MMS)$(MMSQUALIFIERS) test
+	Set Default 'startdir'
+};
+}
 
 # --- Test and Installation Sections ---
 
@@ -1164,7 +1442,19 @@ VMS-style command line quoting in a few cases.
 
 sub install {
     my($self, %attribs) = @_;
-    my(@m);
+    my(@m,@exe_files);
+
+    if ($self->{EXE_FILES}) {
+	my($line,$file) = ('','');
+	foreach $file (@{$self->{EXE_FILES}}) {
+	    $line .= "$file ";
+	    if (length($line) > 128) {
+		push(@exe_files,qq[\t\$(NOECHO) \$(ECHO) "$line" >>.MM_tmp\n]);
+		$line = '';
+	    }
+	}
+	push(@exe_files,qq[\t\$(NOECHO) \$(ECHO) "$line" >>.MM_tmp\n]) if $line;
+    }
 
     push @m, q[
 install :: all pure_install doc_install
@@ -1190,14 +1480,9 @@ doc__install : doc_site_install
 
 # This hack brought to you by DCL's 255-character command line limit
 pure_perl_install ::
-];
-    push @m,
-q[	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'read '.File::Spec->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').' '" >.MM_tmp
+	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'read '.File::Spec->catfile('$(PERL_ARCHLIB)','auto','$(FULLEXT)','.packlist').' '" >.MM_tmp
 	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'write '.File::Spec->catfile('$(DESTINSTALLARCHLIB)','auto','$(FULLEXT)','.packlist').' '" >>.MM_tmp
-] unless $self->{NO_PACKLIST};
-
-    push @m,
-q[	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLPRIVLIB) " >>.MM_tmp
+	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLPRIVLIB) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_ARCHLIB) $(DESTINSTALLARCHLIB) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_BIN) $(DESTINSTALLBIN) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_SCRIPT) $(DESTINSTALLSCRIPT) " >>.MM_tmp
@@ -1209,14 +1494,9 @@ q[	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLPRIVLIB) " >>.MM_tmp
 
 # Likewise
 pure_site_install ::
-];
-    push @m,
-q[	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'read '.File::Spec->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').' '" >.MM_tmp
+	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'read '.File::Spec->catfile('$(SITEARCHEXP)','auto','$(FULLEXT)','.packlist').' '" >.MM_tmp
 	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'write '.File::Spec->catfile('$(DESTINSTALLSITEARCH)','auto','$(FULLEXT)','.packlist').' '" >>.MM_tmp
-] unless $self->{NO_PACKLIST};
-
-    push @m,
-q[	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLSITELIB) " >>.MM_tmp
+	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLSITELIB) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_ARCHLIB) $(DESTINSTALLSITEARCH) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_BIN) $(DESTINSTALLSITEBIN) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_SCRIPT) $(DESTINSTALLSCRIPT) " >>.MM_tmp
@@ -1227,14 +1507,9 @@ q[	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLSITELIB) " >>.MM_tmp
 	$(NOECHO) $(WARN_IF_OLD_PACKLIST) ].$self->catfile($self->{PERL_ARCHLIB},'auto',$self->{FULLEXT},'.packlist').q[
 
 pure_vendor_install ::
-];
-    push @m,
-q[	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'read '.File::Spec->catfile('$(VENDORARCHEXP)','auto','$(FULLEXT)','.packlist').' '" >.MM_tmp
+	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'read '.File::Spec->catfile('$(VENDORARCHEXP)','auto','$(FULLEXT)','.packlist').' '" >.MM_tmp
 	$(NOECHO) $(PERLRUN) "-MFile::Spec" -e "print 'write '.File::Spec->catfile('$(DESTINSTALLVENDORARCH)','auto','$(FULLEXT)','.packlist').' '" >>.MM_tmp
-] unless $self->{NO_PACKLIST};
-
-    push @m,
-q[	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLVENDORLIB) " >>.MM_tmp
+	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLVENDORLIB) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_ARCHLIB) $(DESTINSTALLVENDORARCH) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_BIN) $(DESTINSTALLVENDORBIN) " >>.MM_tmp
 	$(NOECHO) $(ECHO_N) "$(INST_SCRIPT) $(DESTINSTALLSCRIPT) " >>.MM_tmp
@@ -1243,30 +1518,14 @@ q[	$(NOECHO) $(ECHO_N) "$(INST_LIB) $(DESTINSTALLVENDORLIB) " >>.MM_tmp
 	$(NOECHO) $(MOD_INSTALL) <.MM_tmp
 	$(NOECHO) $(RM_F) .MM_tmp
 
-];
-
-    push @m, q[
-# Ditto
-doc_perl_install ::
-	$(NOECHO) $(NOOP)
-
-# And again
-doc_site_install ::
-	$(NOECHO) $(NOOP)
-
-doc_vendor_install ::
-	$(NOECHO) $(NOOP)
-
-] if $self->{NO_PERLLOCAL};
-
-    push @m, q[
 # Ditto
 doc_perl_install ::
 	$(NOECHO) $(ECHO) "Appending installation info to ].$self->catfile($self->{DESTINSTALLARCHLIB}, 'perllocal.pod').q["
 	$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
 	$(NOECHO) $(ECHO_N) "installed into|$(INSTALLPRIVLIB)|" >.MM_tmp
 	$(NOECHO) $(ECHO_N) "LINKTYPE|$(LINKTYPE)|VERSION|$(VERSION)|EXE_FILES|$(EXE_FILES) " >>.MM_tmp
-	$(NOECHO) $(DOC_INSTALL) "Module" "$(NAME)" <.MM_tmp >>].$self->catfile($self->{DESTINSTALLARCHLIB},'perllocal.pod').q[
+],@exe_files,
+q[	$(NOECHO) $(DOC_INSTALL) "Module" "$(NAME)" <.MM_tmp >>].$self->catfile($self->{DESTINSTALLARCHLIB},'perllocal.pod').q[
 	$(NOECHO) $(RM_F) .MM_tmp
 
 # And again
@@ -1275,7 +1534,8 @@ doc_site_install ::
 	$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
 	$(NOECHO) $(ECHO_N) "installed into|$(INSTALLSITELIB)|" >.MM_tmp
 	$(NOECHO) $(ECHO_N) "LINKTYPE|$(LINKTYPE)|VERSION|$(VERSION)|EXE_FILES|$(EXE_FILES) " >>.MM_tmp
-	$(NOECHO) $(DOC_INSTALL) "Module" "$(NAME)" <.MM_tmp >>].$self->catfile($self->{DESTINSTALLARCHLIB},'perllocal.pod').q[
+],@exe_files,
+q[	$(NOECHO) $(DOC_INSTALL) "Module" "$(NAME)" <.MM_tmp >>].$self->catfile($self->{DESTINSTALLARCHLIB},'perllocal.pod').q[
 	$(NOECHO) $(RM_F) .MM_tmp
 
 doc_vendor_install ::
@@ -1283,10 +1543,11 @@ doc_vendor_install ::
 	$(NOECHO) $(MKPATH) $(DESTINSTALLARCHLIB)
 	$(NOECHO) $(ECHO_N) "installed into|$(INSTALLVENDORLIB)|" >.MM_tmp
 	$(NOECHO) $(ECHO_N) "LINKTYPE|$(LINKTYPE)|VERSION|$(VERSION)|EXE_FILES|$(EXE_FILES) " >>.MM_tmp
-	$(NOECHO) $(DOC_INSTALL) "Module" "$(NAME)" <.MM_tmp >>].$self->catfile($self->{DESTINSTALLARCHLIB},'perllocal.pod').q[
+],@exe_files,
+q[	$(NOECHO) $(DOC_INSTALL) "Module" "$(NAME)" <.MM_tmp >>].$self->catfile($self->{DESTINSTALLARCHLIB},'perllocal.pod').q[
 	$(NOECHO) $(RM_F) .MM_tmp
 
-] unless $self->{NO_PERLLOCAL};
+];
 
     push @m, q[
 uninstall :: uninstall_from_$(INSTALLDIRS)dirs
@@ -1320,12 +1581,24 @@ sub perldepend {
     my($self) = @_;
     my(@m);
 
-    if ($self->{OBJECT}) {
-        # Need to add an object file dependency on the perl headers.
-        # this is very important for XS modules in perl.git development.
+    push @m, '
+$(OBJECT) : $(PERL_INC)EXTERN.h, $(PERL_INC)INTERN.h, $(PERL_INC)XSUB.h
+$(OBJECT) : $(PERL_INC)av.h, $(PERL_INC)cc_runtime.h, $(PERL_INC)config.h
+$(OBJECT) : $(PERL_INC)cop.h, $(PERL_INC)cv.h, $(PERL_INC)embed.h
+$(OBJECT) : $(PERL_INC)embedvar.h, $(PERL_INC)form.h
+$(OBJECT) : $(PERL_INC)gv.h, $(PERL_INC)handy.h, $(PERL_INC)hv.h
+$(OBJECT) : $(PERL_INC)intrpvar.h, $(PERL_INC)iperlsys.h, $(PERL_INC)keywords.h
+$(OBJECT) : $(PERL_INC)mg.h, $(PERL_INC)nostdio.h, $(PERL_INC)op.h
+$(OBJECT) : $(PERL_INC)opcode.h, $(PERL_INC)patchlevel.h
+$(OBJECT) : $(PERL_INC)perl.h, $(PERL_INC)perlio.h
+$(OBJECT) : $(PERL_INC)perlsdio.h, $(PERL_INC)perlvars.h
+$(OBJECT) : $(PERL_INC)perly.h, $(PERL_INC)pp.h, $(PERL_INC)pp_proto.h
+$(OBJECT) : $(PERL_INC)proto.h, $(PERL_INC)regcomp.h, $(PERL_INC)regexp.h
+$(OBJECT) : $(PERL_INC)regnodes.h, $(PERL_INC)scope.h, $(PERL_INC)sv.h
+$(OBJECT) : $(PERL_INC)thrdvar.h, $(PERL_INC)thread.h
+$(OBJECT) : $(PERL_INC)util.h, $(PERL_INC)vmsish.h
 
-        push @m, $self->_perl_header_files_fragment(""); # empty separator on VMS as its in the $(PERL_INC)
-    }
+' if $self->{OBJECT}; 
 
     if ($self->{PERL_SRC}) {
 	my(@macros);
@@ -1365,6 +1638,108 @@ $(PERL_ARCHLIB)Config.pm : $(PERL_SRC)config.sh
     join('',@m);
 }
 
+=item makefile (override)
+
+Use VMS commands and quoting.
+
+=cut
+
+sub makefile {
+    my($self) = @_;
+    my(@m,@cmd);
+    # We do not know what target was originally specified so we
+    # must force a manual rerun to be sure. But as it should only
+    # happen very rarely it is not a significant problem.
+    push @m, q[
+$(OBJECT) : $(FIRST_MAKEFILE)
+] if $self->{OBJECT};
+
+    push @m,q[
+# We take a very conservative approach here, but it's worth it.
+# We move $(FIRST_MAKEFILE) to $(MAKEFILE_OLD) here to avoid gnu make looping.
+$(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)
+	$(NOECHO) $(ECHO) "$(FIRST_MAKEFILE) out-of-date with respect to $(MMS$SOURCE_LIST)"
+	$(NOECHO) $(ECHO) "Cleaning current config before rebuilding $(FIRST_MAKEFILE) ..."
+	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD)
+	- $(MMS)$(MMSQUALIFIERS) $(USEMAKEFILE)$(MAKEFILE_OLD) clean
+	$(PERLRUN) Makefile.PL ],join(' ',map(qq["$_"],@ARGV)),q[
+	$(NOECHO) $(ECHO) "$(FIRST_MAKEFILE) has been rebuilt."
+	$(NOECHO) $(ECHO) "Please run $(MMS) to build the extension."
+];
+
+    join('',@m);
+}
+
+=item find_tests (override)
+
+=cut
+
+sub find_tests {
+    my $self = shift;
+    return -d 't' ? 't/*.t' : '';
+}
+
+=item test (override)
+
+Use VMS commands for handling subdirectories.
+
+=cut
+
+sub test {
+    my($self, %attribs) = @_;
+    my($tests) = $attribs{TESTS} || $self->find_tests;
+    my(@m);
+    push @m,"
+TEST_VERBOSE = 0
+TEST_TYPE = test_\$(LINKTYPE)
+TEST_FILE = test.pl
+TESTDB_SW = -d
+
+test :: \$(TEST_TYPE)
+	\$(NOECHO) \$(NOOP)
+
+testdb :: testdb_\$(LINKTYPE)
+	\$(NOECHO) \$(NOOP)
+
+";
+    foreach(@{$self->{DIR}}){
+      my($vmsdir) = $self->fixpath($_,1);
+      push(@m, '	If F$Search("',$vmsdir,'$(FIRST_MAKEFILE)").nes."" Then $(PERL) -e "chdir ',"'$vmsdir'",
+           '; print `$(MMS)$(MMSQUALIFIERS) $(PASTHRU2) test`'."\n");
+    }
+    push(@m, "\t\$(NOECHO) \$(ECHO) \"No tests defined for \$(NAME) extension.\"\n")
+        unless $tests or -f "test.pl" or @{$self->{DIR}};
+    push(@m, "\n");
+
+    push(@m, "test_dynamic :: pure_all\n");
+    push(@m, $self->test_via_harness('$(FULLPERLRUN)', $tests)) if $tests;
+    push(@m, $self->test_via_script('$(FULLPERLRUN)', 'test.pl')) if -f "test.pl";
+    push(@m, "\t\$(NOECHO) \$(NOOP)\n") if (!$tests && ! -f "test.pl");
+    push(@m, "\n");
+
+    push(@m, "testdb_dynamic :: pure_all\n");
+    push(@m, $self->test_via_script('$(FULLPERLRUN) "$(TESTDB_SW)"', '$(TEST_FILE)'));
+    push(@m, "\n");
+
+    # Occasionally we may face this degenerate target:
+    push @m, "test_ : test_dynamic\n\n";
+ 
+    if ($self->needs_linking()) {
+	push(@m, "test_static :: pure_all \$(MAP_TARGET)\n");
+	push(@m, $self->test_via_harness('$(MAP_TARGET)', $tests)) if $tests;
+	push(@m, $self->test_via_script('$(MAP_TARGET)', 'test.pl')) if -f 'test.pl';
+	push(@m, "\n");
+	push(@m, "testdb_static :: pure_all \$(MAP_TARGET)\n");
+	push(@m, $self->test_via_script('$(MAP_TARGET) $(TESTDB_SW)', '$(TEST_FILE)'));
+	push(@m, "\n");
+    }
+    else {
+	push @m, "test_static :: test_dynamic\n\t\$(NOECHO) \$(NOOP)\n\n";
+	push @m, "testdb_static :: testdb_dynamic\n\t\$(NOECHO) \$(NOOP)\n";
+    }
+
+    join('',@m);
+}
 
 =item makeaperl (override)
 
@@ -1375,11 +1750,11 @@ Consequently, it hasn't really been tested, and may well be incomplete.
 
 =cut
 
-our %olbs;  # needs to be localized
+use vars qw(%olbs);
 
 sub makeaperl {
     my($self, %attribs) = @_;
-    my($makefilename, $searchdirs, $static, $extra, $perlinc, $target, $tmpdir, $libperl) =
+    my($makefilename, $searchdirs, $static, $extra, $perlinc, $target, $tmpdir, $libperl) = 
       @attribs{qw(MAKE DIRS STAT EXTRA INCL TARGET TMP LIBPERL)};
     my(@m);
     push @m, "
@@ -1402,7 +1777,7 @@ $(MAKE_APERL_FILE) : $(FIRST_MAKEFILE)
 	push @m, map(q[ \\\n\t\t"$_"], @ARGV),q{
 
 $(MAP_TARGET) :: $(MAKE_APERL_FILE)
-	$(MAKE)$(USEMAKEFILE)$(MAKE_APERL_FILE) static $(MMS$TARGET)
+	$(MMS)$(MMSQUALIFIERS)$(USEMAKEFILE)$(MAKE_APERL_FILE) static $(MMS$TARGET)
 };
 	push @m, "\n";
 
@@ -1428,14 +1803,16 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
 
 	if( exists $self->{INCLUDE_EXT} ){
 		my $found = 0;
+		my $incl;
+		my $xx;
 
-		(my $xx = $File::Find::name) =~ s,.*?/auto/,,;
+		($xx = $File::Find::name) =~ s,.*?/auto/,,;
 		$xx =~ s,/?$_,,;
 		$xx =~ s,/,::,g;
 
 		# Throw away anything not explicitly marked for inclusion.
 		# DynaLoader is implied.
-		foreach my $incl ((@{$self->{INCLUDE_EXT}},'DynaLoader')){
+		foreach $incl ((@{$self->{INCLUDE_EXT}},'DynaLoader')){
 			if( $xx eq $incl ){
 				$found++;
 				last;
@@ -1444,12 +1821,15 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
 		return unless $found;
 	}
 	elsif( exists $self->{EXCLUDE_EXT} ){
-		(my $xx = $File::Find::name) =~ s,.*?/auto/,,;
+		my $excl;
+		my $xx;
+
+		($xx = $File::Find::name) =~ s,.*?/auto/,,;
 		$xx =~ s,/?$_,,;
 		$xx =~ s,/,::,g;
 
 		# Throw away anything explicitly marked for exclusion
-		foreach my $excl (@{$self->{EXCLUDE_EXT}}){
+		foreach $excl (@{$self->{EXCLUDE_EXT}}){
 			return if( $xx eq $excl );
 		}
 	}
@@ -1460,7 +1840,7 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
     # We trust that what has been handed in as argument will be buildable
     $static = [] unless $static;
     @olbs{@{$static}} = (1) x @{$static};
-
+ 
     $extra = [] unless $extra && ref $extra eq 'ARRAY';
     # Sort the object libraries in inverse order of
     # filespec length to try to insure that dependent extensions
@@ -1479,8 +1859,8 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
 	# Get external libraries this extension will need
 	if (-f $extralibs ) {
 	    my %seenthis;
-	    open my $list, "<", $extralibs or warn $!,next;
-	    while (<$list>) {
+	    open LIST,$extralibs or warn $!,next;
+	    while (<LIST>) {
 		chomp;
 		# Include a library in the link only once, unless it's mentioned
 		# multiple times within a single extension's options file, in which
@@ -1491,11 +1871,12 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
 		next if $skip;
 		push @$extra,$_;
 	    }
+	    close LIST;
 	}
 	# Get full name of extension for ExtUtils::Miniperl
 	if (-f $extopt) {
-	    open my $opt, '<', $extopt or die $!;
-	    while (<$opt>) {
+	    open OPT,$extopt or die $!;
+	    while (<OPT>) {
 		next unless /(?:UNIVERSAL|VECTOR)=boot_([\w_]+)/;
 		my $pkg = $1;
 		$pkg =~ s#__*#::#g;
@@ -1524,7 +1905,7 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
     push @optlibs, grep { !/PerlShr/i } split ' ', +($self->ext())[2];
     if ($libperl) {
 	unless (-f $libperl || -f ($libperl = $self->catfile($Config{'installarchlib'},'CORE',$libperl))) {
-	    print "Warning: $libperl not found\n";
+	    print STDOUT "Warning: $libperl not found\n";
 	    undef $libperl;
 	}
     }
@@ -1533,7 +1914,7 @@ $(MAP_TARGET) :: $(MAKE_APERL_FILE)
 	    $libperl = $self->catfile($self->{PERL_SRC},"libperl$self->{LIB_EXT}");
 	} elsif (-f ($libperl = $self->catfile($Config{'installarchlib'},'CORE',"libperl$self->{LIB_EXT}")) ) {
 	} else {
-	    print "Warning: $libperl not found
+	    print STDOUT "Warning: $libperl not found
     If you're going to build a static perl binary, make sure perl is installed
     otherwise ignore this warning\n";
 	}
@@ -1564,9 +1945,9 @@ $(MAP_SHRTARGET) : $(MAP_LIBPERL) Makeaperl.Opt ',"${libperldir}Perlshr_Attr.Opt
 $(MAP_TARGET) : $(MAP_SHRTARGET) ',"${tmpdir}perlmain\$(OBJ_EXT) ${tmpdir}PerlShr.Opt",'
 	$(MAP_LINKCMD) ',"${tmpdir}perlmain\$(OBJ_EXT)",', PerlShr.Opt/Option
 	$(NOECHO) $(ECHO) "To install the new ""$(MAP_TARGET)"" binary, say"
-	$(NOECHO) $(ECHO) "    $(MAKE)$(USEMAKEFILE)$(FIRST_MAKEFILE) inst_perl $(USEMACROS)MAP_TARGET=$(MAP_TARGET)$(ENDMACRO)"
+	$(NOECHO) $(ECHO) "    $(MMS)$(MMSQUALIFIERS)$(USEMAKEFILE)$(FIRST_MAKEFILE) inst_perl $(USEMACROS)MAP_TARGET=$(MAP_TARGET)$(ENDMACRO)"
 	$(NOECHO) $(ECHO) "To remove the intermediate files, say
-	$(NOECHO) $(ECHO) "    $(MAKE)$(USEMAKEFILE)$(FIRST_MAKEFILE) map_clean"
+	$(NOECHO) $(ECHO) "    $(MMS)$(MMSQUALIFIERS)$(USEMAKEFILE)$(FIRST_MAKEFILE) map_clean"
 ';
     push @m,"\n${tmpdir}perlmain.c : \$(FIRST_MAKEFILE)\n\t\$(NOECHO) \$(PERL) -e 1 >${tmpdir}Writemain.tmp\n";
     push @m, "# More from the 255-char line length limit\n";
@@ -1609,11 +1990,10 @@ map_clean :
 
     join '', @m;
 }
-
-
+  
 # --- Output postprocessing section ---
 
-=item maketext_filter (override)
+=item nicetext (override)
 
 Insure that colons marking targets are preceded by space, in order
 to distinguish the target delimiter from a colon appearing as
@@ -1621,11 +2001,11 @@ part of a filespec.
 
 =cut
 
-sub maketext_filter {
-    my($self, $text) = @_;
-
-    $text =~ s/^([^\s:=]+)(:+\s)/$1 $2/mg;
-    return $text;
+sub nicetext {
+    my($self,$text) = @_;
+    return $text if $text =~ m/^\w+\s*=/; # leave macro defs alone
+    $text =~ s/([^\s:])(:+\s)/$1 $2/gs;
+    $text;
 }
 
 =item prefixify (override)
@@ -1650,35 +2030,32 @@ sub prefixify {
 
     # Translate $(PERLPREFIX) to a real path.
     $rprefix = $self->eliminate_macros($rprefix);
-    $rprefix = vmspath($rprefix) if $rprefix;
-    $sprefix = vmspath($sprefix) if $sprefix;
+    $rprefix = VMS::Filespec::vmspath($rprefix) if $rprefix;
+    $sprefix = VMS::Filespec::vmspath($sprefix) if $sprefix;
 
-    $default = vmsify($default)
+    $default = VMS::Filespec::vmsify($default) 
       unless $default =~ /\[.*\]/;
 
     (my $var_no_install = $var) =~ s/^install//;
-    my $path = $self->{uc $var} ||
-               $ExtUtils::MM_Unix::Config_Override{lc $var} ||
+    my $path = $self->{uc $var} || 
+               $ExtUtils::MM_Unix::Config_Override{lc $var} || 
                $Config{lc $var} || $Config{lc $var_no_install};
 
     if( !$path ) {
-        warn "  no Config found for $var.\n" if $Verbose >= 2;
+        print STDERR "  no Config found for $var.\n" if $Verbose >= 2;
         $path = $self->_prefixify_default($rprefix, $default);
     }
-    elsif( !$self->{ARGS}{PREFIX} || !$self->file_name_is_absolute($path) ) {
-        # do nothing if there's no prefix or if its relative
-    }
     elsif( $sprefix eq $rprefix ) {
-        warn "  no new prefix.\n" if $Verbose >= 2;
+        print STDERR "  no new prefix.\n" if $Verbose >= 2;
     }
     else {
 
-        warn "  prefixify $var => $path\n"     if $Verbose >= 2;
-        warn "    from $sprefix to $rprefix\n" if $Verbose >= 2;
+        print STDERR "  prefixify $var => $path\n"     if $Verbose >= 2;
+        print STDERR "    from $sprefix to $rprefix\n" if $Verbose >= 2;
 
         my($path_vol, $path_dirs) = $self->splitpath( $path );
         if( $path_vol eq $Config{vms_prefix}.':' ) {
-            warn "  $Config{vms_prefix}: seen\n" if $Verbose >= 2;
+            print STDERR "  $Config{vms_prefix}: seen\n" if $Verbose >= 2;
 
             $path_dirs =~ s{^\[}{\[.} unless $path_dirs =~ m{^\[\.};
             $path = $self->_catprefix($rprefix, $path_dirs);
@@ -1696,14 +2073,14 @@ sub prefixify {
 sub _prefixify_default {
     my($self, $rprefix, $default) = @_;
 
-    warn "  cannot prefix, using default.\n" if $Verbose >= 2;
+    print STDERR "  cannot prefix, using default.\n" if $Verbose >= 2;
 
     if( !$default ) {
-        warn "No default!\n" if $Verbose >= 1;
+        print STDERR "No default!\n" if $Verbose >= 1;
         return;
     }
     if( !$rprefix ) {
-        warn "No replacement prefix!\n" if $Verbose >= 1;
+        print STDERR "No replacement prefix!\n" if $Verbose >= 1;
         return '';
     }
 
@@ -1726,33 +2103,7 @@ sub _catprefix {
 }
 
 
-=item cd
-
-=cut
-
-sub cd {
-    my($self, $dir, @cmds) = @_;
-
-    $dir = vmspath($dir);
-
-    my $cmd = join "\n\t", map "$_", @cmds;
-
-    # No leading tab makes it look right when embedded
-    my $make_frag = sprintf <<'MAKE_FRAG', $dir, $cmd;
-startdir = F$Environment("Default")
-	Set Default %s
-	%s
-	Set Default 'startdir'
-MAKE_FRAG
-
-    # No trailing newline makes this easier to embed
-    chomp $make_frag;
-
-    return $make_frag;
-}
-
-
-=item oneliner
+=item oneliner (o)
 
 =cut
 
@@ -1770,11 +2121,11 @@ sub oneliner {
     # Switches must be quoted else they will be lowercased.
     $switches = join ' ', map { qq{"$_"} } @$switches;
 
-    return qq{\$(ABSPERLRUN) $switches -e $cmd "--"};
+    return qq{\$(PERLRUN) $switches -e $cmd};
 }
 
 
-=item B<echo>
+=item B<echo> (o)
 
 perl trips up on "<foo>" thinking it's an input redirect.  So we use the
 native Write command instead.  Besides, its faster.
@@ -1782,21 +2133,13 @@ native Write command instead.  Besides, its faster.
 =cut
 
 sub echo {
-    my($self, $text, $file, $opts) = @_;
+    my($self, $text, $file, $appending) = @_;
+    $appending ||= 0;
 
-    # Compatibility with old options
-    if( !ref $opts ) {
-        my $append = $opts;
-        $opts = { append => $append || 0 };
-    }
-    my $opencmd = $opts->{append} ? 'Open/Append' : 'Open/Write';
-
-    $opts->{allow_variables} = 0 unless defined $opts->{allow_variables};
-
-    my $ql_opts = { allow_variables => $opts->{allow_variables} };
+    my $opencmd = $appending ? 'Open/Append' : 'Open/Write';
 
     my @cmds = ("\$(NOECHO) $opencmd MMECHOFILE $file ");
-    push @cmds, map { '$(NOECHO) Write MMECHOFILE '.$self->quote_literal($_, $ql_opts) }
+    push @cmds, map { '$(NOECHO) Write MMECHOFILE '.$self->quote_literal($_) } 
                 split /\n/, $text;
     push @cmds, '$(NOECHO) Close MMECHOFILE';
     return @cmds;
@@ -1808,47 +2151,12 @@ sub echo {
 =cut
 
 sub quote_literal {
-    my($self, $text, $opts) = @_;
-    $opts->{allow_variables} = 1 unless defined $opts->{allow_variables};
+    my($self, $text) = @_;
 
     # I believe this is all we should need.
     $text =~ s{"}{""}g;
 
-    $text = $opts->{allow_variables}
-      ? $self->escape_dollarsigns($text) : $self->escape_all_dollarsigns($text);
-
     return qq{"$text"};
-}
-
-=item escape_dollarsigns
-
-Quote, don't escape.
-
-=cut
-
-sub escape_dollarsigns {
-    my($self, $text) = @_;
-
-    # Quote dollar signs which are not starting a variable
-    $text =~ s{\$ (?!\() }{"\$"}gx;
-
-    return $text;
-}
-
-
-=item escape_all_dollarsigns
-
-Quote, don't escape.
-
-=cut
-
-sub escape_all_dollarsigns {
-    my($self, $text) = @_;
-
-    # Quote dollar signs
-    $text =~ s{\$}{"\$\"}gx;
-
-    return $text;
 }
 
 =item escape_newlines
@@ -1875,7 +2183,7 @@ sub max_exec_len {
     return $self->{_MAX_EXEC_LEN} ||= 256;
 }
 
-=item init_linker
+=item init_linker (o)
 
 =cut
 
@@ -1895,45 +2203,6 @@ sub init_linker {
 
     $self->{PERL_ARCHIVE_AFTER} ||= '';
 }
-
-
-=item catdir (override)
-
-=item catfile (override)
-
-Eliminate the macros in the output to the MMS/MMK file.
-
-(File::Spec::VMS used to do this for us, but it's being removed)
-
-=cut
-
-sub catdir {
-    my $self = shift;
-
-    # Process the macros on VMS MMS/MMK
-    my @args = map { m{\$\(} ? $self->eliminate_macros($_) : $_  } @_;
-
-    my $dir = $self->SUPER::catdir(@args);
-
-    # Fix up the directory and force it to VMS format.
-    $dir = $self->fixpath($dir, 1);
-
-    return $dir;
-}
-
-sub catfile {
-    my $self = shift;
-
-    # Process the macros on VMS MMS/MMK
-    my @args = map { m{\$\(} ? $self->eliminate_macros($_) : $_  } @_;
-
-    my $file = $self->SUPER::catfile(@args);
-
-    $file = vmsify($file);
-
-    return $file
-}
-
 
 =item eliminate_macros
 
@@ -1963,7 +2232,7 @@ sub eliminate_macros {
     my($head,$macro,$tail);
 
     # perform m##g in scalar context so it acts as an iterator
-    while ($npath =~ m#(.*?)\$\((\S+?)\)(.*)#gs) {
+    while ($npath =~ m#(.*?)\$\((\S+?)\)(.*)#gs) { 
         if (defined $self->{$2}) {
             ($head,$macro,$tail) = ($1,$2,$3);
             if (ref $self->{$macro}) {
@@ -1987,20 +2256,17 @@ sub eliminate_macros {
 
 =item fixpath
 
-   my $path = $mm->fixpath($path);
-   my $path = $mm->fixpath($path, $is_dir);
-
 Catchall routine to clean up problem MM[SK]/Make macros.  Expands macros
 in any directory specification, in order to avoid juxtaposing two
 VMS-syntax directories when MM[SK] is run.  Also expands expressions which
 are all macro, so that we can tell how long the expansion is, and avoid
 overrunning DCL's command buffer when MM[KS] is running.
 
-fixpath() checks to see whether the result matches the name of a
-directory in the current default directory and returns a directory or
-file specification accordingly.  C<$is_dir> can be set to true to
-force fixpath() to consider the path to be a directory or false to force
-it to be a file.
+If optional second argument has a TRUE value, then the return string is
+a VMS-syntax directory specification, if it is FALSE, the return string
+is a VMS-syntax file specification, and if it is not specified, fixpath()
+checks to see whether it matches the name of a directory in the current
+default directory, and returns a directory or file specification accordingly.
 
 NOTE:  This is the canonical version of the method.  The version in
 File::Spec::VMS is deprecated.
@@ -2010,16 +2276,16 @@ File::Spec::VMS is deprecated.
 sub fixpath {
     my($self,$path,$force_path) = @_;
     return '' unless $path;
-    $self = bless {}, $self unless ref $self;
+    $self = bless {} unless ref $self;
     my($fixedpath,$prefix,$name);
 
-    if ($path =~ /[ \t]/) {
+    if ($path =~ /\s/) {
       return join ' ',
              map { $self->fixpath($_,$force_path) }
-	     split /[ \t]+/, $path;
+	     split /\s+/, $path;
     }
 
-    if ($path =~ m#^\$\([^\)]+\)\Z(?!\n)#s || $path =~ m#[/:>\]]#) {
+    if ($path =~ m#^\$\([^\)]+\)\Z(?!\n)#s || $path =~ m#[/:>\]]#) { 
         if ($force_path or $path =~ /(?:DIR\)|\])\Z(?!\n)/) {
             $fixedpath = vmspath($self->eliminate_macros($path));
         }
@@ -2066,16 +2332,6 @@ sub os_flavor {
 }
 
 =back
-
-
-=head1 AUTHOR
-
-Original author Charles Bailey F<bailey@newman.upenn.edu>
-
-Maintained by Michael G Schwern F<schwern@pobox.com>
-
-See L<ExtUtils::MakeMaker> for patching and contact information.
-
 
 =cut
 

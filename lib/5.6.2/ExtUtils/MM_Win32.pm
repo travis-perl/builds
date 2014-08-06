@@ -17,31 +17,26 @@ See ExtUtils::MM_Unix for a documentation of the methods provided
 there. This package overrides the implementation of these methods, not
 the semantics.
 
-=cut
+=cut 
 
-use ExtUtils::MakeMaker::Config;
+use Config;
 use File::Basename;
 use File::Spec;
 use ExtUtils::MakeMaker qw( neatvalue );
 
+use vars qw(@ISA $VERSION $BORLAND $GCC $DMAKE $NMAKE);
+
 require ExtUtils::MM_Any;
 require ExtUtils::MM_Unix;
-our @ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
-our $VERSION = '6.98';
+@ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
+$VERSION = '1.09';
 
 $ENV{EMXSHELL} = 'sh'; # to run `commands`
 
-my ( $BORLAND, $GCC, $DLLTOOL ) = _identify_compiler_environment( \%Config );
-
-sub _identify_compiler_environment {
-	my ( $config ) = @_;
-
-	my $BORLAND = $config->{cc} =~ /^bcc/i ? 1 : 0;
-	my $GCC     = $config->{cc} =~ /\bgcc\b/i ? 1 : 0;
-	my $DLLTOOL = $config->{dlltool} || 'dlltool';
-
-	return ( $BORLAND, $GCC, $DLLTOOL );
-}
+$BORLAND = 1 if $Config{'cc'} =~ /^bcc/i;
+$GCC     = 1 if $Config{'cc'} =~ /^gcc/i;
+$DMAKE = 1 if $Config{'make'} =~ /^dmake/i;
+$NMAKE = 1 if $Config{'make'} =~ /^nmake/i;
 
 
 =head2 Overridden methods
@@ -126,6 +121,20 @@ sub maybe_command {
 }
 
 
+=item B<find_tests>
+
+The Win9x shell does not expand globs and I'll play it safe and assume
+other Windows variants don't either.
+
+So we do it for them.
+
+=cut
+
+sub find_tests {
+    return join(' ', <t\\*.t>);
+}
+
+
 =item B<init_DIRFILESEP>
 
 Using \ for Windows.
@@ -136,39 +145,18 @@ sub init_DIRFILESEP {
     my($self) = shift;
 
     # The ^ makes sure its not interpreted as an escape in nmake
-    $self->{DIRFILESEP} = $self->is_make_type('nmake') ? '^\\' :
-                          $self->is_make_type('dmake') ? '\\\\'
-                                                       : '\\';
+    $self->{DIRFILESEP} = $NMAKE ? '^\\' :
+                          $DMAKE ? '\\\\'
+                                 : '\\';
 }
 
-=item init_tools
+=item B<init_others>
 
-Override some of the slower, portable commands with Windows specific ones.
+Override some of the Unix specific commands with portable
+ExtUtils::Command ones.
 
-=cut
-
-sub init_tools {
-    my ($self) = @_;
-
-    $self->{NOOP}     ||= 'rem';
-    $self->{DEV_NULL} ||= '> NUL';
-
-    $self->{FIXIN}    ||= $self->{PERL_CORE} ?
-      "\$(PERLRUN) $self->{PERL_SRC}/win32/bin/pl2bat.pl" :
-      'pl2bat.bat';
-
-    $self->SUPER::init_tools;
-
-    # Setting SHELL from $Config{sh} can break dmake.  Its ok without it.
-    delete $self->{SHELL};
-
-    return;
-}
-
-
-=item init_others
-
-Override the default link and compile tools.
+Also provide defaults for LD and AR in case the %Config values aren't
+set.
 
 LDLOADLIBS's default is changed to $Config{libs}.
 
@@ -177,12 +165,29 @@ Adjustments are made for Borland's quirks needing -L to come first.
 =cut
 
 sub init_others {
-    my $self = shift;
+    my ($self) = @_;
 
-    $self->{LD}     ||= 'link';
-    $self->{AR}     ||= 'lib';
+    # Used in favor of echo because echo won't strip quotes. :(
+    $self->{ECHO}     ||= $self->oneliner('print qq{@ARGV}', ['-l']);
+    $self->{ECHO_N}   ||= $self->oneliner('print qq{@ARGV}');
+
+    $self->{TOUCH}    ||= '$(PERLRUN) -MExtUtils::Command -e touch';
+    $self->{CHMOD}    ||= '$(PERLRUN) -MExtUtils::Command -e chmod'; 
+    $self->{CP}       ||= '$(PERLRUN) -MExtUtils::Command -e cp';
+    $self->{RM_F}     ||= '$(PERLRUN) -MExtUtils::Command -e rm_f';
+    $self->{RM_RF}    ||= '$(PERLRUN) -MExtUtils::Command -e rm_rf';
+    $self->{MV}       ||= '$(PERLRUN) -MExtUtils::Command -e mv';
+    $self->{NOOP}     ||= 'rem';
+    $self->{TEST_F}   ||= '$(PERLRUN) -MExtUtils::Command -e test_f';
+    $self->{DEV_NULL} ||= '> NUL';
+
+    $self->{LD}     ||= $Config{ld} || 'link';
+    $self->{AR}     ||= $Config{ar} || 'lib';
 
     $self->SUPER::init_others;
+
+    # Setting SHELL from $Config{sh} can break dmake.  Its ok without it.
+    delete $self->{SHELL};
 
     $self->{LDLOADLIBS} ||= $Config{libs};
     # -Lfoo must come first for Borland, so we put it in LDDLFLAGS
@@ -198,15 +203,15 @@ sub init_others {
         $self->{LDDLFLAGS} .= " $libpath";
     }
 
-    return;
+    return 1;
 }
 
 
-=item init_platform
+=item init_platform (o)
 
 Add MM_Win32_VERSION.
 
-=item platform_constants
+=item platform_constants (o)
 
 =cut
 
@@ -214,8 +219,6 @@ sub init_platform {
     my($self) = shift;
 
     $self->{MM_Win32_VERSION} = $VERSION;
-
-    return;
 }
 
 sub platform_constants {
@@ -232,37 +235,7 @@ sub platform_constants {
 }
 
 
-=item constants
-
-Add MAXLINELENGTH for dmake before all the constants are output.
-
-=cut
-
-sub constants {
-    my $self = shift;
-
-    my $make_text = $self->SUPER::constants;
-    return $make_text unless $self->is_make_type('dmake');
-
-    # dmake won't read any single "line" (even those with escaped newlines)
-    # larger than a certain size which can be as small as 8k.  PM_TO_BLIB
-    # on large modules like DateTime::TimeZone can create lines over 32k.
-    # So we'll crank it up to a <ironic>WHOPPING</ironic> 64k.
-    #
-    # This has to come here before all the constants and not in
-    # platform_constants which is after constants.
-    my $size = $self->{MAXLINELENGTH} || 800000;
-    my $prefix = qq{
-# Get dmake to read long commands like PM_TO_BLIB
-MAXLINELENGTH = $size
-
-};
-
-    return $prefix . $make_text;
-}
-
-
-=item special_targets
+=item special_targets (o)
 
 Add .USESHELL target for dmake.
 
@@ -273,7 +246,7 @@ sub special_targets {
 
     my $make_frag = $self->SUPER::special_targets;
 
-    $make_frag .= <<'MAKE_FRAG' if $self->is_make_type('dmake');
+    $make_frag .= <<'MAKE_FRAG' if $DMAKE;
 .USESHELL :
 MAKE_FRAG
 
@@ -281,7 +254,7 @@ MAKE_FRAG
 }
 
 
-=item static_lib
+=item static_lib (o)
 
 Changes how to run the linker.
 
@@ -296,7 +269,7 @@ sub static_lib {
 
     my(@m);
     push(@m, <<'END');
-$(INST_STATIC): $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DFSEP).exists
+$(INST_STATIC): $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DIRFILESEP).exists
 	$(RM_RF) $@
 END
 
@@ -319,11 +292,12 @@ q{	$(AR) }.($BORLAND ? '$@ $(OBJECT:^"+")'
 	$(NOECHO) $(ECHO) "$(EXTRALIBS)" >> $(PERL_SRC)\ext.libs
 MAKE_FRAG
 
+    push @m, "\n", $self->dir_target('$(INST_ARCHAUTODIR)');
     join('', @m);
 }
 
 
-=item dynamic_lib
+=item dynamic_lib (o)
 
 Complicated stuff for Win32 that I don't understand. :(
 
@@ -340,25 +314,35 @@ sub dynamic_lib {
     my($ldfrom) = '$(LDFROM)';
     my(@m);
 
+# one thing for GCC/Mingw32:
+# we try to overcome non-relocateable-DLL problems by generating
+#    a (hopefully unique) image-base from the dll's name
+# -- BKS, 10-19-1999
+    if ($GCC) { 
+	my $dllname = $self->{BASEEXT} . "." . $self->{DLEXT};
+	$dllname =~ /(....)(.{0,4})/;
+	my $baseaddr = unpack("n", $1 ^ $2);
+	$otherldflags .= sprintf("-Wl,--image-base,0x%x0000 ", $baseaddr);
+    }
+
     push(@m,'
 # This section creates the dynamically loadable $(INST_DYNAMIC)
 # from $(OBJECT) and possibly $(MYEXTLIB).
 OTHERLDFLAGS = '.$otherldflags.'
 INST_DYNAMIC_DEP = '.$inst_dynamic_dep.'
 
-$(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(BOOTSTRAP) $(INST_ARCHAUTODIR)$(DFSEP).exists $(EXPORT_LIST) $(PERL_ARCHIVE) $(INST_DYNAMIC_DEP)
+$(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(BOOTSTRAP) $(INST_ARCHAUTODIR)$(DIRFILESEP).exists $(EXPORT_LIST) $(PERL_ARCHIVE) $(INST_DYNAMIC_DEP)
 ');
     if ($GCC) {
-      push(@m,
-       q{	}.$DLLTOOL.q{ --def $(EXPORT_LIST) --output-exp dll.exp
+      push(@m,  
+       q{	dlltool --def $(EXPORT_LIST) --output-exp dll.exp
 	$(LD) -o $@ -Wl,--base-file -Wl,dll.base $(LDDLFLAGS) }.$ldfrom.q{ $(OTHERLDFLAGS) $(MYEXTLIB) $(PERL_ARCHIVE) $(LDLOADLIBS) dll.exp
-	}.$DLLTOOL.q{ --def $(EXPORT_LIST) --base-file dll.base --output-exp dll.exp
+	dlltool --def $(EXPORT_LIST) --base-file dll.base --output-exp dll.exp
 	$(LD) -o $@ $(LDDLFLAGS) }.$ldfrom.q{ $(OTHERLDFLAGS) $(MYEXTLIB) $(PERL_ARCHIVE) $(LDLOADLIBS) dll.exp });
     } elsif ($BORLAND) {
       push(@m,
        q{	$(LD) $(LDDLFLAGS) $(OTHERLDFLAGS) }.$ldfrom.q{,$@,,}
-       .($self->is_make_type('dmake')
-                ? q{$(PERL_ARCHIVE:s,/,\,) $(LDLOADLIBS:s,/,\,) }
+       .($DMAKE ? q{$(PERL_ARCHIVE:s,/,\,) $(LDLOADLIBS:s,/,\,) }
 		 .q{$(MYEXTLIB:s,/,\,),$(EXPORT_LIST:s,/,\,)}
 		: q{$(subst /,\,$(PERL_ARCHIVE)) $(subst /,\,$(LDLOADLIBS)) }
 		 .q{$(subst /,\,$(MYEXTLIB)),$(subst /,\,$(EXPORT_LIST))})
@@ -367,30 +351,33 @@ $(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(BOOTSTRAP) $(INST_ARCHAUTODIR)$(DFSEP).
       push(@m,
        q{	$(LD) -out:$@ $(LDDLFLAGS) }.$ldfrom.q{ $(OTHERLDFLAGS) }
       .q{$(MYEXTLIB) $(PERL_ARCHIVE) $(LDLOADLIBS) -def:$(EXPORT_LIST)});
-
-      # Embed the manifest file if it exists
-      push(@m, q{
-	if exist $@.manifest mt -nologo -manifest $@.manifest -outputresource:$@;2
-	if exist $@.manifest del $@.manifest});
     }
     push @m, '
 	$(CHMOD) $(PERM_RWX) $@
 ';
 
+    push @m, $self->dir_target('$(INST_ARCHAUTODIR)');
     join('',@m);
 }
 
-=item extra_clean_files
+=item clean
 
 Clean out some extra dll.{base,exp} files which might be generated by
 gcc.  Otherwise, take out all *.pdb files.
 
 =cut
 
-sub extra_clean_files {
-    my $self = shift;
+sub clean
+{
+    my ($self) = shift;
+    my $s = $self->SUPER::clean(@_);
+    my $clean = $GCC ? 'dll.base dll.exp' : '*.pdb';
+    $s .= <<END;
+clean ::
+	-\$(RM_F) $clean
 
-    return $GCC ? (qw(dll.base dll.exp)) : ('*.pdb');
+END
+    return $s;
 }
 
 =item init_linker
@@ -422,7 +409,7 @@ sub perl_script {
 }
 
 
-=item xs_o
+=item xs_o (o)
 
 This target is stubbed out.  Not sure why.
 
@@ -433,7 +420,7 @@ sub xs_o {
 }
 
 
-=item pasthru
+=item pasthru (o)
 
 All we send is -nologo to nmake to prevent it from printing its damned
 banner.
@@ -442,36 +429,11 @@ banner.
 
 sub pasthru {
     my($self) = shift;
-    return "PASTHRU = " . ($self->is_make_type('nmake') ? "-nologo" : "");
+    return "PASTHRU = " . ($NMAKE ? "-nologo" : "");
 }
 
 
-=item arch_check (override)
-
-Normalize all arguments for consistency of comparison.
-
-=cut
-
-sub arch_check {
-    my $self = shift;
-
-    # Win32 is an XS module, minperl won't have it.
-    # arch_check() is not critical, so just fake it.
-    return 1 unless $self->can_load_xs;
-    return $self->SUPER::arch_check( map { $self->_normalize_path_name($_) } @_);
-}
-
-sub _normalize_path_name {
-    my $self = shift;
-    my $file = shift;
-
-    require Win32;
-    my $short = Win32::GetShortPathName($file);
-    return defined $short ? lc $short : lc $file;
-}
-
-
-=item oneliner
+=item oneliner (o)
 
 These are based on what command.com does on Win98.  They may be wrong
 for other Windows shells, I don't know.
@@ -491,39 +453,27 @@ sub oneliner {
 
     $switches = join ' ', @$switches;
 
-    return qq{\$(ABSPERLRUN) $switches -e $cmd --};
+    return qq{\$(PERLRUN) $switches -e $cmd};
 }
 
 
 sub quote_literal {
-    my($self, $text, $opts) = @_;
-    $opts->{allow_variables} = 1 unless defined $opts->{allow_variables};
+    my($self, $text) = @_;
 
-    # See: http://www.autohotkey.net/~deleyd/parameters/parameters.htm#CPP
+    # I don't know if this is correct, but it seems to work on
+    # Win98's command.com
+    $text =~ s{"}{\\"}g;
 
-    # Apply the Microsoft C/C++ parsing rules
-    $text =~ s{\\\\"}{\\\\\\\\\\"}g;  # \\" -> \\\\\"
-    $text =~ s{(?<!\\)\\"}{\\\\\\"}g; # \"  -> \\\"
-    $text =~ s{(?<!\\)"}{\\"}g;       # "   -> \"
-    $text = qq{"$text"} if $text =~ /[ \t]/;
-
-    # Apply the Command Prompt parsing rules (cmd.exe)
-    my @text = split /("[^"]*")/, $text;
-    # We should also escape parentheses, but it breaks one-liners containing
-    # $(MACRO)s in makefiles.
-    s{([<>|&^@!])}{^$1}g foreach grep { !/^"[^"]*"$/ } @text;
-    $text = join('', @text);
-
-    # dmake expands {{ to { and }} to }.
-    if( $self->is_make_type('dmake') ) {
+    # dmake eats '{' inside double quotes and leaves alone { outside double
+    # quotes; however it transforms {{ into { either inside and outside double
+    # quotes.  It also translates }} into }.  The escaping below is not
+    # 100% correct.
+    if( $DMAKE ) {
         $text =~ s/{/{{/g;
-        $text =~ s/}/}}/g;
+        $text =~ s/}}/}}}/g;
     }
 
-    $text = $opts->{allow_variables}
-      ? $self->escape_dollarsigns($text) : $self->escape_all_dollarsigns($text);
-
-    return $text;
+    return qq{"$text"};
 }
 
 
@@ -534,40 +484,6 @@ sub escape_newlines {
     $text =~ s{\n}{\\\n}g;
 
     return $text;
-}
-
-
-=item cd
-
-dmake can handle Unix style cd'ing but nmake (at least 1.5) cannot.  It
-wants:
-
-    cd dir1\dir2
-    command
-    another_command
-    cd ..\..
-
-=cut
-
-sub cd {
-    my($self, $dir, @cmds) = @_;
-
-    return $self->SUPER::cd($dir, @cmds) unless $self->is_make_type('nmake');
-
-    my $cmd = join "\n\t", map "$_", @cmds;
-
-    my $updirs = $self->catdir(map { $self->updir } $self->splitdir($dir));
-
-    # No leading tab and no trailing newline makes for easier embedding.
-    my $make_frag = sprintf <<'MAKE_FRAG', $dir, $cmd, $updirs;
-cd %s
-	%s
-	cd %s
-MAKE_FRAG
-
-    chomp $make_frag;
-
-    return $make_frag;
 }
 
 
@@ -595,43 +511,11 @@ sub os_flavor {
 }
 
 
-=item cflags
-
-Defines the PERLDLL symbol if we are configured for static building since all
-code destined for the perl5xx.dll must be compiled with the PERLDLL symbol
-defined.
-
-=cut
-
-sub cflags {
-    my($self,$libperl)=@_;
-    return $self->{CFLAGS} if $self->{CFLAGS};
-    return '' unless $self->needs_linking();
-
-    my $base = $self->SUPER::cflags($libperl);
-    foreach (split /\n/, $base) {
-        /^(\S*)\s*=\s*(\S*)$/ and $self->{$1} = $2;
-    };
-    $self->{CCFLAGS} .= " -DPERLDLL" if ($self->{LINKTYPE} eq 'static');
-
-    return $self->{CFLAGS} = qq{
-CCFLAGS = $self->{CCFLAGS}
-OPTIMIZE = $self->{OPTIMIZE}
-PERLTYPE = $self->{PERLTYPE}
-};
-
-}
-
-sub is_make_type {
-    my($self, $type) = @_;
-    return !! ($self->make =~ /\b$type(?:\.exe)?$/);
-}
-
 1;
 __END__
 
 =back
 
-=cut
+=cut 
 
 

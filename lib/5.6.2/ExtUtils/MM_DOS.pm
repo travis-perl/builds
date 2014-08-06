@@ -1,12 +1,13 @@
 package ExtUtils::MM_DOS;
 
 use strict;
+use vars qw($VERSION @ISA);
 
-our $VERSION = '6.98';
+$VERSION = 0.02;
 
 require ExtUtils::MM_Any;
 require ExtUtils::MM_Unix;
-our @ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
+@ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
 
 
 =head1 NAME

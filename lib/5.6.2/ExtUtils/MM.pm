@@ -1,13 +1,14 @@
 package ExtUtils::MM;
 
 use strict;
-use ExtUtils::MakeMaker::Config;
-
-our $VERSION = '6.98';
+use Config;
+use vars qw(@ISA $VERSION);
+$VERSION = 0.04;
 
 require ExtUtils::Liblist;
 require ExtUtils::MakeMaker;
-our @ISA = qw(ExtUtils::Liblist ExtUtils::MakeMaker);
+
+@ISA = qw(ExtUtils::Liblist ExtUtils::MakeMaker);
 
 =head1 NAME
 
@@ -37,48 +38,37 @@ away.
 {
     # Convenient alias.
     package MM;
-    our @ISA = qw(ExtUtils::MM);
+    use vars qw(@ISA);
+    @ISA = qw(ExtUtils::MM);
     sub DESTROY {}
 }
 
-sub _is_win95 {
-    # miniperl might not have the Win32 functions available and we need
-    # to run in miniperl.
-    my $have_win32 = eval { require Win32 };
-    return $have_win32 && defined &Win32::IsWin95 ? Win32::IsWin95()
-                                                  : ! defined $ENV{SYSTEMROOT};
-}
-
 my %Is = ();
-$Is{VMS}    = $^O eq 'VMS';
-$Is{OS2}    = $^O eq 'os2';
-$Is{MacOS}  = $^O eq 'MacOS';
+$Is{VMS}    = 1 if $^O eq 'VMS';
+$Is{OS2}    = 1 if $^O eq 'os2';
+$Is{MacOS}  = 1 if $^O eq 'MacOS';
 if( $^O eq 'MSWin32' ) {
-    _is_win95() ? $Is{Win95} = 1 : $Is{Win32} = 1;
+    Win32::IsWin95() ? $Is{Win95} = 1 : $Is{Win32} = 1;
 }
-$Is{UWIN}   = $^O =~ /^uwin(-nt)?$/;
-$Is{Cygwin} = $^O eq 'cygwin';
-$Is{NW5}    = $Config{osname} eq 'NetWare';  # intentional
-$Is{BeOS}   = ($^O =~ /beos/i or $^O eq 'haiku');
-$Is{DOS}    = $^O eq 'dos';
+$Is{UWIN}   = 1 if $^O eq 'uwin';
+$Is{Cygwin} = 1 if $^O eq 'cygwin';
+$Is{NW5}    = 1 if $Config{osname} eq 'NetWare';  # intentional
+$Is{BeOS}   = 1 if $^O =~ /beos/i;    # XXX should this be that loose?
+$Is{DOS}    = 1 if $^O eq 'dos';
+
+$Is{Unix}   = 1 if !keys %Is;
+
 if( $Is{NW5} ) {
     $^O = 'NetWare';
     delete $Is{Win32};
 }
-$Is{VOS}    = $^O eq 'vos';
-$Is{QNX}    = $^O eq 'qnx';
-$Is{AIX}    = $^O eq 'aix';
-$Is{Darwin} = $^O eq 'darwin';
 
-$Is{Unix}   = !grep { $_ } values %Is;
-
-map { delete $Is{$_} unless $Is{$_} } keys %Is;
 _assert( keys %Is == 1 );
 my($OS) = keys %Is;
 
 
 my $class = "ExtUtils::MM_$OS";
-eval "require $class" unless $INC{"ExtUtils/MM_$OS.pm"}; ## no critic
+eval "require $class" unless $INC{"ExtUtils/MM_$OS.pm"};
 die $@ if $@;
 unshift @ISA, $class;
 

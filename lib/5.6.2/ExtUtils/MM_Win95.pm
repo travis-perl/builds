@@ -1,13 +1,14 @@
 package ExtUtils::MM_Win95;
 
-use strict;
-
-our $VERSION = '6.98';
+use vars qw($VERSION @ISA);
+$VERSION = 0.03;
 
 require ExtUtils::MM_Win32;
-our @ISA = qw(ExtUtils::MM_Win32);
+@ISA = qw(ExtUtils::MM_Win32);
 
-use ExtUtils::MakeMaker::Config;
+use Config;
+my $DMAKE = 1 if $Config{'make'} =~ /^dmake/i;
+my $NMAKE = 1 if $Config{'make'} =~ /^nmake/i;
 
 
 =head1 NAME
@@ -23,13 +24,66 @@ ExtUtils::MM_Win95 - method to customize MakeMaker for Win9X
 This is a subclass of ExtUtils::MM_Win32 containing changes necessary
 to get MakeMaker playing nice with command.com and other Win9Xisms.
 
-=head2 Overridden methods
+=head2 Overriden methods
 
-Most of these make up for limitations in the Win9x/nmake command shell.
-Mostly its lack of &&.
+Most of these make up for limitations in the Win9x command shell.
+Namely the lack of && and that a chdir is global, so you have to chdir
+back at the end.
 
 =over 4
 
+=item dist_test
+
+&& and chdir problem.
+
+=cut
+
+sub dist_test {
+    my($self) = shift;
+    return q{
+disttest : distdir
+	cd $(DISTVNAME)
+	$(ABSPERLRUN) Makefile.PL
+	$(MAKE) $(PASTHRU)
+	$(MAKE) test $(PASTHRU)
+	cd ..
+};
+}
+
+=item subdir_x
+
+&& and chdir problem.
+
+Also, dmake has an odd way of making a command series silent.
+
+=cut
+
+sub subdir_x {
+    my($self, $subdir) = @_;
+
+    # Win-9x has nasty problem in command.com that can't cope with
+    # &&.  Also, Dmake has an odd way of making a commandseries silent:
+    if ($DMAKE) {
+      return sprintf <<'EOT', $subdir;
+
+subdirs ::
+@[
+	cd %s
+	$(MAKE) all $(PASTHRU)
+	cd ..
+]
+EOT
+    }
+    else {
+        return sprintf <<'EOT', $subdir;
+
+subdirs ::
+	$(NOECHO)cd %s
+	$(NOECHO)$(MAKE) all $(PASTHRU)
+	$(NOECHO)cd ..
+EOT
+    }
+}
 
 =item xs_c
 
@@ -42,7 +96,7 @@ sub xs_c {
     return '' unless $self->needs_linking();
     '
 .xs.c:
-	$(XSUBPPRUN) $(XSPROTOARG) $(XSUBPPARGS) $*.xs > $*.c
+	$(PERLRUN) $(XSUBPP) $(XSPROTOARG) $(XSUBPPARGS) $*.xs > $*.c
 	'
 }
 
@@ -58,11 +112,11 @@ sub xs_cpp {
     return '' unless $self->needs_linking();
     '
 .xs.cpp:
-	$(XSUBPPRUN) $(XSPROTOARG) $(XSUBPPARGS) $*.xs > $*.cpp
+	$(PERLRUN) $(XSUBPP) $(XSPROTOARG) $(XSUBPPARGS) $*.xs > $*.cpp
 	';
 }
 
-=item xs_o
+=item xs_o 
 
 The && problem.
 
@@ -73,23 +127,68 @@ sub xs_o {
     return '' unless $self->needs_linking();
     '
 .xs$(OBJ_EXT):
-	$(XSUBPPRUN) $(XSPROTOARG) $(XSUBPPARGS) $*.xs > $*.c
+	$(PERLRUN) $(XSUBPP) $(XSPROTOARG) $(XSUBPPARGS) $*.xs > $*.c
 	$(CCCMD) $(CCCDLFLAGS) -I$(PERL_INC) $(DEFINE) $*.c
 	';
 }
 
+=item clean_subdirs_target
 
-=item max_exec_len
-
-Win98 chokes on things like Encode if we set the max length to nmake's max
-of 2K.  So we go for a more conservative value of 1K.
+&& and chdir problem.
 
 =cut
 
-sub max_exec_len {
+sub clean_subdirs_target {
+    my($self) = shift;
+
+    # No subdirectories, no cleaning.
+    return <<'NOOP_FRAG' unless @{$self->{DIR}};
+clean_subdirs :
+	$(NOECHO)$(NOOP)
+NOOP_FRAG
+
+
+    my $clean = "clean_subdirs :\n";
+
+    for my $dir (@{$self->{DIR}}) {
+        $clean .= sprintf <<'MAKE_FRAG', $dir;
+	cd %s
+	$(TEST_F) $(FIRST_MAKEFILE)
+	$(MAKE) clean
+	cd ..
+MAKE_FRAG
+    }
+
+    return $clean;
+}
+
+
+=item realclean_subdirs_target
+
+&& and chdir problem.
+
+=cut
+
+sub realclean_subdirs_target {
     my $self = shift;
 
-    return $self->{_MAX_EXEC_LEN} ||= 1024;
+    return <<'NOOP_FRAG' unless @{$self->{DIR}};
+realclean_subdirs :
+	$(NOECHO)$(NOOP)
+NOOP_FRAG
+
+    my $rclean = "realclean_subdirs :\n";
+
+    foreach my $dir (@{$self->{DIR}}){
+        $rclean .= sprintf <<'RCLEAN', $dir;
+	-cd %s
+	-$(PERLRUN) -e "exit unless -f shift; system q{$(MAKE) realclean}" $(FIRST_MAKEFILE)
+	-cd ..
+RCLEAN
+
+    }
+
+    return $rclean;
 }
 
 
@@ -110,13 +209,13 @@ sub os_flavor {
 
 =head1 AUTHOR
 
-Code originally inside MM_Win32.  Original author unknown.
+Code originally inside MM_Win32.  Original author unknown.  
 
-Currently maintained by Michael G Schwern C<schwern@pobox.com>.
+Currently maintained by Michael G Schwern <schwern@pobox.com>.
 
-Send patches and ideas to C<makemaker@perl.org>.
+Send patches and ideas to <F<makemaker@perl.org>>.
 
-See https://metacpan.org/release/ExtUtils-MakeMaker.
+See http://www.makemaker.org.
 
 =cut
 

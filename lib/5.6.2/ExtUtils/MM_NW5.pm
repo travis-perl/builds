@@ -16,23 +16,25 @@ the semantics.
 
 =over
 
-=cut
+=cut 
 
 use strict;
-use ExtUtils::MakeMaker::Config;
+use Config;
 use File::Basename;
 
-our $VERSION = '6.98';
+use vars qw(@ISA $VERSION);
+$VERSION = '2.06';
 
 require ExtUtils::MM_Win32;
-our @ISA = qw(ExtUtils::MM_Win32);
+@ISA = qw(ExtUtils::MM_Win32);
 
 use ExtUtils::MakeMaker qw( &neatvalue );
 
 $ENV{EMXSHELL} = 'sh'; # to run `commands`
 
-my $BORLAND  = $Config{'cc'} =~ /^bcc/i;
-my $GCC      = $Config{'cc'} =~ /^gcc/i;
+my $BORLAND  = 1 if $Config{'cc'} =~ /^bcc/i;
+my $GCC      = 1 if $Config{'cc'} =~ /^gcc/i;
+my $DMAKE    = 1 if $Config{'make'} =~ /^dmake/i;
 
 
 =item os_flavor
@@ -46,7 +48,7 @@ sub os_flavor {
     return ($self->SUPER::os_flavor, 'Netware');
 }
 
-=item init_platform
+=item init_platform (o)
 
 Add Netware macros.
 
@@ -66,7 +68,7 @@ sub init_platform {
     # To get Win32's setup.
     $self->SUPER::init_platform;
 
-    # incpath is copied to makefile var INCLUDE in constants sub, here just
+    # incpath is copied to makefile var INCLUDE in constants sub, here just 
     # make it empty
     my $libpth = $Config{'libpth'};
     $libpth =~ s( )(;);
@@ -78,7 +80,7 @@ sub init_platform {
     if($self->{'base_import'}) {
         $self->{'BASE_IMPORT'} .= ', ' . $self->{'base_import'};
     }
-
+ 
     $self->{'NLM_VERSION'} = $Config{'nlm_version'};
     $self->{'MPKTOOL'}	= $Config{'mpktool'};
     $self->{'TOOLPATH'}	= $Config{'toolpath'};
@@ -110,7 +112,7 @@ sub platform_constants {
     # Setup Win32's constants.
     $make_frag .= $self->SUPER::platform_constants;
 
-    foreach my $macro (qw(LIBPTH BASE_IMPORT NLM_VERSION MPKTOOL
+    foreach my $macro (qw(LIBPTH BASE_IMPORT NLM_VERSION MPKTOOL 
                           TOOLPATH BOOT_SYMBOL NLM_SHORT_NAME INCLUDE PATH
                           MM_NW5_VERSION
                       ))
@@ -123,7 +125,7 @@ sub platform_constants {
 }
 
 
-=item const_cccmd
+=item const_cccmd (o)
 
 =cut
 
@@ -140,7 +142,7 @@ MAKE_FRAG
 }
 
 
-=item static_lib
+=item static_lib (o)
 
 =cut
 
@@ -150,7 +152,7 @@ sub static_lib {
     return '' unless $self->has_link_code;
 
     my $m = <<'END';
-$(INST_STATIC): $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DFSEP).exists
+$(INST_STATIC): $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DIRFILESEP).exists
 	$(RM_RF) $@
 END
 
@@ -179,13 +181,14 @@ END
 
     $m .= <<'END' if $self->{PERL_SRC};
 	$(NOECHO) $(ECHO) "$(EXTRALIBS)" >> $(PERL_SRC)\ext.libs
-
-
+    
+    
 END
+    $m .= $self->dir_target('$(INST_ARCHAUTODIR)');
     return $m;
 }
 
-=item dynamic_lib
+=item dynamic_lib (o)
 
 Defines how to produce the *.so (or equivalent) files.
 
@@ -210,7 +213,7 @@ OTHERLDFLAGS = '.$otherldflags.'
 INST_DYNAMIC_DEP = '.$inst_dynamic_dep.'
 
 # Create xdc data for an MT safe NLM in case of mpk build
-$(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(BOOTSTRAP) $(INST_ARCHAUTODIR)$(DFSEP).exists
+$(INST_DYNAMIC): $(OBJECT) $(MYEXTLIB) $(BOOTSTRAP)
 	$(NOECHO) $(ECHO) Export boot_$(BOOT_SYMBOL) > $(BASEEXT).def
 	$(NOECHO) $(ECHO) $(BASE_IMPORT) >> $(BASEEXT).def
 	$(NOECHO) $(ECHO) Import @$(PERL_INC)\perl.imp >> $(BASEEXT).def
@@ -231,7 +234,7 @@ MAKE_FRAG
 
     # Taking care of long names like FileHandle, ByteLoader, SDBM_File etc
     if($self->{NLM_SHORT_NAME}) {
-        # In case of nlms with names exceeding 8 chars, build nlm in the
+        # In case of nlms with names exceeding 8 chars, build nlm in the 
         # current dir, rename and move to auto\lib.
         $m .= q{ -o $(NLM_SHORT_NAME).$(DLEXT)}
     } else {
@@ -245,7 +248,7 @@ MAKE_FRAG
 
     if($self->{NLM_SHORT_NAME}) {
         $m .= <<'MAKE_FRAG';
-	if exist $(INST_AUTODIR)\$(NLM_SHORT_NAME).$(DLEXT) del $(INST_AUTODIR)\$(NLM_SHORT_NAME).$(DLEXT)
+	if exist $(INST_AUTODIR)\$(NLM_SHORT_NAME).$(DLEXT) del $(INST_AUTODIR)\$(NLM_SHORT_NAME).$(DLEXT) 
 	move $(NLM_SHORT_NAME).$(DLEXT) $(INST_AUTODIR)
 MAKE_FRAG
     }
@@ -254,6 +257,8 @@ MAKE_FRAG
 
 	$(CHMOD) 755 $@
 MAKE_FRAG
+
+    $m .= $self->dir_target('$(INST_ARCHAUTODIR)');
 
     return $m;
 }
@@ -264,6 +269,6 @@ __END__
 
 =back
 
-=cut
+=cut 
 
 

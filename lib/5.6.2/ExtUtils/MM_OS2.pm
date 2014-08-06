@@ -1,15 +1,16 @@
 package ExtUtils::MM_OS2;
 
 use strict;
+use vars qw($VERSION @ISA);
 
 use ExtUtils::MakeMaker qw(neatvalue);
 use File::Spec;
 
-our $VERSION = '6.98';
+$VERSION = '1.04';
 
 require ExtUtils::MM_Any;
 require ExtUtils::MM_Unix;
-our @ISA = qw(ExtUtils::MM_Any ExtUtils::MM_Unix);
+@ISA = qw(ExtUtils::MM_Any ExtUtils::MM_Unix);
 
 =pod
 
@@ -31,7 +32,7 @@ the semantics.
 
 =over 4
 
-=item init_dist
+=item init_dist (o)
 
 Define TO_UNIX to convert OS2 linefeeds to Unix style.
 
@@ -74,19 +75,19 @@ $self->{BASEEXT}.def: Makefile.PL
     if ($self->{IMPORTS} && %{$self->{IMPORTS}}) {
 	# Make import files (needed for static build)
 	-d 'tmp_imp' or mkdir 'tmp_imp', 0777 or die "Can't mkdir tmp_imp";
-	open my $imp, '>', 'tmpimp.imp' or die "Can't open tmpimp.imp";
-	while (my($name, $exp) = each %{$self->{IMPORTS}}) {
+	open IMP, '>tmpimp.imp' or die "Can't open tmpimp.imp";
+	my ($name, $exp);
+	while (($name, $exp)= each %{$self->{IMPORTS}}) {
 	    my ($lib, $id) = ($exp =~ /(.*)\.(.*)/) or die "Malformed IMPORT `$exp'";
-	    print $imp "$name $lib $id ?\n";
+	    print IMP "$name $lib $id ?\n";
 	}
-	close $imp or die "Can't close tmpimp.imp";
+	close IMP or die "Can't close tmpimp.imp";
 	# print "emximp -o tmpimp$Config::Config{lib_ext} tmpimp.imp\n";
-	system "emximp -o tmpimp$Config::Config{lib_ext} tmpimp.imp"
+	system "emximp -o tmpimp$Config::Config{lib_ext} tmpimp.imp" 
 	    and die "Cannot make import library: $!, \$?=$?";
-	# May be running under miniperl, so have no glob...
-	eval { unlink <tmp_imp/*>; 1 } or system "rm tmp_imp/*";
-	system "cd tmp_imp; $Config::Config{ar} x ../tmpimp$Config::Config{lib_ext}"
-	    and die "Cannot extract import objects: $!, \$?=$?";
+	unlink <tmp_imp/*>;
+	system "cd tmp_imp; $Config::Config{ar} x ../tmpimp$Config::Config{lib_ext}" 
+	    and die "Cannot extract import objects: $!, \$?=$?";      
     }
     join('',@m);
 }
@@ -95,7 +96,7 @@ sub static_lib {
     my($self) = @_;
     my $old = $self->ExtUtils::MM_Unix::static_lib();
     return $old unless $self->{IMPORTS} && %{$self->{IMPORTS}};
-
+    
     my @chunks = split /\n{2,}/, $old;
     shift @chunks unless length $chunks[0]; # Empty lines at the start
     $chunks[0] .= <<'EOC';

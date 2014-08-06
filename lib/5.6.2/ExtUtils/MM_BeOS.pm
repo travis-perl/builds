@@ -1,7 +1,5 @@
 package ExtUtils::MM_BeOS;
 
-use strict;
-
 =head1 NAME
 
 ExtUtils::MM_BeOS - methods to override UN*X behaviour in ExtUtils::MakeMaker
@@ -18,18 +16,19 @@ the semantics.
 
 =over 4
 
-=cut
+=cut 
 
-use ExtUtils::MakeMaker::Config;
+use Config;
 use File::Spec;
 require ExtUtils::MM_Any;
 require ExtUtils::MM_Unix;
 
-our @ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
-our $VERSION = '6.98';
+use vars qw(@ISA $VERSION);
+@ISA = qw( ExtUtils::MM_Any ExtUtils::MM_Unix );
+$VERSION = 1.04;
 
 
-=item os_flavor
+=item os_flavor (o)
 
 BeOS is BeOS.
 
@@ -48,7 +47,7 @@ libperl.a equivalent to be linked to dynamic extensions.
 sub init_linker {
     my($self) = shift;
 
-    $self->{PERL_ARCHIVE} ||=
+    $self->{PERL_ARCHIVE} ||= 
       File::Spec->catdir('$(PERL_INC)',$Config{libperl});
     $self->{PERL_ARCHIVE_AFTER} ||= '';
     $self->{EXPORT_LIST}  ||= '';
