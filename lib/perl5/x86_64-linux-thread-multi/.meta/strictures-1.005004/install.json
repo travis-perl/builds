@@ -1,1 +1,1 @@
-{"provides":{"strictures":{"file":"lib/strictures.pm","version":"1.005004"}},"target":"strictures","pathname":"H/HA/HAARG/strictures-1.005004.tar.gz","name":"strictures","dist":"strictures-1.005004","version":"1.005004"}
+{"name":"strictures","target":"strictures","pathname":"H/HA/HAARG/strictures-1.005004.tar.gz","provides":{"strictures":{"file":"lib/strictures.pm","version":"1.005004"}},"version":"1.005004","dist":"strictures-1.005004"}
