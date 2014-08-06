@@ -1,4 +1,4 @@
-=head2 Mon Jul 28 11:28:04 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
+=head2 Wed Aug  6 17:14:25 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Mon Jul 28 11:28:10 2014: C<Module> L<Module::Metadata|Module::Metadata>
+=head2 Wed Aug  6 17:14:31 2014: C<Module> L<Module::Metadata|Module::Metadata>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:11 2014: C<Module> L<Perl::OSType|Perl::OSType>
+=head2 Wed Aug  6 17:14:33 2014: C<Module> L<Perl::OSType|Perl::OSType>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:13 2014: C<Module> L<Cwd|Cwd>
+=head2 Wed Aug  6 17:14:39 2014: C<Module> L<Cwd|Cwd>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:15 2014: C<Module> L<Locale::Maketext::Simple|Locale::Maketext::Simple>
+=head2 Wed Aug  6 17:14:41 2014: C<Module> L<Locale::Maketext::Simple|Locale::Maketext::Simple>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:17 2014: C<Module> L<Test::Simple|Test::Simple>
+=head2 Wed Aug  6 17:14:44 2014: C<Module> L<Test::Simple|Test::Simple>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:17 2014: C<Module> L<Module::Load|Module::Load>
+=head2 Wed Aug  6 17:14:44 2014: C<Module> L<Module::Load|Module::Load>
 
 =over 4
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:19 2014: C<Module> L<Module::CoreList|Module::CoreList>
+=head2 Wed Aug  6 17:14:46 2014: C<Module> L<Module::CoreList|Module::CoreList>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: corelist>
 
 =back
 
-=head2 Mon Jul 28 11:28:19 2014: C<Module> L<Params::Check|Params::Check>
+=head2 Wed Aug  6 17:14:48 2014: C<Module> L<Params::Check|Params::Check>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:20 2014: C<Module> L<Module::Load::Conditional|Module::Load::Conditional>
+=head2 Wed Aug  6 17:14:48 2014: C<Module> L<Module::Load::Conditional|Module::Load::Conditional>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:20 2014: C<Module> L<IPC::Cmd|IPC::Cmd>
+=head2 Wed Aug  6 17:14:49 2014: C<Module> L<IPC::Cmd|IPC::Cmd>
 
 =over 4
 
@@ -240,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:21 2014: C<Module> L<ExtUtils::CBuilder|ExtUtils::CBuilder>
+=head2 Wed Aug  6 17:14:49 2014: C<Module> L<ExtUtils::CBuilder|ExtUtils::CBuilder>
 
 =over 4
 
@@ -262,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:23 2014: C<Module> L<Test::Harness|Test::Harness>
+=head2 Wed Aug  6 17:14:52 2014: C<Module> L<Test::Harness|Test::Harness>
 
 =over 4
 
@@ -284,7 +284,7 @@ C<EXE_FILES: bin/prove>
 
 =back
 
-=head2 Mon Jul 28 11:28:24 2014: C<Module> L<ExtUtils::ParseXS|ExtUtils::ParseXS>
+=head2 Wed Aug  6 17:14:54 2014: C<Module> L<ExtUtils::ParseXS|ExtUtils::ParseXS>
 
 =over 4
 
@@ -306,7 +306,7 @@ C<EXE_FILES: lib/ExtUtils/xsubpp>
 
 =back
 
-=head2 Mon Jul 28 11:28:28 2014: C<Module> L<Pod::Escapes|Pod::Escapes>
+=head2 Wed Aug  6 17:14:58 2014: C<Module> L<Pod::Escapes|Pod::Escapes>
 
 =over 4
 
@@ -328,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:28 2014: C<Module> L<Pod::Simple|Pod::Simple>
+=head2 Wed Aug  6 17:14:59 2014: C<Module> L<Pod::Simple|Pod::Simple>
 
 =over 4
 
@@ -350,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:29 2014: C<Module> L<Pod|Pod>
+=head2 Wed Aug  6 17:15:00 2014: C<Module> L<Pod|Pod>
 
 =over 4
 
@@ -372,7 +372,7 @@ C<EXE_FILES: scripts/pod2text scripts/pod2man>
 
 =back
 
-=head2 Mon Jul 28 11:28:31 2014: C<Module> L<Dist::CheckConflicts|Dist::CheckConflicts>
+=head2 Wed Aug  6 17:15:02 2014: C<Module> L<Dist::CheckConflicts|Dist::CheckConflicts>
 
 =over 4
 
@@ -394,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:35 2014: C<Module> L<Test::Requires|Test::Requires>
+=head2 Wed Aug  6 17:15:07 2014: C<Module> L<Test::Requires|Test::Requires>
 
 =over 4
 
@@ -416,7 +416,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:37 2014: C<Module> L<Params::Util|Params::Util>
+=head2 Wed Aug  6 17:15:10 2014: C<Module> L<Params::Util|Params::Util>
 
 =over 4
 
@@ -438,7 +438,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:38 2014: C<Module> L<Sub::Install|Sub::Install>
+=head2 Wed Aug  6 17:15:11 2014: C<Module> L<Sub::Install|Sub::Install>
 
 =over 4
 
@@ -460,7 +460,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:40 2014: C<Module> L<Try::Tiny|Try::Tiny>
+=head2 Wed Aug  6 17:15:13 2014: C<Module> L<Try::Tiny|Try::Tiny>
 
 =over 4
 
@@ -482,7 +482,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:40 2014: C<Module> L<Test::Fatal|Test::Fatal>
+=head2 Wed Aug  6 17:15:14 2014: C<Module> L<Test::Fatal|Test::Fatal>
 
 =over 4
 
@@ -504,7 +504,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:43 2014: C<Module> L<List::MoreUtils|List::MoreUtils>
+=head2 Wed Aug  6 17:15:18 2014: C<Module> L<List::MoreUtils|List::MoreUtils>
 
 =over 4
 
@@ -526,7 +526,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:43 2014: C<Module> L<Package::DeprecationManager|Package::DeprecationManager>
+=head2 Wed Aug  6 17:15:19 2014: C<Module> L<Package::DeprecationManager|Package::DeprecationManager>
 
 =over 4
 
@@ -548,7 +548,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:46 2014: C<Module> L<List::Util|List::Util>
+=head2 Wed Aug  6 17:15:22 2014: C<Module> L<List::Util|List::Util>
 
 =over 4
 
@@ -570,7 +570,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:48 2014: C<Module> L<Package::Stash::XS|Package::Stash::XS>
+=head2 Wed Aug  6 17:15:25 2014: C<Module> L<Package::Stash::XS|Package::Stash::XS>
 
 =over 4
 
@@ -592,7 +592,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:50 2014: C<Module> L<Data::OptList|Data::OptList>
+=head2 Wed Aug  6 17:15:28 2014: C<Module> L<Data::OptList|Data::OptList>
 
 =over 4
 
@@ -614,7 +614,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:50 2014: C<Module> L<Sub::Exporter|Sub::Exporter>
+=head2 Wed Aug  6 17:15:29 2014: C<Module> L<Sub::Exporter|Sub::Exporter>
 
 =over 4
 
@@ -636,7 +636,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:51 2014: C<Module> L<Task::Weaken|Task::Weaken>
+=head2 Wed Aug  6 17:15:31 2014: C<Module> L<Task::Weaken|Task::Weaken>
 
 =over 4
 
@@ -658,7 +658,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:54 2014: C<Module> L<Class::C3::XS|Class::C3::XS>
+=head2 Wed Aug  6 17:15:35 2014: C<Module> L<Class::C3::XS|Class::C3::XS>
 
 =over 4
 
@@ -680,7 +680,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:55 2014: C<Module> L<Algorithm::C3|Algorithm::C3>
+=head2 Wed Aug  6 17:15:36 2014: C<Module> L<Algorithm::C3|Algorithm::C3>
 
 =over 4
 
@@ -702,7 +702,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:55 2014: C<Module> L<Class::C3|Class::C3>
+=head2 Wed Aug  6 17:15:36 2014: C<Module> L<Class::C3|Class::C3>
 
 =over 4
 
@@ -724,7 +724,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:56 2014: C<Module> L<MRO::Compat|MRO::Compat>
+=head2 Wed Aug  6 17:15:37 2014: C<Module> L<MRO::Compat|MRO::Compat>
 
 =over 4
 
@@ -746,7 +746,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:28:59 2014: C<Module> L<Getopt::Long|Getopt::Long>
+=head2 Wed Aug  6 17:15:40 2014: C<Module> L<Getopt::Long|Getopt::Long>
 
 =over 4
 
@@ -768,7 +768,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:00 2014: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
+=head2 Wed Aug  6 17:15:42 2014: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
 
 =over 4
 
@@ -790,7 +790,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:01 2014: C<Module> L<ExtUtils::Config|ExtUtils::Config>
+=head2 Wed Aug  6 17:15:44 2014: C<Module> L<ExtUtils::Config|ExtUtils::Config>
 
 =over 4
 
@@ -812,7 +812,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:02 2014: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
+=head2 Wed Aug  6 17:15:44 2014: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
 
 =over 4
 
@@ -834,7 +834,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:05 2014: C<Module> L<Module::Implementation|Module::Implementation>
+=head2 Wed Aug  6 17:15:48 2014: C<Module> L<Module::Implementation|Module::Implementation>
 
 =over 4
 
@@ -856,7 +856,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:05 2014: C<Module> L<Package::Stash|Package::Stash>
+=head2 Wed Aug  6 17:15:48 2014: C<Module> L<Package::Stash|Package::Stash>
 
 =over 4
 
@@ -878,7 +878,7 @@ C<EXE_FILES: bin/package-stash-conflicts>
 
 =back
 
-=head2 Mon Jul 28 11:29:06 2014: C<Module> L<Class::Load::XS|Class::Load::XS>
+=head2 Wed Aug  6 17:15:50 2014: C<Module> L<Class::Load::XS|Class::Load::XS>
 
 =over 4
 
@@ -900,7 +900,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:07 2014: C<Module> L<parent|parent>
+=head2 Wed Aug  6 17:15:51 2014: C<Module> L<parent|parent>
 
 =over 4
 
@@ -922,7 +922,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:08 2014: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Wed Aug  6 17:15:52 2014: C<Module> L<Devel::StackTrace|Devel::StackTrace>
 
 =over 4
 
@@ -944,7 +944,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:09 2014: C<Module> L<Eval::Closure|Eval::Closure>
+=head2 Wed Aug  6 17:15:53 2014: C<Module> L<Eval::Closure|Eval::Closure>
 
 =over 4
 
@@ -966,7 +966,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:10 2014: C<Module> L<Sub::Name|Sub::Name>
+=head2 Wed Aug  6 17:15:55 2014: C<Module> L<Sub::Name|Sub::Name>
 
 =over 4
 
@@ -980,7 +980,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.07>
+C<VERSION: 0.08>
 
 =item *
 
@@ -988,7 +988,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:11 2014: C<Module> L<Carp|Carp>
+=head2 Wed Aug  6 17:15:57 2014: C<Module> L<Carp|Carp>
 
 =over 4
 
@@ -1010,7 +1010,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:13 2014: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Wed Aug  6 17:15:59 2014: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -1032,7 +1032,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:14 2014: C<Module> L<Devel::GlobalDestruction::XS|Devel::GlobalDestruction::XS>
+=head2 Wed Aug  6 17:16:00 2014: C<Module> L<Devel::GlobalDestruction::XS|Devel::GlobalDestruction::XS>
 
 =over 4
 
@@ -1054,7 +1054,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:14 2014: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Wed Aug  6 17:16:01 2014: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -1076,7 +1076,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:20 2014: C<Module> L<Moose|Moose>
+=head2 Wed Aug  6 17:16:08 2014: C<Module> L<Moose|Moose>
 
 =over 4
 
@@ -1098,7 +1098,7 @@ C<EXE_FILES: bin/moose-outdated>
 
 =back
 
-=head2 Mon Jul 28 11:29:23 2014: C<Module> L<indirect|indirect>
+=head2 Wed Aug  6 17:16:12 2014: C<Module> L<indirect|indirect>
 
 =over 4
 
@@ -1120,7 +1120,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:24 2014: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
+=head2 Wed Aug  6 17:16:14 2014: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
 
 =over 4
 
@@ -1134,7 +1134,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.308>
+C<VERSION: 0.309>
 
 =item *
 
@@ -1142,7 +1142,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:26 2014: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
+=head2 Wed Aug  6 17:16:15 2014: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
 
 =over 4
 
@@ -1164,7 +1164,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:28 2014: C<Module> L<multidimensional|multidimensional>
+=head2 Wed Aug  6 17:16:18 2014: C<Module> L<multidimensional|multidimensional>
 
 =over 4
 
@@ -1186,7 +1186,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:30 2014: C<Module> L<bareword::filehandles|bareword::filehandles>
+=head2 Wed Aug  6 17:16:20 2014: C<Module> L<bareword::filehandles|bareword::filehandles>
 
 =over 4
 
@@ -1208,7 +1208,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:30 2014: C<Module> L<strictures|strictures>
+=head2 Wed Aug  6 17:16:20 2014: C<Module> L<strictures|strictures>
 
 =over 4
 
@@ -1230,7 +1230,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:31 2014: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Wed Aug  6 17:16:21 2014: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -1252,7 +1252,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:32 2014: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Wed Aug  6 17:16:23 2014: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -1274,7 +1274,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:33 2014: C<Module> L<Import::Into|Import::Into>
+=head2 Wed Aug  6 17:16:24 2014: C<Module> L<Import::Into|Import::Into>
 
 =over 4
 
@@ -1296,7 +1296,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Jul 28 11:29:34 2014: C<Module> L<Moo|Moo>
+=head2 Wed Aug  6 17:16:25 2014: C<Module> L<Moo|Moo>
 
 =over 4
 
