@@ -2,17 +2,19 @@ package MooseX::Role::WithOverloading::Meta::Role::Application;
 BEGIN {
   $MooseX::Role::WithOverloading::Meta::Role::Application::AUTHORITY = 'cpan:FLORA';
 }
-{
-  $MooseX::Role::WithOverloading::Meta::Role::Application::VERSION = '0.13';
-}
 # ABSTRACT: Role application role for Roles which support overloading
-
+$MooseX::Role::WithOverloading::Meta::Role::Application::VERSION = '0.14';
 use Moose::Role 1.15;
 use overload ();
 use namespace::autoclean;
 
 requires 'apply_methods';
 
+#pod =method overload_ops
+#pod
+#pod Returns an arrayref of the names of overloaded operations
+#pod
+#pod =cut
 
 has overload_ops => (
     is      => 'ro',
@@ -24,22 +26,38 @@ sub _build_overload_ops {
     return [map { split /\s+/ } values %overload::ops];
 }
 
+#pod =method apply_methods ($role, $other)
+#pod
+#pod Wrapped with an after modifier which calls the C<< ->apply_overloading >>
+#pod method.
+#pod
+#pod =cut
 
 after apply_methods => sub {
     my ($self, $role, $other) = @_;
     $self->apply_overloading($role, $other);
 };
 
+#pod =method apply_overloading ($role, $other)
+#pod
+#pod Does the heavy lifting of applying overload operations to
+#pod a class or role which the role is applied to.
+#pod
+#pod =cut
 
 sub apply_overloading {
     my ($self, $role, $other) = @_;
     return unless overload::Overloaded($role->name);
 
-    # overloading predicate method
-    $other->add_package_symbol('&()' => $role->get_package_symbol('&()'));
-    # fallback value
-    $other->add_package_symbol('$()' => $role->get_package_symbol('$()'))
-        if $role->has_package_symbol('$()');
+    # &(( indicates that overloading is turned on with Perl 5.18+. &() does
+    # this in earlier perls. $() stores the fallback value if one was set.
+    for my $sym (qw{ &(( &() $() }) {
+        # Simply checking ->has_package_symbol doesn't work. With 5.18+, a
+        # package may have &() and $() symbols but they may be undef.
+        my $ref = $role->get_package_symbol($sym);
+        $other->add_package_symbol($sym => $ref)
+            if defined $ref;
+    }
 
     # register with magic by touching (changes to SVf_AMAGIC removed %OVERLOAD in 5.17.0)
     $other->get_or_add_package_symbol('%OVERLOAD')->{dummy}++ if $^V < 5.017000;
@@ -76,11 +94,15 @@ __END__
 
 =pod
 
-=encoding utf-8
+=encoding UTF-8
 
 =head1 NAME
 
 MooseX::Role::WithOverloading::Meta::Role::Application - Role application role for Roles which support overloading
+
+=head1 VERSION
+
+version 0.14
 
 =head1 METHODS
 
@@ -114,7 +136,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Florian Ragwitz.
+This software is copyright (c) 2014 by Florian Ragwitz.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
