@@ -1,5 +1,5 @@
 {
-   "abstract" : "Spiffy Perl Interface Framework For You",
+   "abstract" : "YAML Ain't Markup Language",
    "author" : [
       "Ingy döt Net <ingy@cpan.org>"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Spiffy",
+   "name" : "YAML",
    "no_index" : {
       "directory" : [
          "inc",
@@ -39,12 +39,12 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/ingydotnet/spiffy-pm/issues"
+         "web" : "https://github.com/ingydotnet/yaml-pm/issues"
       },
-      "homepage" : "https://github.com/ingydotnet/spiffy-pm",
+      "homepage" : "https://github.com/ingydotnet/yaml-pm",
       "repository" : {
-         "url" : "https://github.com/ingydotnet/spiffy-pm.git"
+         "url" : "https://github.com/ingydotnet/yaml-pm.git"
       }
    },
-   "version" : "0.36"
+   "version" : "0.98"
 }
