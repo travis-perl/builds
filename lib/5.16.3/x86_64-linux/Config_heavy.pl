@@ -80,9 +80,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Mon Jul 28 12:01:27 UTC 2014
+## Configuration time: Wed Aug  6 17:55:35 UTC 2014
 ## Configured by     : travis
-## Target system     : linux testing-worker-linux-2-2-5830-linux-13-31030841 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-worker-linux-7-1-31950-linux-19-31828065 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -205,8 +205,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-worker-linux-2-2-5830-linux-13-31030841.c45665.blueboxgrid.com'
-cf_time='Mon Jul 28 12:01:27 UTC 2014'
+cf_email='travis@testing-worker-linux-7-1-31950-linux-19-31828065.c45665.blueboxgrid.com'
+cf_time='Wed Aug  6 17:55:35 UTC 2014'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -980,8 +980,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.c45665.blueboxgrid.com'
-myhostname='testing-worker-linux-2-2-5830-linux-13-31030841'
-myuname='linux testing-worker-linux-2-2-5830-linux-13-31030841 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-worker-linux-7-1-31950-linux-19-31828065'
+myuname='linux testing-worker-linux-7-1-31950-linux-19-31828065 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1020,7 +1020,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@testing-worker-linux-2-2-5830-linux-13-31030841.c45665.blueboxgrid.com'
+perladmin='travis@testing-worker-linux-7-1-31950-linux-19-31828065.c45665.blueboxgrid.com'
 perllibs='-lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.16.3/bin/perl'
 pg='pg'
