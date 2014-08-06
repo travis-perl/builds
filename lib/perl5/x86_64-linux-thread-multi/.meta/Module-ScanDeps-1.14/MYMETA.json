@@ -4,7 +4,7 @@
       "Audrey Tang <cpan@audreyt.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.140640",
+   "generated_by" : "Module::Install version 1.10, CPAN::Meta::Converter version 2.140640",
    "license" : [
       "perl_5"
    ],
@@ -55,5 +55,5 @@
          "url" : "http://svn.openfoundry.org/par/Module-ScanDeps/trunk/"
       }
    },
-   "version" : "1.13"
+   "version" : "1.14"
 }

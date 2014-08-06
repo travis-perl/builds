@@ -1,1 +1,1 @@
-{"version":"1.03","pathname":"G/GA/GAAS/Encode-Locale-1.03.tar.gz","target":"Encode::Locale","name":"Encode::Locale","provides":{"Encode::Locale":{"file":"lib/Encode/Locale.pm","version":"1.03"}},"dist":"Encode-Locale-1.03"}
+{"target":"Encode::Locale","version":"1.03","pathname":"G/GA/GAAS/Encode-Locale-1.03.tar.gz","name":"Encode::Locale","provides":{"Encode::Locale":{"version":"1.03","file":"lib/Encode/Locale.pm"}},"dist":"Encode-Locale-1.03"}
