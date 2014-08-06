@@ -1,10 +1,10 @@
 {
-   "abstract" : "(re)name a sub",
+   "abstract" : "unknown",
    "author" : [
-      "Matthijs van Duin <xmath@cpan.org>"
+      "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.141520, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "ExtUtils::MakeMaker version 6.92, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.142060",
    "license" : [
       "unknown"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Sub-Name",
+   "name" : "Test-Most",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,21 +32,22 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.006"
+            "Exception::Class" : "1.14",
+            "Test::Deep" : "0.106",
+            "Test::Differences" : "0.61",
+            "Test::Exception" : "0.31",
+            "Test::Harness" : "3.21",
+            "Test::More" : "0.88",
+            "Test::Warn" : "0.23"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "bugtracker" : {
-         "mailto" : "bug-Sub-Name@rt.cpan.org",
-         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Sub-Name"
-      },
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/karenetheridge/Sub-Name.git",
-         "web" : "https://github.com/karenetheridge/Sub-Name"
+         "web" : "https://github.com/Ovid/test--most"
       }
    },
-   "version" : "0.07"
+   "version" : "0.34"
 }

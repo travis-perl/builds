@@ -1,14 +1,17 @@
 package MooseX::Role::Parameterized::Meta::Trait::Parameterized;
+BEGIN {
+  $MooseX::Role::Parameterized::Meta::Trait::Parameterized::AUTHORITY = 'cpan:SARTAK';
+}
+# ABSTRACT: trait for parameterized roles
+$MooseX::Role::Parameterized::Meta::Trait::Parameterized::VERSION = '1.07';
 use Moose::Role;
-
-our $VERSION = '1.02';
-
 use MooseX::Role::Parameterized::Parameters;
 use Moose::Util 'find_meta';
+use namespace::autoclean;
 
 has genitor => (
     is       => 'ro',
-    isa      => 'MooseX::Role::Parameterized::Meta::Role::Parameterizable',
+    does     => 'MooseX::Role::Parameterized::Meta::Trait::Parameterizable',
     required => 1,
 );
 
@@ -36,15 +39,21 @@ around reinitialize => sub {
     return $new;
 };
 
-no Moose::Role;
-
 1;
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
 =head1 NAME
 
 MooseX::Role::Parameterized::Meta::Trait::Parameterized - trait for parameterized roles
+
+=head1 VERSION
+
+version 1.07
 
 =head1 DESCRIPTION
 
@@ -56,6 +65,8 @@ generated this role object.
 
 =head1 ATTRIBUTES
 
+=for stopwords genitor metaobject
+
 =head2 genitor
 
 Returns the L<MooseX::Role::Parameterized::Meta::Role::Parameterizable>
@@ -66,5 +77,15 @@ metaobject that generated this role.
 Returns the L<MooseX::Role::Parameterized::Parameters> object that represents
 the specific parameter values for this parameterized role.
 
-=cut
+=head1 AUTHOR
 
+Shawn M Moore <code@sartak.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2008 by Shawn M Moore.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
