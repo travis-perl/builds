@@ -1,1 +1,1 @@
-{"dist":"Module-Path-0.13","name":"Module::Path","pathname":"N/NE/NEILB/Module-Path-0.13.tar.gz","target":"Module::Path","version":"0.13","provides":{"Module::Path":{"file":"lib/Module/Path.pm","version":"0.13"}}}
+{"provides":{"Module::Path":{"file":"lib/Module/Path.pm","version":"0.13"}},"dist":"Module-Path-0.13","version":"0.13","pathname":"N/NE/NEILB/Module-Path-0.13.tar.gz","target":"Module::Path","name":"Module::Path"}

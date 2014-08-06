@@ -1,1 +1,1 @@
-{"provides":{"Test::CheckDeps":{"version":"0.010","file":"lib/Test/CheckDeps.pm"}},"version":"0.010","name":"Test::CheckDeps","pathname":"L/LE/LEONT/Test-CheckDeps-0.010.tar.gz","target":"Test::CheckDeps","dist":"Test-CheckDeps-0.010"}
+{"provides":{"Test::CheckDeps":{"version":"0.010","file":"lib/Test/CheckDeps.pm"}},"dist":"Test-CheckDeps-0.010","pathname":"L/LE/LEONT/Test-CheckDeps-0.010.tar.gz","version":"0.010","target":"Test::CheckDeps","name":"Test::CheckDeps"}

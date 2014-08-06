@@ -1,1 +1,0 @@
-{"target":"Test::Most","pathname":"O/OV/OVID/Test-Most-0.33.tar.gz","name":"Test::Most","dist":"Test-Most-0.33","version":"0.33","provides":{"Test::Most::Exception":{"version":"0.33","file":"lib/Test/Most/Exception.pm"},"Test::Most":{"version":"0.33","file":"lib/Test/Most.pm"}}}
