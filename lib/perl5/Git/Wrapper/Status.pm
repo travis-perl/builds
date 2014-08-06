@@ -4,7 +4,7 @@ use warnings;
 
 package Git::Wrapper::Status;
 # ABSTRACT: A specific status information in the Git
-$Git::Wrapper::Status::VERSION = '0.034';
+$Git::Wrapper::Status::VERSION = '0.035';
 my %modes = (
   M   => 'modified',
   A   => 'added',
@@ -52,7 +52,7 @@ Git::Wrapper::Status - A specific status information in the Git
 
 =head1 VERSION
 
-version 0.034
+version 0.035
 
 =head1 METHODS
 
