@@ -505,8 +505,8 @@ in older Perl releases:
     SvUV
     SvUV_nomg
     SvUV_set
-    SvUVX
     SvUVx
+    SvUVX
     SvUVXx
     SvVSTRING_mg
     UNDERBAR
