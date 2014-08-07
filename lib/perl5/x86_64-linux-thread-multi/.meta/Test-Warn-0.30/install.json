@@ -1,1 +1,1 @@
-{"target":"Test::Warn","dist":"Test-Warn-0.30","version":"0.30","provides":{"Test::Warn":{"file":"Warn.pm","version":"0.30"},"Test::Warn::Categorization":{"version":"0.30","file":"Warn.pm"}},"pathname":"C/CH/CHORNY/Test-Warn-0.30.tar.gz","name":"Test::Warn"}
+{"pathname":"C/CH/CHORNY/Test-Warn-0.30.tar.gz","provides":{"Test::Warn":{"file":"Warn.pm","version":"0.30"},"Test::Warn::Categorization":{"file":"Warn.pm","version":"0.30"}},"target":"Test::Warn","name":"Test::Warn","dist":"Test-Warn-0.30","version":"0.30"}
