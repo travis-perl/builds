@@ -1,1 +1,1 @@
-{"name":"String::Flogger","target":"String::Flogger","version":"1.101244","provides":{"String::Flogger":{"file":"lib/String/Flogger.pm","version":"1.101244"}},"dist":"String-Flogger-1.101244","pathname":"R/RJ/RJBS/String-Flogger-1.101244.tar.gz"}
+{"target":"String::Flogger","pathname":"R/RJ/RJBS/String-Flogger-1.101244.tar.gz","name":"String::Flogger","version":"1.101244","provides":{"String::Flogger":{"version":"1.101244","file":"lib/String/Flogger.pm"}},"dist":"String-Flogger-1.101244"}

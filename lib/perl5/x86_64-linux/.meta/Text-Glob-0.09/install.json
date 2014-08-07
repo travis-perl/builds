@@ -1,1 +1,1 @@
-{"name":"Text::Glob","version":"0.09","target":"Text::Glob","provides":{"Text::Glob":{"file":"lib/Text/Glob.pm","version":"0.09"}},"dist":"Text-Glob-0.09","pathname":"R/RC/RCLAMP/Text-Glob-0.09.tar.gz"}
+{"target":"Text::Glob","pathname":"R/RC/RCLAMP/Text-Glob-0.09.tar.gz","name":"Text::Glob","version":"0.09","provides":{"Text::Glob":{"file":"lib/Text/Glob.pm","version":"0.09"}},"dist":"Text-Glob-0.09"}
