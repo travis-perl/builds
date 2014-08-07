@@ -179,32 +179,32 @@ do{ my $x = [
                                                  'Software::License' => '0.103009'
                                                }
                                },
+         'dist_authoring' => {
+                               'requires' => {
+                                               'Archive::Tar' => '1.09'
+                                             },
+                               'recommends' => {
+                                                 'Pod::Readme' => '0.04',
+                                                 'Module::Signature' => '0.21'
+                                               },
+                               'description' => 'Create new distributions'
+                             },
+         'PPM_support' => {
+                            'description' => 'Generate PPM files for distributions'
+                          },
+         'HTML_support' => {
+                             'requires' => {
+                                             'Pod::Html' => 0
+                                           },
+                             'description' => 'Create HTML documentation'
+                           },
          'inc_bundling_support' => {
                                      'description' => 'Bundle Module::Build in inc/',
                                      'requires' => {
                                                      'ExtUtils::Install' => '1.54',
                                                      'ExtUtils::Installed' => '1.999'
                                                    }
-                                   },
-         'dist_authoring' => {
-                               'requires' => {
-                                               'Archive::Tar' => '1.09'
-                                             },
-                               'description' => 'Create new distributions',
-                               'recommends' => {
-                                                 'Pod::Readme' => '0.04',
-                                                 'Module::Signature' => '0.21'
-                                               }
-                             },
-         'PPM_support' => {
-                            'description' => 'Generate PPM files for distributions'
-                          },
-         'HTML_support' => {
-                             'description' => 'Create HTML documentation',
-                             'requires' => {
-                                             'Pod::Html' => 0
-                                           }
-                           }
+                                   }
        }
      ];
 $x; }
