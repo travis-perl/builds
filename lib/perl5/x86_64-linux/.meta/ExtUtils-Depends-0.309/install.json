@@ -1,1 +1,1 @@
-{"dist":"ExtUtils-Depends-0.309","version":"0.309","target":"ExtUtils::Depends","name":"ExtUtils::Depends","provides":{"ExtUtils::Depends":{"file":"lib/ExtUtils/Depends.pm","version":"0.309"}},"pathname":"X/XA/XAOC/ExtUtils-Depends-0.309.tar.gz"}
+{"pathname":"X/XA/XAOC/ExtUtils-Depends-0.309.tar.gz","target":"ExtUtils::Depends","provides":{"ExtUtils::Depends":{"file":"lib/ExtUtils/Depends.pm","version":"0.309"}},"name":"ExtUtils::Depends","version":"0.309","dist":"ExtUtils-Depends-0.309"}
