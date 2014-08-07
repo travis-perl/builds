@@ -1,1 +1,1 @@
-{"provides":{"CPAN::Meta::YAML":{"file":"lib/CPAN/Meta/YAML.pm","version":"0.012"}},"dist":"CPAN-Meta-YAML-0.012","target":"CPAN::Meta::YAML","name":"CPAN::Meta::YAML","version":"0.012","pathname":"D/DA/DAGOLDEN/CPAN-Meta-YAML-0.012.tar.gz"}
+{"name":"CPAN::Meta::YAML","version":"0.012","dist":"CPAN-Meta-YAML-0.012","target":"CPAN::Meta::YAML","pathname":"D/DA/DAGOLDEN/CPAN-Meta-YAML-0.012.tar.gz","provides":{"CPAN::Meta::YAML":{"version":"0.012","file":"lib/CPAN/Meta/YAML.pm"}}}
