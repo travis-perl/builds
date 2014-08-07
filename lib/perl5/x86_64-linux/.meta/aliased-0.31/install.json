@@ -1,1 +1,1 @@
-{"name":"aliased","pathname":"O/OV/OVID/aliased-0.31.tar.gz","dist":"aliased-0.31","target":"aliased","version":"0.31","provides":{"aliased":{"file":"lib/aliased.pm","version":"0.31"}}}
+{"provides":{"aliased":{"file":"lib/aliased.pm","version":"0.31"}},"pathname":"O/OV/OVID/aliased-0.31.tar.gz","name":"aliased","dist":"aliased-0.31","target":"aliased","version":"0.31"}

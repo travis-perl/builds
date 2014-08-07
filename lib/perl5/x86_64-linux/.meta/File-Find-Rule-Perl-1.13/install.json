@@ -1,1 +1,1 @@
-{"dist":"File-Find-Rule-Perl-1.13","pathname":"A/AD/ADAMK/File-Find-Rule-Perl-1.13.tar.gz","name":"File::Find::Rule::Perl","target":"File::Find::Rule::Perl","version":"1.13","provides":{"File::Find::Rule::Perl":{"file":"lib/File/Find/Rule/Perl.pm","version":"1.13"}}}
+{"target":"File::Find::Rule::Perl","version":"1.13","name":"File::Find::Rule::Perl","dist":"File-Find-Rule-Perl-1.13","provides":{"File::Find::Rule::Perl":{"file":"lib/File/Find/Rule/Perl.pm","version":"1.13"}},"pathname":"A/AD/ADAMK/File-Find-Rule-Perl-1.13.tar.gz"}
