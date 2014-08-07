@@ -1,1 +1,1 @@
-{"name":"JSON","version":"2.90","dist":"JSON-2.90","provides":{"JSON":{"version":"2.90","file":"lib/JSON.pm"},"JSON::Boolean":{"file":"lib/JSON.pm","version":"2.90"},"JSON::Backend::PP":{"file":"lib/JSON.pm","version":"2.90"}},"pathname":"M/MA/MAKAMAKA/JSON-2.90.tar.gz","target":"JSON"}
+{"pathname":"M/MA/MAKAMAKA/JSON-2.90.tar.gz","name":"JSON","provides":{"JSON":{"file":"lib/JSON.pm","version":"2.90"},"JSON::Backend::PP":{"file":"lib/JSON.pm","version":"2.90"},"JSON::Boolean":{"file":"lib/JSON.pm","version":"2.90"}},"dist":"JSON-2.90","target":"JSON","version":"2.90"}
