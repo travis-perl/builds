@@ -1,1 +1,1 @@
-{"provides":{"File::pushd":{"version":"1.009","file":"lib/File/pushd.pm"}},"target":"File::pushd","pathname":"D/DA/DAGOLDEN/File-pushd-1.009.tar.gz","version":"1.009","dist":"File-pushd-1.009","name":"File::pushd"}
+{"pathname":"D/DA/DAGOLDEN/File-pushd-1.009.tar.gz","version":"1.009","target":"File::pushd","dist":"File-pushd-1.009","provides":{"File::pushd":{"version":"1.009","file":"lib/File/pushd.pm"}},"name":"File::pushd"}
