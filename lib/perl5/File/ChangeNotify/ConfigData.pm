@@ -168,18 +168,18 @@ do{ my $x = [
        {},
        {},
        {
-         'Inotify' => {
-                        'description' => 'Inotify support',
-                        'requires' => {
-                                        'Linux::Inotify2' => '1.2'
-                                      }
-                      },
          'KQueue' => {
                        'requires' => {
                                        'IO::KQueue' => 0
                                      },
                        'description' => 'KQueue support'
-                     }
+                     },
+         'Inotify' => {
+                        'requires' => {
+                                        'Linux::Inotify2' => '1.2'
+                                      },
+                        'description' => 'Inotify support'
+                      }
        }
      ];
 $x; }

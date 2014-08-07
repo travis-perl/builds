@@ -1,1 +1,1 @@
-{"provides":{"Test::Version":{"version":"1.002004","file":"lib/Test/Version.pm"}},"target":"Test::Version","name":"Test::Version","dist":"Test-Version-1.002004","pathname":"X/XE/XENO/Test-Version-1.002004.tar.gz","version":"1.002004"}
+{"version":"1.002004","pathname":"X/XE/XENO/Test-Version-1.002004.tar.gz","name":"Test::Version","dist":"Test-Version-1.002004","target":"Test::Version","provides":{"Test::Version":{"version":"1.002004","file":"lib/Test/Version.pm"}}}
