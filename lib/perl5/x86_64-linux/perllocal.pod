@@ -1,4 +1,4 @@
-=head2 Wed Aug  6 18:43:57 2014: C<Module> L<Import::Into|Import::Into>
+=head2 Thu Aug  7 00:01:55 2014: C<Module> L<Import::Into|Import::Into>
 
 =over 4
 
@@ -20,95 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:43:59 2014: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.10>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Aug  6 18:44:00 2014: C<Module> L<Role::Tiny|Role::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.003003>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Aug  6 18:44:02 2014: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.001011>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Aug  6 18:44:03 2014: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.12>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Aug  6 18:44:07 2014: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
+=head2 Thu Aug  7 00:01:57 2014: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
 
 =over 4
 
@@ -130,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:10 2014: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
+=head2 Thu Aug  7 00:01:59 2014: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
 
 =over 4
 
@@ -152,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:14 2014: C<Module> L<multidimensional|multidimensional>
+=head2 Thu Aug  7 00:02:02 2014: C<Module> L<multidimensional|multidimensional>
 
 =over 4
 
@@ -174,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:17 2014: C<Module> L<indirect|indirect>
+=head2 Thu Aug  7 00:02:04 2014: C<Module> L<indirect|indirect>
 
 =over 4
 
@@ -196,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:19 2014: C<Module> L<bareword::filehandles|bareword::filehandles>
+=head2 Thu Aug  7 00:02:05 2014: C<Module> L<bareword::filehandles|bareword::filehandles>
 
 =over 4
 
@@ -218,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:20 2014: C<Module> L<strictures|strictures>
+=head2 Thu Aug  7 00:02:06 2014: C<Module> L<strictures|strictures>
 
 =over 4
 
@@ -240,7 +152,95 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:21 2014: C<Module> L<Moo|Moo>
+=head2 Thu Aug  7 00:02:08 2014: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.10>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Aug  7 00:02:09 2014: C<Module> L<Role::Tiny|Role::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.003003>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Aug  7 00:02:14 2014: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.001011>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Aug  7 00:02:15 2014: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.18.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.12>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Aug  7 00:02:15 2014: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -262,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:24 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Thu Aug  7 00:02:18 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -284,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 18:44:25 2014: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Thu Aug  7 00:02:19 2014: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
