@@ -1,9 +1,6 @@
 package MooseX::Types::CheckedUtilExports;
-BEGIN {
-  $MooseX::Types::CheckedUtilExports::AUTHORITY = 'cpan:PHAYLON';
-}
 # ABSTRACT: Wrap L<Moose::Util::TypeConstraints> to be safer for L<MooseX::Types>
-$MooseX::Types::CheckedUtilExports::VERSION = '0.44';
+$MooseX::Types::CheckedUtilExports::VERSION = '0.45';
 use strict;
 use warnings;
 use Moose::Util::TypeConstraints ();
@@ -16,34 +13,37 @@ q{WARNING: String found where Type expected (did you use a => instead of a , ?)}
 
 my @exports = qw/type subtype maybe_type duck_type enum coerce from as/;
 
-# =head1 DESCRIPTION
-#
-# Prevents errors like:
-#
-#     subtype Foo =>
-#     ...
-#
-# Which should be written as:
-#
-#     subtype Foo,
-#     ...
-#
-# When using L<MooseX::Types>. Exported by that module.
-#
-# Exports checked versions of the following subs:
-#
-# C<type> C<subtype> C<maybe_type> C<duck_type> C<enum> C<coerce> C<from> C<as>
-#
-# While C<class_type> and C<role_type> will also register the type in the library.
-#
-# From L<Moose::Util::TypeConstraints>. See that module for syntax.
-#
-# =cut
+#pod =head1 DESCRIPTION
+#pod
+#pod Prevents errors like:
+#pod
+#pod     subtype Foo =>
+#pod     ...
+#pod
+#pod Which should be written as:
+#pod
+#pod     subtype Foo,
+#pod     ...
+#pod
+#pod When using L<MooseX::Types>. Exported by that module.
+#pod
+#pod Exports checked versions of the following subs:
+#pod
+#pod C<type> C<subtype> C<maybe_type> C<duck_type> C<enum> C<coerce> C<from> C<as>
+#pod
+#pod While C<class_type> and C<role_type> will also register the type in the library.
+#pod
+#pod From L<Moose::Util::TypeConstraints>. See that module for syntax.
+#pod
+#pod =cut
 
 for my $export (@exports) {
     no strict 'refs';
 
-    *{$export} = sub {
+    Sub::Install::install_sub({
+      into => __PACKAGE__,
+      as   => $export,
+      code => sub {
         my $caller = shift;
 
         local $Carp::CarpLevel = $Carp::CarpLevel + 1;
@@ -55,7 +55,8 @@ for my $export (@exports) {
                 $caller->get_registered_role_type($_[0]);
 
         goto &{"Moose::Util::TypeConstraints::$export"};
-    }
+      }
+    });
 }
 
 Moose::Exporter->setup_import_methods(
@@ -78,11 +79,11 @@ sub role_type ($;$) {
     );
 }
 
-# =head1 SEE ALSO
-#
-# L<MooseX::Types>
-#
-# =cut
+#pod =head1 SEE ALSO
+#pod
+#pod L<MooseX::Types>
+#pod
+#pod =cut
 
 1;
 
@@ -92,15 +93,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Robert "phaylon" Sedlacek
-
 =head1 NAME
 
 MooseX::Types::CheckedUtilExports - Wrap L<Moose::Util::TypeConstraints> to be safer for L<MooseX::Types>
 
 =head1 VERSION
 
-version 0.44
+version 0.45
 
 =head1 DESCRIPTION
 

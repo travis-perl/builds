@@ -16,7 +16,6 @@ use Plack::TempBuffer;
 
 use constant DEBUG        => $ENV{STARMAN_DEBUG} || 0;
 use constant CHUNKSIZE    => 64 * 1024;
-use constant READ_TIMEOUT => 5;
 
 my $null_io = do { open my $io, "<", \""; $io };
 
@@ -58,6 +57,9 @@ sub run {
     }
     if (! exists $options->{keepalive_timeout}) {
         $options->{keepalive_timeout} = 1;
+    }
+    if (! exists $options->{read_timeout}) {
+        $options->{read_timeout} = 5;
     }
     if (! exists $options->{proctitle}) {
         $options->{proctitle} = 1;
@@ -249,7 +251,7 @@ sub process_request {
 
             # Do we need to send 100 Continue?
             if ( $env->{HTTP_EXPECT} ) {
-                if ( $env->{HTTP_EXPECT} eq '100-continue' ) {
+                if ( lc $env->{HTTP_EXPECT} eq '100-continue' ) {
                     _syswrite($conn, \('HTTP/1.1 100 Continue' . $CRLF . $CRLF));
                     DEBUG && warn "[$$] Sent 100 Continue response\n";
                 }
@@ -325,7 +327,7 @@ sub _read_headers {
     eval {
         local $SIG{ALRM} = sub { die "Timed out\n"; };
 
-        alarm( READ_TIMEOUT );
+        alarm( $self->{options}->{read_timeout} );
 
         while (1) {
             # Do we have a full header in the buffer?
