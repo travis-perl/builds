@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN {
 	$Type::Coercion::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Coercion::VERSION   = '0.046';
+	$Type::Coercion::VERSION   = '1.000004';
 }
 
 use Eval::TypeTiny qw<>;
@@ -24,8 +24,10 @@ use overload
 
 BEGIN {
 	require Type::Tiny;
-	overload->import(q(~~) => sub { $_[0]->has_coercion_for_value($_[1]) })
-		if Type::Tiny::SUPPORT_SMARTMATCH();
+	overload->import(
+		q(~~)    => sub { $_[0]->has_coercion_for_value($_[1]) },
+		fallback => 1, # 5.10 loses the fallback otherwise
+	) if Type::Tiny::SUPPORT_SMARTMATCH();
 }
 
 sub _overload_coderef
@@ -162,12 +164,14 @@ sub is_anon
 	$self->name eq "__ANON__";
 }
 
-sub _clear_compiled_coercion {
+sub _clear_compiled_coercion
+{
 	delete $_[0]{_overload_coderef};
 	delete $_[0]{compiled_coercion};
 }
 
-sub freeze { $_[0]{frozen} = 1; $_[0] }
+sub freeze                    { $_[0]{frozen} = 1; $_[0] }
+sub i_really_want_to_unfreeze { $_[0]{frozen} = 0; $_[0] }
 
 sub coerce
 {
@@ -279,8 +283,8 @@ sub _build_compiled_coercion
 			!defined($codes[$i])
 				? sprintf('  { return $_[0] }') :
 			Types::TypeTiny::StringLike->check($codes[$i])
-				? sprintf('  { local $_ = $_[0]; return( %s ) }', $codes[$i]) :
-			sprintf('  { local $_ = $_[0]; return $codes[%d]->(@_) }', $i);
+				? sprintf('  { local $_ = $_[0]; return scalar(%s); }', $codes[$i]) :
+			sprintf('  { local $_ = $_[0]; return scalar($codes[%d]->(@_)) }', $i);
 	}
 	
 	push @sub, 'return $_[0];';
@@ -298,6 +302,9 @@ sub _build_compiled_coercion
 sub can_be_inlined
 {
 	my $self = shift;
+	
+	return unless $self->frozen;
+	
 	return
 		if $self->has_type_constraint
 		&& !$self->type_constraint->can_be_inlined;
@@ -359,9 +366,9 @@ sub inline_coercion
 		push @sub, sprintf('(%s) ?', $types[$i]->inline_check($varname));
 		push @sub,
 			(defined($codes[$i]) && ($varname eq '$_'))
-				? sprintf('scalar(%s) :', $codes[$i]) :
+				? sprintf('scalar(do { %s }) :', $codes[$i]) :
 			defined($codes[$i])
-				? sprintf('do { local $_ = %s; scalar(%s) } :', $varname, $codes[$i]) :
+				? sprintf('scalar(do { local $_ = %s; %s }) :', $varname, $codes[$i]) :
 			sprintf('%s :', $varname);
 	}
 	
@@ -468,9 +475,12 @@ sub isa
 		return !!1;
 	}
 	
-	if ($INC{"Moose.pm"} and blessed($self) and $_[0] =~ /^Moose/ and my $r = $self->moose_coercion->isa(@_))
+	if ($INC{"Moose.pm"}
+	and blessed($self)
+	and $_[0] =~ /^(Class::MOP|MooseX?)::/)
 	{
-		return $r;
+		my $r = $self->moose_coercion->isa(@_);
+		return $r if $r;
 	}
 	
 	$self->SUPER::isa(@_);
@@ -483,7 +493,9 @@ sub can
 	my $can = $self->SUPER::can(@_);
 	return $can if $can;
 	
-	if ($INC{"Moose.pm"} and blessed($self) and my $method = $self->moose_coercion->can(@_))
+	if ($INC{"Moose.pm"}
+	and blessed($self)
+	and my $method = $self->moose_coercion->can(@_))
 	{
 		return sub { $method->(shift->moose_coercion, @_) };
 	}
@@ -584,8 +596,7 @@ the output of coercion coderefs is expected to conform to).
 
 =item C<type_coercion_map>
 
-Arrayref of source-type/code pairs. Don't set this in the constructor; use
-the C<add_type_coercions> method instead.
+Arrayref of source-type/code pairs.
 
 =item C<frozen>
 
@@ -641,7 +652,7 @@ default lazily-built return values.
 
 Coderef to coerce a value (C<< $_[0] >>).
 
-The general point of this attribute is that you should not set it, and
+The general point of this attribute is that you should not set it, but
 rely on the lazily-built default. Type::Coerce will usually generate a
 pretty fast coderef, inlining all type constraint checks, etc.
 
@@ -712,6 +723,8 @@ Returns the coerced value.
 
 =head3 Coercion code definition methods
 
+These methods all return C<< $self >> so are suitable for chaining.
+
 =over
 
 =item C<< add_type_coercions($type1, $code1, ...) >>
@@ -724,10 +737,25 @@ includes objects which overload stringification), or a coderef (or object
 that overloads coderefification). In either case, the value to be coerced
 is C<< $_ >>.
 
+C<< add_type_coercions($coercion_object) >> also works, and can be used
+to copy coercions from another type constraint:
+
+   $type->coercion->add_type_coercions($othertype->coercion)->freeze;
+
 =item C<< freeze >>
 
-Sets the C<frozen> attribute to true. There is no C<unfreeze>. Called
-automatically by L<Type::Tiny> sometimes.
+Sets the C<frozen> attribute to true. Called automatically by L<Type::Tiny>
+sometimes.
+
+=item C<< i_really_want_to_unfreeze >>
+
+If you really want to unfreeze a coercion, call this method.
+
+Don't call this method. It will potentially lead to subtle bugs.
+
+This method is considered unstable; future versions of Type::Tiny may
+alter its behaviour (e.g. to throw an exception if it has been detected
+that unfreezing this particular coercion will cause bugs).
 
 =back
 
