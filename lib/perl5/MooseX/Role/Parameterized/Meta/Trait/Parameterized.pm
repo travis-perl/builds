@@ -1,9 +1,6 @@
 package MooseX::Role::Parameterized::Meta::Trait::Parameterized;
-BEGIN {
-  $MooseX::Role::Parameterized::Meta::Trait::Parameterized::AUTHORITY = 'cpan:SARTAK';
-}
 # ABSTRACT: trait for parameterized roles
-$MooseX::Role::Parameterized::Meta::Trait::Parameterized::VERSION = '1.07';
+$MooseX::Role::Parameterized::Meta::Trait::Parameterized::VERSION = '1.08';
 use Moose::Role;
 use MooseX::Role::Parameterized::Parameters;
 use Moose::Util 'find_meta';
@@ -53,7 +50,7 @@ MooseX::Role::Parameterized::Meta::Trait::Parameterized - trait for parameterize
 
 =head1 VERSION
 
-version 1.07
+version 1.08
 
 =head1 DESCRIPTION
 

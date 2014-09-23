@@ -1,14 +1,12 @@
-package Class::Load::PP;
-BEGIN {
-  $Class::Load::PP::AUTHORITY = 'cpan:SARTAK';
-}
-$Class::Load::PP::VERSION = '0.21';
 use strict;
 use warnings;
+package Class::Load::PP;
+$Class::Load::PP::VERSION = '0.22';
 use Module::Runtime 'is_module_name';
 use Package::Stash 0.14;
 use Scalar::Util 'blessed', 'reftype';
 use Try::Tiny;
+use namespace::clean;
 
 sub is_class_loaded {
     my $class   = shift;
@@ -58,7 +56,3 @@ sub _is_class_loaded {
 }
 
 1;
-
-=for Pod::Coverage is_class_loaded
-
-=cut
