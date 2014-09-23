@@ -6,14 +6,14 @@ use warnings;
 
 BEGIN {
 	$Type::Tiny::Enum::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Tiny::Enum::VERSION   = '0.046';
+	$Type::Tiny::Enum::VERSION   = '1.000004';
 }
 
 sub _croak ($;@) { require Error::TypeTiny; goto \&Error::TypeTiny::croak }
 
 use overload q[@{}] => 'values';
 
-require Type::Tiny;
+use Type::Tiny ();
 our @ISA = 'Type::Tiny';
 
 sub new
@@ -31,6 +31,13 @@ sub new
 		@{ ref $opts{values} eq "ARRAY" ? $opts{values} : [$opts{values}] };
 	$opts{values} = [sort keys %tmp];
 	
+	if (Type::Tiny::_USE_XS and not grep /[^-\w]/, @{$opts{values}})
+	{
+		my $enum = join ",", @{$opts{values}};
+		my $xsub = Type::Tiny::XS::get_coderef_for("Enum[$enum]");
+		$opts{compiled_type_constraint} = $xsub if $xsub;
+	}
+	
 	return $proto->SUPER::new(%opts);
 }
 
@@ -46,6 +53,7 @@ sub _build_display_name
 sub _build_constraint
 {
 	my $self = shift;
+	
 	my $regexp = join "|", map quotemeta, @$self;
 	return sub { defined and m{\A(?:$regexp)\z} };
 }
@@ -58,6 +66,14 @@ sub can_be_inlined
 sub inline_check
 {
 	my $self = shift;
+	
+	if (Type::Tiny::_USE_XS)
+	{
+		my $enum = join ",", @{$self->values};
+		my $xsub = Type::Tiny::XS::get_subname_for("Enum[$enum]");
+		return "$xsub\($_[0]\)" if $xsub;
+	}
+	
 	my $regexp = join "|", map quotemeta, @$self;
 	$_[0] eq '$_'
 		? "(defined and !ref and m{\\A(?:$regexp)\\z})"

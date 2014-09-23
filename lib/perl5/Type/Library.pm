@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN {
 	$Type::Library::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Library::VERSION   = '0.046';
+	$Type::Library::VERSION   = '1.000004';
 }
 
 use Eval::TypeTiny qw< eval_closure >;
@@ -155,20 +155,26 @@ sub _exporter_expand_sub
 	return $class->SUPER::_exporter_expand_sub(@_);
 }
 
-#sub _exporter_install_sub
-#{
-#	my $class = shift;
-#	my ($name, $value, $globals, $sym) = @_;
-#	
-#	warn sprintf(
-#		'Exporter %s exporting %s with prototype %s',
-#		$class,
-#		$name,
-#		prototype($sym),
-#	);
-#	
-#	$class->SUPER::_exporter_install_sub(@_);
-#}
+sub _exporter_install_sub
+{
+	my $class = shift;
+	my ($name, $value, $globals, $sym) = @_;
+	
+	my $package = $globals->{into};
+	
+	if (!ref $package and my $type = $class->get_type($name))
+	{
+		my ($prefix) = grep defined, $value->{-prefix}, $globals->{prefix}, q();
+		my ($suffix) = grep defined, $value->{-suffix}, $globals->{suffix}, q();
+		my $as = $prefix . ($value->{-as} || $name) . $suffix;
+		
+		$INC{'Type/Registry.pm'}
+			? 'Type::Registry'->for_class($package)->add_type($type, $as)
+			: ($Type::Registry::DELAYED{$package}{$as} = $type);
+	}
+	
+	$class->SUPER::_exporter_install_sub(@_);
+}
 
 sub _exporter_fail
 {
@@ -235,16 +241,13 @@ sub add_type
 	no strict "refs";
 	no warnings "redefine", "prototype";
 	
+	my $to_type = $type->has_coercion && $type->coercion->frozen
+		? $type->coercion->compiled_coercion
+		: sub ($) { $type->coerce($_[0]) };
 	
-	# There is an inlined coercion available, but don't use that because
-	# additional coercions can be added *after* the type has been installed
-	# into the library.
-	#
-	# XXX: maybe we can use it if the coercion is frozen???
-	#
 	*{"$class\::$name"}        = $class->_mksub($type);
 	*{"$class\::is_$name"}     = _subname "$class\::is_$name", $type->compiled_check;
-	*{"$class\::to_$name"}     = _subname "$class\::to_$name", sub ($) { $type->coerce($_[0]) };
+	*{"$class\::to_$name"}     = _subname "$class\::to_$name", $to_type;
 	*{"$class\::assert_$name"} = _subname "$class\::assert_$name", $type->_overload_coderef;
 	
 	return $type;
@@ -308,6 +311,29 @@ sub coercion_names
 	keys %{ $meta->{coercions} };
 }
 
+sub make_immutable
+{
+	my $meta  = shift->meta;
+	my $class = ref($meta);
+	
+	for my $type (values %{$meta->{types}})
+	{
+		$type->coercion->freeze;
+		
+		no strict "refs";
+		no warnings "redefine", "prototype";
+		
+		my $to_type = $type->has_coercion && $type->coercion->frozen
+			? $type->coercion->compiled_coercion
+			: sub ($) { $type->coerce($_[0]) };
+		my $name = $type->name;
+		
+		*{"$class\::to_$name"} = _subname "$class\::to_$name", $to_type;
+	}
+	
+	1;
+}
+
 1;
 
 __END__
@@ -324,6 +350,9 @@ Type::Library - tiny, yet Moo(se)-compatible type libraries
 
 =head1 SYNOPSIS
 
+=for test_synopsis
+BEGIN { die "SKIP: crams multiple modules into single example" };
+
    package Types::Mine {
       use Scalar::Util qw(looks_like_number);
       use Type::Library -base;
@@ -336,6 +365,8 @@ Type::Library - tiny, yet Moo(se)-compatible type libraries
       );
       
       __PACKAGE__->meta->add_type($NUM);
+      
+      __PACKAGE__->meta->make_immutable;
    }
       
    package Ermintrude {
@@ -456,6 +487,11 @@ List all standalone coercions defined by the library.
 =item C<< import(@args) >>
 
 Type::Library-based libraries are exporters.
+
+=item C<< make_immutable >>
+
+A shortcut for calling C<< $type->coercion->freeze >> on every
+type constraint in the library.
 
 =back
 
