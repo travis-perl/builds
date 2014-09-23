@@ -9,7 +9,7 @@ use List::Util 'first';
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07040';
+our $VERSION = '0.07042';
 
 sub _supports_db_schema { 0 }
 
@@ -121,7 +121,7 @@ EOF
         );
     }
 
-    foreach my $fk (keys %$remote_table) {
+    foreach my $fk (sort keys %$remote_table) {
         push @rels, {
             local_columns => $local_cols->{$fk},
             remote_columns => $remote_cols->{$fk},
