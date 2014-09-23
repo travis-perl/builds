@@ -1,8 +1,5 @@
 package Moose::Exception::CodeBlockMustBeACodeRef;
-BEGIN {
-  $Moose::Exception::CodeBlockMustBeACodeRef::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::CodeBlockMustBeACodeRef::VERSION = '2.1210';
+$Moose::Exception::CodeBlockMustBeACodeRef::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::ParamsHash', 'Moose::Exception::Role::Instance';
