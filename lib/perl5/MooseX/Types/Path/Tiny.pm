@@ -1,12 +1,10 @@
 use strict;
 use warnings;
 package MooseX::Types::Path::Tiny;
-BEGIN {
-  $MooseX::Types::Path::Tiny::AUTHORITY = 'cpan:ETHER';
-}
-# git description: v0.009-1-gb623db3
-$MooseX::Types::Path::Tiny::VERSION = '0.010';
+# git description: v0.010-16-gf86e422
+$MooseX::Types::Path::Tiny::VERSION = '0.011';
 # ABSTRACT: Path::Tiny types and coercions for Moose
+# KEYWORDS: moose type constraint path filename directory
 
 use Moose 2;
 use MooseX::Types::Stringlike qw/Stringable/;
@@ -82,16 +80,13 @@ coerce(
 
 =encoding UTF-8
 
-=for :stopwords David Golden Karen Etheridge Toby Inkster coercions SUBTYPES subtype
-subtypes AbsPath AbsFile AbsDir
-
 =head1 NAME
 
 MooseX::Types::Path::Tiny - Path::Tiny types and coercions for Moose
 
 =head1 VERSION
 
-version 0.010
+version 0.011
 
 =head1 SYNOPSIS
 
@@ -100,7 +95,7 @@ version 0.010
   package Foo;
 
   use Moose;
-  use MooseX::Types::Path::Tiny qw/Path AbsPath/;
+  use MooseX::Types::Path::Tiny qw/Path Paths AbsPath/;
 
   has filename => (
     is => 'ro',
@@ -124,6 +119,7 @@ version 0.010
 
   Foo->new( filename => 'foo.txt' ); # coerced to Path::Tiny
   Foo->new( directory => '.' ); # coerced to path('.')->absolute
+  Foo->new( filenames => [qw/bar.txt baz.txt/] ); # coerced to ArrayRef[Path::Tiny]
 
 =head1 DESCRIPTION
 
@@ -144,9 +140,15 @@ coercing to absolute paths
 
 It also can check to ensure that files or directories exist.
 
+=for stopwords coercions
+
 =head1 SUBTYPES
 
+=for stopwords SUBTYPES subtype subtypes
+
 This module uses L<MooseX::Types> to define the following subtypes.
+
+=for stopwords AbsPath AbsFile AbsDir
 
 =head2 Path
 
@@ -226,6 +228,8 @@ This is free software, licensed under:
 
 =head1 CONTRIBUTORS
 
+=for stopwords Karen Etheridge Toby Inkster Demian Riccardi
+
 =over 4
 
 =item *
@@ -235,6 +239,10 @@ Karen Etheridge <ether@cpan.org>
 =item *
 
 Toby Inkster <mail@tobyinkster.co.uk>
+
+=item *
+
+Demian Riccardi <dde@ornl.gov>
 
 =back
 

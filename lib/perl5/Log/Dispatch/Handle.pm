@@ -1,8 +1,5 @@
 package Log::Dispatch::Handle;
-{
-  $Log::Dispatch::Handle::VERSION = '2.41';
-}
-
+$Log::Dispatch::Handle::VERSION = '2.42';
 use strict;
 use warnings;
 
@@ -43,13 +40,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Handle - Object for logging to IO::Handle classes
 
 =head1 VERSION
 
-version 2.41
+version 2.42
 
 =head1 SYNOPSIS
 
@@ -70,8 +69,10 @@ version 2.41
 =head1 DESCRIPTION
 
 This module supplies a very simple object for logging to some sort of
-handle object.  Basically, anything that implements a C<print()>
+handle object. Basically, anything that implements a C<print()>
 method can be passed the object constructor and it should work.
+
+=for Pod::Coverage new log_message
 
 =head1 CONSTRUCTOR
 
@@ -82,7 +83,7 @@ parameters documented in L<Log::Dispatch::Output>:
 
 =item * handle ($)
 
-The handle object.  This object must implement a C<print()> method.
+The handle object. This object must implement a C<print()> method.
 
 =back
 
@@ -92,7 +93,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 
