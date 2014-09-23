@@ -1,9 +1,6 @@
 package MooseX::Types::Base;
-BEGIN {
-  $MooseX::Types::Base::AUTHORITY = 'cpan:PHAYLON';
-}
 # ABSTRACT: Type library base class
-$MooseX::Types::Base::VERSION = '0.44';
+$MooseX::Types::Base::VERSION = '0.45';
 use Moose;
 
 use Carp::Clan                      qw( ^MooseX::Types );
@@ -13,26 +10,26 @@ use Moose::Util::TypeConstraints;
 
 use namespace::autoclean;
 
-# =head1 DESCRIPTION
-#
-# You normally won't need to interact with this class by yourself. It is
-# merely a collection of functionality that type libraries need to
-# interact with moose and the rest of the L<MooseX::Types> module.
-#
-# =cut
+#pod =head1 DESCRIPTION
+#pod
+#pod You normally won't need to interact with this class by yourself. It is
+#pod merely a collection of functionality that type libraries need to
+#pod interact with moose and the rest of the L<MooseX::Types> module.
+#pod
+#pod =cut
 
 my $UndefMsg = q{Unable to find type '%s' in library '%s'};
 
-# =head1 METHODS
-#
-# =cut
+#pod =head1 METHODS
+#pod
+#pod =cut
 
-# =head2 import
-#
-# Provides the import mechanism for your library. See
-# L<MooseX::Types/"LIBRARY USAGE"> for syntax details on this.
-#
-# =cut
+#pod =head2 import
+#pod
+#pod Provides the import mechanism for your library. See
+#pod L<MooseX::Types/"LIBRARY USAGE"> for syntax details on this.
+#pod
+#pod =cut
 
 sub import {
     my ($class, @args) = @_;
@@ -120,11 +117,11 @@ sub import {
     return $class->$exporter(@new_args);
 }
 
-# =head2 get_type
-#
-# This returns a type from the library's store by its name.
-#
-# =cut
+#pod =head2 get_type
+#pod
+#pod This returns a type from the library's store by its name.
+#pod
+#pod =cut
 
 sub get_type {
     my ($class, $type) = @_;
@@ -137,11 +134,11 @@ sub get_type {
     return $class->type_storage->{ $type };
 }
 
-# =head2 type_names
-#
-# Returns a list of all known types by their name.
-#
-# =cut
+#pod =head2 type_names
+#pod
+#pod Returns a list of all known types by their name.
+#pod
+#pod =cut
 
 sub type_names {
     my ($class) = @_;
@@ -150,11 +147,11 @@ sub type_names {
     return keys %{ $class->type_storage };
 }
 
-# =head2 add_type
-#
-# Adds a new type to the library.
-#
-# =cut
+#pod =head2 add_type
+#pod
+#pod Adds a new type to the library.
+#pod
+#pod =cut
 
 sub add_type {
     my ($class, $type) = @_;
@@ -163,12 +160,12 @@ sub add_type {
     $class->type_storage->{ $type } = "${class}::${type}";
 }
 
-# =head2 has_type
-#
-# Returns true or false depending on if this library knows a type by that
-# name.
-#
-# =cut
+#pod =head2 has_type
+#pod
+#pod Returns true or false depending on if this library knows a type by that
+#pod name.
+#pod
+#pod =cut
 
 sub has_type {
     my ($class, $type) = @_;
@@ -177,13 +174,13 @@ sub has_type {
     return ! ! $class->type_storage->{ $type };
 }
 
-# =head2 type_storage
-#
-# Returns the library's type storage hash reference. You shouldn't use this
-# method directly unless you know what you are doing. It is not an internal
-# method because overriding it makes virtual libraries very easy.
-#
-# =cut
+#pod =head2 type_storage
+#pod
+#pod Returns the library's type storage hash reference. You shouldn't use this
+#pod method directly unless you know what you are doing. It is not an internal
+#pod method because overriding it makes virtual libraries very easy.
+#pod
+#pod =cut
 
 sub type_storage {
     my ($class) = @_;
@@ -194,11 +191,11 @@ sub type_storage {
     }
 }
 
-# =head2 registered_class_types
-#
-# Returns the class types registered within this library. Don't use directly.
-#
-# =cut
+#pod =head2 registered_class_types
+#pod
+#pod Returns the class types registered within this library. Don't use directly.
+#pod
+#pod =cut
 
 sub registered_class_types {
     my ($class) = @_;
@@ -209,11 +206,11 @@ sub registered_class_types {
     }
 }
 
-# =head2 register_class_type
-#
-# Register a C<class_type> for use in this library by class name.
-#
-# =cut
+#pod =head2 register_class_type
+#pod
+#pod Register a C<class_type> for use in this library by class name.
+#pod
+#pod =cut
 
 sub register_class_type {
     my ($class, $type) = @_;
@@ -224,11 +221,11 @@ sub register_class_type {
     $class->registered_class_types->{$type->class} = $type;
 }
 
-# =head2 get_registered_class_type
-#
-# Get a C<class_type> registered in this library by name.
-#
-# =cut
+#pod =head2 get_registered_class_type
+#pod
+#pod Get a C<class_type> registered in this library by name.
+#pod
+#pod =cut
 
 sub get_registered_class_type {
     my ($class, $name) = @_;
@@ -236,11 +233,11 @@ sub get_registered_class_type {
     $class->registered_class_types->{$name};
 }
 
-# =head2 registered_role_types
-#
-# Returns the role types registered within this library. Don't use directly.
-#
-# =cut
+#pod =head2 registered_role_types
+#pod
+#pod Returns the role types registered within this library. Don't use directly.
+#pod
+#pod =cut
 
 sub registered_role_types {
     my ($class) = @_;
@@ -251,11 +248,11 @@ sub registered_role_types {
     }
 }
 
-# =head2 register_role_type
-#
-# Register a C<role_type> for use in this library by role name.
-#
-# =cut
+#pod =head2 register_role_type
+#pod
+#pod Register a C<role_type> for use in this library by role name.
+#pod
+#pod =cut
 
 sub register_role_type {
     my ($class, $type) = @_;
@@ -266,11 +263,11 @@ sub register_role_type {
     $class->registered_role_types->{$type->role} = $type;
 }
 
-# =head2 get_registered_role_type
-#
-# Get a C<role_type> registered in this library by role name.
-#
-# =cut
+#pod =head2 get_registered_role_type
+#pod
+#pod Get a C<role_type> registered in this library by role name.
+#pod
+#pod =cut
 
 sub get_registered_role_type {
     my ($class, $name) = @_;
@@ -278,11 +275,11 @@ sub get_registered_role_type {
     $class->registered_role_types->{$name};
 }
 
-# =head1 SEE ALSO
-#
-# L<MooseX::Types::Moose>
-#
-# =cut
+#pod =head1 SEE ALSO
+#pod
+#pod L<MooseX::Types::Moose>
+#pod
+#pod =cut
 
 1;
 
@@ -292,15 +289,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Robert "phaylon" Sedlacek
-
 =head1 NAME
 
 MooseX::Types::Base - Type library base class
 
 =head1 VERSION
 
-version 0.44
+version 0.45
 
 =head1 DESCRIPTION
 
