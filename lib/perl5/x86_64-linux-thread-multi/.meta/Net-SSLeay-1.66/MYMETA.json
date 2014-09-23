@@ -6,7 +6,7 @@
    "dynamic_config" : 0,
    "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.120351",
    "license" : [
-      "openssl"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -51,5 +51,5 @@
          "url" : "svn://svn.debian.org/svn/net-ssleay"
       }
    },
-   "version" : "1.65"
+   "version" : "1.66"
 }
