@@ -9,8 +9,9 @@ BEGIN {
 }
 
 BEGIN {
-	$Type::Tiny::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Tiny::VERSION   = '0.046';
+	$Type::Tiny::AUTHORITY   = 'cpan:TOBYINK';
+	$Type::Tiny::VERSION     = '1.000004';
+	$Type::Tiny::XS_VERSION  = '0.010';
 }
 
 use Eval::TypeTiny ();
@@ -28,7 +29,29 @@ BEGIN {
 	($] >= 5.014)
 		? eval q{ sub _FIXED_PRECEDENCE () { !!1 } }
 		: eval q{ sub _FIXED_PRECEDENCE () { !!0 } };
-}
+};
+
+BEGIN {
+	my $try_xs =
+		exists($ENV{PERL_TYPE_TINY_XS}) ? !!$ENV{PERL_TYPE_TINY_XS} :
+		exists($ENV{PERL_ONLY})         ?  !$ENV{PERL_ONLY} :
+		1;
+	
+	my $use_xs = 0;
+	$try_xs and eval {
+		require Type::Tiny::XS;
+		'Type::Tiny::XS'->VERSION($Type::Tiny::XS_VERSION);
+		$use_xs++;
+	};
+	
+	*_USE_XS = $use_xs
+		? sub () { !!1 }
+		: sub () { !!0 };
+	
+	*_USE_MOUSE = $try_xs
+		? sub () { $INC{'Mouse/Util.pm'} and Mouse::Util::MOUSE_XS() }
+		: sub () { !!0 };
+};
 
 use overload
 	q("")      => sub { caller =~ m{^(Moo::HandleMoose|Sub::Quote)} ? overload::StrVal($_[0]) : $_[0]->display_name },
@@ -63,8 +86,10 @@ use overload
 	fallback   => 1,
 ;
 BEGIN {
-	overload->import(q(~~) => sub { $_[0]->check($_[1]) })
-		if Type::Tiny::SUPPORT_SMARTMATCH;
+	overload->import(
+		q(~~)    => sub { $_[0]->check($_[1]) },
+		fallback => 1, # 5.10 loses the fallback otherwise
+	) if Type::Tiny::SUPPORT_SMARTMATCH;
 }
 
 sub _overload_coderef
@@ -125,7 +150,7 @@ sub new
 		$params{parent}->has_coercion
 			or _croak "coercion => 1 requires type to have a direct parent with a coercion";
 		
-		$params{coercion} = $params{parent}->coercion;
+		$params{coercion} = $params{parent}->coercion->type_coercion_map;
 	}
 	
 	if (!exists $params{inlined}
@@ -177,8 +202,6 @@ sub new
 		$self->{coercion} = $self->_build_coercion;
 		$self->coercion->add_type_coercions(@$arr);
 	}
-	
-	$self->{type_constraints} ||= undef;
 	
 	if ($params{my_methods} and eval { require Sub::Name })
 	{
@@ -780,6 +803,8 @@ sub parameterize
 		weaken($param_cache{$key});
 	}
 	
+	$P->coercion->freeze;
+	
 	return $P;
 }
 
@@ -986,7 +1011,7 @@ sub isa
 {
 	my $self = shift;
 	
-	if ($INC{"Moose.pm"} and ref($self) and $_[0] =~ /^MooseX?::Meta::(.+)$/)
+	if ($INC{"Moose.pm"} and ref($self) and $_[0] =~ /^(?:Class::MOP|MooseX?::Meta)::(.+)$/)
 	{
 		my $meta = $1;
 		
