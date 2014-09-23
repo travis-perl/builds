@@ -1,8 +1,5 @@
 package Moose::Exception::RequiredAttributeNeedsADefault;
-BEGIN {
-  $Moose::Exception::RequiredAttributeNeedsADefault::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::RequiredAttributeNeedsADefault::VERSION = '2.1210';
+$Moose::Exception::RequiredAttributeNeedsADefault::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::InvalidAttributeOptions';

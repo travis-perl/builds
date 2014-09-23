@@ -33,14 +33,14 @@ Objects of C<MIME::Type> store the information on one such type.
 
 =over 4
 
-=item overload: B<string comparison>()
+=item overload: B<string comparison>
 
 When a MIME::Type object is compared to either a string or another
 MIME::TYpe, the L<equals()|MIME::Type/"Knowledge"> method is called.  Comparison is smart,
 which means that it extends common string comparison with some
 features which are defined in the related RFCs.
 
-=item overload: B<stringification>()
+=item overload: B<stringification>
 
 The stringification (use of the object in a place where a string
 is required) will result in the type name, the same as L<type()|MIME::Type/"Attributes">
@@ -60,7 +60,7 @@ example: use of stringification
 
 =over 4
 
-=item MIME::Type-E<gt>B<new>(OPTIONS)
+=item MIME::Type-E<gt>B<new>(%options)
 
 Create (I<instantiate>) a new MIME::Type object which manages one
 mime type.
@@ -120,9 +120,9 @@ type safely.
 Returns a list of extensions which are known to be used for this
 mime type.
 
-=item $obj-E<gt>B<simplified>([STRING])
+=item $obj-E<gt>B<simplified>( [$string] )
 
-=item MIME::Type-E<gt>B<simplified>([STRING])
+=item MIME::Type-E<gt>B<simplified>( [$string] )
 
 Returns the simplified mime type for this object or the specified STRING.
 Mime type names can get officially registered.  Until then, they have to
@@ -134,7 +134,8 @@ example: results of simplified()
 
  my $mime = MIME::Type->new(type => 'x-appl/x-zip');
  print $mime->simplified;                     # 'appl/zip'
- print $mime->simplified('text/plain');       # 'text/plain'
+
+ print $mime->simplified('text/PLAIN');       # 'text/plain'
  print MIME::Type->simplified('x-xyz/x-abc'); # 'xyz/abc'
 
 =item $obj-E<gt>B<system>()
@@ -152,19 +153,18 @@ Returns the long type of this object, for instance C<'text/plain'>
 
 =over 4
 
-=item $obj-E<gt>B<equals>(STRING|MIME)
+=item $obj-E<gt>B<equals>($string|$mime)
 
 Compare this mime-type object with a STRING or other object.  In case of
 a STRING, simplification will take place.
 
 =item $obj-E<gt>B<isAscii>()
 
-Returns false when the encoding is base64, and true otherwise.  All encodings
-except base64 are text encodings.
+Old name for L<isText()|MIME::Type/"Knowledge">.
 
 =item $obj-E<gt>B<isBinary>()
 
-Returns true when the encoding is base64.
+Returns true when the type is not known to be text.  See L<isText()|MIME::Type/"Knowledge">.
 
 =item $obj-E<gt>B<isExperimental>()
 
@@ -186,6 +186,11 @@ method will return false.
 =item $obj-E<gt>B<isSignature>()
 
 Returns true when the type is in the list of known signatures.
+
+=item $obj-E<gt>B<isText>()
+
+[2.05] All types which may have the charset attribute, are text.  However,
+there is currently no record of attributes in this module... so we guess.
 
 =item $obj-E<gt>B<isVendor>()
 
@@ -220,12 +225,12 @@ specified with the C<type> option flag.
 
 =head1 SEE ALSO
 
-This module is part of MIME-Types distribution version 2.04,
-built on September 12, 2013. Website: F<http://perl.overmeer.net/mimetypes/>
+This module is part of MIME-Types distribution version 2.09,
+built on September 14, 2014. Website: F<http://perl.overmeer.net/mimetypes/>
 
 =head1 LICENSE
 
-Copyrights 1999,2001-2013 by [Mark Overmeer]. For other contributors see ChangeLog.
+Copyrights 1999,2001-2014 by [Mark Overmeer]. For other contributors see ChangeLog.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

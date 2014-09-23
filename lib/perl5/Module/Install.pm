@@ -30,7 +30,7 @@ BEGIN {
 	# This is not enforced yet, but will be some time in the next few
 	# releases once we can make sure it won't clash with custom
 	# Module::Install extensions.
-	$VERSION = '1.10';
+	$VERSION = '1.12';
 
 	# Storage for the pseudo-singleton
 	$MAIN    = undef;
@@ -466,20 +466,4 @@ sub _CLASS {
 
 1;
 
-
-__END__
-
-=pod
-
-=encoding UTF-8
-
-=head1 COPYRIGHT
-
-Copyright 2008 - 2014 Adam Kennedy.
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
+# Copyright 2008 - 2012 Adam Kennedy.
