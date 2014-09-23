@@ -7,6 +7,8 @@ use strict;
 use warnings;
 # PODNAME: package-stash-conflicts
 
+# this script was generated with Dist::Zilla::Plugin::Conflicts 0.16
+
 use Getopt::Long;
 use Package::Stash::Conflicts;
 
@@ -26,13 +28,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 package-stash-conflicts
 
 =head1 VERSION
 
-version 0.36
+version 0.37
 
 =head1 AUTHOR
 
@@ -40,7 +44,7 @@ Jesse Luehrs <doy@tozt.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Jesse Luehrs.
+This software is copyright (c) 2014 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
