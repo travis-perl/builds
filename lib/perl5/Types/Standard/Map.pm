@@ -6,9 +6,10 @@ use warnings;
 
 BEGIN {
 	$Types::Standard::Map::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Standard::Map::VERSION   = '0.046';
+	$Types::Standard::Map::VERSION   = '1.000004';
 }
 
+use Type::Tiny ();
 use Types::Standard ();
 use Types::TypeTiny ();
 
@@ -28,19 +29,53 @@ sub __constraint_generator
 	Types::TypeTiny::TypeTiny->check($values)
 		or _croak("Second parameter to Map[`k,`v] expected to be a type constraint; got $values");
 	
-	return sub
+	my @xsub;
+	if (Type::Tiny::_USE_XS)
+	{
+		my @known = map {
+			my $known = Type::Tiny::XS::is_known($_->compiled_check);
+			defined($known) ? $known : ();
+		} ($keys, $values);
+		
+		if (@known == 2)
+		{
+			my $xsub = Type::Tiny::XS::get_coderef_for(
+				sprintf "Map[%s,%s]", @known
+			);
+			push @xsub, $xsub if $xsub;
+		}
+	}
+	
+	sub
 	{
 		my $hash = shift;
 		$keys->check($_)   || return for keys %$hash;
 		$values->check($_) || return for values %$hash;
 		return !!1;
-	};
+	}, @xsub;
 }
 
 sub __inline_generator
 {
 	my ($k, $v) = @_;
 	return unless $k->can_be_inlined && $v->can_be_inlined;
+	
+	if (Type::Tiny::_USE_XS)
+	{
+		my @known = map {
+			my $known = Type::Tiny::XS::is_known($_->compiled_check);
+			defined($known) ? $known : ();
+		} ($k, $v);
+		
+		if (@known == 2)
+		{
+			my $xsub = Type::Tiny::XS::get_subname_for(
+				sprintf "Map[%s,%s]", @known
+			);
+			return sub { my $var = $_[1]; "$xsub\($var\)" } if $xsub;
+		}
+	}
+	
 	my $k_check = $k->inline_check('$k');
 	my $v_check = $v->inline_check('$v');
 	return sub {
@@ -83,7 +118,8 @@ sub __deep_explanation
 		}
 	}
 	
-	return;
+	# This should never happen...
+	return;  # uncoverable statement
 }
 
 sub __coercion_generator

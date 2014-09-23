@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.046';
+our $VERSION   = '1.000004';
 
 use Scalar::Util qw< blessed refaddr weaken >;
 
@@ -31,38 +31,42 @@ sub meta
 	return $_[0];
 }
 
-sub has_type
-{
-	defined(shift->get_coercion(@_))
-}
-
-sub get_type
-{
-	my $self = shift;
-	my $func = $self->can(@_) or return;
-	my $type = $func->();
-	return $type if blessed($type) && $type->isa("Type::Tiny");
-	return;
-}
-
 sub type_names
 {
 	qw( CodeLike StringLike TypeTiny HashLike ArrayLike );
 }
 
-sub has_coercion
+sub has_type
 {
-	defined(shift->get_coercion(@_))
+	my %has = map +($_ => 1), shift->type_names;
+	!!$has{ $_[0] };
 }
 
-sub get_coercion
+sub get_type
 {
-	();
+	my $self = shift;
+	return unless $self->has_type(@_);
+	no strict qw(refs);
+	&{$_[0]}();
 }
 
 sub coercion_names
 {
-	();
+	qw();
+}
+
+sub has_coercion
+{
+	my %has = map +($_ => 1), shift->coercion_names;
+	!!$has{ $_[0] };
+}
+
+sub get_coercion
+{
+	my $self = shift;
+	return unless $self->has_coercion(@_);
+	no strict qw(refs);
+	&{$_[0]}();  # uncoverable statement
 }
 
 sub StringLike ()
@@ -177,7 +181,10 @@ sub _TypeTinyFromMoose
 	
 	$new->{coercion} = do {
 		require Type::Coercion::FromMoose;
-		'Type::Coercion::FromMoose'->new(type_constraint => $new);
+		'Type::Coercion::FromMoose'->new(
+			type_constraint => $new,
+			moose_coercion  => $t->coercion,
+		);
 	} if $t->has_coercion;
 	
 	return $new;
