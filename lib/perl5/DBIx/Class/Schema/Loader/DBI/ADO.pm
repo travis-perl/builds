@@ -5,7 +5,7 @@ use warnings;
 use base 'DBIx::Class::Schema::Loader::DBI';
 use mro 'c3';
 
-our $VERSION = '0.07040';
+our $VERSION = '0.07042';
 
 =head1 NAME
 
@@ -35,12 +35,6 @@ sub _rebless {
         $self->_rebless;
     }
   }
-}
-
-sub _tables_list {
-    my ($self, $opts) = @_;
-
-    return $self->next::method($opts, undef, undef);
 }
 
 sub _filter_tables {
