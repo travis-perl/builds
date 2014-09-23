@@ -10,37 +10,15 @@ BEGIN {
 
 BEGIN {
 	$Type::Tiny::Class::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Tiny::Class::VERSION   = '0.046';
+	$Type::Tiny::Class::VERSION   = '1.000004';
 }
 
 use Scalar::Util qw< blessed >;
 
 sub _croak ($;@) { require Error::TypeTiny; goto \&Error::TypeTiny::croak }
 
-require Type::Tiny;
+use Type::Tiny ();
 our @ISA = 'Type::Tiny';
-
-BEGIN {
-	my $try_xs =
-		exists($ENV{PERL_TYPE_TINY_XS}) ? !!$ENV{PERL_TYPE_TINY_XS} :
-		exists($ENV{PERL_ONLY})         ?  !$ENV{PERL_ONLY} :
-		1;
-	
-	my $use_xs = 0;
-	$try_xs and eval {
-		require Type::Tiny::XS;
-		'Type::Tiny::XS'->VERSION('0.002');
-		$use_xs++;
-	};
-	
-	*_USE_XS = $use_xs
-		? sub () { !!1 }
-		: sub () { !!0 };
-	
-	*_USE_MOUSE = $try_xs
-		? sub () { $INC{'Mouse/Util.pm'} and Mouse::Util::MOUSE_XS() }
-		: sub () { !!0 };
-};
 
 sub new {
 	my $proto = shift;
@@ -52,12 +30,12 @@ sub new {
 	_croak "Class type constraints cannot have a inlining coderef passed to the constructor" if exists $opts{inlined};
 	_croak "Need to supply class name" unless exists $opts{class};
 	
-	if (_USE_XS)
+	if (Type::Tiny::_USE_XS)
 	{
 		my $xsub = Type::Tiny::XS::get_coderef_for("InstanceOf[".$opts{class}."]");
 		$opts{compiled_type_constraint} = $xsub if $xsub;
 	}
-	elsif (_USE_MOUSE)
+	elsif (Type::Tiny::_USE_MOUSE)
 	{
 		require Mouse::Util::TypeConstraints;
 		my $maker = "Mouse::Util::TypeConstraints"->can("generate_isa_predicate_for");
@@ -84,7 +62,7 @@ sub _build_inlined
 	my $self  = shift;
 	my $class = $self->class;
 	
-	if (_USE_XS)
+	if (Type::Tiny::_USE_XS)
 	{
 		my $xsub = Type::Tiny::XS::get_subname_for("InstanceOf[$class]");
 		return sub { my $var = $_[1]; "$xsub\($var\)" } if $xsub;
@@ -190,6 +168,28 @@ sub _build_parent
 	);
 }
 
+*__get_linear_isa_dfs = eval { require mro }
+	? \&mro::get_linear_isa
+	: sub {
+		no strict 'refs';
+		
+		my $classname = shift;
+		my @lin = ($classname);
+		my %stored;
+		
+		foreach my $parent (@{"$classname\::ISA"})
+		{
+			my $plin = __get_linear_isa_dfs($parent);
+			foreach (@$plin) {
+				next if exists $stored{$_};
+				push(@lin, $_);
+				$stored{$_} = 1;
+			}
+		}
+		
+		return \@lin;
+	};
+
 sub validate_explain
 {
 	my $self = shift;
@@ -199,16 +199,7 @@ sub validate_explain
 	return undef if $self->check($value);
 	return ["Not a blessed reference"] unless blessed($value);
 	
-	my @isa;
-	if (eval { require mro })
-	{
-		@isa = @{ mro::get_linear_isa(ref $value) };
-	}
-	else
-	{
-		require Class::ISA;
-		@isa = Class::ISA::super_path(ref $value);
-	}
+	my @isa = @{ __get_linear_isa_dfs(ref $value) };
 	
 	my $display_var = $varname eq q{$_} ? '' : sprintf(' (in %s)', $varname);
 	
