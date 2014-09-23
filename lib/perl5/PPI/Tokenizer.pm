@@ -47,7 +47,7 @@ This is where the truism "Only perl can parse Perl" comes from.
 
 PPI uses a completely different approach by abandoning the (impossible)
 ability to parse Perl the same way that the interpreter does, and instead
-parsing the source as a document, using a document structure independantly
+parsing the source as a document, using a document structure independently
 derived from the Perl documentation and approximating the perl interpreter
 interpretation as closely as possible.
 
@@ -89,8 +89,18 @@ use PPI::Exception::ParserRejection ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 }
+
+# The x operator cannot follow most Perl operators, implying that
+# anything beginning with x following an operator is a word.
+# These are the exceptions.
+my %X_CAN_FOLLOW_OPERATOR = map { $_ => 1 } qw( -- ++ );
+
+# The x operator cannot follow most structure elements, implying that
+# anything beginning with x following a structure element is a word.
+# These are the exceptions.
+my %X_CAN_FOLLOW_STRUCTURE = map { $_ => 1 } qw( } ] \) );
 
 
 
@@ -172,16 +182,7 @@ sub new {
 
 	# We can't handle a null string
 	$self->{source_bytes} = length $self->{source};
-	if ( $self->{source_bytes} > 1048576 ) {
-		# Dammit! It's ALWAYS the "Perl" modules larger than a
-		# meg that seems to blow up the Tokenizer/Lexer.
-		# Nobody actually writes real programs larger than a meg
-		# Perl::Tidy (the largest) is only 800k.
-		# It is always these idiots with massive Data::Dumper
-		# structs or huge RecDescent parser.
-		PPI::Exception::ParserRejection->throw("File is too large");
-
-	} elsif ( $self->{source_bytes} ) {
+	if ( $self->{source_bytes} ) {
 		# Split on local newlines
 		$self->{source} =~ s/(?:\015{1,2}\012|\015|\012)/\n/g;
 		$self->{source} = [ split /(?<=\n)/, $self->{source} ];
@@ -361,7 +362,7 @@ sub all_tokens {
 
 =head2 increment_cursor
 
-Although exposed as a public method, C<increment_method> is implemented
+Although exposed as a public method, C<increment_cursor> is implemented
 for expert use only, when writing lexers or other components that work
 directly on token streams.
 
@@ -383,7 +384,7 @@ sub increment_cursor {
 
 =head2 decrement_cursor
 
-Although exposed as a public method, C<decrement_method> is implemented
+Although exposed as a public method, C<decrement_cursor> is implemented
 for expert use only, when writing lexers or other components that work
 directly on token streams.
 
@@ -533,14 +534,14 @@ sub _process_next_line {
 # Per-character processing methods
 
 # Process on a per-character basis.
-# Note that due the the high number of times this gets
+# Note that due the high number of times this gets
 # called, it has been fairly heavily in-lined, so the code
 # might look a bit ugly and duplicated.
 sub _process_next_char {
 	my $self = shift;
 
 	### FIXME - This checks for a screwed up condition that triggers
-	###         several warnings, amoungst other things.
+	###         several warnings, amongst other things.
 	if ( ! defined $self->{line_cursor} or ! defined $self->{line_length} ) {
 		# $DB::single = 1;
 		return undef;
@@ -756,6 +757,19 @@ sub _opcontext {
 	return ''
 }
 
+# Assuming we are currently parsing the word 'x', return true
+# if previous tokens imply the x is an operator, false otherwise.
+sub _current_x_is_operator {
+	my $self = shift;
+
+	my $prev = $self->_last_significant_token;
+	return 
+		$prev
+		&& (!$prev->isa('PPI::Token::Operator') || $X_CAN_FOLLOW_OPERATOR{$prev})
+		&& (!$prev->isa('PPI::Token::Structure') || $X_CAN_FOLLOW_STRUCTURE{$prev})
+	;
+}
+
 1;
 
 =pod
@@ -764,7 +778,7 @@ sub _opcontext {
 
 =head2 How the Tokenizer Works
 
-Understanding the Tokenizer is not for the feint-hearted. It is by far
+Understanding the Tokenizer is not for the faint-hearted. It is by far
 the most complex and twisty piece of perl I've ever written that is actually
 still built properly and isn't a terrible spaghetti-like mess. In fact, you
 probably want to skip this section.

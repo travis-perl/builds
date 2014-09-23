@@ -1,8 +1,5 @@
 package Log::Dispatch::Screen;
-{
-  $Log::Dispatch::Screen::VERSION = '2.41';
-}
-
+$Log::Dispatch::Screen::VERSION = '2.42';
 use strict;
 use warnings;
 
@@ -54,13 +51,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Screen - Object for logging to the screen
 
 =head1 VERSION
 
-version 2.41
+version 2.42
 
 =head1 SYNOPSIS
 
@@ -85,7 +84,9 @@ This module provides an object for logging to the screen (really
 STDOUT or STDERR).
 
 Note that a newline will I<not> be added automatically at the end of a
-message by default.  To do that, pass C<newline =E<gt> 1>.
+message by default. To do that, pass C<< newline => 1 >>.
+
+=for Pod::Coverage new log_message
 
 =head1 CONSTRUCTOR
 
@@ -96,8 +97,8 @@ parameters documented in L<Log::Dispatch::Output>:
 
 =item * stderr (0 or 1)
 
-Indicates whether or not logging information should go to STDERR.  If
-false, logging information is printed to STDOUT instead.  This
+Indicates whether or not logging information should go to STDERR. If
+false, logging information is printed to STDOUT instead. This
 defaults to true.
 
 =back
@@ -108,7 +109,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 

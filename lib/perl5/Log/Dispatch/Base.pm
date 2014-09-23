@@ -1,8 +1,5 @@
 package Log::Dispatch::Base;
-{
-  $Log::Dispatch::Base::VERSION = '2.41';
-}
-
+$Log::Dispatch::Base::VERSION = '2.42';
 use strict;
 use warnings;
 
@@ -54,13 +51,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Base - Code shared by dispatch and output objects.
 
 =head1 VERSION
 
-version 2.41
+version 2.42
 
 =head1 SYNOPSIS
 
@@ -75,13 +74,15 @@ version 2.41
 Unless you are me, you probably don't need to know what this class
 does.
 
+=for Pod::Coverage add_callback
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 
