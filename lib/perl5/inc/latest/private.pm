@@ -2,9 +2,10 @@ package inc::latest::private;
 
 use if $] >= 5.019, 'deprecate';
 
+use 5.006;
 use strict;
-use vars qw($VERSION);
-$VERSION = '0.4206';
+use warnings;
+our $VERSION = '0.4210';
 $VERSION = eval $VERSION;
 
 use File::Spec;
