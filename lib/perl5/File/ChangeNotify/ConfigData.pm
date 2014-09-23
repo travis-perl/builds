@@ -175,10 +175,10 @@ do{ my $x = [
                         'description' => 'Inotify support'
                       },
          'KQueue' => {
+                       'description' => 'KQueue support',
                        'requires' => {
                                        'IO::KQueue' => 0
-                                     },
-                       'description' => 'KQueue support'
+                                     }
                      }
        }
      ];
