@@ -2,9 +2,7 @@ package Package::Stash::PP;
 BEGIN {
   $Package::Stash::PP::AUTHORITY = 'cpan:DOY';
 }
-{
-  $Package::Stash::PP::VERSION = '0.36';
-}
+$Package::Stash::PP::VERSION = '0.37';
 use strict;
 use warnings;
 # ABSTRACT: pure perl implementation of the Package::Stash API
@@ -190,6 +188,7 @@ sub add_symbol {
             local *__ANON__:: = $namespace;
             no strict 'refs';
             no warnings 'void';
+            no warnings 'once';
             *{"__ANON__::$name"};
         }
 
@@ -417,13 +416,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Package::Stash::PP - pure perl implementation of the Package::Stash API
 
 =head1 VERSION
 
-version 0.36
+version 0.37
 
 =head1 SYNOPSIS
 
@@ -521,7 +522,7 @@ Jesse Luehrs <doy@tozt.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Jesse Luehrs.
+This software is copyright (c) 2014 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

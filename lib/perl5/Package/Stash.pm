@@ -2,9 +2,7 @@ package Package::Stash;
 BEGIN {
   $Package::Stash::AUTHORITY = 'cpan:DOY';
 }
-{
-  $Package::Stash::VERSION = '0.36';
-}
+$Package::Stash::VERSION = '0.37';
 use strict;
 use warnings;
 use 5.008001;
@@ -44,13 +42,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Package::Stash - routines for manipulating stashes
 
 =head1 VERSION
 
-version 0.36
+version 0.37
 
 =head1 SYNOPSIS
 
@@ -224,9 +224,8 @@ L<perlref/Making References> point 7 for more information.
 
 =back
 
-Please report any bugs through RT: email
-C<bug-package-stash at rt.cpan.org>, or browse to
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Package-Stash>.
+Please report any bugs to GitHub Issues at
+L<https://github.com/doy/package-stash/issues>.
 
 =head1 SEE ALSO
 
@@ -277,7 +276,7 @@ Jesse Luehrs <doy@tozt.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Jesse Luehrs.
+This software is copyright (c) 2014 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

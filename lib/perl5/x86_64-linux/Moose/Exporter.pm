@@ -1,8 +1,5 @@
 package Moose::Exporter;
-BEGIN {
-  $Moose::Exporter::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exporter::VERSION = '2.1210';
+$Moose::Exporter::VERSION = '2.1212';
 use strict;
 use warnings;
 
@@ -10,7 +7,7 @@ use Class::Load qw(is_class_loaded);
 use Class::MOP;
 use List::MoreUtils qw( first_index uniq );
 use Moose::Util::MetaRole;
-use Scalar::Util qw(reftype);
+use Scalar::Util 1.11 qw(reftype);
 use Sub::Exporter 0.980;
 use Sub::Name qw(subname);
 
@@ -86,10 +83,16 @@ sub build_import_methods {
     my $package = Class::MOP::Package->initialize($exporting_package);
     for my $to_install ( @{ $args{install} || [] } ) {
         my $symbol = '&' . $to_install;
+
         next
             unless $methods{$to_install}
                 && !$package->has_package_symbol($symbol);
-        $package->add_package_symbol( $symbol, $methods{$to_install} );
+        $package->add_package_symbol(
+            $symbol,
+            subname(
+                $exporting_package . '::' . $to_install, $methods{$to_install}
+            )
+        );
     }
 
     return ( $methods{import}, $methods{unimport}, $methods{init_meta} );
@@ -794,7 +797,7 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
 =head1 VERSION
 
-version 2.1210
+version 2.1212
 
 =head1 SYNOPSIS
 
