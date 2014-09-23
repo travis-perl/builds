@@ -116,20 +116,12 @@ sub currstr {
 }
 
 package version::vpp;
-
-use 5.006002;
 use strict;
 
-use Config;
-use vars qw($VERSION $CLASS @ISA $LAX $STRICT);
-$VERSION = 0.9908;
-$CLASS = 'version::vpp';
-
-require version::regex;
-*version::vpp::is_strict = \&version::regex::is_strict;
-*version::vpp::is_lax = \&version::regex::is_lax;
-*LAX = \$version::regex::LAX;
-*STRICT = \$version::regex::STRICT;
+use POSIX qw/locale_h/;
+use locale;
+use vars qw ($VERSION @ISA @REGEXS);
+$VERSION = 0.88;
 
 use overload (
     '""'       => \&stringify,
@@ -137,83 +129,16 @@ use overload (
     'cmp'      => \&vcmp,
     '<=>'      => \&vcmp,
     'bool'     => \&vbool,
-    '+'        => \&vnoop,
-    '-'        => \&vnoop,
-    '*'        => \&vnoop,
-    '/'        => \&vnoop,
-    '+='        => \&vnoop,
-    '-='        => \&vnoop,
-    '*='        => \&vnoop,
-    '/='        => \&vnoop,
-    'abs'      => \&vnoop,
+    'nomethod' => \&vnoop,
 );
 
 eval "use warnings";
 if ($@) {
     eval '
-	package
-	warnings;
+	package warnings;
 	sub enabled {return $^W;}
 	1;
     ';
-}
-
-sub import {
-    no strict 'refs';
-    my ($class) = shift;
-
-    # Set up any derived class
-    unless ($class eq $CLASS) {
-	local $^W;
-	*{$class.'::declare'} =  \&{$CLASS.'::declare'};
-	*{$class.'::qv'} = \&{$CLASS.'::qv'};
-    }
-
-    my %args;
-    if (@_) { # any remaining terms are arguments
-	map { $args{$_} = 1 } @_
-    }
-    else { # no parameters at all on use line
-	%args =
-	(
-	    qv => 1,
-	    'UNIVERSAL::VERSION' => 1,
-	);
-    }
-
-    my $callpkg = caller();
-
-    if (exists($args{declare})) {
-	*{$callpkg.'::declare'} =
-	    sub {return $class->declare(shift) }
-	  unless defined(&{$callpkg.'::declare'});
-    }
-
-    if (exists($args{qv})) {
-	*{$callpkg.'::qv'} =
-	    sub {return $class->qv(shift) }
-	  unless defined(&{$callpkg.'::qv'});
-    }
-
-    if (exists($args{'UNIVERSAL::VERSION'})) {
-	local $^W;
-	*UNIVERSAL::VERSION
-		= \&{$CLASS.'::_VERSION'};
-    }
-
-    if (exists($args{'VERSION'})) {
-	*{$callpkg.'::VERSION'} = \&{$CLASS.'::_VERSION'};
-    }
-
-    if (exists($args{'is_strict'})) {
-	*{$callpkg.'::is_strict'} = \&{$CLASS.'::is_strict'}
-	  unless defined(&{$callpkg.'::is_strict'});
-    }
-
-    if (exists($args{'is_lax'})) {
-	*{$callpkg.'::is_lax'} = \&{$CLASS.'::is_lax'}
-	  unless defined(&{$callpkg.'::is_lax'});
-    }
 }
 
 my $VERSION_MAX = 0x7FFFFFFF;
@@ -328,7 +253,7 @@ dotted_decimal_version:
 		}
 		$j = 0;
 	    }
-
+	
 	    if ($strict && $i < 2) {
 		# requires v1.2.3
 		return BADVERSION($s,$errstr,"Invalid version format (dotted-decimal versions require at least three parts)");
@@ -337,7 +262,6 @@ dotted_decimal_version:
     } 					# end if dotted-decimal
     else
     {					# decimal versions
-	my $j = 0;
 	# special $strict case for leading '.' or '0'
 	if ($strict) {
 	    if ($d eq '.') {
@@ -346,11 +270,6 @@ dotted_decimal_version:
 	    if ($d eq '0' && isDIGIT($d+1)) {
 		return BADVERSION($s,$errstr,"Invalid version format (no leading zeros)");
 	    }
-	}
-
-	# and we never support negative version numbers
-	if ($d eq '-') {
-	    return BADVERSION($s,$errstr,"Invalid version format (negative version number)");
 	}
 
 	# consume all of the integer part
@@ -400,7 +319,7 @@ dotted_decimal_version:
 	}
 
 	while (isDIGIT($d)) {
-	    $d++; $j++;
+	    $d++;
 	    if ($d eq '.' && isDIGIT($d-1)) {
 		if ($alpha) {
 		    return BADVERSION($s,$errstr,"Invalid version format (underscores before decimal)");
@@ -422,7 +341,6 @@ dotted_decimal_version:
 		if ( ! isDIGIT($d+1) ) {
 		    return BADVERSION($s,$errstr,"Invalid version format (misplaced underscore)");
 		}
-		$width = $j;
 		$d++;
 		$alpha = TRUE;
 	    }
@@ -478,7 +396,7 @@ sub scan_version {
     if ($errstr) {
 	# 'undef' is a special case and not an error
 	if ( $s ne 'undef') {
-	    require Carp;
+	    use Carp;
 	    Carp::croak($errstr);
 	}
     }
@@ -498,7 +416,7 @@ sub scan_version {
     if ( !$qv && $width < 3 ) {
 	$$rv->{width} = $width;
     }
-
+    
     while (isDIGIT($pos)) {
 	$pos++;
     }
@@ -523,7 +441,7 @@ sub scan_version {
 			$orev = $rev;
  			$rev += $s * $mult;
  			$mult /= 10;
-			if (   (abs($orev) > abs($rev))
+			if (   (abs($orev) > abs($rev)) 
 			    || (abs($rev) > $VERSION_MAX )) {
 			    warn("Integer overflow in version %d",
 					   $VERSION_MAX);
@@ -542,7 +460,7 @@ sub scan_version {
 			$orev = $rev;
  			$rev += $end * $mult;
  			$mult *= 10;
-			if (   (abs($orev) > abs($rev))
+			if (   (abs($orev) > abs($rev)) 
 			    || (abs($rev) > $VERSION_MAX )) {
 			    warn("Integer overflow in version");
 			    $end = $s - 1;
@@ -550,7 +468,7 @@ sub scan_version {
 			    $vinf = 1;
 			}
  		    }
- 		}
+ 		} 
   	    }
 
   	    # Append revision
@@ -599,7 +517,7 @@ sub scan_version {
 	#  gcc version 3.3 20030304 (Apple Computer, Inc. build 1640)
 	#  for ( len = 2 - len; len > 0; len-- )
 	#  av_push(MUTABLE_AV(sv), newSViv(0));
-	#
+	# 
 	$len = 2 - $len;
 	while ($len-- > 0) {
 	    push @av, 0;
@@ -634,49 +552,21 @@ sub scan_version {
     return $s;
 }
 
-sub new {
-    my $class = shift;
-    unless (defined $class or $#_ > 1) {
-	require Carp;
-	Carp::croak('Usage: version::new(class, version)');
-    }
+sub new
+{
+	my ($class, $value) = @_;
+	my $self = bless ({}, ref ($class) || $class);
+	my $qv = FALSE;
+	
+	if ( ref($value) && eval('$value->isa("version")') ) {
+	    # Can copy the elements directly
+	    $self->{version} = [ @{$value->{version} } ];
+	    $self->{qv} = 1 if $value->{qv};
+	    $self->{alpha} = 1 if $value->{alpha};
+	    $self->{original} = ''.$value->{original};
+	    return $self;
+	}
 
-    my $self = bless ({}, ref ($class) || $class);
-    my $qv = FALSE;
-
-    if ( $#_ == 1 ) { # must be CVS-style
-	$qv = TRUE;
-    }
-    my $value = pop; # always going to be the last element
-
-    if ( ref($value) && eval('$value->isa("version")') ) {
-	# Can copy the elements directly
-	$self->{version} = [ @{$value->{version} } ];
-	$self->{qv} = 1 if $value->{qv};
-	$self->{alpha} = 1 if $value->{alpha};
-	$self->{original} = ''.$value->{original};
-	return $self;
-    }
-
-    if ( not defined $value or $value =~ /^undef$/ ) {
-	# RT #19517 - special case for undef comparison
-	# or someone forgot to pass a value
-	push @{$self->{version}}, 0;
-	$self->{original} = "0";
-	return ($self);
-    }
-
-
-    if (ref($value) =~ m/ARRAY|HASH/) {
-	require Carp;
-	Carp::croak("Invalid version format (non-numeric data)");
-    }
-
-    $value = _un_vstring($value);
-
-    if ($Config{d_setlocale}) {
-	use POSIX qw/locale_h/;
-	use if $Config{d_setlocale}, 'locale';
 	my $currlocale = setlocale(LC_ALL);
 
 	# if the current locale uses commas for decimal points, we
@@ -685,27 +575,42 @@ sub new {
 	if ( localeconv()->{decimal_point} eq ',' ) {
 	    $value =~ tr/,/./;
 	}
-    }
 
-    # exponential notation
-    if ( $value =~ /\d+.?\d*e[-+]?\d+/ ) {
-	$value = sprintf("%.9f",$value);
-	$value =~ s/(0+)$//; # trim trailing zeros
-    }
+	if ( not defined $value or $value =~ /^undef$/ ) {
+	    # RT #19517 - special case for undef comparison
+	    # or someone forgot to pass a value
+	    push @{$self->{version}}, 0;
+	    $self->{original} = "0";
+	    return ($self);
+	}
 
-    my $s = scan_version($value, \$self, $qv);
+	if ( $#_ == 2 ) { # must be CVS-style
+	    $value = $_[2];
+	    $qv = TRUE;
+	}
 
-    if ($s) { # must be something left over
-	warn("Version string '%s' contains invalid data; "
-		   ."ignoring: '%s'", $value, $s);
-    }
+	$value = _un_vstring($value);
 
-    return ($self);
+	# exponential notation
+	if ( $value =~ /\d+.?\d*e[-+]?\d+/ ) {
+	    $value = sprintf("%.9f",$value);
+	    $value =~ s/(0+)$//; # trim trailing zeros
+	}
+	
+	my $s = scan_version($value, \$self, $qv);
+
+	if ($s) { # must be something left over
+	    warn("Version string '%s' contains invalid data; "
+                       ."ignoring: '%s'", $value, $s);
+	}
+
+	return ($self);
 }
 
 *parse = \&new;
 
-sub numify {
+sub numify 
+{
     my ($self) = @_;
     unless (_verify($self)) {
 	require Carp;
@@ -745,7 +650,8 @@ sub numify {
     return $string;
 }
 
-sub normal {
+sub normal 
+{
     my ($self) = @_;
     unless (_verify($self)) {
 	require Carp;
@@ -780,20 +686,22 @@ sub normal {
     return $string;
 }
 
-sub stringify {
+sub stringify
+{
     my ($self) = @_;
     unless (_verify($self)) {
 	require Carp;
 	Carp::croak("Invalid version object");
     }
-    return exists $self->{original}
-    	? $self->{original}
-	: exists $self->{qv}
+    return exists $self->{original} 
+    	? $self->{original} 
+	: exists $self->{qv} 
 	    ? $self->normal
 	    : $self->numify;
 }
 
-sub vcmp {
+sub vcmp
+{
     require UNIVERSAL;
     my ($left,$right,$swap) = @_;
     my $class = ref($left);
@@ -810,7 +718,7 @@ sub vcmp {
     }
     unless (_verify($right)) {
 	require Carp;
-	Carp::croak("Invalid version format");
+	Carp::croak("Invalid version object");
     }
     my $l = $#{$left->{version}};
     my $r = $#{$right->{version}};
@@ -825,8 +733,8 @@ sub vcmp {
     }
 
     # tiebreaker for alpha with identical terms
-    if ( $retval == 0
-	&& $l == $r
+    if ( $retval == 0 
+	&& $l == $r 
 	&& $left->{version}[$m] == $right->{version}[$m]
 	&& ( $lalpha || $ralpha ) ) {
 
@@ -858,7 +766,7 @@ sub vcmp {
 	}
     }
 
-    return $retval;
+    return $retval;  
 }
 
 sub vbool {
@@ -866,8 +774,8 @@ sub vbool {
     return vcmp($self,$self->new("0"),1);
 }
 
-sub vnoop {
-    require Carp;
+sub vnoop { 
+    require Carp; 
     Carp::croak("operation not supported with version object");
 }
 
@@ -878,7 +786,7 @@ sub is_alpha {
 
 sub qv {
     my $value = shift;
-    my $class = $CLASS;
+    my $class = 'version';
     if (@_) {
 	$class = ref($value) || $value;
 	$value = shift;
@@ -886,8 +794,8 @@ sub qv {
 
     $value = _un_vstring($value);
     $value = 'v'.$value unless $value =~ /(^v|\d+\.\d+\.\d)/;
-    my $obj = $CLASS->new($value);
-    return bless $obj, $class;
+    my $version = $class->new($value);
+    return $version;
 }
 
 *declare = \&qv;
@@ -925,7 +833,7 @@ sub _is_non_alphanumeric {
 sub _un_vstring {
     my $value = shift;
     # may be a v-string
-    if ( length($value) >= 3 && $value !~ /[._]/
+    if ( length($value) >= 3 && $value !~ /[._]/ 
 	&& _is_non_alphanumeric($value)) {
 	my $tvalue;
 	if ( $] ge 5.008_001 ) {
@@ -983,7 +891,7 @@ sub _VERSION {
     if ( defined $req ) {
 	unless ( defined $version ) {
 	    require Carp;
-	    my $msg =  $] < 5.006
+	    my $msg =  $] < 5.006 
 	    ? "$class version $req required--this is only version "
 	    : "$class does not define \$$class\::VERSION"
 	      ."--version check failed";
@@ -1001,14 +909,14 @@ sub _VERSION {
 	if ( $req > $version ) {
 	    require Carp;
 	    if ( $req->is_qv ) {
-		Carp::croak(
+		Carp::croak( 
 		    sprintf ("%s version %s required--".
 			"this is only version %s", $class,
 			$req->normal, $version->normal)
 		);
 	    }
 	    else {
-		Carp::croak(
+		Carp::croak( 
 		    sprintf ("%s version %s required--".
 			"this is only version %s", $class,
 			$req->stringify, $version->stringify)
