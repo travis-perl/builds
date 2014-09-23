@@ -3,7 +3,7 @@ require 5.008001;
 use if $] >= 5.019, 'deprecate';
 use Carp 'croak';
 
-$CGI::VERSION='4.03';
+$CGI::VERSION='4.04';
 
 # HARD-CODED LOCATION FOR FILE UPLOAD TEMPORARY FILES.
 # UNCOMMENT THIS ONLY IF YOU KNOW WHAT YOU'RE DOING.
@@ -226,7 +226,7 @@ if ($needs_binmode) {
 	':form'     => [ qw/
 		textfield textarea filefield password_field hidden checkbox checkbox_group
 		submit reset defaults radio_group popup_menu button autoEscape
-		scrolling_list image_button start_form end_form startform endform
+		scrolling_list image_button start_form end_form
 		start_multipart_form end_multipart_form isindex tmpFileName uploadInfo URL_ENCODED MULTIPART
 	/ ],
 	':cgi' => [ qw/
@@ -1217,7 +1217,10 @@ END_OF_FUNC
 
 'DELETE' => <<'END_OF_FUNC',
 sub DELETE {
-    $_[0]->delete($_[1]);
+    my ($self, $param) = @_;
+    my $value = $self->FETCH($param);
+    $self->delete($param);
+    return $value;
 }
 END_OF_FUNC
 
@@ -1307,6 +1310,7 @@ sub url_param {
 	    my($param,$value);
 	    for (@pairs) {
 		($param,$value) = split('=',$_,2);
+		next if ! defined($param);
 		$param = unescape($param);
 		$value = unescape($value);
 		push(@{$self->{'.url_param'}->{$param}},$value);
@@ -1896,35 +1900,6 @@ sub isindex {
 END_OF_FUNC
 
 
-#### Method: startform
-# This method is DEPRECATED
-# Start a form
-# Parameters:
-#   $method -> optional submission method to use (GET or POST)
-#   $action -> optional URL of script to run
-#   $enctype ->encoding to use (URL_ENCODED or MULTIPART)
-'startform' => <<'END_OF_FUNC',
-sub startform {
-    my($self,@p) = self_or_default(@_);
-
-    my($method,$action,$enctype,@other) = 
-	rearrange([METHOD,ACTION,ENCTYPE],@p);
-
-    $method  = $self->_maybe_escapeHTML(lc($method || 'post'));
-    $enctype = $self->_maybe_escapeHTML($enctype || &URL_ENCODED);
-    if (defined $action) {
-       $action = $self->_maybe_escapeHTML($action);
-    }
-    else {
-       $action = $self->_maybe_escapeHTML($self->request_uri || $self->self_url);
-    }
-    $action = qq(action="$action");
-    my($other) = @other ? " @other" : '';
-    $self->{'.parametersToAdd'}={};
-    return qq/<form method="$method" $action enctype="$enctype"$other>/;
-}
-END_OF_FUNC
-
 #### Method: start_form
 # Start a form
 # Parameters:
@@ -1994,21 +1969,6 @@ sub end_form {
 }
 END_OF_FUNC
 
-'endform' => <<'END_OF_FUNC',
-sub endform {
-    my($self,@p) = self_or_default(@_);
-    if ( $NOSTICKY ) {
-        return wantarray ? ("</form>") : "\n</form>";
-    } else {
-        if (my @fields = $self->get_fields) {
-            return wantarray ? ("<div>",@fields,"</div>","</form>")
-                             : "<div>".(join '',@fields)."</div>\n</form>";
-        } else {
-            return "</form>";
-        }
-    }
-}
-END_OF_FUNC
 
 #### Method: end_multipart_form
 # end a multipart form
@@ -2854,6 +2814,8 @@ sub url {
         my $protocol = $self->protocol();
         $url = "$protocol://";
         my $vh = http('x_forwarded_host') || http('host') || '';
+			$vh =~ s/^.*,\s*//; # x_forwarded_host may be a comma-separated list (e.g. when the request has
+                                # passed through multiple reverse proxies. Take the last one.
             $vh =~ s/\:\d+$//;  # some clients add the port number (incorrectly). Get rid of it.
 
         $url .= $vh || server_name();
@@ -4192,43 +4154,20 @@ END_OF_AUTOLOAD
 ####################################################################################
 ################################## TEMPORARY FILES #################################
 ####################################################################################
+
+# FIXME: kill this package and just use File::Temp
 package CGITempFile;
+
+use File::Spec;
 
 sub find_tempdir {
   $SL = $CGI::SL;
-  $MAC = $CGI::OS eq 'MACINTOSH';
-  my ($vol) = $MAC ? MacPerl::Volumes() =~ /:(.*)/ : "";
   unless (defined $TMPDIRECTORY) {
-    @TEMP=("${SL}usr${SL}tmp","${SL}var${SL}tmp",
-	   "C:${SL}temp","${SL}tmp","${SL}temp",
-	   "${vol}${SL}Temporary Items",
-           "${SL}WWW_ROOT", "${SL}SYS\$SCRATCH",
-	   "C:${SL}system${SL}temp");
-    
-    if( $CGI::OS eq 'WINDOWS' ){
-         # PeterH: These evars may not exist if this is invoked within a service and untainting
-         # is in effect - with 'use warnings' the undefined array entries causes Perl to die
-         unshift(@TEMP,$ENV{TEMP}) if defined $ENV{TEMP};
-         unshift(@TEMP,$ENV{TMP}) if defined $ENV{TMP};
-         unshift(@TEMP,$ENV{WINDIR} . $SL . 'TEMP') if defined $ENV{WINDIR};
-    }
-
-    unshift(@TEMP,$ENV{'TMPDIR'}) if defined $ENV{'TMPDIR'};
-
-    # this feature was supposed to provide per-user tmpfiles, but
-    # it is problematic.
-    #    unshift(@TEMP,(getpwuid($<))[7].'/tmp') if $CGI::OS eq 'UNIX';
-    # Rob: getpwuid() is unfortunately UNIX specific. On brain dead OS'es this
-    #    : can generate a 'getpwuid() not implemented' exception, even though
-    #    : it's never called.  Found under DOS/Win with the DJGPP perl port.
-    #    : Refer to getpwuid() only at run-time if we're fortunate and have  UNIX.
-    # unshift(@TEMP,(eval {(getpwuid($>))[7]}).'/tmp') if $CGI::OS eq 'UNIX' and $> != 0;
-
-    for (@TEMP) {
+    for ($ENV{'TMPDIR'},File::Spec->tmpdir) {
+      next if ! defined;
       do {$TMPDIRECTORY = $_; last} if -d $_ && -w _;
     }
   }
-  $TMPDIRECTORY  = $MAC ? "" : "." unless $TMPDIRECTORY;
 }
 
 find_tempdir();
@@ -4372,6 +4311,21 @@ in time. These will be documented with L<CGI::Alternatives>.
 For more discussion on the removal of CGI.pm from core please see:
 
   L<http://www.nntp.perl.org/group/perl.perl5.porters/2013/05/msg202130.html>
+
+=head1 HTML Generation functions should no longer be used
+
+B<All> HTML generation functions within CGI.pm are no longer being
+maintained. Any issues, bugs, or patches will be rejected unless
+they relate to fundamentally broken page rendering.
+
+The rational for this is that the HTML generation functions of CGI.pm
+are an obfuscation at best and a maintenance nightmare at worst. You
+should be using a template engine for better separation of concerns.
+See L<CGI::Alternatives> for an example of using CGI.pm with the
+L<Template::Toolkit> module.
+
+These functions, and perldoc for them, will continue to exist in the
+v4 releases of CGI.pm but may be deprecated (soft) in v5 and beyond.
 
 =head2 Programming style
 
@@ -5060,10 +5014,16 @@ pragma.
 
 =item -utf8
 
-This makes CGI.pm treat all parameters as UTF-8 strings. Use this with
-care, as it will interfere with the processing of binary uploads. It
-is better to manually select which fields are expected to return utf-8
-strings and convert them using code like this:
+This makes CGI.pm treat all parameters as text strings rather than binary
+strings (see L<perlunitut> for the distinction), assuming UTF-8 for the
+encoding.
+
+CGI.pm does the decoding from the UTF-8 encoded input data, restricting this
+decoding to input text as distinct from binary upload data which are left
+untouched. Therefore, a ':utf8' layer must B<not> be used on STDIN.
+
+If you do not use this option you can manually select which fields are
+expected to return utf-8 strings and convert them using code like this:
 
  use Encode;
  my $arg = decode utf8=>param('foo');
@@ -5146,11 +5106,8 @@ The temporary directory is selected using the following algorithm:
     2. if the environment variable TMPDIR exists, use the location
     indicated.
 
-    3. Otherwise try the locations /usr/tmp, /var/tmp, C:\temp,
-    /tmp, /temp, ::Temporary Items, and \WWW_ROOT.
-
-Each of these locations is checked that it is a directory and is
-writable.  If not, the algorithm tries the next choice.
+    3. Otherwise use File::Spec->tmpdir to find a temp directory
+    (see File::Spec::Unix and File::Spec::Win32)
 
 =back
 
@@ -6006,13 +5963,9 @@ action and form encoding that you specify.  The defaults are:
 
 end_form() returns the closing </form> tag.  
 
-Start_form()'s enctype argument tells the browser how to package the various
+start_form()'s enctype argument tells the browser how to package the various
 fields of the form before sending the form to the server.  Two
 values are possible:
-
-B<Note:> These methods were previously named startform() and endform().
-These methods are now DEPRECATED.
-Please use start_form() and end_form() instead.
 
 =over 4
 
@@ -6287,6 +6240,12 @@ a hash containing all the document headers.
        unless ($type eq 'text/html') {
         die "HTML FILES ONLY!";
        }
+
+Note that you must use ->param to get the filename to pass into uploadInfo
+as internally this is represented as a Fh object (which is what will be
+returned by ->param). When using ->Vars you will get the literal filename
+rather than the Fh object, which will not return anything when passed to
+uploadInfo. So don't use ->Vars.
 
 If you are using a machine that recognizes "text" and "binary" data
 modes, be sure to understand when and how to use them (see the Camel book).  

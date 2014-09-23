@@ -12,7 +12,7 @@ use warnings;
 
 use Storable;
 
-our $VERSION = '1.15'; # VERSION
+our $VERSION = '1.17'; # VERSION
 
 sub new {
     my $class = shift;
@@ -43,7 +43,7 @@ Devel::Cover::DB::IO::Storable - Storable based IO routines for Devel::Cover::DB
 
 =head1 VERSION
 
-version 1.15
+version 1.17
 
 =head1 SYNOPSIS
 

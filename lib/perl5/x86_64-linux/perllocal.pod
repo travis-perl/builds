@@ -1,4 +1,4 @@
-=head2 Thu Aug  7 00:06:23 2014: C<Module> L<CGI|CGI>
+=head2 Tue Sep 23 14:14:19 2014: C<Module> L<CGI|CGI>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 4.03>
+C<VERSION: 4.04>
 
 =item *
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Aug  7 00:06:26 2014: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Tue Sep 23 14:14:22 2014: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.15>
+C<VERSION: 1.17>
 
 =item *
 
@@ -42,29 +42,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Thu Aug  7 00:06:31 2014: C<Module> L<Class::Accessor::Lite|Class::Accessor::Lite>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.20@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.06>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Thu Aug  7 00:06:33 2014: C<Module> L<HTTP::Parser::XS|HTTP::Parser::XS>
+=head2 Tue Sep 23 14:14:26 2014: C<Module> L<HTTP::Parser::XS|HTTP::Parser::XS>
 
 =over 4
 
@@ -79,6 +57,28 @@ C<LINKTYPE: dynamic>
 =item *
 
 C<VERSION: 0.16>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 23 14:14:28 2014: C<Module> L<Class::Accessor::Lite|Class::Accessor::Lite>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.06>
 
 =item *
 
