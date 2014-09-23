@@ -1,8 +1,5 @@
 package Moose::Exception::MustPassAMooseMetaRoleInstanceOrSubclass;
-BEGIN {
-  $Moose::Exception::MustPassAMooseMetaRoleInstanceOrSubclass::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::MustPassAMooseMetaRoleInstanceOrSubclass::VERSION = '2.1210';
+$Moose::Exception::MustPassAMooseMetaRoleInstanceOrSubclass::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 
