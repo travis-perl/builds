@@ -11,13 +11,13 @@ indirect - Lexically warn about using the indirect method call syntax.
 
 =head1 VERSION
 
-Version 0.31
+Version 0.32
 
 =cut
 
 our $VERSION;
 BEGIN {
- $VERSION = '0.31';
+ $VERSION = '0.32';
 }
 
 =head1 SYNOPSIS
@@ -289,7 +289,7 @@ Andrew Main and Florian Ragwitz, for testing on real-life code and reporting iss
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008,2009,2010,2011,2012,2013 Vincent Pit, all rights reserved.
+Copyright 2008,2009,2010,2011,2012,2013,2014 Vincent Pit, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
 
