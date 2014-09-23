@@ -6,7 +6,7 @@
       "John SJ Anderson <genehack@genehack.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141520, CPAN::Meta::Converter version 2.140640",
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141520, CPAN::Meta::Converter version 2.142060",
    "license" : [
       "perl_5"
    ],
@@ -24,7 +24,8 @@
       "configure" : {
          "requires" : {
             "Devel::CheckBin" : "0",
-            "ExtUtils::MakeMaker" : "6.30"
+            "ExtUtils::MakeMaker" : "6.30",
+            "File::Spec" : "0"
          }
       },
       "develop" : {
@@ -75,7 +76,7 @@
          "web" : "https://github.com/genehack/Git-Wrapper"
       }
    },
-   "version" : "0.035",
+   "version" : "0.037",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.020000"
@@ -122,16 +123,6 @@
             "version" : "5.019"
          },
          {
-            "class" : "Dist::Zilla::Plugin::MakeMaker",
-            "config" : {
-               "Dist::Zilla::Role::TestRunner" : {
-                  "default_jobs" : 1
-               }
-            },
-            "name" : "@Filter/MakeMaker",
-            "version" : "5.019"
-         },
-         {
             "class" : "Dist::Zilla::Plugin::Manifest",
             "name" : "@Filter/Manifest",
             "version" : "5.019"
@@ -150,6 +141,16 @@
             "class" : "Dist::Zilla::Plugin::UploadToCPAN",
             "name" : "@Filter/UploadToCPAN",
             "version" : "5.019"
+         },
+         {
+            "class" : "inc::CheckGitConfig",
+            "config" : {
+               "Dist::Zilla::Role::TestRunner" : {
+                  "default_jobs" : 1
+               }
+            },
+            "name" : "=inc::CheckGitConfig",
+            "version" : null
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::NextVersion",
@@ -349,7 +350,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "v0.035",
+                  "tag" : "v0.037",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
