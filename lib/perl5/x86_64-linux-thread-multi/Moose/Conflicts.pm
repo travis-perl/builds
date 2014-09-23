@@ -4,6 +4,8 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.16
+
 use Dist::CheckConflicts
     -dist      => 'Moose',
     -conflicts => {
@@ -73,78 +75,36 @@ use Dist::CheckConflicts
         'Throwable' => '0.102080',
         'namespace::autoclean' => '0.08',
     },
+    -also => [ qw(
+        Carp
+        Class::Load
+        Class::Load::XS
+        Data::OptList
+        Devel::GlobalDestruction
+        Devel::StackTrace
+        Dist::CheckConflicts
+        Eval::Closure
+        List::MoreUtils
+        MRO::Compat
+        Module::Runtime
+        Module::Runtime::Conflicts
+        Package::DeprecationManager
+        Package::Stash
+        Package::Stash::XS
+        Params::Util
+        Scalar::Util
+        Sub::Exporter
+        Sub::Name
+        Task::Weaken
+        Try::Tiny
+        parent
+        strict
+        warnings
+    ) ],
 
 ;
 
 1;
 
 # ABSTRACT: Provide information on conflicts for Moose
-
-__END__
-
-=pod
-
-=encoding UTF-8
-
-=head1 NAME
-
-Moose::Conflicts - Provide information on conflicts for Moose
-
-=head1 VERSION
-
-version 2.1210
-
-=head1 AUTHORS
-
-=over 4
-
-=item *
-
-Stevan Little <stevan.little@iinteractive.com>
-
-=item *
-
-Dave Rolsky <autarch@urth.org>
-
-=item *
-
-Jesse Luehrs <doy@tozt.net>
-
-=item *
-
-Shawn M Moore <code@sartak.org>
-
-=item *
-
-יובל קוג'מן (Yuval Kogman) <nothingmuch@woobling.org>
-
-=item *
-
-Karen Etheridge <ether@cpan.org>
-
-=item *
-
-Florian Ragwitz <rafl@debian.org>
-
-=item *
-
-Hans Dieter Pearcey <hdp@weftsoar.net>
-
-=item *
-
-Chris Prather <chris@prather.org>
-
-=item *
-
-Matt S Trout <mst@shadowcat.co.uk>
-
-=back
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut
+# Dist::Zilla: -PodWeaver
