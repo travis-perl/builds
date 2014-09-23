@@ -1,0 +1,90 @@
+{
+   "abstract" : "Create a DBIx::Class::Schema based on a database",
+   "author" : [
+      "blblack: Brandon Black <blblack@gmail.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Install version 1.10, CPAN::Meta::Converter version 2.142060",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "DBIx-Class-Schema-Loader",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "t"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "DBD::SQLite" : "1.29",
+            "DBIx::Class::IntrospectableM2M" : "0",
+            "ExtUtils::MakeMaker" : "6.59",
+            "File::Path" : "2.07",
+            "File::Temp" : "0.16",
+            "Test::Deep" : "0.107",
+            "Test::Differences" : "0.60",
+            "Test::Exception" : "0.31",
+            "Test::More" : "0.94",
+            "Test::Warn" : "0.21"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp::Clan" : "0",
+            "Class::Accessor::Grouped" : "0.10008",
+            "Class::C3::Componentised" : "1.0008",
+            "Class::Inspector" : "1.27",
+            "Class::Unload" : "0.07",
+            "DBD::SQLite" : "1.29",
+            "DBIx::Class" : "0.08127",
+            "DBIx::Class::IntrospectableM2M" : "0",
+            "Data::Dump" : "1.06",
+            "Digest::MD5" : "2.36",
+            "Exporter" : "5.63",
+            "File::Path" : "2.07",
+            "File::Temp" : "0.16",
+            "Hash::Merge" : "0.12",
+            "Lingua::EN::Inflect::Number" : "1.1",
+            "Lingua::EN::Inflect::Phrase" : "0.15",
+            "Lingua::EN::Tagger" : "0.23",
+            "List::MoreUtils" : "0.32",
+            "MRO::Compat" : "0.09",
+            "Scope::Guard" : "0.20",
+            "String::CamelCase" : "0.02",
+            "String::ToIdentifier::EN" : "0.05",
+            "Sub::Name" : "0",
+            "Test::Deep" : "0.107",
+            "Test::Differences" : "0.60",
+            "Test::Exception" : "0.31",
+            "Test::More" : "0.94",
+            "Test::Warn" : "0.21",
+            "Try::Tiny" : "0",
+            "namespace::clean" : "0.23",
+            "perl" : "5.008001"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "url" : "https://github.com/dbsrgits/dbix-class-schema-loader"
+      },
+      "x_IRC" : "irc://irc.perl.org/#dbix-class",
+      "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbix-class"
+   },
+   "version" : "0.07042"
+}
