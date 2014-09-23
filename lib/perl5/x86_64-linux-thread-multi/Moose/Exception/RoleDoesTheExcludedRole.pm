@@ -1,8 +1,5 @@
 package Moose::Exception::RoleDoesTheExcludedRole;
-BEGIN {
-  $Moose::Exception::RoleDoesTheExcludedRole::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::RoleDoesTheExcludedRole::VERSION = '2.1210';
+$Moose::Exception::RoleDoesTheExcludedRole::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Role';
