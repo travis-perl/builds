@@ -62,7 +62,7 @@ use PPI::Exception  ();
 
 use vars qw{$VERSION $errstr *_PARENT %ROUND %RESOLVE};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	$errstr  = '';
 
 	# Faster than having another method call just
@@ -244,21 +244,6 @@ sub lex_tokenizer {
 
 #####################################################################
 # Lex Methods - Document Object
-
-=pod
-
-=begin testing _lex_document 3
-
-# Validate the creation of a null statement
-SCOPE: {
-	my $token = new_ok( 'PPI::Token::Structure' => [ ')'    ] );
-	my $brace = new_ok( 'PPI::Statement::UnmatchedBrace' => [ $token ] );
-	is( $brace->content, ')', '->content ok' );
-}
-
-=end testing
-
-=cut
 
 sub _lex_document {
 	my ($self, $Document) = @_;
@@ -690,7 +675,7 @@ sub _lex_end {
 	$self->_rollback;
 }
 
-# For many statements, it can be dificult to determine the end-point.
+# For many statements, it can be difficult to determine the end-point.
 # This method takes a statement and the next significant token, and attempts
 # to determine if the there is a statement boundary between the two, or if
 # the statement can continue with the token.
@@ -1084,99 +1069,6 @@ BEGIN {
 	);
 }
 
-=pod
-
-=begin testing _curly 26
-
-my $document = PPI::Document->new(\<<'END_PERL');
-use constant { One => 1 };
-use constant 1 { One => 1 };
-$foo->{bar};
-$foo[1]{bar};
-$foo{bar};
-sub {1};
-grep { $_ } 0 .. 2;
-map { $_ => 1 } 0 .. 2;
-sort { $b <=> $a } 0 .. 2;
-do {foo};
-$foo = { One => 1 };
-$foo ||= { One => 1 };
-1, { One => 1 };
-One => { Two => 2 };
-{foo, bar};
-{foo => bar};
-{};
-+{foo, bar};
-{; => bar};
-@foo{'bar', 'baz'};
-@{$foo}{'bar', 'baz'};
-${$foo}{bar};
-return { foo => 'bar' };
-bless { foo => 'bar' };
-END_PERL
- 
-isa_ok( $document, 'PPI::Document' );
-$document->index_locations();
-
-my @statements;
-foreach my $elem ( @{ $document->find( 'PPI::Statement' ) || [] } ) {
-	$statements[ $elem->line_number() - 1 ] ||= $elem;
-}
-
-is( scalar(@statements), 24, 'Found 24 statements' );
-
-isa_ok( $statements[0]->schild(2), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[0]);
-isa_ok( $statements[1]->schild(3), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[1]);
-isa_ok( $statements[2]->schild(2), 'PPI::Structure::Subscript',
-	'The curly in ' . $statements[2]);
-isa_ok( $statements[3]->schild(2), 'PPI::Structure::Subscript',
-	'The curly in ' . $statements[3]);
-isa_ok( $statements[4]->schild(1), 'PPI::Structure::Subscript',
-	'The curly in ' . $statements[4]);
-isa_ok( $statements[5]->schild(1), 'PPI::Structure::Block',
-	'The curly in ' . $statements[5]);
-isa_ok( $statements[6]->schild(1), 'PPI::Structure::Block',
-	'The curly in ' . $statements[6]);
-isa_ok( $statements[7]->schild(1), 'PPI::Structure::Block',
-	'The curly in ' . $statements[7]);
-isa_ok( $statements[8]->schild(1), 'PPI::Structure::Block',
-	'The curly in ' . $statements[8]);
-isa_ok( $statements[9]->schild(1), 'PPI::Structure::Block',
-	'The curly in ' . $statements[9]);
-isa_ok( $statements[10]->schild(2), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[10]);
-isa_ok( $statements[11]->schild(3), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[11]);
-isa_ok( $statements[12]->schild(2), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[12]);
-isa_ok( $statements[13]->schild(2), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[13]);
-isa_ok( $statements[14]->schild(0), 'PPI::Structure::Block',
-	'The curly in ' . $statements[14]);
-isa_ok( $statements[15]->schild(0), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[15]);
-isa_ok( $statements[16]->schild(0), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[16]);
-isa_ok( $statements[17]->schild(1), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[17]);
-isa_ok( $statements[18]->schild(0), 'PPI::Structure::Block',
-	'The curly in ' . $statements[18]);
-isa_ok( $statements[19]->schild(1), 'PPI::Structure::Subscript',
-	'The curly in ' . $statements[19]);
-isa_ok( $statements[20]->schild(2), 'PPI::Structure::Subscript',
-	'The curly in ' . $statements[20]);
-isa_ok( $statements[21]->schild(2), 'PPI::Structure::Subscript',
-	'The curly in ' . $statements[21]);
-isa_ok( $statements[22]->schild(1), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[22]);
-isa_ok( $statements[23]->schild(1), 'PPI::Structure::Constructor',
-	'The curly in ' . $statements[23]);
-
-=end testing
-
-=cut
 
 # Given a parent element, and a { token to open a structure, determine
 # the class that the structure should be.
@@ -1291,23 +1183,6 @@ sub _curly {
 	return 'PPI::Structure::Block';
 }
 
-=pod
-
-=begin testing _lex_structure 4
-
-# Validate the creation of a null statement
-SCOPE: {
-	my $token = new_ok( 'PPI::Token::Structure' => [ ';'    ] );
-	my $null  = new_ok( 'PPI::Statement::Null'  => [ $token ] );
-	is( $null->content, ';', '->content ok' );
-}
-
-# Validate the creation of an empty statement
-new_ok( 'PPI::Statement' => [ ] );
-
-=end testing
-
-=cut
 
 sub _lex_structure {
 	my ($self, $Structure) = @_;
@@ -1440,14 +1315,13 @@ sub _add_element {
 	# my $Element = _INSTANCE(shift, 'PPI::Element') or die "Bad param 2";
 
 	# Handle a special case, where a statement is not fully resolved
-	if ( ref $Parent eq 'PPI::Statement' ) {
-		my $first  = $Parent->schild(0);
-		my $second = $Parent->schild(1);
-		if ( $first and $first->isa('PPI::Token::Label') and ! $second ) {
+	if ( ref $Parent eq 'PPI::Statement'
+		   and my $first = $Parent->schild(0) ) {
+		if ( $first->isa('PPI::Token::Label')
+			   and !(my $second = $Parent->schild(1)) ) {
+			my $new_class = $STATEMENT_CLASSES{$second->content};
 			# It's a labelled statement
-			if ( $STATEMENT_CLASSES{$second->content} ) {
-				bless $Parent, $STATEMENT_CLASSES{$second->content};
-			}
+			bless $Parent, $new_class if $new_class;
 		}
 	}
 

@@ -1,8 +1,5 @@
 package Log::Dispatch::Code;
-{
-  $Log::Dispatch::Code::VERSION = '2.41';
-}
-
+$Log::Dispatch::Code::VERSION = '2.42';
 use strict;
 use warnings;
 
@@ -44,13 +41,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Code - Object for logging to a subroutine reference
 
 =head1 VERSION
 
-version 2.41
+version 2.42
 
 =head1 SYNOPSIS
 
@@ -75,6 +74,8 @@ version 2.41
 =head1 DESCRIPTION
 
 This module supplies a simple object for logging to a subroutine reference.
+
+=for Pod::Coverage new log_message
 
 =head1 CONSTRUCTOR
 
@@ -112,7 +113,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 

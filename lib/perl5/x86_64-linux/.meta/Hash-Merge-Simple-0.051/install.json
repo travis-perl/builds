@@ -1,1 +1,1 @@
-{"version":"0.051","dist":"Hash-Merge-Simple-0.051","target":"Hash::Merge::Simple","name":"Hash::Merge::Simple","pathname":"R/RO/ROKR/Hash-Merge-Simple-0.051.tar.gz","provides":{"Hash::Merge::Simple":{"file":"lib/Hash/Merge/Simple.pm","version":"0.051"}}}
+{"version":"0.051","name":"Hash::Merge::Simple","pathname":"R/RO/ROKR/Hash-Merge-Simple-0.051.tar.gz","dist":"Hash-Merge-Simple-0.051","target":"Hash::Merge::Simple","provides":{"Hash::Merge::Simple":{"file":"lib/Hash/Merge/Simple.pm","version":"0.051"}}}

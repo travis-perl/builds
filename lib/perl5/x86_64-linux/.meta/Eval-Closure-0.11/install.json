@@ -1,1 +1,1 @@
-{"target":"Eval::Closure","dist":"Eval-Closure-0.11","version":"0.11","pathname":"D/DO/DOY/Eval-Closure-0.11.tar.gz","name":"Eval::Closure","provides":{"Eval::Closure":{"file":"lib/Eval/Closure.pm","version":"0.11"}}}
+{"target":"Eval::Closure","provides":{"Eval::Closure":{"version":"0.11","file":"lib/Eval/Closure.pm"}},"dist":"Eval-Closure-0.11","pathname":"D/DO/DOY/Eval-Closure-0.11.tar.gz","version":"0.11","name":"Eval::Closure"}

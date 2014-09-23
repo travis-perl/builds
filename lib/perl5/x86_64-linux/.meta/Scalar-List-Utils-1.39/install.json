@@ -1,1 +1,0 @@
-{"pathname":"P/PE/PEVANS/Scalar-List-Utils-1.39.tar.gz","name":"List::Util","provides":{"Scalar::Util":{"file":"lib/Scalar/Util.pm","version":"1.39"},"List::Util::XS":{"version":"1.39","file":"lib/List/Util/XS.pm"},"List::Util":{"file":"lib/List/Util.pm","version":"1.39"}},"target":"List::Util","dist":"Scalar-List-Utils-1.39","version":"1.39"}

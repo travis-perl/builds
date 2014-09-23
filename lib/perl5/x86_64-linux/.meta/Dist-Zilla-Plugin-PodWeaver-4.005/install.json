@@ -1,1 +1,0 @@
-{"version":"4.005","pathname":"R/RJ/RJBS/Dist-Zilla-Plugin-PodWeaver-4.005.tar.gz","dist":"Dist-Zilla-Plugin-PodWeaver-4.005","name":"Dist::Zilla::Plugin::PodWeaver","target":"Dist::Zilla::Plugin::PodWeaver","provides":{"Dist::Zilla::Plugin::PodWeaver":{"file":"lib/Dist/Zilla/Plugin/PodWeaver.pm","version":"4.005"}}}

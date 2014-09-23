@@ -1,6 +1,6 @@
 package Git::Wrapper::Exception;
 # ABSTRACT: Exception class for Git::Wrapper
-$Git::Wrapper::Exception::VERSION = '0.035';
+$Git::Wrapper::Exception::VERSION = '0.037';
 use 5.006;
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ Git::Wrapper::Exception - Exception class for Git::Wrapper
 
 =head1 VERSION
 
-version 0.035
+version 0.037
 
 =head1 METHODS
 
