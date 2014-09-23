@@ -11,7 +11,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::NextVersion;
 {
-  $Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.023';
+  $Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.024';
 }
 # ABSTRACT: provide a version number by bumping the last git release tag
 
@@ -204,7 +204,7 @@ Dist::Zilla::Plugin::Git::NextVersion - provide a version number by bumping the 
 
 =head1 VERSION
 
-version 2.023
+version 2.024
 
 =head1 SYNOPSIS
 

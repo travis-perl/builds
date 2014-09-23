@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Init;
 {
-  $Dist::Zilla::Plugin::Git::Init::VERSION = '2.023';
+  $Dist::Zilla::Plugin::Git::Init::VERSION = '2.024';
 }
 # ABSTRACT: initialize git repository on dzil new
 
@@ -46,6 +46,12 @@ has commit => (
     default => 1,
 );
 
+has branch => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => '',
+);
+
 has remotes => (
   is   => 'ro',
   isa  => 'ArrayRef[Str]',
@@ -75,8 +81,15 @@ sub after_mint {
     }
 
     $git->add("$opts->{mint_root}");
-    $git->commit({message => _format_string($self->commit_message, $self)})
-      if $self->commit;
+    if ($self->commit) {
+      my $message = 'Made initial commit';
+      if (length $self->branch) {
+        $git->checkout('-b', $self->branch);
+        $message .= ' on branch ' . $self->branch;
+      }
+      $git->commit({message => _format_string($self->commit_message, $self)});
+      $self->log($message);
+    }
     foreach my $remoteSpec (@{ $self->remotes }) {
       my ($remote, $url) = split ' ', _format_string($remoteSpec, $self), 2;
       $self->log_debug("Adding remote $remote as $url");
@@ -98,7 +111,7 @@ Dist::Zilla::Plugin::Git::Init - initialize git repository on dzil new
 
 =head1 VERSION
 
-version 2.023
+version 2.024
 
 =head1 SYNOPSIS
 
@@ -107,6 +120,7 @@ In your F<profile.ini>:
     [Git::Init]
     commit_message = initial commit  ; this is the default
     commit = 1                       ; this is the default
+    branch =                         ; this is the default (means master)
     remote = origin git@github.com:USERNAME/%{lc}N.git ; no default
     config = user.email USERID@cpan.org  ; there is no default
 
@@ -127,6 +141,10 @@ the newly-minted dist. Defaults to C<initial commit>.
 =item * commit - if true (the default), commit the newly-minted dist.
 If set to a false value, add the files to the Git index but don't
 actually make a commit.
+
+=item * branch - the branch name under which the newly-minted dist is checked
+in (if C<commit> is true). Defaults to an empty string, which means that
+the Git default branch is used (master).
 
 =item * config - a config setting to make in the repository.  No
 config entries are made by default.  A setting is specified as
