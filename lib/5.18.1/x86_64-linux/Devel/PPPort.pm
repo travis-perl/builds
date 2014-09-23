@@ -515,8 +515,8 @@ in older Perl releases:
     UVSIZE
     UVTYPE
     UVuf
-    UVxf
     UVXf
+    UVxf
     vload_module
     vnewSVpvf
     WARN_ALL
