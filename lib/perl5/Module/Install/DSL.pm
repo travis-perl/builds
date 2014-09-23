@@ -3,7 +3,7 @@ package Module::Install::DSL;
 use strict;
 use vars qw{$VERSION $ISCORE};
 BEGIN {
-	$VERSION = '1.10';
+	$VERSION = '1.12';
 	$ISCORE  = 1;
 	*inc::Module::Install::DSL::VERSION = *VERSION;
 	@inc::Module::Install::DSL::ISA     = __PACKAGE__;
@@ -99,20 +99,3 @@ sub dsl2code {
 }
 
 1;
-
-__END__
-
-=pod
-
-=encoding UTF-8
-
-=head1 COPYRIGHT
-
-Copyright 2008 - 2014 Adam Kennedy.
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
