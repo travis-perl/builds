@@ -1,9 +1,6 @@
 package MooseX::Role::Parameterized::Meta::Role::Parameterized;
-BEGIN {
-  $MooseX::Role::Parameterized::Meta::Role::Parameterized::AUTHORITY = 'cpan:SARTAK';
-}
 # ABSTRACT: metaclass for parameterized roles
-$MooseX::Role::Parameterized::Meta::Role::Parameterized::VERSION = '1.07';
+$MooseX::Role::Parameterized::Meta::Role::Parameterized::VERSION = '1.08';
 use Moose;
 extends 'Moose::Meta::Role';
 with 'MooseX::Role::Parameterized::Meta::Trait::Parameterized';
@@ -25,7 +22,7 @@ MooseX::Role::Parameterized::Meta::Role::Parameterized - metaclass for parameter
 
 =head1 VERSION
 
-version 1.07
+version 1.08
 
 =head1 DESCRIPTION
 

@@ -1,1 +1,1 @@
-{"name":"Test::Requires","pathname":"T/TO/TOKUHIROM/Test-Requires-0.08.tar.gz","dist":"Test-Requires-0.08","provides":{"Test::Requires":{"file":"lib/Test/Requires.pm","version":"0.08"}},"target":"Test::Requires","version":"0.08"}
+{"provides":{"Test::Requires":{"version":"0.08","file":"lib/Test/Requires.pm"}},"dist":"Test-Requires-0.08","name":"Test::Requires","target":"Test::Requires","pathname":"T/TO/TOKUHIROM/Test-Requires-0.08.tar.gz","version":"0.08"}

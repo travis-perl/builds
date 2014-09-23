@@ -1,8 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Code::execute_method;
-BEGIN {
-  $Moose::Meta::Method::Accessor::Native::Code::execute_method::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Method::Accessor::Native::Code::execute_method::VERSION = '2.1210';
+$Moose::Meta::Method::Accessor::Native::Code::execute_method::VERSION = '2.1212';
 use strict;
 use warnings;
 

@@ -23,7 +23,7 @@ use PPI::Document ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Document';
 }
 
@@ -60,7 +60,7 @@ sub index_locations {
 
 # We are not a scope boundary
 ### XS -> PPI/XS.xs:_PPI_Document_Fragment__scope 0.903+
-sub scope { '' }
+sub scope() { '' }
 
 1;
 

@@ -1,8 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait::Number;
-BEGIN {
-  $Moose::Meta::Attribute::Native::Trait::Number::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Attribute::Native::Trait::Number::VERSION = '2.1210';
+$Moose::Meta::Attribute::Native::Trait::Number::VERSION = '2.1212';
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
 
@@ -26,7 +23,7 @@ Moose::Meta::Attribute::Native::Trait::Number - Helper trait for Num attributes
 
 =head1 VERSION
 
-version 2.1210
+version 2.1212
 
 =head1 SYNOPSIS
 

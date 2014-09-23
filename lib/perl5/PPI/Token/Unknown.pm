@@ -33,9 +33,9 @@ use PPI::Exception ();
 
 use vars qw{$VERSION @ISA $CURLY_SYMBOL};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token';
-	$CURLY_SYMBOL = qr{^\^[[:upper:]_]\w+\}};
+	$CURLY_SYMBOL = qr{\G\^[[:upper:]_]\w+\}};
 }
 
 
@@ -64,8 +64,8 @@ sub __TOKENIZER__on_char {
 
 		if ( $char eq '{' ) {
 			# Get rest of line
-			my $rest = substr( $t->{line}, $t->{line_cursor} + 1 );
-			if ( $rest =~ m/$CURLY_SYMBOL/ ) {
+			pos $t->{line} = $t->{line_cursor} + 1;
+			if ( $t->{line} =~ m/$CURLY_SYMBOL/gc ) {
 				# control-character symbol (e.g. *{^_Foo})
 				$t->{class} = $t->{token}->set_class( 'Magic' );
 				return 1;
@@ -137,8 +137,8 @@ sub __TOKENIZER__on_char {
 
 		if ( $char eq '{' ) {
 			# Get rest of line
-			my $rest = substr( $t->{line}, $t->{line_cursor} + 1 );
-			if ( $rest =~ m/$CURLY_SYMBOL/ ) {
+			pos $t->{line} = $t->{line_cursor} + 1;
+			if ( $t->{line} =~ m/$CURLY_SYMBOL/gc ) {
 				# control-character symbol (e.g. ${^MATCH})
 				$t->{class} = $t->{token}->set_class( 'Magic' );
 				return 1;
@@ -166,8 +166,8 @@ sub __TOKENIZER__on_char {
 
 		if ( $char eq '{' ) {
 			# Get rest of line
-			my $rest = substr( $t->{line}, $t->{line_cursor} + 1 );
-			if ( $rest =~ m/$CURLY_SYMBOL/ ) {
+			pos $t->{line} = $t->{line_cursor} + 1;
+			if ( $t->{line} =~ m/$CURLY_SYMBOL/gc ) {
 				# control-character symbol (e.g. @{^_Foo})
 				$t->{class} = $t->{token}->set_class( 'Magic' );
 				return 1;
@@ -202,8 +202,8 @@ sub __TOKENIZER__on_char {
 
 		if ( $char eq '{' ) {
 			# Get rest of line
-			my $rest = substr( $t->{line}, $t->{line_cursor} + 1 );
-			if ( $rest =~ m/$CURLY_SYMBOL/ ) {
+			pos $t->{line} = $t->{line_cursor} + 1;
+			if ( $t->{line} =~ m/$CURLY_SYMBOL/gc ) {
 				# control-character symbol (e.g. @{^_Foo})
 				$t->{class} = $t->{token}->set_class( 'Magic' );
 				return 1;
@@ -338,7 +338,7 @@ sub __TOKENIZER__is_an_attribute {
 		return 1;
 	}
 
-	# We arn't an attribute
+	# We aren't an attribute
 	'';	
 }
 
