@@ -22,9 +22,12 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Exporter" : "0",
-            "Test::More" : "0",
-            "base" : "0"
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
@@ -34,15 +37,25 @@
             "strict" : "0",
             "warnings" : "0"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Exporter" : "0",
+            "Test::More" : "0",
+            "base" : "0"
+         }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
+         "mailto" : "bug-Import-Into@rt.cpan.org",
          "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Import-Into"
       },
       "repository" : {
-         "url" : "git://git.shadowcat.co.uk/p5sagit/Import-Into.git"
+         "type" : "git",
+         "url" : "git://git.shadowcat.co.uk/p5sagit/Import-Into.git",
+         "web" : "http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=p5sagit/Import-Into.git"
       }
    },
    "version" : "1.002004"
