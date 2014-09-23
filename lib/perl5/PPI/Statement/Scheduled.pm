@@ -58,11 +58,11 @@ use PPI::Statement::Sub ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Statement::Sub';
 }
 
-sub __LEXER__normal { '' }
+sub __LEXER__normal() { '' }
 
 sub _complete {
 	my $child = $_[0]->schild(-1);

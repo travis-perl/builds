@@ -34,7 +34,7 @@ use PPI::Token ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token';
 }
 
@@ -47,9 +47,7 @@ This is 10 for decimal, 16 for hexadecimal, 2 for binary, etc.
 
 =cut
 
-sub base {
-	return 10;
-}
+sub base() { 10 }
 
 =pod
 
@@ -92,10 +90,10 @@ sub __TOKENIZER__on_char {
 	my $token = $t->{token};
 	if ( $token->{content} =~ /^-?0_*$/ ) {
 		# This could be special
-		if ( $char eq 'x' ) {
+		if ( $char eq 'x' || $char eq 'X' ) {
 			$t->{class} = $t->{token}->set_class( 'Number::Hex' );
 			return 1;
-		} elsif ( $char eq 'b' ) {
+		} elsif ( $char eq 'b' || $char eq 'B' ) {
 			$t->{class} = $t->{token}->set_class( 'Number::Binary' );
 			return 1;
 		} elsif ( $char =~ /\d/ ) {

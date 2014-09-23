@@ -1,8 +1,5 @@
 package Moose::Exception::CannotAddAsAnAttributeToARole;
-BEGIN {
-  $Moose::Exception::CannotAddAsAnAttributeToARole::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::CannotAddAsAnAttributeToARole::VERSION = '2.1210';
+$Moose::Exception::CannotAddAsAnAttributeToARole::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Role';

@@ -1,9 +1,6 @@
 package MooseX::Role::Parameterized;
-BEGIN {
-  $MooseX::Role::Parameterized::AUTHORITY = 'cpan:SARTAK';
-}
-# git description: v1.06-3-gc3ce56c
-$MooseX::Role::Parameterized::VERSION = '1.07';
+# git description: v1.07-1-gaaeb0e0
+$MooseX::Role::Parameterized::VERSION = '1.08';
 # ABSTRACT: roles with composition parameters
 # KEYWORDS: moose extension parameter role arguments dynamic
 
@@ -98,7 +95,7 @@ MooseX::Role::Parameterized - roles with composition parameters
 
 =head1 VERSION
 
-version 1.07
+version 1.08
 
 =head1 SYNOPSIS
 
@@ -229,9 +226,37 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
-=for stopwords Chris Weyl Csson Dave Rolsky Florian Ragwitz Jesse Luehrs Karen Etheridge Oliver Charles Ricardo Signes Robert 'phaylon' Sedlacek Todd Hepler Yuval Kogman
+=for stopwords Karen Etheridge Dave Rolsky Oliver Charles Jesse Luehrs Yuval Kogman Florian Ragwitz Robert 'phaylon' Sedlacek Chris Weyl Csson Todd Hepler Ricardo Signes
 
 =over 4
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Oliver Charles <oliver.g.charles@googlemail.com>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Yuval Kogman <nothingmuch@woobling.org>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Robert 'phaylon' Sedlacek <rs@474.at>
 
 =item *
 
@@ -243,39 +268,11 @@ Csson <erik.carlsson@live.com>
 
 =item *
 
-Dave Rolsky <autarch@urth.org>
-
-=item *
-
-Florian Ragwitz <rafl@debian.org>
-
-=item *
-
-Jesse Luehrs <doy@tozt.net>
-
-=item *
-
-Karen Etheridge <ether@cpan.org>
-
-=item *
-
-Oliver Charles <oliver.g.charles@googlemail.com>
-
-=item *
-
-Ricardo Signes <rjbs@cpan.org>
-
-=item *
-
-Robert 'phaylon' Sedlacek <rs@474.at>
-
-=item *
-
 Todd Hepler <thepler@employees.org>
 
 =item *
 
-Yuval Kogman <nothingmuch@woobling.org>
+Ricardo Signes <rjbs@cpan.org>
 
 =back
 

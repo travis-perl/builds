@@ -4,13 +4,14 @@ package Class::Method::Modifiers;
 BEGIN {
   $Class::Method::Modifiers::AUTHORITY = 'cpan:SARTAK';
 }
-# git description: v2.09-5-gb272828
-$Class::Method::Modifiers::VERSION = '2.10';
+# git description: v2.10-10-gcae27a4
+$Class::Method::Modifiers::VERSION = '2.11';
 # ABSTRACT: Provides Moose-like method modifiers
+# KEYWORDS: method wrap modification patch
 # vim: set ts=8 sw=4 tw=78 et :
 
 # work around https://rt.cpan.org/Ticket/Display.html?id=89173
-use base ('Exp'.'orter');
+use base 'Exporter';
 
 our @EXPORT = qw(before after around);
 our @EXPORT_OK = (@EXPORT, qw(fresh install_modifier));
@@ -231,7 +232,7 @@ Class::Method::Modifiers - provides Moose-like method modifiers
 
 =head1 VERSION
 
-version 2.10
+version 2.11
 
 =head1 SYNOPSIS
 
@@ -302,7 +303,14 @@ C<fresh>; see below.
 
 =head1 MODIFIERS
 
-=head2 before method(s) => sub { ... }
+All modifiers let you modify one or multiple methods at a time. The names of
+multiple methods can be provided as a list or as an array-reference. Examples:
+
+ before 'method' => sub { ... };
+ before 'method1', 'method2' => sub { ... };
+ before [ 'method1', 'method2' ] => sub { ... };
+
+=head2 before method(s) => sub { ... };
 
 C<before> is called before the method it is modifying. Its return value is
 totally ignored. It receives the same C<@_> as the method it is modifying
@@ -310,7 +318,7 @@ would have received. You can modify the C<@_> the original method will receive
 by changing C<$_[0]> and friends (or by changing anything inside a reference).
 This is a feature!
 
-=head2 after method(s) => sub { ... }
+=head2 after method(s) => sub { ... };
 
 C<after> is called after the method it is modifying. Its return value is
 totally ignored. It receives the same C<@_> as the method it is modifying
@@ -319,7 +327,7 @@ C<$_[0]> or references) and C<after> will see the modified version. If you
 don't like this behavior, specify both a C<before> and C<after>, and copy the
 C<@_> during C<before> for C<after> to use.
 
-=head2 around method(s) => sub { ... }
+=head2 around method(s) => sub { ... };
 
 C<around> is called instead of the method it is modifying. The method you're
 overriding is passed in as the first argument (called C<$orig> by convention).
@@ -355,6 +363,8 @@ You can use C<around> to:
 =back
 
 =head2 fresh method(s) => sub { ... };
+
+(Available since version 2.00)
 
 Unlike the other modifiers, this does not modify an existing method.
 Ordinarily, C<fresh> merely installs the coderef as a method in the
