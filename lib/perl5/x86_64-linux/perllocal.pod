@@ -1,4 +1,4 @@
-=head2 Thu Aug  7 00:09:19 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Tue Sep 23 14:17:37 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.038>
+C<VERSION: 0.040>
 
 =item *
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Aug  7 00:09:19 2014: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Tue Sep 23 14:17:38 2014: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.046>
+C<VERSION: 1.000004>
 
 =item *
 

@@ -11,7 +11,7 @@ BEGIN {
 
 BEGIN {
 	$Types::Common::String::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Common::String::VERSION   = '0.046';
+	$Types::Common::String::VERSION   = '1.000004';
 }
 
 use Type::Library -base, -declare => qw(
@@ -27,6 +27,7 @@ use Type::Library -base, -declare => qw(
 	UpperCaseStr
 );
 
+use Type::Tiny ();
 use Types::Standard qw( Str );
 
 my $meta = __PACKAGE__->meta;
@@ -78,12 +79,24 @@ $meta->add_type(
 	message    => sub { "Must be between 8 and 255 chars, and contain a non-alpha char" },
 );
 
+my ($nestr);
+if (Type::Tiny::_USE_XS) {
+	$nestr = Type::Tiny::XS::get_coderef_for('NonEmptyStr');
+}
+
 $meta->add_type(
 	name       => NonEmptyStr,
 	parent     => Str,
 	constraint => sub { length($_) > 0 },
-	inlined    => sub { undef, qq(length($_) > 0) },
+	inlined    => sub {
+		if ($nestr) {
+			my $xsub = Type::Tiny::XS::get_subname_for($_[0]->name);
+			return "$xsub($_[1])" if $xsub;
+		}
+		undef, qq(length($_) > 0);
+	},
 	message    => sub { "Must not be empty" },
+	$nestr ? ( compiled_type_constraint => $nestr ) : (),
 );
 
 $meta->add_type(
@@ -133,6 +146,8 @@ $meta->add_type(
 UpperCaseSimpleStr->coercion->add_type_coercions(
 	NonEmptySimpleStr, q[ uc($_) ],
 );
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 
