@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN {
 	$Type::Coercion::FromMoose::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Coercion::FromMoose::VERSION   = '0.046';
+	$Type::Coercion::FromMoose::VERSION   = '1.000004';
 }
 
 use Scalar::Util qw< blessed >;
@@ -21,8 +21,17 @@ sub type_coercion_map
 {
 	my $self = shift;
 	
-	my @from = @{ $self->type_constraint->moose_type->coercion->type_coercion_map };
-
+	my @from;
+	if ($self->type_constraint)
+	{
+		my $moose = $self->type_constraint->{moose_type};
+		@from = @{ $moose->coercion->type_coercion_map } if $moose && $moose->has_coercion;
+	}
+	else
+	{
+		_croak "The type constraint attached to this coercion has been garbage collected... PANIC";
+	}
+	
 	my @return;
 	while (@from)
 	{
@@ -39,6 +48,24 @@ sub add_type_coercions
 {
 	my $self = shift;
 	_croak "Adding coercions to Type::Coercion::FromMoose not currently supported" if @_;
+}
+
+sub _build_moose_coercion
+{
+	my $self = shift;
+	
+	if ($self->type_constraint)
+	{
+		my $moose = $self->type_constraint->{moose_type};
+		return $moose->coercion if $moose && $moose->has_coercion;
+	}
+	
+	$self->SUPER::_build_moose_coercion(@_);
+}
+
+sub can_be_inlined
+{
+	0;
 }
 
 1;

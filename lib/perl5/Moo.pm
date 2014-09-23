@@ -4,7 +4,7 @@ use strictures 1;
 use Moo::_Utils;
 use Import::Into;
 
-our $VERSION = '1.005000';
+our $VERSION = '1.006000';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -320,8 +320,8 @@ to use them in L<Moose> code without anybody ever noticing you aren't using
 L<Moose> everywhere.
 
 L<Moo> will also create L<Moose type constraints|Moose::Manual::Types> for
-classes and roles, so that C<< isa => 'MyClass' >> and C<< isa => 'MyRole' >>
-work the same as for L<Moose> classes and roles.
+L<Moo> classes and roles, so that in Moose classes C<< isa => 'MyMooClass' >>
+and C<< isa => 'MyMooRole' >> work the same as for L<Moose> classes and roles.
 
 Extending a L<Moose> class or consuming a L<Moose::Role> will also work.
 
@@ -495,7 +495,7 @@ The options for C<has> are as follows:
 
 =over 2
 
-=item * is
+=item * C<is>
 
 B<required>, may be C<ro>, C<lazy>, C<rwp> or C<rw>.
 
@@ -518,7 +518,7 @@ This feature comes from L<MooseX::AttributeShortcuts>.
 C<rw> generates a normal getter/setter by defaulting C<accessor> to the
 name of the attribute.
 
-=item * isa
+=item * C<isa>
 
 Takes a coderef which is meant to validate the attribute.  Unlike L<Moose>, Moo
 does not include a basic type system, so instead of doing C<< isa => 'Num' >>,
@@ -555,7 +555,7 @@ Note that this example is purely illustrative; anything that returns a
 L<Moose::Meta::TypeConstraint> object or something similar enough to it to
 make L<Moose> happy is fine.
 
-=item * coerce
+=item * C<coerce>
 
 Takes a coderef which is meant to coerce the attribute.  The basic idea is to
 do something like the following:
@@ -571,7 +571,10 @@ check after the coercion has run to ensure that it returned a valid value.
 
 L<Sub::Quote aware|/SUB QUOTE AWARE>
 
-=item * handles
+If the C<isa> option is a blessed object providing a C<coerce> or
+C<coercion> method, then the C<coerce> option may be set to just C<1>.
+
+=item * C<handles>
 
 Takes a string
 

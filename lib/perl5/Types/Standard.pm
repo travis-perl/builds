@@ -12,7 +12,7 @@ BEGIN {
 
 BEGIN {
 	$Types::Standard::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Standard::VERSION   = '0.046';
+	$Types::Standard::VERSION   = '1.000004';
 }
 
 use Type::Library -base;
@@ -20,32 +20,11 @@ use Type::Library -base;
 our @EXPORT_OK = qw( slurpy );
 
 use Scalar::Util qw( blessed looks_like_number );
+use Type::Tiny ();
 use Types::TypeTiny ();
 
 BEGIN {
-	my $try_xs =
-		exists($ENV{PERL_TYPE_TINY_XS}) ? !!$ENV{PERL_TYPE_TINY_XS} :
-		exists($ENV{PERL_ONLY})         ?  !$ENV{PERL_ONLY} :
-		1;
-	
-	my $use_xs = 0;
-	$try_xs and eval {
-		require Type::Tiny::XS;
-		'Type::Tiny::XS'->VERSION('0.003');
-		$use_xs++;
-	};
-	
-	*_USE_XS = $use_xs
-		? sub () { !!1 }
-		: sub () { !!0 };
-	
-	*_USE_MOUSE = $try_xs
-		? sub () { $INC{'Mouse/Util.pm'} and Mouse::Util::MOUSE_XS() }
-		: sub () { !!0 };
-};
-
-BEGIN {
-	*_is_class_loaded = _USE_XS
+	*_is_class_loaded = Type::Tiny::_USE_XS
 		? \&Type::Tiny::XS::Util::is_class_loaded
 		: sub {
 			return !!0 if ref $_[0];
@@ -63,22 +42,26 @@ BEGIN {
 my $add_core_type = sub {
 	my $meta = shift;
 	my ($typedef) = @_;
-	$typedef->{_is_core} = 1;
 	
 	my $name = $typedef->{name};
 	my ($xsub, $xsubname);
 	
-	if ( _USE_XS
+	# We want Map and Tuple to be XSified, even if they're not
+	# really core.
+	$typedef->{_is_core} = 1
+		unless $name eq 'Map' || $name eq 'Tuple';
+
+	if ( Type::Tiny::_USE_XS
 	and not ($name eq 'RegexpRef') ) {
 		$xsub     = Type::Tiny::XS::get_coderef_for($name);
 		$xsubname = Type::Tiny::XS::get_subname_for($name);
 	}
 		
-	elsif ( _USE_MOUSE
+	elsif ( Type::Tiny::_USE_MOUSE
 	and not ($name eq 'RegexpRef' or $name eq 'Int' or $name eq 'Object') ) {
 		require Mouse::Util::TypeConstraints;
 		$xsub     = "Mouse::Util::TypeConstraints"->can($name);
-		$xsubname = "Mouse::Util::TypeConstraints::$name";
+		$xsubname = "Mouse::Util::TypeConstraints::$name" if $xsub;
 	}
 	
 	$typedef->{compiled_type_constraint} = $xsub if $xsub;
@@ -392,17 +375,42 @@ $meta->$add_core_type({
 		Types::TypeTiny::TypeTiny->check($param)
 			or _croak("Parameter to Maybe[`a] expected to be a type constraint; got $param");
 		
-		# TODO: xsubs
-		
-		return sub
+		my $param_compiled_check = $param->compiled_check;
+		my @xsub;
+		if (Type::Tiny::_USE_XS)
 		{
-			my $value = shift;
-			return !!1 unless defined $value;
-			return $param->check($value);
-		};
+			my $paramname = Type::Tiny::XS::is_known($param_compiled_check);
+			push @xsub, Type::Tiny::XS::get_coderef_for("Maybe[$paramname]")
+				if $paramname;
+		}
+		elsif (Type::Tiny::_USE_MOUSE and $param->_has_xsub)
+		{
+			require Mouse::Util::TypeConstraints;
+			my $maker = "Mouse::Util::TypeConstraints"->can("_parameterize_Maybe_for");
+			push @xsub, $maker->($param) if $maker;
+		}
+		
+		return(
+			sub
+			{
+				my $value = shift;
+				return !!1 unless defined $value;
+				return $param->check($value);
+			},
+			@xsub,
+		);
 	},
 	inline_generator => sub {
 		my $param = shift;
+		
+		my $param_compiled_check = $param->compiled_check;
+		if (Type::Tiny::_USE_XS)
+		{
+			my $paramname = Type::Tiny::XS::is_known($param_compiled_check);
+			my $xsubname  = Type::Tiny::XS::get_subname_for("Maybe[$paramname]");
+			return sub { "$xsubname\($_[1]\)" } if $xsubname;
+		}
+		
 		return unless $param->can_be_inlined;
 		return sub {
 			my $v = $_[1];
@@ -428,7 +436,7 @@ $meta->$add_core_type({
 	},
 });
 
-my $_map = $meta->add_type({
+my $_map = $meta->$add_core_type({
 	name       => "Map",
 	parent     => $_hash,
 	constraint_generator => LazyLoad(Map => 'constraint_generator'),
@@ -474,15 +482,14 @@ my $_Optional = $meta->add_type({
 		Types::TypeTiny::TypeTiny->check($param)
 			or _croak("Parameter to Optional[`a] expected to be a type constraint; got $param");
 		
-		sub { exists($_[0]) ? $param->check($_[0]) : !!1 }
+		sub { $param->check($_[0]) }
 	},
 	inline_generator => sub {
 		my $param = shift;
 		return unless $param->can_be_inlined;
 		return sub {
 			my $v = $_[1];
-			my $param_check = $param->inline_check($v);
-			"!exists($v) or $param_check";
+			$param->inline_check($v);
 		};
 	},
 	deep_explanation => sub {
@@ -508,7 +515,7 @@ sub slurpy {
 	wantarray ? (+{ slurpy => $t }, @_) : +{ slurpy => $t };
 }
 
-$meta->add_type({
+$meta->$add_core_type({
 	name       => "Tuple",
 	parent     => $_arr,
 	name_generator => sub
@@ -911,6 +918,8 @@ $meta->add_coercion({
 	},
 });
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -1105,15 +1114,44 @@ optional and may be omitted (but not necessarily set to an explicit undef).
 C<< Dict[name => Str, id => Optional[Int]] >> allows C<< { name => "Bob" } >>
 but not C<< { name => "Bob", id => "BOB" } >>.
 
+Note that any use of C<< Optional[`a] >> outside the context of
+parameterized C<Dict> and C<Tuple> type constraints makes little sense,
+and its behaviour is undefined. (An exception: it is used by
+L<Type::Params> for a similar purpose to how it's used in C<Tuple>.)
+
 =back
 
-This module also exports a C<slurpy> function, which can be used as follows:
+This module also exports a C<slurpy> function, which can be used as
+follows.
+
+It can cause additional trailing values in a C<Tuple> to be slurped
+into a structure and validated. For example, slurping into an ArrayRef:
 
    my $type = Tuple[Str, slurpy ArrayRef[Int]];
    
    $type->( ["Hello"] );                # ok
    $type->( ["Hello", 1, 2, 3] );       # ok
    $type->( ["Hello", [1, 2, 3]] );     # not ok
+
+Or into a hashref:
+
+   my $type2 = Tuple[Str, slurpy Map[Int, RegexpRef]];
+   
+   $type2->( ["Hello"] );                               # ok
+   $type2->( ["Hello", 1, qr/one/i, 2, qr/two/] );      # ok
+
+It can cause additional values in a C<Dict> to be slurped into a
+hashref and validated:
+
+   my $type3 = Dict[ values => ArrayRef, slurpy HashRef[Str] ];
+   
+   $type3->( { values => [] } );                        # ok
+   $type3->( { values => [], name => "Foo" } );         # ok
+   $type3->( { values => [], name => [] } );            # not ok
+
+In either C<Tuple> or C<Dict>, C<< slurpy Any >> can be used to indicate
+that additional values are acceptable, but should not be constrained in
+any way. (C<< slurpy Any >> is an optimized code path.)
 
 =begin trustme
 
