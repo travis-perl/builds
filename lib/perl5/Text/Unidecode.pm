@@ -1,13 +1,13 @@
-;;;;# -*-coding:utf-8;-*-                                               µ
+;;;;# -*-coding:utf-8;-*-                                               µ ← col73
 
 require 5;
 use 5.8.0;
-package Text::Unidecode;  # Time-stamp: "2014-06-30 01:54:22 MDT sburke@cpan.org"
+package Text::Unidecode;  # Time-stamp: "2014-08-15 04:23:21 MDT sburke@cpan.org"
 use utf8;
 use strict;
 use integer; # vroom vroom!
 use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE);
-$VERSION = '1.01';
+$VERSION = '1.22';
 require Exporter;
 @ISA = ('Exporter');
 @EXPORT = ('unidecode');
@@ -46,16 +46,15 @@ sub unidecode {
     next unless defined $n;    
     $n =~ s~([^\x00-\x7f])~${$Char[ord($1)>>8]||t($1)}[ord($1)&255]~egs;
   }
-  # Replace character 0xABCD with $Char[0xAB][0xCD], loading
-  #  the table as needed.
+  # That means:
+  #   Replace character 0xABCD with $Char[0xAB][0xCD], loading
+  #    the table 0xAB as needed.
   #
   #======================================================================
   #
   # Yes, that's dense code.  It's the warp core!
   # Here is an expansion into pseudocode... as best as I can manage it...
   #
-  #   
-  #  
   #     $character = $1;
   #     $charnum = ord($character);
   #     $charnum_lowbits  = $charnum & 255;
@@ -95,8 +94,8 @@ sub unidecode {
   #       use other delimiters, such as "s!!!" and "s{}{}", 
   #  I didn't do it for sake of obscurity. I think it's just to
   #  keep my editor's syntax highlighter from crashing,
-  #  which was a problem with s///
-  #
+  #  which was a problem with s/// when the insides are as gory
+  #  as we have here.
 
   return unless defined wantarray; # void context
   return @_ if wantarray;  # normal list context -- return the copies
@@ -107,17 +106,22 @@ sub unidecode {
 
 #======================================================================
 
+sub make_placeholder_map {
+  return [( $UNKNOWN ) x $TABLE_SIZE ];
+}
+sub make_placeholder_map_nulls {
+  return [( "" ) x $TABLE_SIZE ];
+}
+
+#======================================================================
+
 sub t {   # "t" is for "t"able.
   # Load (and return) a char table for this character
   # this should get called only once per table per session.
   my $bank = ord($_[0]) >> 8;
   return $Char[$bank] if $Char[$bank];
-  
-  {
-    DEBUG and printf "Loading %s::x%02x\n", __PACKAGE__, $bank;
-    local $SIG{'__DIE__'};
-    eval(sprintf 'require %s::x%02x;', __PACKAGE__, $bank);
-  }
+ 
+  load_bank($bank);
         
   # Now see how that fared...
 
@@ -173,7 +177,40 @@ sub t {   # "t" is for "t"able.
   return $Char[$bank];
 }
 
-#--------------------------------------------------------------------------
+#-----------------------------------------------------------------------
+
+our $eval_loaded_okay;
+
+sub load_bank {
+
+  # This is in its own sub, for sake of sweeping the scary thing
+  #  (namely, a call to eval) under the rug.
+  # I.e., to paraphrase what Larry Wall once said to me: if
+  #  you're going to do something odd, maybe you should do it
+  #  in private.
+
+  my($banknum) = @_;  # just as an integer value
+
+  DEBUG and printf
+      "# Eval-loading %s::x%02x ...\n",
+
+  $eval_loaded_okay = 0;
+  my $code = 
+      sprintf( "require %s::x%02x; \$eval_loaded_okay = 1;\n",
+               __PACKAGE__,
+	       $banknum);
+
+  {
+    local $SIG{'__DIE__'};
+    eval($code);
+  }
+
+  return 1 if $eval_loaded_okay;
+  return 0;
+}
+
+#======================================================================
+
 1;
 __END__
 
@@ -278,22 +315,22 @@ is exported by default.  It can be used in a variety of calling contexts:
 
 =over
 
-=item C<$out = unidecode($in);> # scalar context
+=item C<$out = unidecode( $in );> # scalar context
 
 This returns a copy of $in, transliterated.
 
-=item C<$out = unidecode(@in);> # scalar context
+=item C<$out = unidecode( @in );> # scalar context
 
 This is the same as C<$out = unidecode(join "", @in);>
 
-=item C<@out = unidecode(@in);> # list context
+=item C<@out = unidecode( @in );> # list context
 
 This returns a list consisting of copies of @in, each transliterated.  This
 is the same as C<@out = map scalar(unidecode($_)), @in;>
 
-=item C<unidecode(@items);> # void context
+=item C<unidecode( @items );> # void context
 
-=item C<unidecode(@bar, $foo, @baz);> # void context
+=item C<unidecode( @bar, $foo, @baz );> # void context
 
 Each item on input is replaced with its transliteration.  This
 is the same as C<for(@bar, $foo, @baz) { $_ = unidecode($_) }>
@@ -363,12 +400,12 @@ catching up!
 
 =head1 DESIGN GOALS AND CONSTRAINTS
 
-Text::Unidecode is meant to be a transliterator-of-last resort,
+Text::Unidecode is meant to be a transliterator of last resort,
 to be used once you've decided that you can't just display the
 Unicode data as is, I<and once you've decided you don't have a
 more clever, language-specific transliterator available,> or once
-you've I<already applied> a smarter algorithm and now just want Unidecode
-to do cleanup.
+you've I<already applied> smarter algorithms or mappings that you prefer
+and you now just want Unidecode to do cleanup.
 
 Unidecode
 transliterates context-insensitively-- that is, a given character is
@@ -463,6 +500,12 @@ with /-shaped accents on the "e" characters.
 
 =item *
 
+"læti" should be I<four> letters long-- the second letter should not
+be two letters "ae", but should be a single letter that
+looks like an "a" entirely fused with an "e".
+
+=item *
+
 "χρονος" is six Greek characters that should look kind of like: xpovoc
 
 =item *
@@ -483,7 +526,10 @@ lot like: KAK BAC 3OBYT
 If all of those come out right, your Pod viewing setup is working
 fine-- welcome to the 2010s!  If those are full of garbage characters,
 consider viewing this page as HTML at
+L<https://metacpan.org/pod/Text::Unidecode>
+or
 L<http://search.cpan.org/perldoc?Text::Unidecode>
+
 
 If things look mostly okay, but the Malayalam and/or the Chinese are
 just question-marks or empty boxes, it's probably just that your
@@ -637,11 +683,13 @@ L<perlunicode> and L<perlunitut>.
 
 =head1 THANKS
 
-Thanks to (in only the sloppiest of sorta-chronological order): Harald
-Tveit Alvestrand, Abhijit Menon-Sen, Mark-Jason Dominus, Joe Johnston,
-Conrad Heiney,
+Thanks to (in only the sloppiest of sorta-chronological order): 
+Jordan Lachler, Harald Tveit Alvestrand, Melissa Axelrod,
+Abhijit Menon-Sen, Mark-Jason Dominus, Joe Johnston,
+Conrad Heiney, fileformat.info,
 Philip Newton, 唐鳳, Tomaž Šolc, Mike Doherty, JT Smith and the
-MadMongers, and I<many> other pals in Unicode's behind-the-scenes F5
+MadMongers, Arden Ogg, Craig Copris,
+and I<many> other pals in Unicode's behind-the-scenes F5
 tornado underlying its code.
 
 =head1 SEE ALSO
