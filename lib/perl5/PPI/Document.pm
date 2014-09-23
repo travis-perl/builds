@@ -78,7 +78,7 @@ use overload '""'   => 'content';
 
 use vars qw{$VERSION @ISA $errstr};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Node';
 	$errstr  = '';
 }
@@ -457,7 +457,7 @@ sub serialize {
 
 		# This token is a HereDoc.
 		# First, add the token content as normal, which in this
-		# case will definately not contain a newline.
+		# case will definitely not contain a newline.
 		$output .= $Token->content;
 
 		# Now add all of the here-doc content to the heredoc buffer.
@@ -472,7 +472,7 @@ sub serialize {
 			# from the end of a file that we silently allow.
 			#
 			# When writing back out to the file we have to
-			# auto-repair these problems if we arn't going back
+			# auto-repair these problems if we aren't going back
 			# on to the end of the file.
 
 			# When calculating $last_line, ignore the final token if
@@ -592,7 +592,7 @@ sub index_locations {
 	my @tokens = $self->tokens;
 
 	# Whenever we hit a heredoc we will need to increment by
-	# the number of lines in it's content section when when we
+	# the number of lines in it's content section when we
 	# encounter the next token with a newline in it.
 	my $heredoc = 0;
 
@@ -842,7 +842,7 @@ sub complete {
 
 # We are a scope boundary
 ### XS -> PPI/XS.xs:_PPI_Document__scope 0.903+
-sub scope { 1 }
+sub scope() { 1 }
 
 
 

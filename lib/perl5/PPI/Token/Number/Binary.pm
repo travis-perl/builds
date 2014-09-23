@@ -31,7 +31,7 @@ use PPI::Token::Number ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token::Number';
 }
 
@@ -43,9 +43,7 @@ Returns the base for the number: 2.
 
 =cut
 
-sub base {
-	return 2;
-}
+sub base() { 2 }
 
 =pod
 
@@ -60,7 +58,7 @@ sub literal {
 	return if $self->{_error};
 	my $str = $self->_literal;
 	my $neg = $str =~ s/^\-//;
-	$str =~ s/^0b//;
+	$str =~ s/^0[bB]//;
 	my $val = 0;
 	for my $bit ( $str =~ m/(.)/g ) {
 		$val = $val * 2 + $bit;
@@ -85,7 +83,7 @@ sub __TOKENIZER__on_char {
 
 	if ( $char =~ /[\w\d]/ ) {
 		unless ( $char eq '1' or $char eq '0' ) {
-			# Add a warning if it contains non-hex chars
+			# Add a warning if it contains non-binary chars
 			$t->{token}->{_error} = "Illegal character in binary number '$char'";
 		}
 		return 1;

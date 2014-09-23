@@ -1,6 +1,6 @@
 package StackTrace::Auto;
 # ABSTRACT: a role for generating stack traces during instantiation
-$StackTrace::Auto::VERSION = '0.200011';
+$StackTrace::Auto::VERSION = '0.200012';
 use Moo::Role;
 use Sub::Quote ();
 use Module::Runtime 0.002 ();
@@ -49,8 +49,12 @@ has stack_trace => (
       @{ $_[0]->stack_trace_args },
     );
   }),
+  lazy => 1,
   init_arg => undef,
 );
+
+sub BUILD {};
+before BUILD => sub { $_[0]->stack_trace };
 
 has stack_trace_class => (
   is      => 'ro',
@@ -93,6 +97,7 @@ sub _build_stack_trace_args {
 
   my $found_mark = 0;
   return [
+    filter_frames_early => 1,
     frame_filter => sub {
       my ($raw) = @_;
       my $sub = $raw->{caller}->[3];
@@ -127,7 +132,7 @@ StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.200011
+version 0.200012
 
 =head1 SYNOPSIS
 

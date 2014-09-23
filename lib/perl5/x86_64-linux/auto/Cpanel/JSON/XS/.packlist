@@ -1,0 +1,4 @@
+/home/travis/.perlbrew/libs/5.8.8@dzil/bin/cpanel_json_xs
+/home/travis/.perlbrew/libs/5.8.8@dzil/lib/perl5/x86_64-linux/Cpanel/JSON/XS.pm
+/home/travis/.perlbrew/libs/5.8.8@dzil/lib/perl5/x86_64-linux/Cpanel/JSON/XS/Boolean.pm
+/home/travis/.perlbrew/libs/5.8.8@dzil/lib/perl5/x86_64-linux/auto/Cpanel/JSON/XS/XS.so
