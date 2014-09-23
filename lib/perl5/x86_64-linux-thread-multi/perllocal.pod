@@ -1,4 +1,4 @@
-=head2 Wed Aug  6 22:57:27 2014: C<Module> L<Test::Simple|Test::Simple>
+=head2 Tue Sep 23 13:03:11 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -12,15 +12,15 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.001003>
+C<VERSION: 6.98>
 
 =item *
 
-C<EXE_FILES: >
+C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Wed Aug  6 22:57:28 2014: C<Module> L<parent|parent>
+=head2 Tue Sep 23 13:03:15 2014: C<Module> L<parent|parent>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:29 2014: C<Module> L<URI|URI>
+=head2 Tue Sep 23 13:03:16 2014: C<Module> L<URI|URI>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:30 2014: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
+=head2 Tue Sep 23 13:03:18 2014: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:31 2014: C<Module> L<Encode::Locale|Encode::Locale>
+=head2 Tue Sep 23 13:03:19 2014: C<Module> L<Encode::Locale|Encode::Locale>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:38 2014: C<Module> L<Compress::Raw::Bzip2|Compress::Raw::Bzip2>
+=head2 Tue Sep 23 13:03:29 2014: C<Module> L<Compress::Raw::Bzip2|Compress::Raw::Bzip2>
 
 =over 4
 
@@ -122,7 +122,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.064>
+C<VERSION: 2.066>
 
 =item *
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:43 2014: C<Module> L<Compress::Raw::Zlib|Compress::Raw::Zlib>
+=head2 Tue Sep 23 13:03:38 2014: C<Module> L<Compress::Raw::Zlib|Compress::Raw::Zlib>
 
 =over 4
 
@@ -144,7 +144,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.065>
+C<VERSION: 2.066>
 
 =item *
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:45 2014: C<Module> L<IO::Compress|IO::Compress>
+=head2 Tue Sep 23 13:03:39 2014: C<Module> L<IO::Compress|IO::Compress>
 
 =over 4
 
@@ -166,7 +166,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.064>
+C<VERSION: 2.066>
 
 =item *
 
@@ -174,7 +174,7 @@ C<EXE_FILES: bin/zipdetails>
 
 =back
 
-=head2 Wed Aug  6 22:57:46 2014: C<Module> L<HTTP::Date|HTTP::Date>
+=head2 Tue Sep 23 13:03:40 2014: C<Module> L<HTTP::Date|HTTP::Date>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:47 2014: C<Module> L<IO::HTML|IO::HTML>
+=head2 Tue Sep 23 13:03:42 2014: C<Module> L<IO::HTML|IO::HTML>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:47 2014: C<Module> L<HTTP::Message|HTTP::Message>
+=head2 Tue Sep 23 13:03:43 2014: C<Module> L<HTTP::Message|HTTP::Message>
 
 =over 4
 
@@ -240,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:48 2014: C<Module> L<File::Listing|File::Listing>
+=head2 Tue Sep 23 13:03:45 2014: C<Module> L<File::Listing|File::Listing>
 
 =over 4
 
@@ -262,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:49 2014: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
+=head2 Tue Sep 23 13:03:47 2014: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
 
 =over 4
 
@@ -284,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:50 2014: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Tue Sep 23 13:03:49 2014: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -306,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:52 2014: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Tue Sep 23 13:03:52 2014: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -328,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:53 2014: C<Module> L<HTTP::Daemon|HTTP::Daemon>
+=head2 Tue Sep 23 13:03:54 2014: C<Module> L<HTTP::Daemon|HTTP::Daemon>
 
 =over 4
 
@@ -350,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:54 2014: C<Module> L<Net::HTTP|Net::HTTP>
+=head2 Tue Sep 23 13:03:57 2014: C<Module> L<Net::HTTP|Net::HTTP>
 
 =over 4
 
@@ -372,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:56 2014: C<Module> L<HTTP::Cookies|HTTP::Cookies>
+=head2 Tue Sep 23 13:03:58 2014: C<Module> L<HTTP::Cookies|HTTP::Cookies>
 
 =over 4
 
@@ -394,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:57 2014: C<Module> L<WWW::RobotRules|WWW::RobotRules>
+=head2 Tue Sep 23 13:04:00 2014: C<Module> L<WWW::RobotRules|WWW::RobotRules>
 
 =over 4
 
@@ -416,7 +416,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:57:58 2014: C<Module> L<LWP|LWP>
+=head2 Tue Sep 23 13:04:02 2014: C<Module> L<LWP|LWP>
 
 =over 4
 
@@ -438,7 +438,7 @@ C<EXE_FILES: bin/lwp-request bin/lwp-mirror bin/lwp-download bin/lwp-dump>
 
 =back
 
-=head2 Wed Aug  6 22:58:19 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Tue Sep 23 13:04:28 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -452,7 +452,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.65>
+C<VERSION: 1.66>
 
 =item *
 
@@ -460,7 +460,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:58:20 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Tue Sep 23 13:04:30 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -482,7 +482,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:58:21 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Tue Sep 23 13:04:31 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -496,7 +496,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.997>
+C<VERSION: 1.998>
 
 =item *
 
@@ -504,7 +504,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:58:21 2014: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
+=head2 Tue Sep 23 13:04:32 2014: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
 
 =over 4
 
@@ -518,7 +518,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 6.04>
+C<VERSION: 6.06>
 
 =item *
 
