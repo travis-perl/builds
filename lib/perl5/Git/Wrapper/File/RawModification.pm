@@ -1,6 +1,6 @@
 package Git::Wrapper::File::RawModification;
 # ABSTRACT: Modification of a file in a commit
-$Git::Wrapper::File::RawModification::VERSION = '0.035';
+$Git::Wrapper::File::RawModification::VERSION = '0.037';
 use 5.006;
 use strict;
 use warnings;
@@ -40,7 +40,7 @@ Git::Wrapper::File::RawModification - Modification of a file in a commit
 
 =head1 VERSION
 
-version 0.035
+version 0.037
 
 =head1 METHODS
 

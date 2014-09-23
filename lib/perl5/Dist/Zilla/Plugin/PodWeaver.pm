@@ -1,8 +1,6 @@
 package Dist::Zilla::Plugin::PodWeaver;
-{
-  $Dist::Zilla::Plugin::PodWeaver::VERSION = '4.005';
-}
 # ABSTRACT: weave your Pod together from configuration and Dist::Zilla
+$Dist::Zilla::Plugin::PodWeaver::VERSION = '4.006';
 use Moose;
 use List::MoreUtils qw(any);
 use Pod::Weaver 3.100710; # logging with proxies
@@ -15,6 +13,42 @@ with(
 
 use namespace::autoclean;
 
+#pod =head1 DESCRIPTION
+#pod
+#pod [PodWeaver] is the bridge between L<Dist::Zilla> and L<Pod::Weaver>.  It rips
+#pod apart your kinda-Pod and reconstructs it as boring old real Pod.
+#pod
+#pod =head1 CONFIGURATION
+#pod
+#pod If the C<config_plugin> attribute is given, it will be treated like a
+#pod Pod::Weaver section heading.  For example, C<@Default> could be given.  I may
+#pod be given multiple times.
+#pod
+#pod Otherwise, if a file matching C<./weaver.*> exists, Pod::Weaver will be told to
+#pod look for configuration in the current directory.
+#pod
+#pod Otherwise, it will use the default configuration.
+#pod
+#pod =attr finder
+#pod
+#pod [PodWeaver] is a L<Dist::Zilla::Role::FileFinderUser>.  The L<FileFinder> given
+#pod for its C<finder> attribute is used to decide which files to munge.  By
+#pod default, it will munge:
+#pod
+#pod =for :list
+#pod * C<:InstallModules>
+#pod * C<:ExecFiles>
+#pod
+#pod =method weaver
+#pod
+#pod This method returns the Pod::Weaver object to be used.  The current
+#pod implementation builds a new weaver on each invocation, because one or two core
+#pod Pod::Weaver plugins cannot be trusted to handle multiple documents per plugin
+#pod instance.  In the future, when that is fixed, this may become an accessor of an
+#pod attribute with a builder.  Until this is clearer, use caution when modifying
+#pod this method in subclasses.
+#pod
+#pod =cut
 
 sub weaver {
   my ($self) = @_;
@@ -41,7 +75,7 @@ sub weaver {
   } elsif (@files) {
     return Pod::Weaver->new_from_config(
       { root   => $self->zilla->root },
-      { logger => $self->logger },
+      { root_config => { logger => $self->logger } },
     );
   } else {
     return Pod::Weaver->new_with_default_config($arg);
@@ -161,7 +195,7 @@ Dist::Zilla::Plugin::PodWeaver - weave your Pod together from configuration and 
 
 =head1 VERSION
 
-version 4.005
+version 4.006
 
 =head1 DESCRIPTION
 

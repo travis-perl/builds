@@ -4,7 +4,7 @@ use warnings;
 
 package Git::Wrapper;
 #ABSTRACT: Wrap git(7) command-line interface
-$Git::Wrapper::VERSION = '0.035';
+$Git::Wrapper::VERSION = '0.037';
 our $DEBUG=0;
 
 # Prevent ANSI color with extreme prejudice
@@ -390,7 +390,7 @@ Git::Wrapper - Wrap git(7) command-line interface
 
 =head1 VERSION
 
-version 0.035
+version 0.037
 
 =head1 SYNOPSIS
 

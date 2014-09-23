@@ -1,16 +1,13 @@
 use strict;
 use warnings;
 package MooseX::Types::TypeDecorator;
-BEGIN {
-  $MooseX::Types::TypeDecorator::AUTHORITY = 'cpan:PHAYLON';
-}
 # ABSTRACT: Wraps Moose::Meta::TypeConstraint objects with added features
-$MooseX::Types::TypeDecorator::VERSION = '0.44';
+$MooseX::Types::TypeDecorator::VERSION = '0.45';
 use Carp::Clan '^MooseX::Types';
 use Moose::Util::TypeConstraints ();
 use Moose::Meta::TypeConstraint::Union;
 use Scalar::Util qw(blessed);
-use namespace::clean;   # TODO: namespace::autoclean does not yet respect overloads
+use namespace::autoclean 0.16;
 
 use overload(
     '0+' => sub {
@@ -53,23 +50,22 @@ use overload(
         return Moose::Util::TypeConstraints::register_type_constraint($union);
     },
     fallback => 1,
-
 );
 
-# =head1 DESCRIPTION
-#
-# This is a decorator object that contains an underlying type constraint.  We use
-# this to control access to the type constraint and to add some features.
-#
-# =head1 METHODS
-#
-# This class defines the following methods.
-#
-# =head2 new
-#
-# Old school instantiation
-#
-# =cut
+#pod =head1 DESCRIPTION
+#pod
+#pod This is a decorator object that contains an underlying type constraint.  We use
+#pod this to control access to the type constraint and to add some features.
+#pod
+#pod =head1 METHODS
+#pod
+#pod This class defines the following methods.
+#pod
+#pod =head2 new
+#pod
+#pod Old school instantiation
+#pod
+#pod =cut
 
 sub new {
     my $proto = shift;
@@ -96,11 +92,11 @@ sub new {
     }
 }
 
-# =head2 __type_constraint ($type_constraint)
-#
-# Set/Get the type_constraint.
-#
-# =cut
+#pod =head2 __type_constraint ($type_constraint)
+#pod
+#pod Set/Get the type_constraint.
+#pod
+#pod =cut
 
 sub __type_constraint {
     my $self = shift @_;
@@ -114,12 +110,12 @@ sub __type_constraint {
     }
 }
 
-# =head2 C<isa>
-#
-# handle C<< $self->isa >> since C<AUTOLOAD> can't - this tries both the type constraint,
-# and for a class type, the class.
-#
-# =cut
+#pod =head2 C<isa>
+#pod
+#pod handle C<< $self->isa >> since C<AUTOLOAD> can't - this tries both the type constraint,
+#pod and for a class type, the class.
+#pod
+#pod =cut
 
 sub isa {
   my $self = shift;
@@ -130,11 +126,11 @@ sub isa {
       : $self->SUPER::isa(@_);
 }
 
-# =head2 can
-#
-# handle $self->can since AUTOLOAD can't.
-#
-# =cut
+#pod =head2 can
+#pod
+#pod handle $self->can since AUTOLOAD can't.
+#pod
+#pod =cut
 
 sub can {
     my $self = shift;
@@ -144,11 +140,11 @@ sub can {
         : $self->SUPER::can(@_);
 }
 
-# =head2 _throw_error
-#
-# properly delegate error messages
-#
-# =cut
+#pod =head2 _throw_error
+#pod
+#pod properly delegate error messages
+#pod
+#pod =cut
 
 sub _throw_error {
     shift;
@@ -157,25 +153,25 @@ sub _throw_error {
     goto &Moose::throw_error;
 }
 
-# =head2 DESTROY
-#
-# We might need it later
-#
-# =cut
+#pod =head2 DESTROY
+#pod
+#pod We might need it later
+#pod
+#pod =cut
 
 sub DESTROY {
     return;
 }
 
-# =head2 AUTOLOAD
-#
-# Delegate to the decorator target, unless this is a class type, in which
-# case it will try to delegate to the type object, then if that fails try
-# the class. The method 'new' is special cased to only be permitted on
-# the class; if there is no class, or it does not provide a new method,
-# an exception will be thrown.
-#
-# =cut
+#pod =head2 AUTOLOAD
+#pod
+#pod Delegate to the decorator target, unless this is a class type, in which
+#pod case it will try to delegate to the type object, then if that fails try
+#pod the class. The method 'new' is special cased to only be permitted on
+#pod the class; if there is no class, or it does not provide a new method,
+#pod an exception will be thrown.
+#pod
+#pod =cut
 
 sub AUTOLOAD {
     my ($self, @args) = @_;
@@ -231,15 +227,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Robert "phaylon" Sedlacek
-
 =head1 NAME
 
 MooseX::Types::TypeDecorator - Wraps Moose::Meta::TypeConstraint objects with added features
 
 =head1 VERSION
 
-version 0.44
+version 0.45
 
 =head1 DESCRIPTION
 
