@@ -1,1 +1,1 @@
-{"dist":"Test-Fatal-0.013","version":"0.013","name":"Test::Fatal","pathname":"R/RJ/RJBS/Test-Fatal-0.013.tar.gz","provides":{"Test::Fatal":{"version":"0.013","file":"lib/Test/Fatal.pm"}},"target":"Test::Fatal"}
+{"pathname":"R/RJ/RJBS/Test-Fatal-0.013.tar.gz","version":"0.013","target":"Test::Fatal","name":"Test::Fatal","dist":"Test-Fatal-0.013","provides":{"Test::Fatal":{"version":"0.013","file":"lib/Test/Fatal.pm"}}}

@@ -7,13 +7,22 @@ $VERSION = '0.76';
 
 use strict;
 use Config;
-use Getopt::Std;
+use Getopt::Long qw(:config bundling no_ignore_case);
 use Module::ScanDeps;
 use ExtUtils::MakeMaker;
 use subs qw( _name _modtree );
 
 my %opts;
-getopts('BVRxce:C:', \%opts);
+GetOptions(\%opts,
+    "B|bundle",
+    "C|cachedeps=s",
+    "c|compile".
+    "e|eval=s",
+    "xargs=s",
+    "R|no-recurse",
+    "V|verbose",
+    "x|execute",
+);
 
 my (%map, %skip);
 my $core    = $opts{B};
@@ -29,6 +38,11 @@ if ($eval) {
     push @ARGV, $filename;
 }
 
+if ($opts{x} && defined $opts{xargs}) {
+    require Text::ParseWords;
+    $opts{x} = [ Text::ParseWords::shellwords($opts{xargs}) ];
+}
+
 die "Usage: $0 [ -B ] [ -V ] [ -x | -c ] [ -R ] [-C FILE ] [ -e STRING | FILE ... ]\n" unless @ARGV;
 
 my @files = @ARGV;
@@ -40,7 +54,7 @@ while (<>) {
 my $map = scan_deps(
     files   => \@files,
     recurse => $recurse,
-    $opts{x} ? ( execute => 1 ) :
+    $opts{x} ? ( execute => $opts{x} ) :
     $opts{c} ? ( compile => 1 ) : (),
     $opts{V} ? ( warn_missing => 1 ) : (),
     $opts{C} ? ( cache_file   => $opts{C}) : (),
@@ -178,27 +192,33 @@ up by the heuristic anyway.
 
 =over 4
 
-=item -e STRING
+=item B<-e>, B<--eval>=I<STRING>
 
 Scan I<STRING> as a string containing perl code.
 
-=item -c
+=item B<-c>, B<--compile>
 
 Compiles the code and inspects its C<%INC>, in addition to static scanning.
 
-=item -x
+=item B<-x>, B<--execute>
 
 Executes the code and inspects its C<%INC>, in addition to static scanning.
 
-=item -B
+=item B<--xargs>=I<STRING>
+
+If B<-x> is given, splits the C<STRING> using the function 
+C<shellwords> from L<Text::ParseWords> and passes the result 
+as C<@ARGV> when executing the code.
+
+=item B<-B>, B<--bundle>
 
 Include core modules in the output and the recursive search list.
 
-=item -R
+=item B<-R>, B<--no-recurse>
 
 Only show dependencies found in the files listed and do not recurse.
 
-=item -V
+=item B<-V>, B<--verbose>
 
 Verbose mode: Output all files found during the process; 
 show dependencies between modules and availability.
@@ -207,7 +227,7 @@ Additionally, warns of any missing dependencies. If you find missing
 dependencies that aren't really dependencies, you have probably found
 false positives.
 
-=item -C CACHEFILE
+=item B<-C>, B<--cachedeps>=I<CACHEFILE>
 
 Use CACHEFILE to speed up the scanning process by caching dependencies.
 Creates CACHEFILE if it does not exist yet.

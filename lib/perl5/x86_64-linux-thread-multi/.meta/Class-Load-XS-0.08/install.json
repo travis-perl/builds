@@ -1,1 +1,1 @@
-{"target":"Class::Load::XS","provides":{"Class::Load::XS":{"version":"0.08","file":"lib/Class/Load/XS.pm"}},"version":"0.08","dist":"Class-Load-XS-0.08","pathname":"E/ET/ETHER/Class-Load-XS-0.08.tar.gz","name":"Class::Load::XS"}
+{"dist":"Class-Load-XS-0.08","name":"Class::Load::XS","provides":{"Class::Load::XS":{"file":"lib/Class/Load/XS.pm","version":"0.08"}},"version":"0.08","pathname":"E/ET/ETHER/Class-Load-XS-0.08.tar.gz","target":"Class::Load::XS"}
