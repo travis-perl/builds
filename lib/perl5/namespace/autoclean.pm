@@ -2,11 +2,8 @@ use strict;
 use warnings;
 
 package namespace::autoclean;
-BEGIN {
-  $namespace::autoclean::AUTHORITY = 'cpan:FLORA';
-}
-# git description: 0.18-15-g89e453d
-$namespace::autoclean::VERSION = '0.19';
+# git description: 0.19-8-g7e15899
+$namespace::autoclean::VERSION = '0.20';
 # ABSTRACT: Keep imports out of your namespace
 # KEYWORDS: namespaces clean dirty imports exports subroutines methods development
 
@@ -126,9 +123,16 @@ use namespace::clean 0.20;
 #pod
 #pod =head1 SEE ALSO
 #pod
-#pod L<namespace::clean>
-#pod
-#pod L<B::Hooks::EndOfScope>
+#pod =for :list
+#pod * L<namespace::clean>
+#pod * L<B::Hooks::EndOfScope>
+#pod * L<namespace::sweep>
+#pod * L<Sub::Exporter::ForMethods>
+#pod * L<Sub::Name>
+#pod * L<Sub::Install>
+#pod * L<MooseX::MarkAsMethods>
+#pod * L<Test::CleanNamespaces>
+#pod * L<Dist::Zilla::Plugin::Test::CleanNamespaces>
 #pod
 #pod =cut
 
@@ -197,7 +201,7 @@ sub _method_check {
             my $coderef = do { no strict 'refs'; \&{ $package . '::' . $_[0] } };
             my $code_stash = Sub::Identify::stash_name($coderef);
             return 1 if $code_stash eq $package;
-            return 1 if $does && $package->$does($code_stash);
+            return 1 if $does && eval { $package->$does($code_stash) };
             return 1 if $code_stash eq 'constant';
             return 0;
         };
@@ -328,9 +332,45 @@ work correctly for methods from roles consumed at compile time.
 
 =head1 SEE ALSO
 
+=over 4
+
+=item *
+
 L<namespace::clean>
 
+=item *
+
 L<B::Hooks::EndOfScope>
+
+=item *
+
+L<namespace::sweep>
+
+=item *
+
+L<Sub::Exporter::ForMethods>
+
+=item *
+
+L<Sub::Name>
+
+=item *
+
+L<Sub::Install>
+
+=item *
+
+L<MooseX::MarkAsMethods>
+
+=item *
+
+L<Test::CleanNamespaces>
+
+=item *
+
+L<Dist::Zilla::Plugin::Test::CleanNamespaces>
+
+=back
 
 =head1 AUTHOR
 
@@ -338,23 +378,9 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 CONTRIBUTORS
 
+=for stopwords Graham Knop Karen Etheridge Dave Rolsky Kent Fredric Tomas Doran Shawn M Moore Felix Ostmann Chris Prather Andrew Rodland
+
 =over 4
-
-=item *
-
-Andrew Rodland <andrew@hbslabs.com>
-
-=item *
-
-Chris Prather <cprather@hdpublishing.com>
-
-=item *
-
-Dave Rolsky <autarch@urth.org>
-
-=item *
-
-Felix Ostmann <sadrak@sadrak-laptop.(none)>
 
 =item *
 
@@ -366,7 +392,15 @@ Karen Etheridge <ether@cpan.org>
 
 =item *
 
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
 Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Tomas Doran <bobtfish@bobtfish.net>
 
 =item *
 
@@ -374,7 +408,15 @@ Shawn M Moore <sartak@gmail.com>
 
 =item *
 
-Tomas Doran <bobtfish@bobtfish.net>
+Felix Ostmann <sadrak@sadrak-laptop.(none)>
+
+=item *
+
+Chris Prather <cprather@hdpublishing.com>
+
+=item *
+
+Andrew Rodland <andrew@hbslabs.com>
 
 =back
 

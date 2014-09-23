@@ -1,5 +1,7 @@
 package DateTime;
-$DateTime::VERSION = '1.10';
+# git description: v1.11-4-g98156fc
+$DateTime::VERSION = '1.12';
+
 use 5.008001;
 
 use strict;
@@ -10,7 +12,7 @@ use Carp;
 use DateTime::Duration;
 use DateTime::Helpers;
 use DateTime::Locale 0.41;
-use DateTime::TimeZone 1.09;
+use DateTime::TimeZone 1.74;
 use Params::Validate 0.76
     qw( validate validate_pos UNDEF SCALAR BOOLEAN HASHREF OBJECT );
 use POSIX qw(floor);
@@ -2163,19 +2165,21 @@ sub time_zone { $_[0]->{tz} }
 
 1;
 
-# ABSTRACT: A date and time object
+# ABSTRACT: A date and time object for Perl
 
 __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
-DateTime - A date and time object
+DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.10
+version 1.12
 
 =head1 SYNOPSIS
 
