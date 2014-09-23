@@ -1,8 +1,5 @@
 package Moose::Exception::IsaLacksDoesMethod;
-BEGIN {
-  $Moose::Exception::IsaLacksDoesMethod::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::IsaLacksDoesMethod::VERSION = '2.1210';
+$Moose::Exception::IsaLacksDoesMethod::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::InvalidAttributeOptions';

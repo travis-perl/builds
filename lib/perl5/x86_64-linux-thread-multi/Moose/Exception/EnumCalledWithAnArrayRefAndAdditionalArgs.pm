@@ -1,8 +1,5 @@
 package Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs;
-BEGIN {
-  $Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs::VERSION = '2.1210';
+$Moose::Exception::EnumCalledWithAnArrayRefAndAdditionalArgs::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 

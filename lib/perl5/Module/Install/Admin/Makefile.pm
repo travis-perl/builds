@@ -6,7 +6,7 @@ use ExtUtils::MakeMaker ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.10';
+	$VERSION = '1.12';
 	@ISA     = qw{Module::Install::Base};
 }
 
@@ -51,20 +51,3 @@ sub preop {
 }
 
 1;
-
-__END__
-
-=pod
-
-=encoding UTF-8
-
-=head1 COPYRIGHT
-
-Copyright 2008 - 2014 Adam Kennedy.
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut

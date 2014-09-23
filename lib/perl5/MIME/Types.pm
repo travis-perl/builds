@@ -1,11 +1,11 @@
-# Copyrights 1999,2001-2013 by [Mark Overmeer].
+# Copyrights 1999,2001-2014 by [Mark Overmeer].
 #  For other contributors see ChangeLog.
 # See the manual pages for details on the licensing terms.
 # Pod stripped from pm file by OODoc 2.01.
 
 package MIME::Types;
 use vars '$VERSION';
-$VERSION = '2.04';
+$VERSION = '2.09';
 
 
 use strict;
@@ -13,6 +13,7 @@ use strict;
 use MIME::Type     ();
 use File::Spec     ();
 use File::Basename qw(dirname);
+use List::Util     qw(first);
 
 
 my %typedb;
@@ -76,7 +77,6 @@ sub _read_db($)
 sub create_type_index {}
 
 #-------------------------------------------
-
 
 sub type($)
 {   my $spec    = lc $_[1];
@@ -149,11 +149,70 @@ sub listTypes()
 }
 
 
-
 sub extensions { keys %{$typedb{EXTENSIONS}} }
+sub _MojoExtTable() {$typedb{EXTENSIONS}}
+
+#-------------
+
+sub httpAccept($)
+{   my $self   = shift;
+    my @listed;
+
+    foreach (split /\,\s*/, shift)
+    {
+        m!^   ([a-zA-Z0-9-]+ | \*) / ( [a-zA-Z0-9+-]+ | \* )
+          \s* (?: \;\s*q\=\s* ([0-9]+(?:\.[0-9]*)?) \s* )?
+              (\;.* | )
+          $ !x or next;
+
+        my $mime = "$1/$2$4";
+        my $q    = $3 || ($1 eq '*' ? -2 : $2 eq '*' ? -1 : 1);
+        push @listed, [ $mime, $q-@listed*0.001 ];
+    }
+    map $_->[0], sort {$b->[1] <=> $a->[1]} @listed;
+}
+
+
+sub httpAcceptBest($@)
+{   my $self   = shift;
+    my @accept = ref $_[0] eq 'ARRAY' ? @{(shift)} : $self->httpAccept(shift);
+    my $match;
+
+    foreach my $acc (@accept)
+    {   $acc   =~ s/\s*\;.*//;    # remove attributes
+        my $m = $acc !~ s#/\*$## ? first { $_->equals($acc) } @_
+              : $acc eq '*'      ? $_[0]     # $acc eq */*
+              :                    first { $_->mediaType eq $acc } @_;
+        return $m if defined $m;
+    }
+
+    ();
+}
+
+
+sub httpAcceptSelect($@)
+{   my ($self, $accept) = (shift, shift);
+    my $fns  = !@_ ? return () : ref $_[0] eq 'ARRAY' ? shift : [@_];
+
+    unless(defined $accept)
+    {   my $fn = $fns->[0];
+        return ($fn, $self->mimeTypeOf($fn));
+    }
+
+    # create mapping  type -> filename
+    my (%have, @have);
+    foreach my $fn (@$fns)
+    {   my $type = $self->mimeTypeOf($fn) or next;
+        $have{$type->simplified} = $fn;
+        push @have, $type;
+    }
+
+    my $type = $self->httpAcceptBest($accept, @have);
+    defined $type ? ($have{$type}, $type) : ();
+}
 
 #-------------------------------------------
-# OLD INTERGFACE (version 0.06 and lower)
+# OLD INTERFACE (version 0.06 and lower)
 
 
 use base 'Exporter';

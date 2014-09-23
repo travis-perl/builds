@@ -1,17 +1,15 @@
 package Module::Build::PodParser;
 
 use strict;
-use vars qw($VERSION);
-$VERSION = '0.4206';
+use warnings;
+our $VERSION = '0.4210';
 $VERSION = eval $VERSION;
-use vars qw(@ISA);
 
 sub new {
   # Perl is so fun.
   my $package = shift;
 
   my $self;
-  @ISA = ();
   $self = bless {have_pod_parser => 0, @_}, $package;
 
   unless ($self->{fh}) {
