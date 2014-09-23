@@ -1,8 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Hash::delete;
-BEGIN {
-  $Moose::Meta::Method::Accessor::Native::Hash::delete::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Method::Accessor::Native::Hash::delete::VERSION = '2.1210';
+$Moose::Meta::Method::Accessor::Native::Hash::delete::VERSION = '2.1212';
 use strict;
 use warnings;
 
