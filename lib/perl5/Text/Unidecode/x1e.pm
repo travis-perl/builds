@@ -1,4 +1,4 @@
-# Time-stamp: "Sat Jul 14 00:27:22 2001 by Automatic Bizooty (__blocks2pm.plx)"
+# Time-stamp: "2014-07-22 05:34:54 MDT sburke@cpan.org"
 $Text::Unidecode::Char[0x1e] = [
 'A', 'a', 'B', 'b', 'B', 'b', 'B', 'b', 'C', 'c', 'D', 'd', 'D', 'd', 'D', 'd',
 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'F', 'f',
@@ -9,7 +9,7 @@ $Text::Unidecode::Char[0x1e] = [
 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't',
 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'V', 'v', 'V', 'v',
 'W', 'w', 'W', 'w', 'W', 'w', 'W', 'w', 'W', 'w', 'X', 'x', 'X', 'x', 'Y', 'y',
-'Z', 'z', 'Z', 'z', 'Z', 'z', 'h', 't', 'w', 'y', 'a', 'S', '[?]', '[?]', '[?]', '[?]',
+'Z', 'z', 'Z', 'z', 'Z', 'z', 'h', 't', 'w', 'y', 'a', 's', 's', 's', 'Ss', 'd',
 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a',
 'A', 'a', 'A', 'a', 'A', 'a', 'A', 'a', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e',
 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'I', 'i', 'I', 'i', 'O', 'o', 'O', 'o',
