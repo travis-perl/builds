@@ -6,9 +6,10 @@ use warnings;
 
 BEGIN {
 	$Types::Standard::ArrayRef::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Standard::ArrayRef::VERSION   = '0.046';
+	$Types::Standard::ArrayRef::VERSION   = '1.000004';
 }
 
+use Type::Tiny ();
 use Types::Standard ();
 use Types::TypeTiny ();
 
@@ -26,13 +27,13 @@ sub __constraint_generator
 	
 	my $param_compiled_check = $param->compiled_check;
 	my $xsub;
-	if (Types::Standard::_USE_XS)
+	if (Type::Tiny::_USE_XS)
 	{
 		my $paramname = Type::Tiny::XS::is_known($param_compiled_check);
 		$xsub = Type::Tiny::XS::get_coderef_for("ArrayRef[$paramname]")
 			if $paramname;
 	}
-	elsif (Types::Standard::_USE_MOUSE and $param->_has_xsub)
+	elsif (Type::Tiny::_USE_MOUSE and $param->_has_xsub)
 	{
 		require Mouse::Util::TypeConstraints;
 		my $maker = "Mouse::Util::TypeConstraints"->can("_parameterize_ArrayRef_for");
@@ -55,7 +56,7 @@ sub __inline_generator
 	my $param = shift;
 	
 	my $param_compiled_check = $param->compiled_check;
-	if (Types::Standard::_USE_XS)
+	if (Type::Tiny::_USE_XS)
 	{
 		my $paramname = Type::Tiny::XS::is_known($param_compiled_check);
 		my $xsubname  = Type::Tiny::XS::get_subname_for("ArrayRef[$paramname]");
@@ -91,7 +92,8 @@ sub __deep_explanation
 		]
 	}
 	
-	return;
+	# This should never happen...
+	return;  # uncoverable statement
 }
 
 sub __coercion_generator
