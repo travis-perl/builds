@@ -1,8 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Hash::Writer;
-BEGIN {
-  $Moose::Meta::Method::Accessor::Native::Hash::Writer::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Method::Accessor::Native::Hash::Writer::VERSION = '2.1210';
+$Moose::Meta::Method::Accessor::Native::Hash::Writer::VERSION = '2.1212';
 use strict;
 use warnings;
 

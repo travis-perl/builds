@@ -1,8 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::shallow_clone;
-BEGIN {
-  $Moose::Meta::Method::Accessor::Native::Array::shallow_clone::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Method::Accessor::Native::Array::shallow_clone::VERSION = '2.1210';
+$Moose::Meta::Method::Accessor::Native::Array::shallow_clone::VERSION = '2.1212';
 use strict;
 use warnings;
 

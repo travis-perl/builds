@@ -1,1 +1,0 @@
-{"version":"2.04","name":"MIME::Types","target":"MIME::Types","pathname":"M/MA/MARKOV/MIME-Types-2.04.tar.gz","provides":{"MIME::Type":{"version":"2.04","file":"lib/MIME/Type.pm"},"MIME::Types":{"version":"2.04","file":"lib/MIME/Types.pm"}},"dist":"MIME-Types-2.04"}
