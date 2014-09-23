@@ -1,0 +1,1 @@
+{"name":"Test::Exception","version":"0.35","pathname":"E/EX/EXODIST/Test-Exception-0.35.tar.gz","dist":"Test-Exception-0.35","target":"Test::Exception","provides":{"Test::Exception":{"version":"0.35","file":"lib/Test/Exception.pm"}}}
