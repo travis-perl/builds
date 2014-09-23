@@ -13,7 +13,7 @@ use DBIx::Class::Schema::Loader::Utils qw/sigwarn_silencer/;
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07040';
+our $VERSION = '0.07042';
 
 =head1 NAME
 
@@ -64,12 +64,6 @@ sub _system_schemas {
     my $self = shift;
 
     return ($self->next::method(@_), 'mysql');
-}
-
-sub _tables_list {
-    my ($self, $opts) = @_;
-
-    return $self->next::method($opts, undef, undef);
 }
 
 sub _table_fk_info {

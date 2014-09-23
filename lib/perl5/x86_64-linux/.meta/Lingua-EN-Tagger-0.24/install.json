@@ -1,1 +1,1 @@
-{"target":"Lingua::EN::Tagger","name":"Lingua::EN::Tagger","dist":"Lingua-EN-Tagger-0.24","provides":{"Lingua::EN::Tagger":{"version":"0.24","file":"Tagger.pm"}},"version":"0.24","pathname":"A/AC/ACOBURN/Lingua-EN-Tagger-0.24.tar.gz"}
+{"pathname":"A/AC/ACOBURN/Lingua-EN-Tagger-0.24.tar.gz","version":"0.24","dist":"Lingua-EN-Tagger-0.24","provides":{"Lingua::EN::Tagger":{"version":"0.24","file":"Tagger.pm"}},"name":"Lingua::EN::Tagger","target":"Lingua::EN::Tagger"}
