@@ -424,7 +424,6 @@
 /home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/Moose/Util/TypeConstraints.pm
 /home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/Moose/Util/TypeConstraints/Builtins.pm
 /home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/Test/Moose.pm
-/home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/auto/Moose/Moose.bs
 /home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/auto/Moose/Moose.so
 /home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/metaclass.pm
 /home/travis/.perlbrew/libs/5.12.5@moose/lib/perl5/x86_64-linux/oose.pm
