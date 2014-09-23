@@ -2,7 +2,7 @@ use strict;
 
 package Path::Class::Dir;
 {
-  $Path::Class::Dir::VERSION = '0.33';
+  $Path::Class::Dir::VERSION = '0.35';
 }
 
 use Path::Class::File;
@@ -273,7 +273,7 @@ sub subsumes {
   my ($self, $other) = @_;
   die "No second entity given to subsumes()" unless $other;
   
-  $other = $self->new($other) unless UNIVERSAL::isa($other, __PACKAGE__);
+  $other = $self->new($other) unless UNIVERSAL::isa($other, "Path::Class::Entity");
   $other = $other->dir unless $other->is_dir;
   
   if ($self->is_absolute) {
@@ -321,7 +321,7 @@ Path::Class::Dir - Objects representing directories
 
 =head1 VERSION
 
-version 0.33
+version 0.35
 
 =head1 SYNOPSIS
 

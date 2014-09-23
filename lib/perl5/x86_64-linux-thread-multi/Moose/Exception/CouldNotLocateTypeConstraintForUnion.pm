@@ -1,8 +1,5 @@
 package Moose::Exception::CouldNotLocateTypeConstraintForUnion;
-BEGIN {
-  $Moose::Exception::CouldNotLocateTypeConstraintForUnion::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::CouldNotLocateTypeConstraintForUnion::VERSION = '2.1210';
+$Moose::Exception::CouldNotLocateTypeConstraintForUnion::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::TypeConstraint';

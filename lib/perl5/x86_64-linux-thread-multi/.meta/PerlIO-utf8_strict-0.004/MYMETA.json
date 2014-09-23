@@ -5,7 +5,7 @@
       "Christian Hansen <chansen@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4206",
+   "generated_by" : "Module::Build version 0.421",
    "license" : [
       "perl_5"
    ],

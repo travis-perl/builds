@@ -1,6 +1,6 @@
 package Throwable::Error;
 # ABSTRACT: an easy-to-use class for error objects
-$Throwable::Error::VERSION = '0.200011';
+$Throwable::Error::VERSION = '0.200012';
 use Moo 1.000001;
 with 'Throwable', 'StackTrace::Auto';
 
@@ -113,7 +113,7 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.200011
+version 0.200012
 
 =head1 SYNOPSIS
 
