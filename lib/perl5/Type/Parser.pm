@@ -6,7 +6,7 @@ use warnings;
 sub _croak ($;@) { require Error::TypeTiny; goto \&Error::TypeTiny::croak }
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.046';
+our $VERSION   = '1.000004';
 
 # Token types
 # 
@@ -25,7 +25,7 @@ sub L_PAREN   () { "L_PAREN" };
 sub R_PAREN   () { "R_PAREN" };
 sub MYSTERY   () { "MYSTERY" };
 
-our @EXPORT_OK = qw( eval_type _std_eval parse );
+our @EXPORT_OK = qw( eval_type _std_eval parse extract_type );
 
 require Exporter::Tiny;
 our @ISA = 'Exporter::Tiny';
@@ -80,17 +80,15 @@ Evaluate: {
 		
 		if ($node->{type} eq "union")
 		{
-			require Type::Tiny::Union;
-			return "Type::Tiny::Union"->new(
-				type_constraints => [ map _eval_type($_, $reg), @{$node->{union}} ],
+			return $reg->make_union(
+				map _eval_type($_, $reg), @{$node->{union}}
 			);
 		}
 		
 		if ($node->{type} eq "intersect")
 		{
-			require Type::Tiny::Intersection;
-			return "Type::Tiny::Intersection"->new(
-				type_constraints => [ map _eval_type($_, $reg), @{$node->{intersect}} ],
+			return $reg->make_intersection(
+				map _eval_type($_, $reg), @{$node->{intersect}}
 			);
 		}
 		
@@ -114,9 +112,12 @@ Evaluate: {
 		
 		if ($node->{type} eq "primary" and $node->{token}->type eq CLASS)
 		{
-			my $class = substr($node->{token}->spelling, 0, length($node->{token}->spelling) - 2);
-			require Type::Tiny::Class;
-			return "Type::Tiny::Class"->new(class => $class);
+			my $class = substr(
+				$node->{token}->spelling,
+				0,
+				length($node->{token}->spelling) - 2
+			);
+			return $reg->make_class_type($class);
 		}
 		
 		if ($node->{type} eq "primary" and $node->{token}->type eq QUOTELIKE)
@@ -132,21 +133,9 @@ Evaluate: {
 		if ($node->{type} eq "primary" and $node->{token}->type eq TYPE)
 		{
 			my $t = $node->{token}->spelling;
-			my $r;
-			if ($t =~ /^(.+)::(\w+)$/)
-			{
-				require Types::TypeTiny;
-				my $library = $1; $t = $2;
-				eval "require $library;";
-				$r =
-					$library->isa('MooseX::Types::Base')  ? Types::TypeTiny::to_TypeTiny(Moose::Util::TypeConstraints::find_type_constraint($library->get_type($t))) :
-					$library->can("get_type")             ? $library->get_type($t) :
-					$reg->simple_lookup("$library\::$t", 1);
-				}
-			else
-			{
-				$r = $reg->simple_lookup($t, 1);
-			}
+			my $r = ($t =~ /^(.+)::(\w+)$/)
+				? $reg->foreign_lookup($t, 1)
+				: $reg->simple_lookup($t, 1);
 			$r or _croak("%s is not a known type constraint", $node->{token}->spelling);
 			return $r;
 		}
