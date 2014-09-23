@@ -4,7 +4,7 @@
       "Andrew Main (Zefram) <zefram@fysh.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
@@ -16,19 +16,19 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Module::Build" : 0,
-            "Test::More" : 0,
+            "Module::Build" : "0",
+            "Test::More" : "0",
             "perl" : "5.006",
-            "strict" : 0,
-            "warnings" : 0
+            "strict" : "0",
+            "warnings" : "0"
          }
       },
       "configure" : {
          "requires" : {
-            "Module::Build" : 0,
+            "Module::Build" : "0",
             "perl" : "5.006",
-            "strict" : 0,
-            "warnings" : 0
+            "strict" : "0",
+            "warnings" : "0"
          }
       },
       "runtime" : {

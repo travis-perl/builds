@@ -1,8 +1,5 @@
 package Moose::Exception::ClassDoesNotHaveInitMeta;
-BEGIN {
-  $Moose::Exception::ClassDoesNotHaveInitMeta::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::ClassDoesNotHaveInitMeta::VERSION = '2.1210';
+$Moose::Exception::ClassDoesNotHaveInitMeta::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Class';

@@ -424,7 +424,6 @@
 /home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Util/TypeConstraints.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Util/TypeConstraints/Builtins.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/Test/Moose.pm
-/home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/auto/Moose/Moose.bs
 /home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/auto/Moose/Moose.so
 /home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/metaclass.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@moose/lib/perl5/x86_64-linux-thread-multi/oose.pm
