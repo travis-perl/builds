@@ -12,7 +12,7 @@ use File::Find;
 use File::Spec;
 use Data::Dumper;
 
-our $VERSION = '0.309';
+our $VERSION = '0.401';
 
 sub import {
 	my $class = shift;
@@ -128,10 +128,13 @@ sub save_config {
 		typemaps => [ map { basename $_ } @{ $self->{typemaps} } ],
 		deps => [keys %{ $self->{deps} }],
 	}], ['self']);
-	print $file "\n\n\@deps = \@{ \$self->{deps} };\n";
-	print $file "\@typemaps = \@{ \$self->{typemaps} };\n";
-	print $file "\$libs = \$self->{libs};\n";
-	print $file "\$inc = \$self->{inc};\n";
+	print $file <<'EOF';
+
+@deps = @{ $self->{deps} };
+@typemaps = @{ $self->{typemaps} };
+$libs = $self->{libs};
+$inc = $self->{inc};
+EOF
 	# this is ridiculous, but old versions of ExtUtils::Depends take
 	# first $loadedmodule::CORE and then $INC{$file} --- the fallback
 	# includes the Filename.pm, which is not useful.  so we must add
@@ -146,6 +149,17 @@ sub save_config {
 			\$CORE = \$_ . "/$mdir/Install/";
 			last;
 		}
+	}
+
+	sub deps { \@{ \$self->{deps} }; }
+
+	sub Inline {
+		my (\$class, \$lang) = \@_;
+		if (\$lang ne 'C') {
+			warn "Warning: Inline hints not available for \$lang language\n";
+			return;
+		}
+		+{ map { (uc(\$_) => \$self->{\$_}) } qw(inc libs typemaps) };
 	}
 EOT
 
@@ -168,14 +182,13 @@ sub load {
 	eval {
 		require $relpath 
 	} or die " *** Can't load dependency information for $dep:\n   $@\n";
-	#
 	#print Dumper(\%INC);
 
 	# effectively $instpath = dirname($INC{$relpath})
 	@pieces = File::Spec->splitdir ($INC{$relpath});
 	pop @pieces;
 	my $instpath = File::Spec->catdir (@pieces);
-	
+
 	no strict;
 
 	croak "No dependency information found for $dep"
@@ -185,20 +198,32 @@ sub load {
 		$instpath = File::Spec->rel2abs ($instpath);
 	}
 
-	my @typemaps = map {
-		File::Spec->rel2abs ($_, $instpath)
-	} @{"$depinstallfiles\::typemaps"};
+	my (@typemaps, $inc, $libs, @deps);
+
+	# this will not exist when loading files from old versions
+	# of ExtUtils::Depends.
+	@deps = eval { $depinstallfiles->deps };
+	@deps = @{"$depinstallfiles\::deps"}
+		if $@ and exists ${"$depinstallfiles\::"}{deps};
+
+	my $inline = eval { $depinstallfiles->Inline('C') };
+	if (!$@) {
+		$inc = $inline->{INC} || '';
+		$libs = $inline->{LIBS} || '';
+		@typemaps = @{ $inline->{TYPEMAPS} || [] };
+	} else {
+		$inc = ${"$depinstallfiles\::inc"} || '';
+		$libs = ${"$depinstallfiles\::libs"} || '';
+		@typemaps = @{"$depinstallfiles\::typemaps"};
+	}
+	@typemaps = map { File::Spec->rel2abs ($_, $instpath) } @typemaps;
 
 	{
 		instpath => $instpath,
 		typemaps => \@typemaps,
-		inc      => "-I$instpath ".${"$depinstallfiles\::inc"},
-		libs     => ${"$depinstallfiles\::libs"},
-		# this will not exist when loading files from old versions
-		# of ExtUtils::Depends.
-		(exists ${"$depinstallfiles\::"}{deps}
-		  ? (deps => \@{"$depinstallfiles\::deps"})
-		  : ()), 
+		inc      => "-I$instpath $inc",
+		libs     => $libs,
+		deps     => \@deps,
 	}
 }
 
@@ -240,7 +265,7 @@ sub get_makefile_vars {
 	# collect and uniquify things from the dependencies.
 	# first, ensure they are completely loaded.
 	$self->load_deps;
-	
+
 	##my @defbits = map { split } @{ $self->{defines} };
 	my @incbits = map { split } @{ $self->{inc} };
 	my @libsbits = split /\s+/, $self->{libs};
@@ -451,6 +476,27 @@ For example:
      this command automatically brings in all the stuff needed
      for Glib, since Gtk2 depends on it.
 
+When the configuration information is saved, it also includes a class
+method called C<Inline>, inheritable by your module. This allows you in
+your module to simply say at the top:
+
+  package Mymod;
+  use parent 'Mymod::Install::Files'; # to inherit 'Inline' method
+
+And users of C<Mymod> who want to write inline code (using L<Inline>)
+will simply be able to write:
+
+  use Inline with => 'Mymod';
+
+And all the necessary header files, defines, and libraries will be added
+for them.
+
+The C<Mymod::Install::Files> will also implement a C<deps> method,
+which will return a list of any modules that C<Mymod> depends on -
+you will not normally need to use this:
+
+  require Mymod::Install::Files;
+  @deps = Mymod::Install::Files->deps;
 
 =head1 METHODS
 
@@ -513,8 +559,9 @@ passed through WriteMakefile's PM key.
 Save the important information from I<$depends> to I<$filename>, and
 set it up to be installed as I<name>::Install::Files.
 
-Note: the actual value of I<$filename> seems to be irrelevant, but its
-usage is kept for backward compatibility.
+Note: the actual value of I<$filename> is unimportant so long as it
+doesn't clash with any other local files. It will be installed as
+I<name>::Install::Files.
 
 =item hash = $depends->get_makefile_vars
 
@@ -566,12 +613,17 @@ loading files created by old versions of ExtUtils::Depends.
 =back
 
 If you want to make module I<name> support this, you must provide
-a module I<name>::Install::Files, which on loading will provide the
-following package variables: C<@typemaps>, C<$inc>, C<$libs>, C<$deps>,
-with the same contents as above (not coincidentally). The C<load>
-function will supply the C<instpath>. An easy way to achieve this is
-to use the method L</"$depends-E<gt>save_config ($filename)">, but your
-package may have different facilities already.
+a module I<name>::Install::Files, which on loading will implement the
+following class methods:
+
+  $hashref = name::Install::Files->Inline('C');
+  # hash to contain any necessary TYPEMAPS (array-ref), LIBS, INC
+  @deps = name::Install::Files->deps;
+  # any modules on which "name" depends
+
+An easy way to achieve this is to use the method
+L</"$depends-E<gt>save_config ($filename)">, but your package may have
+different facilities already.
 
 =item $depends->load_deps
 
