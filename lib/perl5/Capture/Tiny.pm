@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Capture::Tiny;
 # ABSTRACT: Capture STDOUT and STDERR from Perl, XS or external programs
-our $VERSION = '0.24'; # VERSION
+our $VERSION = '0.25'; # VERSION
 use Carp ();
 use Exporter ();
 use IO::Handle ();
@@ -420,7 +420,7 @@ Capture::Tiny - Capture STDOUT and STDERR from Perl, XS or external programs
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -824,9 +824,21 @@ L<https://github.com/dagolden/Capture-Tiny>
 
 David Golden <dagolden@cpan.org>
 
-=head1 CONTRIBUTOR
+=head1 CONTRIBUTORS
+
+=for stopwords Dagfinn Ilmari Mannsåker David E. Wheeler
+
+=over 4
+
+=item *
 
 Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+David E. Wheeler <david@justatheory.com>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
