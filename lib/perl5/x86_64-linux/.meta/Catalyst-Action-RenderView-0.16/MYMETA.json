@@ -4,7 +4,7 @@
       "Marcus Ramberg <marcus@thefeed.no>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 0.91, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Module::Install version 0.91, CPAN::Meta::Converter version 2.142060",
    "license" : [
       "perl_5"
    ],

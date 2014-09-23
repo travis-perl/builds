@@ -2,15 +2,13 @@ package MooseX::Role::WithOverloading;
 BEGIN {
   $MooseX::Role::WithOverloading::AUTHORITY = 'cpan:FLORA';
 }
-# git description: v0.13-31-g055b57e
-$MooseX::Role::WithOverloading::VERSION = '0.14';
+# git description: v0.14-9-gae3b660
+$MooseX::Role::WithOverloading::VERSION = '0.15';
 # ABSTRACT: Roles which support overloading
 # KEYWORDS: moose extension role operator overload overloading
 
-use XSLoader;
 use Moose::Role ();
 use Moose::Exporter;
-use Moose::Util::MetaRole;
 use aliased 'MooseX::Role::WithOverloading::Meta::Role', 'MetaRole';
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToClass';
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToRole';
@@ -18,22 +16,33 @@ use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToInstance'
 
 use namespace::clean;
 
-XSLoader::load(
-    __PACKAGE__,
-    $MooseX::Role::WithOverloading::{VERSION}
-    ? ${ $MooseX::Role::WithOverloading::{VERSION} }
-    : ()
-);
+# this functionality is built-in, starting with Moose 2.1300
+my $has_core_support = eval { Moose->VERSION('2.1300'); 1 };
 
-Moose::Exporter->setup_import_methods(
-    also           => 'Moose::Role',
-    role_metaroles => {
-        role                    => [MetaRole],
-        application_to_class    => [ToClass],
-        application_to_role     => [ToRole],
-        application_to_instance => [ToInstance],
-    },
-);
+if ($has_core_support)
+{
+    Moose::Exporter->setup_import_methods(also => 'Moose::Role');
+}
+else
+{
+    require XSLoader;
+    XSLoader::load(
+        __PACKAGE__,
+        $MooseX::Role::WithOverloading::{VERSION}
+        ? ${ $MooseX::Role::WithOverloading::{VERSION} }
+        : ()
+    );
+
+    Moose::Exporter->setup_import_methods(
+        also           => 'Moose::Role',
+        role_metaroles => {
+            role                    => [MetaRole],
+            application_to_class    => [ToClass],
+            application_to_role     => [ToRole],
+            application_to_instance => [ToInstance],
+        },
+    );
+}
 
 1;
 
@@ -49,7 +58,7 @@ MooseX::Role::WithOverloading - Roles which support overloading
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -85,6 +94,10 @@ defines overloaded operators and allows those overload methods to be
 composed into the classes/roles/instances it's compiled to, where plain
 L<Moose::Role>s would lose the overloading.
 
+Starting with L<Moose> version 2.1300, this module is no longer necessary, as
+the functionality is available already. In that case,
+C<use MooseX::Role::WithOverloading> behaves identically to C<use Moose::Role>.
+
 =for stopwords metaclasses
 
 =head1 AUTHORS
@@ -103,12 +116,14 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Florian Ragwitz.
+This software is copyright (c) 2009 by Florian Ragwitz.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
+
+=for stopwords Dave Rolsky Florian Ragwitz Jesse Luehrs Tomas Doran (t0m)
 
 =over 4
 
@@ -118,15 +133,19 @@ Dave Rolsky <autarch@urth.org>
 
 =item *
 
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
 Jesse Luehrs <doy@tozt.net>
 
 =item *
 
-Karen Etheridge <ether@cpan.org>
+Tomas Doran (t0m) <t0m@state51.co.uk>
 
 =item *
 
-Tomas Doran (t0m) <t0m@state51.co.uk>
+Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
