@@ -41,6 +41,7 @@
       },
       "homepage" : "http://search.cpan.org/dist/Sub-Exporter-Progressive/",
       "repository" : {
+         "type" : "git",
          "url" : "git://git.shadowcat.co.uk/p5sagit/Sub-Exporter-Progressive.git"
       }
    },
