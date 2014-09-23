@@ -1,4 +1,13 @@
 /home/travis/.perlbrew/libs/5.10.1@dzil/bin/instmodsh
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/Converter.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/Feature.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/History.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/Prereqs.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/Requirements.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/Spec.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/Validator.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/CPAN/Meta/YAML.pm
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/ExtUtils/Command/MM.pm
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/ExtUtils/Liblist.pm
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/ExtUtils/Liblist/Kid.pm
@@ -30,4 +39,7 @@
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/ExtUtils/Mksymlists.pm
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/ExtUtils/testlib.pm
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/File/Copy/Recursive.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/JSON/PP.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/JSON/PP/Boolean.pm
 /home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/JSON/PP/Compat5006.pm
+/home/travis/.perlbrew/libs/5.10.1@dzil/lib/perl5/Parse/CPAN/Meta.pm

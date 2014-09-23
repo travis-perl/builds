@@ -1,8 +1,5 @@
 package Class::MOP::Class::Immutable::Trait;
-BEGIN {
-  $Class::MOP::Class::Immutable::Trait::AUTHORITY = 'cpan:STEVAN';
-}
-$Class::MOP::Class::Immutable::Trait::VERSION = '2.1210';
+$Class::MOP::Class::Immutable::Trait::VERSION = '2.1212';
 use strict;
 use warnings;
 
@@ -110,7 +107,7 @@ Class::MOP::Class::Immutable::Trait - Implements immutability for metaclass obje
 
 =head1 VERSION
 
-version 2.1210
+version 2.1212
 
 =head1 DESCRIPTION
 

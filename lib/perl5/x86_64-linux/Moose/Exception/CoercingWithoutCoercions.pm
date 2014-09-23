@@ -1,8 +1,5 @@
 package Moose::Exception::CoercingWithoutCoercions;
-BEGIN {
-  $Moose::Exception::CoercingWithoutCoercions::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::CoercingWithoutCoercions::VERSION = '2.1210';
+$Moose::Exception::CoercingWithoutCoercions::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::TypeConstraint';

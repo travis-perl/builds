@@ -1,8 +1,5 @@
 package Log::Dispatch::Email::MailSender;
-{
-  $Log::Dispatch::Email::MailSender::VERSION = '2.41';
-}
-
+$Log::Dispatch::Email::MailSender::VERSION = '2.42';
 # By: Joseph Annino
 # (c) 2002
 # Licensed under the same terms as Perl
@@ -69,13 +66,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Email::MailSender - Subclass of Log::Dispatch::Email that uses the Mail::Sender module
 
 =head1 VERSION
 
-version 2.41
+version 2.42
 
 =head1 SYNOPSIS
 
@@ -122,7 +121,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 
