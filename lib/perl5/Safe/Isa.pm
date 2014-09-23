@@ -5,12 +5,15 @@ use warnings FATAL => 'all';
 use Scalar::Util qw(blessed);
 use Exporter 5.57 qw(import);
 
-our $VERSION = '1.000004';
+our $VERSION = '1.000005';
 
 our @EXPORT = qw($_call_if_object $_isa $_can $_does $_DOES);
 
 our $_call_if_object = sub {
   my ($obj, $method) = (shift, shift);
+  # This is intentionally a truth test, not a defined test, otherwise
+  # we gratuitously break modules like Scalar::Defer, which would be
+  # un-perlish.
   return unless blessed($obj);
   return $obj->$method(@_);
 };
@@ -144,6 +147,11 @@ returns nothing.
 
 If called on an object, calls C<method_name> on it and returns the result,
 otherwise returns nothing.
+
+=head1 SEE ALSO
+
+I gave a lightning talk on this module (and L<curry> and L<Import::Into>) at
+L<YAPC::NA 2013|https://www.youtube.com/watch?v=wFXWV2yY7gE&t=46m05s>.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
       "Dave Rolsky <autarch@urth.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110240, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110240, CPAN::Meta::Converter version 2.142060",
    "license" : [
       "artistic_2"
    ],

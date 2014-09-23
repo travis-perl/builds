@@ -9,7 +9,6 @@
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/ConfigData.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Cookbook.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Dumper.pm
-/home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/ModuleInfo.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Notes.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/PPMMaker.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Platform/Default.pm
@@ -23,7 +22,5 @@
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Platform/darwin.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Platform/os2.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/PodParser.pm
-/home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/Version.pm
-/home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/Module/Build/YAML.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/inc/latest.pm
 /home/travis/.perlbrew/libs/5.16.3-thr@cat/lib/perl5/inc/latest/private.pm

@@ -18,7 +18,7 @@ BEGIN {
 	# version an author currently has installed.
 	# This allows it to implement any back-compatibility features
 	# it may want or need to.
-	$VERSION = '1.10';
+	$VERSION = '1.12';
 }
 
 if ( -d './inc' ) {
@@ -100,7 +100,7 @@ Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright 2008 - 2014 Adam Kennedy.
+Copyright 2008 - 2012 Adam Kennedy.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

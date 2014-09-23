@@ -3,7 +3,7 @@ package HTTP::Tiny;
 use strict;
 use warnings;
 # ABSTRACT: A small, simple, correct HTTP/1.1 client
-our $VERSION = '0.047'; # VERSION
+our $VERSION = '0.049'; # VERSION
 
 use Carp ();
 
@@ -53,9 +53,9 @@ use Carp ();
 #pod
 #pod The C<keep_alive> parameter enables a persistent connection, but only to a
 #pod single destination scheme, host and port.  Also, if any connection-relevant
-#pod attributes are modified, a persistent connection will be dropped.  If you want
-#pod persistent connections across multiple destinations, use multiple HTTP::Tiny
-#pod objects.
+#pod attributes are modified, or if the process ID or thread ID change, the
+#pod persistent connection will be dropped.  If you want persistent connections
+#pod across multiple destinations, use multiple HTTP::Tiny objects.
 #pod
 #pod See L</SSL SUPPORT> for more on the C<verify_SSL> and C<SSL_options> attributes.
 #pod
@@ -861,6 +861,15 @@ use warnings;
 use Errno      qw[EINTR EPIPE];
 use IO::Socket qw[SOCK_STREAM];
 
+# for thread safety, we need to know thread id or else fake it;
+# requires "threads.pm" to hide it from the minimum version detector
+if ( eval { require "threads.pm"; 1 } ) { ## no critic
+    *_get_tid = sub { threads->tid };
+}
+else {
+    *_get_tid = sub () { 0 };
+}
+
 # PERL_HTTP_TINY_IPV4_ONLY is a private environment variable to force old
 # behavior if someone is unable to boostrap CPAN from a new perl install; it is
 # not intended for general, per-client use and may be removed in the future
@@ -924,6 +933,8 @@ sub connect {
     $self->{scheme} = $scheme;
     $self->{host} = $host;
     $self->{port} = $port;
+    $self->{pid} = $$;
+    $self->{tid} = _get_tid();
 
     return $self;
 }
@@ -1367,7 +1378,9 @@ sub _assert_ssl {
 sub can_reuse {
     my ($self,$scheme,$host,$port) = @_;
     return 0 if
-         length($self->{rbuf})
+        $self->{pid} != $$
+        || $self->{tid} != _get_tid()
+        || length($self->{rbuf})
         || $scheme ne $self->{scheme}
         || $host ne $self->{host}
         || $port ne $self->{port}
@@ -1444,7 +1457,7 @@ HTTP::Tiny - A small, simple, correct HTTP/1.1 client
 
 =head1 VERSION
 
-version 0.047
+version 0.049
 
 =head1 SYNOPSIS
 
@@ -1554,9 +1567,9 @@ content field in the response will contain the text of the exception.
 
 The C<keep_alive> parameter enables a persistent connection, but only to a
 single destination scheme, host and port.  Also, if any connection-relevant
-attributes are modified, a persistent connection will be dropped.  If you want
-persistent connections across multiple destinations, use multiple HTTP::Tiny
-objects.
+attributes are modified, or if the process ID or thread ID change, the
+persistent connection will be dropped.  If you want persistent connections
+across multiple destinations, use multiple HTTP::Tiny objects.
 
 See L</SSL SUPPORT> for more on the C<verify_SSL> and C<SSL_options> attributes.
 
@@ -2009,47 +2022,13 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
+=for stopwords Alan Gardner James Raspass Jess Robinson Lukas Eklund Martin J. Evans Martin-Louis Bright Mike Doherty Petr Písař Serguei Trouchelle Syohei YOSHIDA Sören Kornetzki Alessandro Ghedini Tom Hukins Tony Cook Brad Gilbert Chris Nehren Weyl Claes Jakobsson Clinton Gormley Craig Berry David Mitchell Edward Zborowski
+
 =over 4
 
 =item *
 
 Alan Gardner <gardner@pythian.com>
-
-=item *
-
-Alessandro Ghedini <al3xbio@gmail.com>
-
-=item *
-
-Brad Gilbert <bgills@cpan.org>
-
-=item *
-
-Chris Nehren <apeiron@cpan.org>
-
-=item *
-
-Chris Weyl <rsrchboy@cpan.org>
-
-=item *
-
-Claes Jakobsson <claes@surfar.nu>
-
-=item *
-
-Clinton Gormley <clint@traveljury.com>
-
-=item *
-
-Craig Berry <cberry@cpan.org>
-
-=item *
-
-David Mitchell <davem@iabyn.com>
-
-=item *
-
-Edward Zborowski <ed@rubensteintech.com>
 
 =item *
 
@@ -2093,7 +2072,47 @@ Sören Kornetzki <soeren.kornetzki@delti.com>
 
 =item *
 
+Alessandro Ghedini <al3xbio@gmail.com>
+
+=item *
+
+Tom Hukins <tom@eborcom.com>
+
+=item *
+
 Tony Cook <tony@develop-help.com>
+
+=item *
+
+Brad Gilbert <bgills@cpan.org>
+
+=item *
+
+Chris Nehren <apeiron@cpan.org>
+
+=item *
+
+Chris Weyl <rsrchboy@cpan.org>
+
+=item *
+
+Claes Jakobsson <claes@surfar.nu>
+
+=item *
+
+Clinton Gormley <clint@traveljury.com>
+
+=item *
+
+Craig Berry <cberry@cpan.org>
+
+=item *
+
+David Mitchell <davem@iabyn.com>
+
+=item *
+
+Edward Zborowski <ed@rubensteintech.com>
 
 =back
 
