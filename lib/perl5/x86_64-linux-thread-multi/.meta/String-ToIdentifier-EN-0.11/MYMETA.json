@@ -4,7 +4,7 @@
       "Rafael Kitover <rkitover@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300036, CPAN::Meta::Converter version 2.131560, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Dist::Zilla version 4.300036, CPAN::Meta::Converter version 2.131560, CPAN::Meta::Converter version 2.142060",
    "license" : [
       "perl_5"
    ],
