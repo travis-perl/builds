@@ -1,4 +1,4 @@
-=head2 Wed Aug  6 22:31:17 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
+=head2 Tue Sep 23 12:33:43 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Wed Aug  6 22:31:36 2014: C<Module> L<List::Util|List::Util>
+=head2 Tue Sep 23 12:33:59 2014: C<Module> L<List::Util|List::Util>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:31:53 2014: C<Module> L<Cwd|Cwd>
+=head2 Tue Sep 23 12:34:15 2014: C<Module> L<Cwd|Cwd>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:32:25 2014: C<Module> L<Module::CoreList|Module::CoreList>
+=head2 Tue Sep 23 12:34:45 2014: C<Module> L<Module::CoreList|Module::CoreList>
 
 =over 4
 
@@ -78,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 5.021002>
+C<VERSION: 5.20140920>
 
 =item *
 
@@ -86,7 +86,7 @@ C<EXE_FILES: corelist>
 
 =back
 
-=head2 Wed Aug  6 22:32:45 2014: C<Module> L<Test::Simple|Test::Simple>
+=head2 Tue Sep 23 12:35:02 2014: C<Module> L<Test::Simple|Test::Simple>
 
 =over 4
 
@@ -100,7 +100,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.001003>
+C<VERSION: 1.001006>
 
 =item *
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:32:50 2014: C<Module> L<IO::Stringy|IO::Stringy>
+=head2 Tue Sep 23 12:35:05 2014: C<Module> L<IO::Stringy|IO::Stringy>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:32:55 2014: C<Module> L<Module::Metadata|Module::Metadata>
+=head2 Tue Sep 23 12:35:09 2014: C<Module> L<Module::Metadata|Module::Metadata>
 
 =over 4
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:32:59 2014: C<Module> L<Module::Load|Module::Load>
+=head2 Tue Sep 23 12:35:12 2014: C<Module> L<Module::Load|Module::Load>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:02 2014: C<Module> L<Locale::Maketext::Simple|Locale::Maketext::Simple>
+=head2 Tue Sep 23 12:35:15 2014: C<Module> L<Locale::Maketext::Simple|Locale::Maketext::Simple>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:05 2014: C<Module> L<Params::Check|Params::Check>
+=head2 Tue Sep 23 12:35:18 2014: C<Module> L<Params::Check|Params::Check>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:08 2014: C<Module> L<Module::Load::Conditional|Module::Load::Conditional>
+=head2 Tue Sep 23 12:35:21 2014: C<Module> L<Module::Load::Conditional|Module::Load::Conditional>
 
 =over 4
 
@@ -240,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:12 2014: C<Module> L<IPC::Cmd|IPC::Cmd>
+=head2 Tue Sep 23 12:35:25 2014: C<Module> L<IPC::Cmd|IPC::Cmd>
 
 =over 4
 
@@ -262,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:16 2014: C<Module> L<MIME::Base64|MIME::Base64>
+=head2 Tue Sep 23 12:35:28 2014: C<Module> L<MIME::Base64|MIME::Base64>
 
 =over 4
 
@@ -284,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:21 2014: C<Module> L<HTTP::Tiny|HTTP::Tiny>
+=head2 Tue Sep 23 12:35:33 2014: C<Module> L<HTTP::Tiny|HTTP::Tiny>
 
 =over 4
 
@@ -298,7 +298,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.047>
+C<VERSION: 0.049>
 
 =item *
 
@@ -306,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:25 2014: C<Module> L<CPAN::Meta::Requirements|CPAN::Meta::Requirements>
+=head2 Tue Sep 23 12:35:37 2014: C<Module> L<CPAN::Meta::Requirements|CPAN::Meta::Requirements>
 
 =over 4
 
@@ -320,7 +320,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.126>
+C<VERSION: 2.128>
 
 =item *
 
@@ -328,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 22:33:42 2014: C<Module> L<Test::Harness|Test::Harness>
+=head2 Tue Sep 23 12:35:53 2014: C<Module> L<Test::Harness|Test::Harness>
 
 =over 4
 
@@ -342,7 +342,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 3.32>
+C<VERSION: 3.33>
 
 =item *
 
@@ -350,7 +350,7 @@ C<EXE_FILES: bin/prove>
 
 =back
 
-=head2 Wed Aug  6 22:33:50 2014: C<Module> L<CPAN|CPAN>
+=head2 Tue Sep 23 12:36:02 2014: C<Module> L<CPAN|CPAN>
 
 =over 4
 
