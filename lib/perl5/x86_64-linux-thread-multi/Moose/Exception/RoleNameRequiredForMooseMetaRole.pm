@@ -1,8 +1,5 @@
 package Moose::Exception::RoleNameRequiredForMooseMetaRole;
-BEGIN {
-  $Moose::Exception::RoleNameRequiredForMooseMetaRole::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::RoleNameRequiredForMooseMetaRole::VERSION = '2.1210';
+$Moose::Exception::RoleNameRequiredForMooseMetaRole::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Role';
