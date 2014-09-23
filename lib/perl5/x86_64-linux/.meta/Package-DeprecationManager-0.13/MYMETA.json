@@ -4,7 +4,7 @@
       "Dave Rolsky <autarch@urth.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120351, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120351, CPAN::Meta::Converter version 2.142060",
    "license" : [
       "artistic_2"
    ],
@@ -35,15 +35,25 @@
             "strict" : "0",
             "warnings" : "0"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Test::Fatal" : "0",
+            "Test::More" : "0.88",
+            "Test::Requires" : "0"
+         }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
+         "mailto" : "bug-package-deprecationmanager@rt.cpan.org",
          "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=Package-DeprecationManager"
       },
       "repository" : {
-         "url" : "git://git.moose.perl.org/Package-DeprecationManager.git"
+         "type" : "git",
+         "url" : "git://git.moose.perl.org/Package-DeprecationManager.git",
+         "web" : "http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=gitmo/Package-DeprecationManager.git;a=summary"
       }
    },
    "version" : "0.13"
