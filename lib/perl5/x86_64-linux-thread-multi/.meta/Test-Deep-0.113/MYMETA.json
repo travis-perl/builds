@@ -4,9 +4,9 @@
       "Fergal Daly <fergal@esatclear.ie>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.82, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.120630",
    "license" : [
-      "unknown"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -54,5 +54,5 @@
       },
       "x_MailingList" : "http://lists.perl.org/list/perl-qa.html"
    },
-   "version" : "0.112"
+   "version" : "0.113"
 }
