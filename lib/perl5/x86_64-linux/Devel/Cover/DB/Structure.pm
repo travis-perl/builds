@@ -20,7 +20,7 @@ use Devel::Cover::Dumper;
 # For comprehensive debug logging.
 use constant DEBUG => 0;
 
-our $VERSION = '1.15'; # VERSION
+our $VERSION = '1.17'; # VERSION
 our $AUTOLOAD;
 
 sub new {
@@ -349,7 +349,7 @@ Devel::Cover::DB::Structure - Internal: abstract structure of a source file
 
 =head1 VERSION
 
-version 1.15
+version 1.17
 
 =head1 SYNOPSIS
 
