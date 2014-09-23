@@ -1,8 +1,5 @@
 package Moose::Exception::ReferencesAreNotAllowedAsDefault;
-BEGIN {
-  $Moose::Exception::ReferencesAreNotAllowedAsDefault::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::ReferencesAreNotAllowedAsDefault::VERSION = '2.1210';
+$Moose::Exception::ReferencesAreNotAllowedAsDefault::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::ParamsHash';
