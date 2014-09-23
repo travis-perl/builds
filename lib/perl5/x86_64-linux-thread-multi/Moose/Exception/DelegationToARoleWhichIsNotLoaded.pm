@@ -1,8 +1,5 @@
 package Moose::Exception::DelegationToARoleWhichIsNotLoaded;
-BEGIN {
-  $Moose::Exception::DelegationToARoleWhichIsNotLoaded::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::DelegationToARoleWhichIsNotLoaded::VERSION = '2.1210';
+$Moose::Exception::DelegationToARoleWhichIsNotLoaded::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Attribute';

@@ -23,7 +23,7 @@ use Params::Util  qw{_INSTANCE _CLASS _CODE _SCALAR0};
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 }
 
 
@@ -54,7 +54,7 @@ sub register_apply_handler {
 
 # Register the default handlers
 __PACKAGE__->register_apply_handler( 'SCALAR', \&_SCALAR_get, \&_SCALAR_set );
-__PACKAGE__->register_apply_handler( 'PPI::Document', sub { $_[0] }, sub { 1 } );
+__PACKAGE__->register_apply_handler( 'PPI::Document', sub { $_[0] }, sub() { 1 } );
 
 
 
