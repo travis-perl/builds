@@ -1,8 +1,5 @@
 package Moose::Deprecated;
-BEGIN {
-  $Moose::Deprecated::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Deprecated::VERSION = '2.1210';
+$Moose::Deprecated::VERSION = '2.1212';
 use strict;
 use warnings;
 
@@ -29,7 +26,7 @@ Moose::Deprecated - Manages deprecation warnings for Moose
 
 =head1 VERSION
 
-version 2.1210
+version 2.1212
 
 =head1 DESCRIPTION
 

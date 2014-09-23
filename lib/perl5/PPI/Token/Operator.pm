@@ -20,9 +20,11 @@ PPI::Token::Operator - Token class for operators
   <<   >>   lt   gt   le   ge   cmp  ~~
   ==   !=   <=>  .    ..   ...  ,
   &    |    ^    &&   ||   //
-  ?    :    =    +=   -=   *=   .=   //=
-  <    >    <=   >=   <>   =>   ->
-  and  or   dor  not  eq   ne
+  ?    :    **=  +=   -=   .=   *=   /=
+  %=   x=   &=   |=   ^=   <<=  >>=  &&=
+  ||=  //=  <    >    <=   >=   <>   =>   ->
+  and  or   xor  not  eq   ne
+
 
 =head1 DESCRIPTION
 
@@ -35,8 +37,6 @@ object.
 There are no additional methods beyond those provided by the parent
 L<PPI::Token> and L<PPI::Element> classes.
 
-Got any ideas for methods? Submit a report to rt.cpan.org!
-
 =cut
 
 use strict;
@@ -44,7 +44,7 @@ use PPI::Token ();
 
 use vars qw{$VERSION @ISA %OPERATOR};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token';
 
 	# Build the operator index
@@ -58,7 +58,8 @@ BEGIN {
 		< > <= >= lt gt le ge
 		== != <=> eq ne cmp ~~
 		& | ^ && || // .. ...
-		? : = += -= *= .= /= //=
+		? :
+		= **= += -= .= *= /= %= x= &= |= ^= <<= >>= &&= ||= //=
 		=> <>
 		and or xor not
 		}, ',' 	# Avoids "comma in qw{}" warning
@@ -91,11 +92,11 @@ sub __TOKENIZER__on_char {
 
 	# Handle the special case if we might be a here-doc
 	if ( $content eq '<<' ) {
-		my $line = substr( $t->{line}, $t->{line_cursor} );
+		pos $t->{line} = $t->{line_cursor};
 		# Either <<FOO or << 'FOO' or <<\FOO
 		### Is the zero-width look-ahead assertion really
 		### supposed to be there?
-		if ( $line =~ /^(?: (?!\d)\w | \s*['"`] | \\\w ) /x ) {
+		if ( $t->{line} =~ m/\G(?: (?!\d)\w | \s*['"`] | \\\w ) /gcx ) {
 			# This is a here-doc.
 			# Change the class and move to the HereDoc's own __TOKENIZER__on_char method.
 			$t->{class} = $t->{token}->set_class('HereDoc');
