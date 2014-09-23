@@ -2,14 +2,13 @@
 
 =encoding utf-8
 
+=for stopwords versioning
+
 =head1 NAME
 
 Type::Tiny::Manual::Policies - Type::Tiny policies
 
 =head1 STABILITY
-
-B<< The following stability policy is planned for Type::Tiny 1.000000
-and above. This milestone has not yet been reached. >>
 
 =head2 Type::Tiny Stability Policy
 
@@ -68,7 +67,9 @@ The L<parameterizable coercion API|Type::Coercion> is subject to change.
 
 =item *
 
-L<Type::Registry> has L<changes under consideration|Type::Registry/"STATUS">.
+The interaction of deep coercions and mutable coercions currently results
+in ill-defined behaviour. This could change at any time.
+(See L<Type::Tiny::Manual::Coercions/"Deep Caveat">.)
 
 =item *
 
@@ -100,6 +101,19 @@ L<Types::Standard::Tuple>.
 L<Reply::Plugin::TypeTiny> is not covered by the stability policy.
 
 =back
+
+=head2 Type::Tiny Versioning Policy
+
+As of 1.000000, this distribution follows a versioning scheme similar
+to L<Moo>, which is based on a L<semver|http://semver.org/>-like three
+component version number, but with the last two components each
+represented by three decimal digits in the fractional part of the
+version number. That is, version 1.003002 of the software represents
+"1.3.2".
+
+Additionally, releases where the second component is an odd number will
+be considered unstable/trial releases. (These will also include an
+underscore in the version number as per the usual CPAN convention.)
 
 =head1 BUGS
 

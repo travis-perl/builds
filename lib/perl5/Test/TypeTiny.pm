@@ -15,7 +15,7 @@ BEGIN {
 };
 
 our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.046';
+our $VERSION   = '1.000004';
 our @EXPORT    = qw( should_pass should_fail ok_subtype );
 our @EXPORT_OK = qw( EXTENDED_TESTING matchfor );
 
@@ -143,12 +143,15 @@ Test::TypeTiny - useful functions for testing the efficacy of type constraints
 
 =head1 SYNOPSIS
 
+=for test_synopsis
+BEGIN { die "SKIP: uses a module that doesn't exist as an example" };
+
    use strict;
    use warnings;
    use Test::More;
    use Test::TypeTiny;
    
-   use Types::Mine qw(Integer);
+   use Types::Mine qw(Integer Number);
    
    should_pass(1, Integer);
    should_pass(-1, Integer);
