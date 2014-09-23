@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Local::Unix;
-$DateTime::TimeZone::Local::Unix::VERSION = '1.73';
+$DateTime::TimeZone::Local::Unix::VERSION = '1.74';
 use strict;
 use warnings;
 
@@ -180,7 +180,7 @@ sub FromEtcSysconfigClock {
     my $clock_file = $class->_EtcFile('sysconfig/clock');
     return unless -r $clock_file && -f _;
 
-    my $name = $class->_ReadEtcSysconfigClock();
+    my $name = $class->_ReadEtcSysconfigClock($clock_file);
 
     return unless $class->_IsValidName($name);
 
@@ -249,7 +249,7 @@ DateTime::TimeZone::Local::Unix - Determine the local system's time zone on Unix
 
 =head1 VERSION
 
-version 1.73
+version 1.74
 
 =head1 SYNOPSIS
 

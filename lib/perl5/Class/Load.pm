@@ -1,11 +1,11 @@
-package Class::Load;
-BEGIN {
-  $Class::Load::AUTHORITY = 'cpan:SARTAK';
-}
-# git description: v0.20-8-gc4c6e08
-$Class::Load::VERSION = '0.21';
 use strict;
 use warnings;
+package Class::Load;
+# git description: v0.21-14-g8465ff7
+$Class::Load::VERSION = '0.22';
+# ABSTRACT: A working (require "Class::Name") and more
+# KEYWORDS: class module load require use runtime
+
 use base 'Exporter';
 use Data::OptList 'mkopt';
 use Module::Implementation 0.04;
@@ -16,6 +16,7 @@ use Module::Runtime 0.012 qw(
     use_module
 );
 use Try::Tiny;
+use namespace::clean;
 
 {
     my $loader = Module::Implementation::build_loader_sub(
@@ -204,8 +205,6 @@ sub _croak {
 
 1;
 
-# ABSTRACT: a working (require "Class::Name") and more
-
 __END__
 
 =pod
@@ -214,11 +213,11 @@ __END__
 
 =head1 NAME
 
-Class::Load - a working (require "Class::Name") and more
+Class::Load - A working (require "Class::Name") and more
 
 =head1 VERSION
 
-version 0.21
+version 0.22
 
 =head1 SYNOPSIS
 
@@ -322,6 +321,17 @@ This is useful for using if you want a fallback module system, i.e.:
 That way, if $foo does exist, but can't be loaded due to error, you won't
 get the behaviour of it simply not existing.
 
+=head1 CAVEATS
+
+Because of some of the heuristics that this module uses to infer whether a
+module has been loaded, some false positives may occur in C<is_class_loaded>
+checks (which are also performed internally in other interfaces) -- if a class
+has started to be loaded but then dies, it may appear that it has already been
+loaded, which can cause other things to make the wrong decision.
+L<Module::Runtime> doesn't have this issue, but it also doesn't do some things
+that this module does -- for example gracefully handle packages that have been
+defined inline in the same file as another package.
+
 =head1 SEE ALSO
 
 =over 4
@@ -345,6 +355,10 @@ over its competitors.
 This module was designed to be used anywhere you have
 C<if (eval "require $module"; 1)>, which occurs in many large projects.
 
+=item L<Module::Runtime>
+
+A leaner approach to loading modules
+
 =back
 
 =head1 AUTHOR
@@ -357,5 +371,41 @@ This software is copyright (c) 2008 by Shawn M Moore.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+=head1 CONTRIBUTORS
+
+=for stopwords Dave Rolsky Shawn Moore Karen Etheridge M Jesse Luehrs Kent Fredric Caleb Cushing
+
+=over 4
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Shawn Moore <sartak@bestpractical.com>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Shawn M Moore <sartak@bestpractical.com>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Caleb Cushing <xenoterracide@gmail.com>
+
+=back
 
 =cut
