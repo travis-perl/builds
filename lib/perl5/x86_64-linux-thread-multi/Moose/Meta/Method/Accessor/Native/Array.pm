@@ -1,8 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array;
-BEGIN {
-  $Moose::Meta::Method::Accessor::Native::Array::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Method::Accessor::Native::Array::VERSION = '2.1210';
+$Moose::Meta::Method::Accessor::Native::Array::VERSION = '2.1212';
 use strict;
 use warnings;
 

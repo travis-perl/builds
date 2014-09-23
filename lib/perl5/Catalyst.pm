@@ -47,13 +47,14 @@ use Plack::Middleware::HTTPExceptions;
 use Plack::Middleware::FixMissingBodyInRedirect;
 use Plack::Middleware::MethodOverride;
 use Plack::Middleware::RemoveRedundantBody;
+use Catalyst::Middleware::Stash;
 use Plack::Util;
 use Class::Load 'load_class';
+use Encode 2.21 ();
 
 BEGIN { require 5.008003; }
 
 has stack => (is => 'ro', default => sub { [] });
-has stash => (is => 'rw', default => sub { {} });
 has state => (is => 'rw', default => 0);
 has stats => (is => 'rw');
 has action => (is => 'rw');
@@ -117,16 +118,16 @@ __PACKAGE__->mk_classdata($_)
   for qw/components arguments dispatcher engine log dispatcher_class
   engine_loader context_class request_class response_class stats_class
   setup_finished _psgi_app loading_psgi_file run_options _psgi_middleware
-  _data_handlers/;
+  _data_handlers _encoding _encode_check/;
 
 __PACKAGE__->dispatcher_class('Catalyst::Dispatcher');
 __PACKAGE__->request_class('Catalyst::Request');
 __PACKAGE__->response_class('Catalyst::Response');
 __PACKAGE__->stats_class('Catalyst::Stats');
+__PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-
-our $VERSION = '5.90065';
+our $VERSION = '5.90072';
 
 sub import {
     my ( $class, @arguments ) = @_;
@@ -496,21 +497,10 @@ Catalyst).
 
 =cut
 
-around stash => sub {
-    my $orig = shift;
-    my $c = shift;
-    my $stash = $orig->($c);
-    if (@_) {
-        my $new_stash = @_ > 1 ? {@_} : $_[0];
-        croak('stash takes a hash or hashref') unless ref $new_stash;
-        foreach my $key ( keys %$new_stash ) {
-          $stash->{$key} = $new_stash->{$key};
-        }
-    }
-
-    return $stash;
-};
-
+sub stash {
+  my $c = shift;
+  return Catalyst::Middleware::Stash::get_stash($c->req->env)->(@_);
+}
 
 =head2 $c->error
 
@@ -563,6 +553,14 @@ sub clear_errors {
     my $c = shift;
     $c->error(0);
 }
+
+=head2 $c->has_errors
+
+Returns true if you have errors
+
+=cut
+
+sub has_errors { scalar(@{shift->error}) ? 1:0 }
 
 sub _comp_search_prefixes {
     my $c = shift;
@@ -1000,6 +998,38 @@ And later:
 Your log class should implement the methods described in
 L<Catalyst::Log>.
 
+=head2 encoding
+
+Sets or gets the application encoding.
+
+=cut
+
+sub encoding {
+    my $c = shift;
+    my $encoding;
+
+    if ( scalar @_ ) {
+        # Let it be set to undef
+        if (my $wanted = shift)  {
+            $encoding = Encode::find_encoding($wanted)
+              or Carp::croak( qq/Unknown encoding '$wanted'/ );
+            binmode(STDERR, ':encoding(' . $encoding->name . ')');
+        }
+        else {
+            binmode(STDERR);
+        }
+
+        $encoding = ref $c
+                  ? $c->{encoding} = $encoding
+                  : $c->_encoding($encoding);
+    } else {
+      $encoding = ref $c && exists $c->{encoding}
+                ? $c->{encoding}
+                : $c->_encoding;
+    }
+
+    return $encoding;
+}
 
 =head2 $c->debug
 
@@ -1173,6 +1203,11 @@ EOF
         $class->setup unless $Catalyst::__AM_RESTARTING;
     }
 
+    # If you are expecting configuration info as part of your setup, it needs
+    # to get called here and below, since we need the above line to support
+    # ConfigLoader based configs.
+
+    $class->setup_encoding();
     $class->setup_middleware();
 
     # Initialize our data structure
@@ -1741,6 +1776,12 @@ sub execute {
     if ( my $error = $@ ) {
         #rethow if this can be handled by middleware
         if(blessed $error && ($error->can('as_psgi') || $error->can('code'))) {
+            foreach my $err (@{$c->error}) {
+                $c->log->error($err);
+            }
+            $c->clear_errors;
+            $c->log->_flush if $c->log->can('_flush');
+
             $error->can('rethrow') ? $error->rethrow : croak $error;
         }
         if ( blessed($error) and $error->isa('Catalyst::Exception::Detach') ) {
@@ -1867,8 +1908,8 @@ sub finalize {
             $c->finalize_error;
         }
 
+        $c->finalize_encoding;
         $c->finalize_headers unless $c->response->finalized_headers;
-
         $c->finalize_body;
     }
 
@@ -1922,7 +1963,6 @@ sub finalize_error {
             # In the case where the error 'knows what it wants', becauses its PSGI
             # aware, just rethow and let middleware catch it
             $error->can('rethrow') ? $error->rethrow : croak $error;
-            croak $error;
         } else {
             $c->engine->finalize_error( $c, @_ )
         }
@@ -1958,6 +1998,46 @@ sub finalize_headers {
 
     # Done
     $response->finalized_headers(1);
+}
+
+=head2 $c->finalize_encoding
+
+Make sure your headers and body are encoded properly IF you set an encoding.
+See L</ENCODING>.
+
+=cut
+
+sub finalize_encoding {
+    my $c = shift;
+
+    my $body = $c->response->body;
+
+    return unless defined($body);
+
+    my $enc = $c->encoding;
+
+    return unless $enc;
+
+    my ($ct, $ct_enc) = $c->response->content_type;
+
+    # Only touch 'text-like' contents
+    return unless $c->response->content_type =~ /^text|xml$|javascript$/;
+
+    if ($ct_enc && $ct_enc =~ /charset=([^;]*)/) {
+        if (uc($1) ne uc($enc->mime_name)) {
+            $c->log->debug("Unicode::Encoding is set to encode in '" .
+                           $enc->mime_name .
+                           "', content type is '$1', not encoding ");
+            return;
+        }
+    } else {
+        $c->res->content_type($c->res->content_type . "; charset=" . $enc->mime_name);
+    }
+
+    # Oh my, I wonder what filehandle responses and streams do... - jnap.
+    # Encode expects plain scalars (IV, NV or PV) and segfaults on ref's
+    $c->response->body( $c->encoding->encode( $body, $c->_encode_check ) )
+        if ref(\$body) eq 'SCALAR';
 }
 
 =head2 $c->finalize_output
@@ -2119,7 +2199,19 @@ Prepares action. See L<Catalyst::Dispatcher>.
 
 =cut
 
-sub prepare_action { my $c = shift; $c->dispatcher->prepare_action( $c, @_ ) }
+sub prepare_action {
+    my $c = shift;
+    my $ret = $c->dispatcher->prepare_action( $c, @_);
+
+    if($c->encoding) {
+        foreach (@{$c->req->arguments}, @{$c->req->captures}) {
+          $_ = $c->_handle_param_unicode_decoding($_);
+        }
+    }
+
+    return $ret;
+}
+
 
 =head2 $c->prepare_body
 
@@ -2170,9 +2262,7 @@ Prepares connection.
 
 sub prepare_connection {
     my $c = shift;
-    # XXX - This is called on the engine (not the request) to maintain
-    #       Engine::PSGI back compat.
-    $c->engine->prepare_connection($c);
+    $c->request->prepare_connection($c);
 }
 
 =head2 $c->prepare_cookies
@@ -2439,8 +2529,38 @@ Prepares uploads.
 
 sub prepare_uploads {
     my $c = shift;
-
     $c->engine->prepare_uploads( $c, @_ );
+
+    my $enc = $c->encoding;
+    return unless $enc;
+
+    # Uggg we hook prepare uploads to do the encoding crap on post and query
+    # parameters!  Sorry -jnap
+    for my $key (qw/ parameters query_parameters body_parameters /) {
+        for my $value ( values %{ $c->request->{$key} } ) {
+            # N.B. Check if already a character string and if so do not try to double decode.
+            #      http://www.mail-archive.com/catalyst@lists.scsys.co.uk/msg02350.html
+            #      this avoids exception if we have already decoded content, and is _not_ the
+            #      same as not encoding on output which is bad news (as it does the wrong thing
+            #      for latin1 chars for example)..
+            $value = $c->_handle_unicode_decoding($value);
+        }
+    }
+    for my $value ( values %{ $c->request->uploads } ) {
+        # skip if it fails for uploads, as we don't usually want uploads touched
+        # in any way
+        for my $inner_value ( ref($value) eq 'ARRAY' ? @{$value} : $value ) {
+            $inner_value->{filename} = try {
+                $enc->decode( $inner_value->{filename}, $c->_encode_check )
+            } catch {
+                $c->handle_unicode_encoding_exception({
+                    param_value => $inner_value->{filename},
+                    error_msg => $_,
+                    encoding_step => 'uploads',
+                });
+            };
+        }
+    }
 }
 
 =head2 $c->prepare_write
@@ -2594,18 +2714,15 @@ sub locate_components {
     my $class  = shift;
     my $config = shift;
 
-    my @paths   = qw( ::Controller ::C ::Model ::M ::View ::V );
+    my @paths   = qw( ::M ::Model ::V ::View ::C ::Controller );
     my $extra   = delete $config->{ search_extra } || [];
 
-    push @paths, @$extra;
+    unshift @paths, @$extra;
 
-    my $locator = Module::Pluggable::Object->new(
-        search_path => [ map { s/^(?=::)/$class/; $_; } @paths ],
-        %$config
-    );
-
-    # XXX think about ditching this sort entirely
-    my @comps = sort { length $a <=> length $b } $locator->plugins;
+    my @comps = map { sort { length($a) <=> length($b) } Module::Pluggable::Object->new(
+      search_path => [ map { s/^(?=::)/$class/; $_; } ($_) ],
+      %$config
+    )->plugins } @paths;
 
     return @comps;
 }
@@ -2915,6 +3032,79 @@ sub setup_home {
     }
 }
 
+=head2 $c->setup_encoding
+
+Sets up the input/output encoding.  See L<ENCODING>
+
+=cut
+
+sub setup_encoding {
+    my $c = shift;
+    my $enc = delete $c->config->{encoding};
+    $c->encoding( $enc ) if defined $enc;
+}
+
+=head2 handle_unicode_encoding_exception
+
+Hook to let you customize how encoding errors are handled.  By default
+we just throw an exception.  Receives a hashref of debug information.
+Example:
+
+    $c->handle_unicode_encoding_exception({
+        param_value => $value,
+        error_msg => $_,
+            encoding_step => 'params',
+        });
+
+=cut
+
+sub handle_unicode_encoding_exception {
+    my ( $self, $exception_ctx ) = @_;
+    die $exception_ctx->{error_msg};
+}
+
+# Some unicode helpers cargo culted from the old plugin.  These could likely
+# be neater.
+
+sub _handle_unicode_decoding {
+    my ( $self, $value ) = @_;
+
+    return unless defined $value;
+
+    if ( ref $value eq 'ARRAY' ) {
+        foreach ( @$value ) {
+            $_ = $self->_handle_unicode_decoding($_);
+        }
+        return $value;
+    }
+    elsif ( ref $value eq 'HASH' ) {
+        foreach ( values %$value ) {
+            $_ = $self->_handle_unicode_decoding($_);
+        }
+        return $value;
+    }
+    else {
+        return $self->_handle_param_unicode_decoding($value);
+    }
+}
+
+sub _handle_param_unicode_decoding {
+    my ( $self, $value ) = @_;
+    my $enc = $self->encoding;
+    return try {
+        Encode::is_utf8( $value ) ?
+            $value
+        : $enc->decode( $value, $self->_encode_check );
+    }
+    catch {
+        $self->handle_unicode_encoding_exception({
+            param_value => $value,
+            error_msg => $_,
+            encoding_step => 'params',
+        });
+    };
+}
+
 =head2 $c->setup_log
 
 Sets up log by instantiating a L<Catalyst::Log|Catalyst::Log> object and
@@ -3025,7 +3215,7 @@ the plugin name does not begin with C<Catalyst::Plugin::>.
         return $class;
     }
 
-    sub _default_plugins { return qw(Unicode::Encoding) }
+    sub _default_plugins { return qw() }
 
     sub setup_plugins {
         my ( $class, $plugins ) = @_;
@@ -3118,6 +3308,7 @@ sub registered_middlewares {
     my $class = shift;
     if(my $middleware = $class->_psgi_middleware) {
         return (
+          Catalyst::Middleware::Stash->new,
           Plack::Middleware::HTTPExceptions->new,
           Plack::Middleware::RemoveRedundantBody->new,
           Plack::Middleware::FixMissingBodyInRedirect->new,
@@ -3199,7 +3390,8 @@ sub registered_data_handlers {
     if(my $data_handlers = $class->_data_handlers) {
         return %$data_handlers;
     } else {
-        die "You cannot call ->registered_data_handlers until data_handers has been setup";
+        $class->setup_data_handlers;
+        return $class->registered_data_handlers;
     }
 }
 
