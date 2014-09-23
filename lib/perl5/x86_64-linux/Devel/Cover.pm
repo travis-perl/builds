@@ -10,8 +10,8 @@ package Devel::Cover;
 use strict;
 use warnings;
 
-our $VERSION = '1.15'; # VERSION
-our $LVERSION = do { eval '$VERSION' || "0.001" };  # for development purposes
+our $VERSION = '1.17'; # VERSION
+our $LVERSION = do { no warnings; eval '$VERSION' || "0.001" };  # for dev
 
 use DynaLoader ();
 our @ISA = "DynaLoader";
@@ -1218,7 +1218,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.15
+version 1.17
 
 =head1 SYNOPSIS
 
