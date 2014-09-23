@@ -1,8 +1,5 @@
 package Moose::Exception::UnableToCanonicalizeNonRolePackage;
-BEGIN {
-  $Moose::Exception::UnableToCanonicalizeNonRolePackage::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::UnableToCanonicalizeNonRolePackage::VERSION = '2.1210';
+$Moose::Exception::UnableToCanonicalizeNonRolePackage::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Attribute';

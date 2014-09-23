@@ -1,8 +1,5 @@
 package Moose::Exception::CannotCreateHigherOrderTypeWithoutATypeParameter;
-BEGIN {
-  $Moose::Exception::CannotCreateHigherOrderTypeWithoutATypeParameter::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::CannotCreateHigherOrderTypeWithoutATypeParameter::VERSION = '2.1210';
+$Moose::Exception::CannotCreateHigherOrderTypeWithoutATypeParameter::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::TypeConstraint';
