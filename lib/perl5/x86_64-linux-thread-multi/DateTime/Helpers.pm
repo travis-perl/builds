@@ -1,5 +1,5 @@
 package DateTime::Helpers;
-$DateTime::Helpers::VERSION = '1.10';
+$DateTime::Helpers::VERSION = '1.12';
 use strict;
 use warnings;
 

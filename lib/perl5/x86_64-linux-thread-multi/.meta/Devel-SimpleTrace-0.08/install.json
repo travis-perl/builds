@@ -1,1 +1,1 @@
-{"target":"Devel::SimpleTrace","version":"0.08","dist":"Devel-SimpleTrace-0.08","name":"Devel::SimpleTrace","pathname":"S/SA/SAPER/Devel-SimpleTrace-0.08.tar.gz","provides":{"Devel::SimpleTrace":{"file":"lib/Devel/SimpleTrace.pm","version":"0.08"}}}
+{"name":"Devel::SimpleTrace","pathname":"S/SA/SAPER/Devel-SimpleTrace-0.08.tar.gz","dist":"Devel-SimpleTrace-0.08","provides":{"Devel::SimpleTrace":{"file":"lib/Devel/SimpleTrace.pm","version":"0.08"}},"target":"Devel::SimpleTrace","version":"0.08"}

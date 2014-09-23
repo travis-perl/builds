@@ -33,7 +33,7 @@ use PPI::Token::Number ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token::Number';
 }
 
@@ -45,7 +45,7 @@ Returns the base for the number: 10.
 
 =cut
 
-sub base () { 10 }
+sub base() { 10 }
 
 =pod
 
