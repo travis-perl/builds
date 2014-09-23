@@ -1,18 +1,24 @@
 {
-   "abstract" : "Test exception based code",
+   "abstract" : "unknown",
    "author" : [
-      "Adrian Howard <adrianh@quietstars.com>"
+      "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4206",
+   "generated_by" : "Module::Build version 0.4205",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
    "name" : "Test-Exception",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
    "prereqs" : {
       "runtime" : {
          "requires" : {
@@ -25,17 +31,6 @@
          }
       }
    },
-   "provides" : {
-      "Test::Exception" : {
-         "file" : "lib/Test/Exception.pm",
-         "version" : "0.32"
-      }
-   },
    "release_status" : "stable",
-   "resources" : {
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ]
-   },
-   "version" : "0.32"
+   "version" : "0.35"
 }

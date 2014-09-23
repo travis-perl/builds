@@ -1,1 +1,1 @@
-{"pathname":"D/DC/DCANTRELL/Test-Differences-0.62.tar.gz","name":"Test::Differences","target":"Test::Differences","version":"0.62","dist":"Test-Differences-0.62","provides":{"Test::Differences":{"version":"0.62","file":"lib/Test/Differences.pm"}}}
+{"pathname":"D/DC/DCANTRELL/Test-Differences-0.62.tar.gz","name":"Test::Differences","provides":{"Test::Differences":{"file":"lib/Test/Differences.pm","version":"0.62"}},"target":"Test::Differences","version":"0.62","dist":"Test-Differences-0.62"}
