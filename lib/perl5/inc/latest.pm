@@ -2,9 +2,10 @@ package inc::latest;
 
 use if $] >= 5.019, 'deprecate';
 
+use 5.006;
 use strict;
-use vars qw($VERSION);
-$VERSION = '0.4206';
+use warnings;
+our $VERSION = '0.4210';
 $VERSION = eval $VERSION;
 
 use Carp;
@@ -50,9 +51,8 @@ sub write {
   print {$fh} <<'HERE';
 package inc::latest;
 use strict;
-use vars '@ISA';
 require inc::latest::private;
-@ISA = qw/inc::latest::private/;
+our @ISA = qw/inc::latest::private/;
 HERE
   if (@preload) {
     print {$fh} "\npackage inc::latest::preload;\n";
