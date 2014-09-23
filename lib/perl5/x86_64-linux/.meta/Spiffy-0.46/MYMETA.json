@@ -1,0 +1,50 @@
+{
+   "abstract" : "Spiffy Perl Interface Framework For You",
+   "author" : [
+      "Ingy döt Net <ingy@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Spiffy",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "t",
+         "xt",
+         "example"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {}
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ingydotnet/spiffy-pm/issues"
+      },
+      "homepage" : "https://github.com/ingydotnet/spiffy-pm",
+      "repository" : {
+         "url" : "https://github.com/ingydotnet/spiffy-pm.git"
+      }
+   },
+   "version" : "0.46"
+}

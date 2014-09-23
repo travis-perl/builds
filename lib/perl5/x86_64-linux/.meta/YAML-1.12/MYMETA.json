@@ -33,7 +33,9 @@
          }
       },
       "runtime" : {
-         "requires" : {}
+         "requires" : {
+            "Test::YAML" : "1.05"
+         }
       }
    },
    "release_status" : "stable",
@@ -46,5 +48,5 @@
          "url" : "https://github.com/ingydotnet/yaml-pm.git"
       }
    },
-   "version" : "0.98"
+   "version" : "1.12"
 }

@@ -1,4 +1,4 @@
-=head2 Wed Aug  6 23:34:53 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Tue Sep 23 13:39:33 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:34:53 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Tue Sep 23 13:39:33 2014: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:34:55 2014: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Tue Sep 23 13:39:35 2014: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -56,7 +56,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.15>
+C<VERSION: 1.17>
 
 =item *
 
@@ -64,7 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Wed Aug  6 23:35:08 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Tue Sep 23 13:39:48 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -78,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.65>
+C<VERSION: 1.66>
 
 =item *
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:35:10 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Tue Sep 23 13:39:49 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:35:10 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Tue Sep 23 13:39:50 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -122,7 +122,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.997>
+C<VERSION: 1.998>
 
 =item *
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:35:12 2014: C<Module> L<YAML|YAML>
+=head2 Tue Sep 23 13:39:53 2014: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -144,7 +144,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.98>
+C<VERSION: 1.1902>
 
 =item *
 
@@ -152,7 +152,117 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:35:14 2014: C<Module> L<Class::Accessor::Lite|Class::Accessor::Lite>
+=head2 Tue Sep 23 13:39:53 2014: C<Module> L<Text::Diff|Text::Diff>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.41>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 23 13:39:54 2014: C<Module> L<Spiffy|Spiffy>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.46>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 23 13:39:55 2014: C<Module> L<Test::Base|Test::Base>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.88>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 23 13:39:55 2014: C<Module> L<Test::YAML|Test::YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.05>
+
+=item *
+
+C<EXE_FILES: bin/test-yaml>
+
+=back
+
+=head2 Tue Sep 23 13:39:56 2014: C<Module> L<YAML|YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.12>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Sep 23 13:39:58 2014: C<Module> L<Class::Accessor::Lite|Class::Accessor::Lite>
 
 =over 4
 
@@ -174,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Aug  6 23:35:16 2014: C<Module> L<HTTP::Parser::XS|HTTP::Parser::XS>
+=head2 Tue Sep 23 13:40:00 2014: C<Module> L<HTTP::Parser::XS|HTTP::Parser::XS>
 
 =over 4
 

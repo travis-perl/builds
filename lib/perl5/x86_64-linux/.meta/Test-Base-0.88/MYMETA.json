@@ -1,0 +1,59 @@
+{
+   "abstract" : "A Data Driven Testing Framework",
+   "author" : [
+      "Ingy döt Net <ingy@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Test-Base",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "t",
+         "xt",
+         "example"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "Test::Deep" : "0"
+         },
+         "requires" : {
+            "Algorithm::Diff" : "1.15",
+            "ExtUtils::MakeMaker" : "6.52",
+            "Filter::Util::Call" : "0",
+            "Spiffy" : "0.40",
+            "Text::Diff" : "0.35"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ingydotnet/test-base-pm/issues"
+      },
+      "homepage" : "https://github.com/ingydotnet/test-base-pm",
+      "repository" : {
+         "url" : "https://github.com/ingydotnet/test-base-pm.git"
+      }
+   },
+   "version" : "0.88"
+}
