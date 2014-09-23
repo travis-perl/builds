@@ -1,16 +1,21 @@
 package Module::Implementation;
-{
-  $Module::Implementation::VERSION = '0.07';
-}
-BEGIN {
-  $Module::Implementation::AUTHORITY = 'cpan:DROLSKY';
-}
+# git description: v0.08-2-gd599347
+$Module::Implementation::VERSION = '0.09';
 
 use strict;
 use warnings;
 
 use Module::Runtime 0.012 qw( require_module );
 use Try::Tiny;
+
+# This is needed for the benefit of Test::CleanNamespaces, which in turn loads
+# Package::Stash, which in turn loads this module and expects a minimum
+# version.
+unless ( exists $Module::Implementation::{VERSION}
+    && ${ $Module::Implementation::{VERSION} } ) {
+
+    $Module::Implementation::{VERSION} = \42;
+}
 
 my %Implementation;
 
@@ -144,13 +149,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Module::Implementation - Loads one of several alternate underlying implementations for a module
 
 =head1 VERSION
 
-version 0.07
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -274,7 +281,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 

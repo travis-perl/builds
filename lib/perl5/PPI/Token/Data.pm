@@ -33,7 +33,7 @@ use PPI::Token ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token';
 }
 
@@ -65,7 +65,19 @@ sub handle {
 	IO::String->new( \$self->{content} );
 }
 
-sub __TOKENIZER__on_char { 1 }
+sub __TOKENIZER__on_line_start {
+	my ( $self, $t ) = @_;
+
+	# Add the line
+	if ( defined $t->{token} ) {
+		$t->{token}->{content} .= $t->{line};
+	}
+	else {
+		defined( $t->{token} = $t->{class}->new( $t->{line} ) ) or return undef;
+	}
+
+	return 0;
+}
 
 1;
 

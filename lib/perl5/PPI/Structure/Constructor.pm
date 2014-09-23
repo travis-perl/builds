@@ -28,8 +28,6 @@ reference of C<HASH> reference constructors.
 C<PPI::Structure::Constructor> has no methods beyond those provided by
 the standard L<PPI::Structure>, L<PPI::Node> and L<PPI::Element> methods.
 
-Got any ideas for methods? Submit a report to rt.cpan.org!
-
 =cut
 
 use strict;
@@ -37,7 +35,7 @@ use PPI::Structure ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Structure';
 }
 

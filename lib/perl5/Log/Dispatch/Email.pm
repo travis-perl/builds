@@ -1,8 +1,5 @@
 package Log::Dispatch::Email;
-{
-  $Log::Dispatch::Email::VERSION = '2.41';
-}
-
+$Log::Dispatch::Email::VERSION = '2.42';
 use strict;
 use warnings;
 
@@ -98,13 +95,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Email - Base class for objects that send log messages via email
 
 =head1 VERSION
 
-version 2.41
+version 2.42
 
 =head1 SYNOPSIS
 
@@ -117,7 +116,7 @@ version 2.41
       my $self = shift;
       my %p    = @_;
 
-      # Send email somehow.  Message is in $p{message}
+      # Send email somehow. Message is in $p{message}
   }
 
 =head1 DESCRIPTION
@@ -126,6 +125,8 @@ This module should be used as a base class to implement
 Log::Dispatch::* objects that send their log messages via email.
 Implementing a subclass simply requires the code shown in the
 L<SYNOPSIS> with a real implementation of the C<send_email()> method.
+
+=for Pod::Coverage new log_message
 
 =head1 CONSTRUCTOR
 
@@ -136,48 +137,46 @@ parameters documented in L<Log::Dispatch::Output>:
 
 =item * subject ($)
 
-The subject of the email messages which are sent.  Defaults to "$0:
+The subject of the email messages which are sent. Defaults to "$0:
 log email"
 
 =item * to ($ or \@)
 
 Either a string or a list reference of strings containing email
-addresses.  Required.
+addresses. Required.
 
 =item * from ($)
 
-A string containing an email address.  This is optional and may not
+A string containing an email address. This is optional and may not
 work with all mail sending methods.
 
 =item * buffered (0 or 1)
 
 This determines whether the object sends one email per message it is
-given or whether it stores them up and sends them all at once.  The
+given or whether it stores them up and sends them all at once. The
 default is to buffer messages.
 
 =back
 
 =head1 METHODS
 
-=over 4
+This class provides the following methods:
 
-=item * send_email(%p)
+=head2 $email->send_email(%p)
 
-This is the method that must be subclassed.  For now the only
+This is the method that must be subclassed. For now the only
 parameter in the hash is 'message'.
 
-=item * flush
+=head2 $email->flush
 
 If the object is buffered, then this method will call the
 C<send_email()> method to send the contents of the buffer and then
 clear the buffer.
 
-=item * DESTROY
+=head2 $email->DESTROY
 
 On destruction, the object will call C<flush()> to send any pending
 email.
-
-=back
 
 =head1 AUTHOR
 
@@ -185,7 +184,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2014 by Dave Rolsky.
 
 This is free software, licensed under:
 

@@ -1,8 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Bool::unset;
-BEGIN {
-  $Moose::Meta::Method::Accessor::Native::Bool::unset::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Meta::Method::Accessor::Native::Bool::unset::VERSION = '2.1210';
+$Moose::Meta::Method::Accessor::Native::Bool::unset::VERSION = '2.1212';
 use strict;
 use warnings;
 
