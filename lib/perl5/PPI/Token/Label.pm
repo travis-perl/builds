@@ -24,8 +24,6 @@ from multiple levels below to reference the loop directly.
 There are no additional methods beyond those provided by the parent
 L<PPI::Token> and L<PPI::Element> classes.
 
-Got any ideas for methods? Submit a report to rt.cpan.org!
-
 =cut
 
 use strict;
@@ -33,7 +31,7 @@ use PPI::Token ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token';
 }
 

@@ -11,13 +11,13 @@ Variable::Magic - Associate user-defined magic to variables from Perl.
 
 =head1 VERSION
 
-Version 0.53
+Version 0.54
 
 =cut
 
 our $VERSION;
 BEGIN {
- $VERSION = '0.53';
+ $VERSION = '0.54';
 }
 
 =head1 SYNOPSIS
@@ -152,7 +152,10 @@ It behaves roughly like Perl object destructors (i.e. C<DESTROY> methods), excep
 
 I<copy>
 
-This magic only applies to tied arrays and hashes, and fires when you try to access or change their elements.
+When applied to tied arrays and hashes, this magic fires when you try to access or change their elements.
+
+Starting from perl 5.17.0, it can also be applied to closure prototypes, in which case the magic will be called when the prototype is cloned.
+The L</VMG_COMPAT_CODE_COPY_CLONE> constant is true when your perl support this feature.
 
 =item *
 
@@ -269,8 +272,11 @@ The callback is expected to return the new scalar or array length to use, or C<u
 
 I<copy>
 
-C<$_[2]> is a either an alias or a copy of the current key, and C<$_[3]> is an alias to the current element (i.e. the value).
-Because C<$_[2]> might be a copy, it is useless to try to change it or cast magic on it.
+When the variable for which the magic is invoked is an array or an hash, C<$_[2]> is a either an alias or a copy of the current key, and C<$_[3]> is an alias to the current element (i.e. the value).
+Since C<$_[2]> might be a copy, it is useless to try to change it or cast magic on it.
+
+Starting from perl 5.17.0, this magic can also be called for code references.
+In this case, C<$_[2]> is always C<undef> and C<$_[3]> is a reference to the cloned anonymous subroutine.
 
 =item *
 
@@ -463,6 +469,10 @@ True for perls that call I<clear> magic when undefining magical arrays.
 
 True for perls that don't call I<delete> magic when you delete an element from a hash in void context.
 
+=head2 C<VMG_COMPAT_CODE_COPY_CLONE>
+
+True for perls that call I<copy> magic when a magical closure prototype is cloned.
+
 =head2 C<VMG_COMPAT_GLOB_GET>
 
 True for perls that call I<get> magic for operations on globs.
@@ -646,6 +656,7 @@ our %EXPORT_TAGS    = (
    VMG_COMPAT_ARRAY_UNSHIFT_NOLEN_VOID
    VMG_COMPAT_ARRAY_UNDEF_CLEAR
    VMG_COMPAT_HASH_DELETE_NOUVAR_VOID
+   VMG_COMPAT_CODE_COPY_CLONE
    VMG_COMPAT_GLOB_GET
    VMG_PERL_PATCHLEVEL
    VMG_THREADSAFE VMG_FORKSAFE
@@ -705,7 +716,7 @@ Tests code coverage report is available at L<http://www.profvince.com/perl/cover
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2007,2008,2009,2010,2011,2012,2013 Vincent Pit, all rights reserved.
+Copyright 2007,2008,2009,2010,2011,2012,2013,2014 Vincent Pit, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

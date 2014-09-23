@@ -1,5 +1,5 @@
 package DateTime::LeapSecond;
-$DateTime::LeapSecond::VERSION = '1.10';
+$DateTime::LeapSecond::VERSION = '1.12';
 use strict;
 use warnings;
 
@@ -122,13 +122,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.10
+version 1.12
 
 =head1 SYNOPSIS
 
