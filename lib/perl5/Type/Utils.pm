@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN {
 	$Type::Utils::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Utils::VERSION   = '0.046';
+	$Type::Utils::VERSION   = '1.000004';
 }
 
 sub _croak ($;@) { require Error::TypeTiny; goto \&Error::TypeTiny::croak }
@@ -348,19 +348,16 @@ sub match_on_type
 	
 	while (@_)
 	{
-		my ($type, $code);
+		my $code;
 		if (@_ == 1)
 		{
-			require Types::Standard;
-			($type, $code) = (Types::Standard::Any(), shift);
+			$code = shift;
 		}
 		else
 		{
-			($type, $code) = splice(@_, 0, 2);
-			TypeTiny->($type);
+			(my($type), $code) = splice(@_, 0, 2);
+			TypeTiny->($type)->check($value) or next;
 		}
-		
-		$type->check($value) or next;
 		
 		if (StringLike->check($code))
 		{
@@ -473,6 +470,22 @@ sub classifier
 	
 	our @ISA = qw(Type::Registry);
 	
+	sub foreign_lookup
+	{
+		my $self = shift;
+		my $r = $self->SUPER::foreign_lookup(@_);
+		return $r if $r;
+		
+		if (defined($self->{"~~assume"})
+		and $_[0] =~ /[A-Z_a-z][0-9A-Z_a-z]*(?:::[0-9A-Z_a-z]+)*/)
+		{
+			my $method = $self->{"~~assume"};
+			return $self->$method(@_);
+		}
+		
+		return;
+	}
+	
 	sub simple_lookup
 	{
 		my $self = shift;
@@ -495,44 +508,52 @@ sub classifier
 		# Only continue any further if we've been called from Type::Parser.
 		return unless $_[1];
 		
-		# If Moose is loaded...
-		if ($INC{'Moose.pm'})
+		my $moose_lookup = sub
 		{
-			require Moose::Util::TypeConstraints;
-			require Types::TypeTiny;
-			$r = Moose::Util::TypeConstraints::find_type_constraint($_[0]);
-			return Types::TypeTiny::to_TypeTiny($r) if defined $r;
+			if ($INC{'Moose.pm'})
+			{
+				require Moose::Util::TypeConstraints;
+				require Types::TypeTiny;
+				$r = Moose::Util::TypeConstraints::find_type_constraint($_[0]);
+				$r = Types::TypeTiny::to_TypeTiny($r) if defined $r;
+			}
+			defined $r;
+		};
+		
+		my $mouse_lookup = sub
+		{
+			if ($INC{'Mouse.pm'})
+			{
+				require Mouse::Util::TypeConstraints;
+				require Types::TypeTiny;
+				$r = Mouse::Util::TypeConstraints::find_type_constraint($_[0]);
+				$r = Types::TypeTiny::to_TypeTiny($r) if defined $r;
+			}
+			defined $r;
+		};
+		
+		my $meta;
+		if (defined $self->{"~~chained"})
+		{
+			$meta ||= Moose::Util::find_meta($self->{"~~chained"}) if $INC{'Moose.pm'};
+			$meta ||= Mouse::Util::find_meta($self->{"~~chained"}) if $INC{'Mouse.pm'};
 		}
 		
-		# If Mouse is loaded...
-		if ($INC{'Mouse.pm'})
+		if ($meta and $meta->isa('Class::MOP::Module'))
 		{
-			require Mouse::Util::TypeConstraints;
-			require Types::TypeTiny;
-			$r = Mouse::Util::TypeConstraints::find_type_constraint($_[0]);
-			return Types::TypeTiny::to_TypeTiny($r) if defined $r;
+			$moose_lookup->(@_) and return $r;
+		}
+		elsif ($meta and $meta->isa('Mouse::Meta::Module'))
+		{
+			$mouse_lookup->(@_) and return $r;
+		}
+		else
+		{
+			$moose_lookup->(@_) and return $r;
+			$mouse_lookup->(@_) and return $r;
 		}
 		
-		return unless $_[0] =~ /^\s*(\w+(::\w+)*)\s*$/sm;
-		return unless defined $self->{"~~assume"};
-		
-		# Lastly, if it looks like a class/role name, assume it's
-		# supposed to be a class/role type.
-		#
-		
-		if ($self->{"~~assume"} eq "Type::Tiny::Class")
-		{
-			require Type::Tiny::Class;
-			return "Type::Tiny::Class"->new(class => $_[0]);
-		}
-		
-		if ($self->{"~~assume"} eq "Type::Tiny::Role")
-		{
-			require Type::Tiny::Role;
-			return "Type::Tiny::Role"->new(role => $_[0]);
-		}
-		
-		die;
+		return $self->foreign_lookup(@_);
 	}
 }
 
@@ -548,7 +569,7 @@ sub dwim_type
 	};
 	
 	local $dwimmer->{'~~chained'} = $opts{for};
-	local $dwimmer->{'~~assume'}  = $opts{does} ? 'Type::Tiny::Role' : 'Type::Tiny::Class';
+	local $dwimmer->{'~~assume'}  = $opts{does} ? 'make_role_type' : 'make_class_type';
 	
 	$dwimmer->lookup($string);
 }
@@ -1003,7 +1024,8 @@ This function is not exported by default.
 
 By default, all of the functions documented above are exported, except
 C<subtype> and C<type> (prefer C<declare> instead), C<extends>, C<dwim_type>,
-and C<match_on_type>/C<compile_match_on_type>.
+C<match_on_type>/C<compile_match_on_type>, C<classifier>, and
+C<english_list>.
 
 This module uses L<Exporter::Tiny>; see the documentation of that module
 for tips and tricks importing from Type::Utils.
