@@ -10,7 +10,7 @@ BEGIN {
 
 BEGIN {
 	$Types::Common::Numeric::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Common::Numeric::VERSION   = '0.046';
+	$Types::Common::Numeric::VERSION   = '1.000004';
 }
 
 use Type::Library -base, -declare => qw(
@@ -21,6 +21,7 @@ use Type::Library -base, -declare => qw(
 	SingleDigit
 );
 
+use Type::Tiny ();
 use Types::Standard qw( Num Int );
 
 my $meta = __PACKAGE__->meta;
@@ -41,20 +42,40 @@ $meta->add_type(
 	message    => sub { "Must be a number greater than or equal to zero" },
 );
 
+my ($pos_int, $posz_int);
+if (Type::Tiny::_USE_XS) {
+	$pos_int  = Type::Tiny::XS::get_coderef_for('PositiveInt');
+	$posz_int = Type::Tiny::XS::get_coderef_for('PositiveOrZeroInt');
+}
+
 $meta->add_type(
 	name       => 'PositiveInt',
 	parent     => Int,
 	constraint => sub { $_ > 0 },
-	inlined    => sub { undef, qq($_ > 0) },
+	inlined    => sub {
+		if ($pos_int) {
+			my $xsub = Type::Tiny::XS::get_subname_for($_[0]->name);
+			return "$xsub($_[1])" if $xsub;
+		}
+		undef, qq($_ > 0);
+	},
 	message    => sub { "Must be a positive integer" },
+	$pos_int ? ( compiled_type_constraint => $pos_int ) : (),
 );
 
 $meta->add_type(
 	name       => 'PositiveOrZeroInt',
 	parent     => Int,
 	constraint => sub { $_ >= 0 },
-	inlined    => sub { undef, qq($_ >= 0) },
+	inlined    => sub {
+		if ($posz_int) {
+			my $xsub = Type::Tiny::XS::get_subname_for($_[0]->name);
+			return "$xsub($_[1])" if $xsub;
+		}
+		undef, qq($_ >= 0);
+	},
 	message    => sub { "Must be an integer greater than or equal to zero" },
+	$posz_int ? ( compiled_type_constraint => $posz_int ) : (),
 );
 
 $meta->add_type(
@@ -84,7 +105,7 @@ $meta->add_type(
 $meta->add_type(
 	name       => 'NegativeOrZeroInt',
 	parent     => Int,
-	constraint => sub { $_ >= 0 },
+	constraint => sub { $_ <= 0 },
 	inlined    => sub { undef, qq($_ <= 0) },
 	message    => sub { "Must be an integer less than or equal to zero" },
 );
@@ -96,7 +117,9 @@ $meta->add_type(
 	inlined    => sub { undef, qq($_ >= -9), qq($_ <= 9) },
 	message    => sub { "Must be a single digit" },
 );
- 
+
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
