@@ -243,12 +243,10 @@ sub as_perl {
     my ($class, $content) = @_;
     my ($block, $defblocks, $metadata) = @$content{ qw( BLOCK DEFBLOCKS METADATA ) };
 
-    $block =~ s/\n(?!#line)/\n    /g;
     $block =~ s/\s+$//;
 
     $defblocks = join('', map {
         my $code = $defblocks->{ $_ };
-        $code =~ s/\n(?!#line)/\n        /g;
         $code =~ s/\s*$//;
         "        '$_' => $code,\n";
     } keys %$defblocks);
@@ -519,7 +517,7 @@ Andy Wardley E<lt>abw@wardley.orgE<gt> L<http://wardley.org/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 1996-2012 Andy Wardley.  All Rights Reserved.
+Copyright (C) 1996-2013 Andy Wardley.  All Rights Reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
