@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN {
 	$Type::Registry::AUTHORITY = 'cpan:TOBYINK';
-	$Type::Registry::VERSION   = '0.046';
+	$Type::Registry::VERSION   = '1.000004';
 }
 
 use Exporter::Tiny qw( mkopt );
@@ -123,6 +123,7 @@ sub add_types
 		for my $key (sort keys %hash)
 		{
 			exists($self->{$key})
+				and $self->{$key}{uniq} != $hash{$key}{uniq}
 				and _croak("Duplicate type name: %s", $key);
 			$self->{$key} = $hash{$key};
 		}
@@ -142,6 +143,7 @@ sub add_type
 	};
 	
 	exists($self->{$name})
+		and $self->{$name}{uniq} != $type->{uniq}
 		and _croak("Duplicate type name: %s", $name);
 	
 	$self->{$name} = $type;
@@ -152,7 +154,9 @@ sub alias_type
 {
 	my $self = shift;
 	my ($old, @new) = @_;
-	$self->{$_} = $self->{$old} for @new;
+	my $lookup = eval { $self->lookup($old) }
+		or _croak("Expected existing type constraint name; got '$old'");
+	$self->{$_} = $lookup for @new;
 	$self;
 }
 
@@ -171,11 +175,85 @@ sub simple_lookup
 	return;
 }
 
+sub foreign_lookup
+{
+	my $self = shift;
+	
+	return $_[1] ? () : $self->simple_lookup($_[0], 1)
+		unless $_[0] =~ /^(.+)::(\w+)$/;
+	
+	my $library  = $1;
+	my $typename = $2;
+	
+	eval "require $library;";
+	
+	if ( $library->isa('MooseX::Types::Base') )
+	{
+		require Moose::Util::TypeConstraints;
+		my $type = Moose::Util::TypeConstraints::find_type_constraint(
+			$library->get_type($typename)
+		) or return;
+		return to_TypeTiny($type);
+	}
+	
+	if ( $library->isa('MouseX::Types::Base') )
+	{
+		require Mouse::Util::TypeConstraints;
+		my $sub  = $library->can($typename) or return;
+		my $type = Mouse::Util::TypeConstraints::find_type_constraint($sub->()) or return;
+		return to_TypeTiny($type);
+	}
+	
+	if ( $library->can("get_type") )
+	{
+		my $type = $library->get_type($typename);
+		return to_TypeTiny($type);
+	}
+	
+	return;
+}
+
 sub lookup
 {
 	my $self = shift;
 	
 	$self->simple_lookup(@_) or eval_type($_[0], $self);
+}
+
+sub make_union
+{
+	my $self = shift;
+	my (@types) = @_;
+	
+	require Type::Tiny::Union;
+	return "Type::Tiny::Union"->new(type_constraints => \@types);
+}
+
+sub make_intersection
+{
+	my $self = shift;
+	my (@types) = @_;
+	
+	require Type::Tiny::Intersection;
+	return "Type::Tiny::Intersection"->new(type_constraints => \@types);
+}
+
+sub make_class_type
+{
+	my $self = shift;
+	my ($class) = @_;
+	
+	require Type::Tiny::Class;
+	return "Type::Tiny::Class"->new(class => $class);
+}
+
+sub make_role_type
+{
+	my $self = shift;
+	my ($role) = @_;
+	
+	require Type::Tiny::Role;
+	return "Type::Tiny::Role"->new(role => $role);
 }
 
 sub AUTOLOAD
@@ -193,6 +271,20 @@ sub DESTROY
 	return;
 }
 
+DELAYED: {
+	our %DELAYED;
+	for my $package (sort keys %DELAYED)
+	{
+		my $reg   = __PACKAGE__->for_class($package);
+		my $types = $DELAYED{$package};
+		
+		for my $name (sort keys %$types)
+		{
+			$reg->add_type($types->{$name}, $name);
+		}
+	}
+}
+
 1;
 
 __END__
@@ -208,6 +300,8 @@ __END__
 Type::Registry - a glorified hashref for looking up type constraints
 
 =head1 SYNOPSIS
+
+=for test_synopsis no warnings qw(misc);
 
    package Foo::Bar;
    
@@ -260,24 +354,6 @@ Alternatively:
 This module is covered by the
 L<Type-Tiny stability policy|Type::Tiny::Manual::Policies/"STABILITY">.
 
-=head2 Changes under consideration
-
-An exception to this policy is that the following feature is being
-considered. When type constraint barewords are imported into a package
-that has a registry:
-
-   use Type::Registry qw(t);
-   use Types::Standard -types;
-
-Then the C<Str>, C<Num>, etc keywords imported from L<Types::Standard> will
-work fine, but C<< t->lookup("Str") >> and C<< t->lookup("Num") >> will fail,
-because importing types from a library does not automatically add them to
-your registry.
-
-Some kind of integration may be desirable between Type::Registry and
-L<Type::Library>, but exactly what form that will take is still to be
-decided.
-
 =head1 DESCRIPTION
 
 A type registry is basically just a hashref mapping type names to type
@@ -295,6 +371,9 @@ Create a new glorified hashref.
 
 Create or return the existing glorified hashref associated with the given
 class.
+
+Note that any type constraint you have imported from Type::Library-based
+type libraries will be automatically available in your class' registry.
 
 =item C<< for_me >>
 
@@ -352,6 +431,11 @@ Look up a type in the registry by name.
 
 Returns undef if not found.
 
+=item C<< foreign_lookup($name) >>
+
+Like C<simple_lookup>, but if the type name contains "::", will attempt
+to load it from a type library. (And will attempt to load that module.)
+
 =item C<< lookup($name) >>
 
 Look up by name, with a DSL.
@@ -370,6 +454,13 @@ The DSL can be summed up as:
    Foo::Bar::      class type
 
 Croaks if not found.
+
+=item C<< make_union(@constraints) >>,
+C<< make_intersection(@constraints) >>,
+C<< make_class_type($class) >>,
+C<< make_role_type($role) >>
+
+Convenience methods for creating certain common type constraints.
 
 =item C<< AUTOLOAD >>
 
