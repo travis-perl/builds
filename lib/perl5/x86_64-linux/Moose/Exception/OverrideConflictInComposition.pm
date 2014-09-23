@@ -1,8 +1,5 @@
 package Moose::Exception::OverrideConflictInComposition;
-BEGIN {
-  $Moose::Exception::OverrideConflictInComposition::AUTHORITY = 'cpan:STEVAN';
-}
-$Moose::Exception::OverrideConflictInComposition::VERSION = '2.1210';
+$Moose::Exception::OverrideConflictInComposition::VERSION = '2.1212';
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Role';

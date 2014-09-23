@@ -167,12 +167,12 @@ do{ my $x = [
        {},
        {},
        {
-         'manpage_support' => {
-                                'description' => 'Create Unix man pages',
-                                'requires' => {
-                                                'Pod::Man' => 0
-                                              }
-                              },
+         'HTML_support' => {
+                             'requires' => {
+                                             'Pod::Html' => 0
+                                           },
+                             'description' => 'Create HTML documentation'
+                           },
          'dist_authoring' => {
                                'recommends' => {
                                                  'Module::Signature' => '0.21',
@@ -189,22 +189,22 @@ do{ my $x = [
                                                },
                                  'description' => 'Create licenses automatically in distributions'
                                },
+         'inc_bundling_support' => {
+                                     'requires' => {
+                                                     'ExtUtils::Installed' => '1.999',
+                                                     'ExtUtils::Install' => '1.54'
+                                                   },
+                                     'description' => 'Bundle Module::Build in inc/'
+                                   },
          'PPM_support' => {
                             'description' => 'Generate PPM files for distributions'
                           },
-         'HTML_support' => {
-                             'description' => 'Create HTML documentation',
-                             'requires' => {
-                                             'Pod::Html' => 0
-                                           }
-                           },
-         'inc_bundling_support' => {
-                                     'description' => 'Bundle Module::Build in inc/',
-                                     'requires' => {
-                                                     'ExtUtils::Install' => '1.54',
-                                                     'ExtUtils::Installed' => '1.999'
-                                                   }
-                                   }
+         'manpage_support' => {
+                                'description' => 'Create Unix man pages',
+                                'requires' => {
+                                                'Pod::Man' => 0
+                                              }
+                              }
        }
      ];
 $x; }

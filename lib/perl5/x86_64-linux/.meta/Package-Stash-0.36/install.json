@@ -1,1 +1,0 @@
-{"dist":"Package-Stash-0.36","version":"0.36","target":"Package::Stash","pathname":"D/DO/DOY/Package-Stash-0.36.tar.gz","name":"Package::Stash","provides":{"Package::Stash":{"file":"lib/Package/Stash.pm","version":"0.36"},"Package::Stash::PP":{"version":"0.36","file":"lib/Package/Stash/PP.pm"}}}
