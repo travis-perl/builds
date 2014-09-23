@@ -12,9 +12,9 @@ package Devel::Cover::Inc;
 use strict;
 use warnings;
 
-our $VERSION      = "1.15";
+our $VERSION      = "1.17";
 our $Perl_version = '5.018001';
-our $Base         = '/home/travis/.cpanm/work/1407368842.3141/Devel-Cover-1.15';
+our $Base         = '/home/travis/.cpanm/work/1411480709.2329/Devel-Cover-1.17';
 our @Inc          = qw( . /home/travis/perl5/perlbrew/perls/5.18.1-thr/lib/5.18.1 /home/travis/perl5/perlbrew/perls/5.18.1-thr/lib/5.18.1/x86_64-linux-thread-multi /home/travis/perl5/perlbrew/perls/5.18.1-thr/lib/site_perl/5.18.1 /home/travis/perl5/perlbrew/perls/5.18.1-thr/lib/site_perl/5.18.1/x86_64-linux-thread-multi );
 chomp (our $Perl  = <<'EOV');  # Careful with \\ in the path
 /home/travis/perl5/perlbrew/perls/5.18.1-thr/bin/perl
