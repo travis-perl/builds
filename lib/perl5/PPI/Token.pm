@@ -27,7 +27,7 @@ use PPI::Exception ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Element';
 }
 
@@ -199,9 +199,9 @@ sub insert_after {
 #####################################################################
 # Tokenizer Methods
 
-sub __TOKENIZER__on_line_start { 1 }
-sub __TOKENIZER__on_line_end   { 1 }
-sub __TOKENIZER__on_char       { 'Unknown' }
+sub __TOKENIZER__on_line_start() { 1 }
+sub __TOKENIZER__on_line_end()   { 1 }
+sub __TOKENIZER__on_char()       { 'Unknown' }
 
 
 

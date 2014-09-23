@@ -47,7 +47,7 @@ use PPI::Token ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.215';
+	$VERSION = '1.218';
 	@ISA     = 'PPI::Token';
 }
 
@@ -81,7 +81,7 @@ sub null {
 }
 
 ### XS -> PPI/XS.xs:_PPI_Token_Whitespace__significant 0.900+
-sub significant { '' }
+sub significant() { '' }
 
 =pod
 
@@ -135,12 +135,14 @@ BEGIN {
 	$CLASSMAP[ord '_']  = 'Word';
 	$CLASSMAP[9]        = 'Whitespace'; # A horizontal tab
 	$CLASSMAP[10]       = 'Whitespace'; # A newline
+	$CLASSMAP[12]       = 'Whitespace'; # A form feed
 	$CLASSMAP[13]       = 'Whitespace'; # A carriage return
 	$CLASSMAP[32]       = 'Whitespace'; # A normal space
 
 	# Words (functions and keywords) after which a following / is
 	# almost certainly going to be a regex
 	%MATCHWORD = map { $_ => 1 } qw{
+		return
 		split
 		if
 		unless
@@ -148,6 +150,7 @@ BEGIN {
 		map
 	};
 }
+
 
 sub __TOKENIZER__on_line_start {
 	my $t    = $_[1];
@@ -189,7 +192,7 @@ sub __TOKENIZER__on_line_start {
 		}
 		push @{ $t->{perl6} }, join '', @perl6;
 
-		# We only sucked in the block, we don't actially do
+		# We only sucked in the block, we don't actually do
 		# anything to the "use v6..." line. So return as if
 		# we didn't find anything at all.
 		return 1;
@@ -202,7 +205,7 @@ sub __TOKENIZER__on_char {
 	my $t    = $_[1];
 	my $char = ord substr $t->{line}, $t->{line_cursor}, 1;
 
-	# Do we definately know what something is?
+	# Do we definitely know what something is?
 	return $COMMITMAP[$char]->__TOKENIZER__commit($t) if $COMMITMAP[$char];
 
 	# Handle the simple option first
@@ -300,8 +303,8 @@ sub __TOKENIZER__on_char {
 			# Could go either way... do a regex check
 			# $foo->{bar} < 2;
 			# grep { .. } <foo>;
-			my $line = substr( $t->{line}, $t->{line_cursor} );
-			if ( $line =~ /^<(?!\d)\w+>/ ) {
+			pos $t->{line} = $t->{line_cursor};
+			if ( $t->{line} =~ m/\G<(?!\d)\w+>/gc ) {
 				# Almost definitely readline
 				return 'QuoteLike::Readline';
 			}
@@ -378,16 +381,17 @@ sub __TOKENIZER__on_char {
 		return 'Operator';
 
 	} elsif ( $char == 120 ) { # $char eq 'x'
-		# Handle an arcane special case where "string"x10 means the x is an operator.
-		# String in this case means ::Single, ::Double or ::Execute, or the operator versions or same.
-		my $nextchar = substr $t->{line}, $t->{line_cursor} + 1, 1;
-		my $prev     = $t->_previous_significant_tokens(1);
-		$prev = ref $prev->[0];
-		if ( $nextchar =~ /\d/ and $prev ) {
-			if ( $prev =~ /::Quote::(?:Operator)?(?:Single|Double|Execute)$/ ) {
-				return 'Operator';
-			}
-		}
+		# x followed immediately by a digit can be the x
+		# operator or a word.  Disambiguate by checking
+		# whether the previous token is an operator that cannot be
+		# followed by the x operator, e.g.: +.
+		#
+		# x followed immediately by '=' is the 'x=' operator, not
+		# 'x ='. An important exception is x followed immediately by
+		# '=>', which makes the x into a bareword.
+		pos $t->{line} = $t->{line_cursor} + 1;
+		return 'Operator'
+			if $t->_current_x_is_operator and $t->{line} =~ m/\G(?:\d|(?!(=>|[\w\s])))/gc;
 
 		# Otherwise, commit like a normal bareword
 		return PPI::Token::Word->__TOKENIZER__commit($t);

@@ -1,0 +1,1 @@
+{"name":"Throwable","provides":{"Throwable::Error":{"file":"lib/Throwable/Error.pm","version":"0.200012"},"StackTrace::Auto":{"version":"0.200012","file":"lib/StackTrace/Auto.pm"},"Throwable":{"version":"0.200012","file":"lib/Throwable.pm"}},"version":"0.200012","target":"Throwable","dist":"Throwable-0.200012","pathname":"R/RJ/RJBS/Throwable-0.200012.tar.gz"}
