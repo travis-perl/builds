@@ -1,8 +1,5 @@
 package Class::MOP::Package;
-BEGIN {
-  $Class::MOP::Package::AUTHORITY = 'cpan:STEVAN';
-}
-$Class::MOP::Package::VERSION = '2.1210';
+$Class::MOP::Package::VERSION = '2.1212';
 use strict;
 use warnings;
 
@@ -286,7 +283,7 @@ Class::MOP::Package - Package Meta Object
 
 =head1 VERSION
 
-version 2.1210
+version 2.1212
 
 =head1 DESCRIPTION
 
