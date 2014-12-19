@@ -2,16 +2,16 @@ package Devel::Cover::Report::Coveralls;
 use strict;
 use warnings;
 use 5.008005;
-our $VERSION = "0.08";
+our $VERSION = "0.11";
 
 our $CONFIG_FILE = '.coveralls.yml';
 our $API_ENDPOINT = 'https://coveralls.io/api/v1/jobs';
 our $SERVICE_NAME = 'coveralls-perl';
 
 use Devel::Cover::DB;
+use HTTP::Tiny;
 use JSON::PP;
 use YAML;
-use Furl;
 
 sub get_source {
     my ($file, $callback) = @_;
@@ -30,6 +30,8 @@ sub get_source {
     }
 
     close(F);
+
+    $file =~ s!^blib/!!;
 
     return +{
         name => $file,
@@ -97,6 +99,22 @@ sub get_config {
     return $json;
 }
 
+sub _parse_line ($) {
+    my $c = shift;
+
+    return sub {
+        my $l = $c->location(shift);
+
+        return $l unless $l;
+
+        if ($l->[0]->uncoverable) {
+            return undef;
+        } else {
+            return $l->[0]->covered;
+        }
+    };
+}
+
 sub report {
     my ($pkg, $db, $options) = @_;
 
@@ -108,21 +126,21 @@ sub report {
         my $f = $cover->file($file);
         my $c = $f->statement();
 
-        push @sfs, get_source( $file,
-            sub { my $l = $c->location( $_[0] ); $l ? $l->[0]->covered : $l } );
+        push @sfs, get_source( $file, _parse_line $c );
     }
 
     my $json = get_config();
     $json->{git} = eval { get_git_info() } || {};
     $json->{source_files} = \@sfs;
 
-    my $furl = Furl->new;
-    my $response = $furl->post($API_ENDPOINT, [], [ json => encode_json $json ]);
+    my $response = HTTP::Tiny->new( verify_SSL => 1 )
+        ->post_form( $API_ENDPOINT, { json => encode_json $json } );
 
-    my $res = eval { decode_json($response->content); };
+    my $res = eval { decode_json $response->{content} };
+
     if ($@) {
-        print "error: " . $response->content;
-    } elsif ($response->is_success) {
+        print "error: " . $response->{content};
+    } elsif ($response->{success}) {
         print "register: " . $res->{url} . "\n";
     } else {
         print "error: " . $res->{message} . "\n";
@@ -186,6 +204,10 @@ L<https://coveralls.io/>
 L<https://coveralls.io/docs>
 L<https://github.com/coagulant/coveralls-python>
 L<Devel::Cover>
+
+=head2 EXAMPLE
+
+L<https://coveralls.io/r/kan/p5-smart-options>
 
 =head1 LICENSE
 
