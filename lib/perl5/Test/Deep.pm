@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '0.113';
+our $VERSION = '0.114';
 $VERSION = eval $VERSION;
 
 require Exporter;
@@ -91,6 +91,7 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
   our @EXPORT_OK = qw( descend render_stack class_base cmp_details deep_diag );
 
   our %EXPORT_TAGS;
+  $EXPORT_TAGS{preload} = [];
   $EXPORT_TAGS{v0} = [
     qw(
       Isa
@@ -100,9 +101,9 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       all any array array_each arrayelementsonly arraylength arraylengthonly
       bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore isa listmethods methods
-      noclass num re reftype regexpmatches regexponly regexpref regexprefonly
-      scalarrefonly scalref set shallow str subbagof subhashof subsetof
-      superbagof superhashof supersetof useclass
+      noclass noneof num re reftype regexpmatches regexponly regexpref
+      regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
+      subsetof superbagof superhashof supersetof useclass
     )
   ];
 
@@ -113,15 +114,62 @@ while (my ($pkg, $name) = splice @constructors, 0, 2)
       all any array array_each arrayelementsonly arraylength arraylengthonly
       bag bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply
       hash hash_each hashkeys hashkeysonly ignore listmethods methods
-      noclass num re reftype regexpmatches regexponly regexpref regexprefonly
-      scalarrefonly scalref set shallow str subbagof subhashof subsetof
-      superbagof superhashof supersetof useclass
+      noclass noneof num re reftype regexpmatches regexponly regexpref
+      regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
+      subsetof superbagof superhashof supersetof useclass
     )
   ];
 
   our @EXPORT = @{ $EXPORT_TAGS{ v0 } };
 
   $EXPORT_TAGS{all} = [ @EXPORT, @EXPORT_OK ];
+}
+
+sub import {
+  if (grep {; $_ eq ':preload' } @_) {
+    require Test::Deep::All;
+    require Test::Deep::Any;
+    require Test::Deep::Array;
+    require Test::Deep::ArrayEach;
+    require Test::Deep::ArrayElementsOnly;
+    require Test::Deep::ArrayLength;
+    require Test::Deep::ArrayLengthOnly;
+    require Test::Deep::Blessed;
+    require Test::Deep::Boolean;
+    require Test::Deep::Cache::Simple;
+    require Test::Deep::Cache;
+    require Test::Deep::Class;
+    require Test::Deep::Cmp;
+    require Test::Deep::Code;
+    require Test::Deep::Hash;
+    require Test::Deep::HashEach;
+    require Test::Deep::HashElements;
+    require Test::Deep::HashKeys;
+    require Test::Deep::HashKeysOnly;
+    require Test::Deep::Ignore;
+    require Test::Deep::Isa;
+    require Test::Deep::ListMethods;
+    require Test::Deep::Methods;
+    require Test::Deep::MM;
+    require Test::Deep::Number;
+    require Test::Deep::Obj;
+    require Test::Deep::Ref;
+    require Test::Deep::RefType;
+    require Test::Deep::Regexp;
+    require Test::Deep::RegexpMatches;
+    require Test::Deep::RegexpOnly;
+    require Test::Deep::RegexpRef;
+    require Test::Deep::RegexpRefOnly;
+    require Test::Deep::RegexpVersion;
+    require Test::Deep::ScalarRef;
+    require Test::Deep::ScalarRefOnly;
+    require Test::Deep::Set;
+    require Test::Deep::Shallow;
+    require Test::Deep::Stack;
+    require Test::Deep::String;
+  }
+
+  goto &Exporter::import;
 }
 
 # this is ugly, I should never have exported a sub called isa now I
@@ -482,6 +530,13 @@ sub subsetof
 	return Test::Deep::Set->new(1, "sub", @_);
 }
 
+sub noneof
+{
+        require Test::Deep::Set;
+
+        return Test::Deep::Set->new(1, "none", @_);
+}
+
 sub cmp_set
 {
 	local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -607,6 +662,8 @@ strings are exactly equal but sometimes that's not what you want. When you
 don't know exactly what the string should be but you do know some things
 about how it should look, C<eq> is no good and you must use pattern matching
 instead. Test::Deep provides pattern matching for complex data structures
+
+Test::Deep has B<I<a lot>> of exports.  See L</EXPORTS> below.
 
 =head1 EXAMPLES
 
@@ -1145,7 +1202,7 @@ will result in a set containing 1, 2, 3.
 C<NOTE> See the NOTE on the bag() comparison for some dangers in using
 special comparisons inside set()
 
-=head3 superbagof(@elements), subbagof(@elements), supersetof(@elements) and subsetof(@elements)
+=head3 superbagof(@elements), subbagof(@elements), supersetof(@elements), subsetof(@elements) and noneof(@elements)
 
 @elements is an array of elements.
 
@@ -1158,6 +1215,10 @@ checks that @$data contains at most 2 "1"s, 1 "3" and 1 "4" and
   cmp_deeply($data, supersetof(1, 1, 1, 4));
 
 will check that @$data has at least one "1" and at least one "4".
+
+  cmp_deeply($data, noneof(1, 2, 3));
+
+will check that @$data does not contain any instances of "1", "2" or "3".
 
 These are just special cases of the Set and Bag comparisons so they also
 give you an add() method and they also have the same limitations when using
@@ -1228,6 +1289,11 @@ a package that is used as a class. Without this, anyone calling
 C<Class-E<gt>isa($other_class)> would get the wrong answer. This is a
 hack to patch over the fact that isa is exported by default.
 
+=head3 obj_isa($class)
+
+This test accepts only objects that are instances of C<$class> or a subclass.
+Unlike the C<Isa> test, this test will never accept class names.
+
 =head3 array_each($thing)
 
 $thing is a structure to be compared against.
@@ -1272,6 +1338,11 @@ size of each one you could do this
     )
   )
   cmp_deeply($got, array_each($structure));
+
+=head3 hash_each($thing)
+
+This test behaves like C<array_each> (see above) but tests that each hash value
+passes its tests.
 
 =head3 str($string)
 
@@ -1462,6 +1533,29 @@ method should just return true or false.
 This gives you enough to write your own SCs but I haven't documented how
 diagnostics works because it's about to get an overhaul.
 
+=head1 EXPORTS
+
+By default, Test::Deep will export everything in its C<v0> tag, as if you had
+written:
+
+  use Test::Deep ':v0';
+
+Those things are:
+
+  all any array array_each arrayelementsonly arraylength arraylengthonly bag
+  blessed bool cmp_bag cmp_deeply cmp_methods cmp_set code eq_deeply hash
+  hash_each hashkeys hashkeysonly ignore Isa isa listmethods methods noclass
+  noneof num obj_isa re reftype regexpmatches regexponly regexpref
+  regexprefonly scalarrefonly scalref set shallow str subbagof subhashof
+  subsetof superbagof superhashof supersetof useclass
+
+A slightly better set of exports is the C<v1> set.  It's all the same things,
+with the exception of C<Isa> and C<blessed>.  If you want to import
+"everything", you probably want to C<< use Test::Deep ':V1'; >>.
+
+There's another magic export group:  C<:preload>.  If that is specified, all of
+the Test::Deep plugins will be loaded immediately instead of lazily.
+
 =head1 SEE ALSO
 
 L<Test::More>
@@ -1476,8 +1570,8 @@ Fergal Daly E<lt>fergal@esatclear.ieE<gt>, with thanks to Michael G Schwern
 for Test::More's is_deeply function which inspired this.
 
 B<Please> do not bother Fergal Daly with bug reports.  Send them to the
-maintainer (above) or submit them at L<the request
-tracker|https://rt.cpan.org/Dist/Display.html?Queue=Test-Deep>.
+maintainer (above) or submit them at L<the issue
+tracker|https://github.com/rjbs/Test-Deep/issues>.
 
 =head1 COPYRIGHT
 
