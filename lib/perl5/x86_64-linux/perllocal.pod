@@ -1,4 +1,4 @@
-=head2 Tue Sep 23 13:47:48 2014: C<Module> L<URI|URI>
+=head2 Fri Dec 19 22:40:59 2014: C<Module> L<URI|URI>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.64>
+C<VERSION: 1.65>
 
 =item *
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:49 2014: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
+=head2 Fri Dec 19 22:41:00 2014: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:50 2014: C<Module> L<Encode::Locale|Encode::Locale>
+=head2 Fri Dec 19 22:41:01 2014: C<Module> L<Encode::Locale|Encode::Locale>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:52 2014: C<Module> L<IO::HTML|IO::HTML>
+=head2 Fri Dec 19 22:41:03 2014: C<Module> L<IO::HTML|IO::HTML>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:53 2014: C<Module> L<HTTP::Date|HTTP::Date>
+=head2 Fri Dec 19 22:41:04 2014: C<Module> L<HTTP::Date|HTTP::Date>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:54 2014: C<Module> L<HTTP::Message|HTTP::Message>
+=head2 Fri Dec 19 22:41:05 2014: C<Module> L<HTTP::Message|HTTP::Message>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:55 2014: C<Module> L<File::Listing|File::Listing>
+=head2 Fri Dec 19 22:41:06 2014: C<Module> L<File::Listing|File::Listing>
 
 =over 4
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:56 2014: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
+=head2 Fri Dec 19 22:41:08 2014: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:57 2014: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Fri Dec 19 22:41:09 2014: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:47:59 2014: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Fri Dec 19 22:41:11 2014: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:00 2014: C<Module> L<HTTP::Daemon|HTTP::Daemon>
+=head2 Fri Dec 19 22:41:12 2014: C<Module> L<HTTP::Daemon|HTTP::Daemon>
 
 =over 4
 
@@ -240,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:01 2014: C<Module> L<Net::HTTP|Net::HTTP>
+=head2 Fri Dec 19 22:41:13 2014: C<Module> L<Net::HTTP|Net::HTTP>
 
 =over 4
 
@@ -262,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:02 2014: C<Module> L<HTTP::Cookies|HTTP::Cookies>
+=head2 Fri Dec 19 22:41:14 2014: C<Module> L<HTTP::Cookies|HTTP::Cookies>
 
 =over 4
 
@@ -284,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:03 2014: C<Module> L<WWW::RobotRules|WWW::RobotRules>
+=head2 Fri Dec 19 22:41:15 2014: C<Module> L<WWW::RobotRules|WWW::RobotRules>
 
 =over 4
 
@@ -306,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:05 2014: C<Module> L<LWP|LWP>
+=head2 Fri Dec 19 22:41:16 2014: C<Module> L<LWP|LWP>
 
 =over 4
 
@@ -328,7 +328,7 @@ C<EXE_FILES: bin/lwp-request bin/lwp-mirror bin/lwp-download bin/lwp-dump>
 
 =back
 
-=head2 Tue Sep 23 13:48:18 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Fri Dec 19 22:41:28 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -350,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:19 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Fri Dec 19 22:41:29 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -372,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:20 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Fri Dec 19 22:41:30 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -386,7 +386,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.998>
+C<VERSION: 2.008>
 
 =item *
 
@@ -394,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:48:20 2014: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
+=head2 Fri Dec 19 22:41:30 2014: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
 
 =over 4
 
