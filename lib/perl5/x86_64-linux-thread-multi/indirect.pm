@@ -11,13 +11,13 @@ indirect - Lexically warn about using the indirect method call syntax.
 
 =head1 VERSION
 
-Version 0.32
+Version 0.33
 
 =cut
 
 our $VERSION;
 BEGIN {
- $VERSION = '0.32';
+ $VERSION = '0.33';
 }
 
 =head1 SYNOPSIS
@@ -249,6 +249,8 @@ If you use C<perl> 5.12 or greater, those constructs are correctly reported.
 
 With 5.8 perls, the pragma does not propagate into C<eval STRING>.
 This is due to a shortcoming in the way perl handles the hints hash, which is addressed in perl 5.10.
+
+Indirect constructs that appear in code C<eval>'d during the global destruction phase of a spawned thread or pseudo-fork (the processes used internally for the C<fork> emulation on Windows) are not reported.
 
 The search for indirect method calls happens before constant folding.
 Hence C<my $x = new Class if 0> will be caught.

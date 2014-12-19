@@ -4,7 +4,7 @@
       "Guillermo Roditi (groditi) <groditi@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 0.76, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Module::Install version 0.76, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],

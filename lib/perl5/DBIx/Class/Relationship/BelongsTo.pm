@@ -60,6 +60,8 @@ sub belongs_to {
   else {
     if (ref $cond eq 'HASH') { # ARRAY is also valid
       my $cond_rel;
+      # FIXME This loop is ridiculously incomplete and dangerous
+      # staving off changes until implmentation of the swindon consensus
       for (keys %$cond) {
         if (m/\./) { # Explicit join condition
           $cond_rel = $cond;
@@ -89,6 +91,7 @@ sub belongs_to {
   $class->add_relationship($rel, $f_class,
     $cond,
     {
+      is_depends_on => 1,
       accessor => $acc_type,
       $fk_columns ? ( fk_columns => $fk_columns ) : (),
       %{$attrs || {}}
@@ -97,15 +100,5 @@ sub belongs_to {
 
   return 1;
 }
-
-# Attempt to remove the POD so it (maybe) falls off the indexer
-
-#=head1 AUTHORS
-#
-#Alexander Hartmaier <Alexander.Hartmaier@t-systems.at>
-#
-#Matt S. Trout <mst@shadowcatsystems.co.uk>
-#
-#=cut
 
 1;

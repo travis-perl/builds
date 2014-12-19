@@ -9,6 +9,8 @@ use DBIx::Class::ResultSet;
 use DBIx::Class::ResultSourceHandle;
 
 use DBIx::Class::Carp;
+use DBIx::Class::_Util 'UNRESOLVABLE_CONDITION';
+use SQL::Abstract 'is_literal_value';
 use Devel::GlobalDestruction;
 use Try::Tiny;
 use List::Util 'first';
@@ -75,7 +77,7 @@ More specifically, the L<DBIx::Class::Core> base class pulls in the
 L<DBIx::Class::ResultSourceProxy::Table> component, which defines
 the L<table|DBIx::Class::ResultSourceProxy::Table/table> method.
 When called, C<table> creates and stores an instance of
-L<DBIx::Class::ResultSoure::Table>. Luckily, to use tables as result
+L<DBIx::Class::ResultSource::Table>. Luckily, to use tables as result
 sources, you don't need to remember any of this.
 
 Result sources representing select queries, or views, can also be
@@ -84,7 +86,8 @@ created, see L<DBIx::Class::ResultSource::View> for full details.
 =head2 Finding result source objects
 
 As mentioned above, a result source instance is created and stored for
-you when you define a L<result class|DBIx::Class::Manual::Glossary/Result class>.
+you when you define a
+L<Result Class|DBIx::Class::Manual::Glossary/Result Class>.
 
 You can retrieve the result source at runtime in the following ways:
 
@@ -106,7 +109,13 @@ You can retrieve the result source at runtime in the following ways:
 
 =head1 METHODS
 
-=pod
+=head2 new
+
+  $class->new();
+
+  $class->new({attribute_name => value});
+
+Creates a new ResultSource object.  Not normally called directly by end users.
 
 =cut
 
@@ -140,6 +149,11 @@ sub new {
   $source->add_columns(qw/col1 col2 col3/);
 
   $source->add_columns('col1' => \%col1_info, 'col2' => \%col2_info, ...);
+
+  $source->add_columns(
+    'col1' => { data_type => 'integer', is_nullable => 1, ... },
+    'col2' => { data_type => 'text',    is_auto_increment => 1, ... },
+  );
 
 Adds columns to the result source. If supplied colname => hashref
 pairs, uses the hashref as the L</column_info> for that column. Repeated
@@ -201,7 +215,7 @@ schema, see L<DBIx::Class::Schema/deploy>.
 
    { is_nullable => 1 }
 
-Set this to a true value for a columns that is allowed to contain NULL
+Set this to a true value for a column that is allowed to contain NULL
 values, default is false. This is currently only used to create tables
 from your schema, see L<DBIx::Class::Schema/deploy>.
 
@@ -575,7 +589,7 @@ sub remove_column { shift->remove_columns(@_); } # DO NOT CHANGE THIS TO GLOB
 Defines one or more columns as primary key for this source. Must be
 called after L</add_columns>.
 
-Additionally, defines a L<unique constraint|add_unique_constraint>
+Additionally, defines a L<unique constraint|/add_unique_constraint>
 named C<primary>.
 
 Note: you normally do want to define a primary key on your sources
@@ -639,7 +653,7 @@ sub _pri_cols_or_die {
 }
 
 # same as above but mandating single-column PK (used by relationship condition
-# inferrence)
+# inference)
 sub _single_pri_col_or_die {
   my $self = shift;
   my ($pri, @too_many) = $self->_pri_cols_or_die;
@@ -829,6 +843,7 @@ sub name_unique_constraint {
 
   my $name = $self->name;
   $name = $$name if (ref $name eq 'SCALAR');
+  $name =~ s/ ^ [^\.]+ \. //x;  # strip possible schema qualifier
 
   return join '_', $name, @$cols;
 }
@@ -1172,6 +1187,17 @@ clause contents.
 
 sub from { die 'Virtual method!' }
 
+=head2 source_info
+
+Stores a hashref of per-source metadata.  No specific key names
+have yet been standardized, the examples below are purely hypothetical
+and don't actually accomplish anything on their own:
+
+  __PACKAGE__->source_info({
+    "_tablespace" => 'fast_disk_array_3',
+    "_engine" => 'InnoDB',
+  });
+
 =head2 schema
 
 =over 4
@@ -1313,10 +1339,11 @@ sub add_relationship {
 
   # Check foreign and self are right in cond
   if ( (ref $cond ||'') eq 'HASH') {
-    for (keys %$cond) {
-      $self->throw_exception("Keys of condition should be of form 'foreign.col', not '$_'")
-        if /\./ && !/^foreign\./;
-    }
+    $_ =~ /^foreign\./ or $self->throw_exception("Malformed relationship condition key '$_': must be prefixed with 'foreign.'")
+      for keys %$cond;
+
+    $_ =~ /^self\./ or $self->throw_exception("Malformed relationship condition value '$_': must be prefixed with 'self.'")
+      for values %$cond;
   }
 
   my %rels = %{ $self->_relationships };
@@ -1362,7 +1389,7 @@ sub add_relationship {
 
 =back
 
-  my @relnames = $source->relationships();
+  my @rel_names = $source->relationships();
 
 Returns all relationship names for this source.
 
@@ -1545,6 +1572,67 @@ sub _identifying_column_set {
   return undef;
 }
 
+sub _minimal_valueset_satisfying_constraint {
+  my $self = shift;
+  my $args = { ref $_[0] eq 'HASH' ? %{ $_[0] } : @_ };
+
+  $args->{columns_info} ||= $self->columns_info;
+
+  my $vals = $self->storage->_extract_fixed_condition_columns(
+    $args->{values},
+    ($args->{carp_on_nulls} ? 'consider_nulls' : undef ),
+  );
+
+  my $cols;
+  for my $col ($self->unique_constraint_columns($args->{constraint_name}) ) {
+    if( ! exists $vals->{$col} or ( $vals->{$col}||'' ) eq UNRESOLVABLE_CONDITION ) {
+      $cols->{missing}{$col} = undef;
+    }
+    elsif( ! defined $vals->{$col} ) {
+      $cols->{$args->{carp_on_nulls} ? 'undefined' : 'missing'}{$col} = undef;
+    }
+    else {
+      # we need to inject back the '=' as _extract_fixed_condition_columns
+      # will strip it from literals and values alike, resulting in an invalid
+      # condition in the end
+      $cols->{present}{$col} = { '=' => $vals->{$col} };
+    }
+
+    $cols->{fc}{$col} = 1 if (
+      ( ! $cols->{missing} or ! exists $cols->{missing}{$col} )
+        and
+      keys %{ $args->{columns_info}{$col}{_filter_info} || {} }
+    );
+  }
+
+  $self->throw_exception( sprintf ( "Unable to satisfy requested constraint '%s', missing values for column(s): %s",
+    $args->{constraint_name},
+    join (', ', map { "'$_'" } sort keys %{$cols->{missing}} ),
+  ) ) if $cols->{missing};
+
+  $self->throw_exception( sprintf (
+    "Unable to satisfy requested constraint '%s', FilterColumn values not usable for column(s): %s",
+    $args->{constraint_name},
+    join (', ', map { "'$_'" } sort keys %{$cols->{fc}}),
+  )) if $cols->{fc};
+
+  if (
+    $cols->{undefined}
+      and
+    !$ENV{DBIC_NULLABLE_KEY_NOWARN}
+  ) {
+    carp_unique ( sprintf (
+      "NULL/undef values supplied for requested unique constraint '%s' (NULL "
+    . 'values in column(s): %s). This is almost certainly not what you wanted, '
+    . 'though you can set DBIC_NULLABLE_KEY_NOWARN to disable this warning.',
+      $args->{constraint_name},
+      join (', ', map { "'$_'" } sort keys %{$cols->{undefined}}),
+    ));
+  }
+
+  return { map { %{ $cols->{$_}||{} } } qw(present undefined) };
+}
+
 # Returns the {from} structure used to express JOIN conditions
 sub _resolve_join {
   my ($self, $join, $alias, $seen, $jpath, $parent_force_left) = @_;
@@ -1670,150 +1758,466 @@ sub _pk_depends_on {
 
 sub resolve_condition {
   carp 'resolve_condition is a private method, stop calling it';
-  my $self = shift;
-  $self->_resolve_condition (@_);
+  shift->_resolve_condition (@_);
 }
 
-our $UNRESOLVABLE_CONDITION = \ '1 = 0';
-
-# Resolves the passed condition to a concrete query fragment and a flag
-# indicating whether this is a cross-table condition. Also an optional
-# list of non-trivial values (normally conditions) returned as a part
-# of a joinfree condition hash
 sub _resolve_condition {
-  my ($self, $cond, $as, $for, $rel_name) = @_;
+#  carp_unique sprintf
+#    '_resolve_condition is a private method, and moreover is about to go '
+#  . 'away. Please contact the development team at %s if you believe you '
+#  . 'have a genuine use for this method, in order to discuss alternatives.',
+#    DBIx::Class::_ENV_::HELP_URL,
+#  ;
 
-  my $obj_rel = defined blessed $for;
+#######################
+### API Design? What's that...? (a backwards compatible shim, kill me now)
 
-  if (ref $cond eq 'CODE') {
-    my $relalias = $obj_rel ? 'me' : $as;
+  my ($self, $cond, @res_args, $rel_name);
 
-    my ($crosstable_cond, $joinfree_cond) = $cond->({
-      self_alias => $obj_rel ? $as : $for,
-      foreign_alias => $relalias,
+  # we *SIMPLY DON'T KNOW YET* which arg is which, yay
+  ($self, $cond, $res_args[0], $res_args[1], $rel_name) = @_;
+
+  # assume that an undef is an object-like unset (set_from_related(undef))
+  my @is_objlike = map { ! defined $_ or length ref $_ } (@res_args);
+
+  # turn objlike into proper objects for saner code further down
+  for (0,1) {
+    next unless $is_objlike[$_];
+
+    if ( defined blessed $res_args[$_] ) {
+
+      # but wait - there is more!!! WHAT THE FUCK?!?!?!?!
+      if ($res_args[$_]->isa('DBIx::Class::ResultSet')) {
+        carp('Passing a resultset for relationship resolution makes no sense - invoking __gremlins__');
+        $is_objlike[$_] = 0;
+        $res_args[$_] = '__gremlins__';
+      }
+    }
+    else {
+      $res_args[$_] ||= {};
+
+      # hate everywhere - have to pass in as a plain hash
+      # pretending to be an object at least for now
+      $self->throw_exception("Unsupported object-like structure encountered: $res_args[$_]")
+        unless ref $res_args[$_] eq 'HASH';
+    }
+  }
+
+  my $args = {
+    condition => $cond,
+
+    # where-is-waldo block guesses relname, then further down we override it if available
+    (
+      $is_objlike[1] ? ( rel_name => $res_args[0], self_alias => $res_args[0], foreign_alias => 'me',         self_result_object  => $res_args[1] )
+    : $is_objlike[0] ? ( rel_name => $res_args[1], self_alias => 'me',         foreign_alias => $res_args[1], foreign_values      => $res_args[0] )
+    :                  ( rel_name => $res_args[0], self_alias => $res_args[1], foreign_alias => $res_args[0]                                      )
+    ),
+
+    ( $rel_name ? ( rel_name => $rel_name ) : () ),
+  };
+#######################
+
+  # now it's fucking easy isn't it?!
+  my $rc = $self->_resolve_relationship_condition( $args );
+
+  my @res = (
+    ( $rc->{join_free_condition} || $rc->{condition} ),
+    ! $rc->{join_free_condition},
+  );
+
+  # _resolve_relationship_condition always returns qualified cols even in the
+  # case of join_free_condition, but nothing downstream expects this
+  if ($rc->{join_free_condition} and ref $res[0] eq 'HASH') {
+    $res[0] = { map
+      { ($_ =~ /\.(.+)/) => $res[0]{$_} }
+      keys %{$res[0]}
+    };
+  }
+
+  # and more legacy
+  return wantarray ? @res : $res[0];
+}
+
+# Keep this indefinitely. There is evidence of both CPAN and
+# darkpan using it, and there isn't much harm in an extra var
+# anyway.
+our $UNRESOLVABLE_CONDITION = UNRESOLVABLE_CONDITION;
+# YES I KNOW THIS IS EVIL
+# it is there to save darkpan from themselves, since internally
+# we are moving to a constant
+Internals::SvREADONLY($UNRESOLVABLE_CONDITION => 1);
+
+# Resolves the passed condition to a concrete query fragment and extra
+# metadata
+#
+## self-explanatory API, modeled on the custom cond coderef:
+# rel_name              => (scalar)
+# foreign_alias         => (scalar)
+# foreign_values        => (either not supplied, or a hashref, or a foreign ResultObject (to be ->get_columns()ed), or plain undef )
+# self_alias            => (scalar)
+# self_result_object    => (either not supplied or a result object)
+# require_join_free_condition => (boolean, throws on failure to construct a JF-cond)
+# infer_values_based_on => (either not supplied or a hashref, implies require_join_free_condition)
+# condition             => (sqla cond struct, optional, defeaults to from $self->rel_info(rel_name)->{cond})
+#
+## returns a hash
+# condition           => (a valid *likely fully qualified* sqla cond structure)
+# identity_map        => (a hashref of foreign-to-self *unqualified* column equality names)
+# join_free_condition => (a valid *fully qualified* sqla cond structure, maybe unset)
+# inferred_values     => (in case of an available join_free condition, this is a hashref of
+#                         *unqualified* column/value *EQUALITY* pairs, representing an amalgamation
+#                         of the JF-cond parse and infer_values_based_on
+#                         always either complete or unset)
+#
+sub _resolve_relationship_condition {
+  my $self = shift;
+
+  my $args = { ref $_[0] eq 'HASH' ? %{ $_[0] } : @_ };
+
+  for ( qw( rel_name self_alias foreign_alias ) ) {
+    $self->throw_exception("Mandatory argument '$_' to _resolve_relationship_condition() is not a plain string")
+      if !defined $args->{$_} or length ref $args->{$_};
+  }
+
+  $self->throw_exception("Arguments 'self_alias' and 'foreign_alias' may not be identical")
+    if $args->{self_alias} eq $args->{foreign_alias};
+
+# TEMP
+  my $exception_rel_id = "relationship '$args->{rel_name}' on source '@{[ $self->source_name ]}'";
+
+  my $rel_info = $self->relationship_info($args->{rel_name})
+# TEMP
+#    or $self->throw_exception( "No such $exception_rel_id" );
+    or carp_unique("Requesting resolution on non-existent relationship '$args->{rel_name}' on source '@{[ $self->source_name ]}': fix your code *soon*, as it will break with the next major version");
+
+# TEMP
+  $exception_rel_id = "relationship '$rel_info->{_original_name}' on source '@{[ $self->source_name ]}'"
+    if $rel_info and exists $rel_info->{_original_name};
+
+  $self->throw_exception("No practical way to resolve $exception_rel_id between two data structures")
+    if exists $args->{self_result_object} and exists $args->{foreign_values};
+
+  $self->throw_exception( "Argument to infer_values_based_on must be a hash" )
+    if exists $args->{infer_values_based_on} and ref $args->{infer_values_based_on} ne 'HASH';
+
+  $args->{require_join_free_condition} ||= !!$args->{infer_values_based_on};
+
+  $args->{condition} ||= $rel_info->{cond};
+
+  $self->throw_exception( "Argument 'self_result_object' must be an object of class '@{[ $self->result_class ]}'" )
+    if (
+      exists $args->{self_result_object}
+        and
+      ( ! defined blessed $args->{self_result_object} or ! $args->{self_result_object}->isa($self->result_class) )
+    )
+  ;
+
+#TEMP
+  my $rel_rsrc;# = $self->related_source($args->{rel_name});
+
+  if (exists $args->{foreign_values}) {
+# TEMP
+    $rel_rsrc ||= $self->related_source($args->{rel_name});
+
+    if (defined blessed $args->{foreign_values}) {
+
+      $self->throw_exception( "Objects supplied as 'foreign_values' ($args->{foreign_values}) must inherit from DBIx::Class::Row" )
+        unless $args->{foreign_values}->isa('DBIx::Class::Row');
+
+      carp_unique(
+        "Objects supplied as 'foreign_values' ($args->{foreign_values}) "
+      . "usually should inherit from the related ResultClass ('@{[ $rel_rsrc->result_class ]}'), "
+      . "perhaps you've made a mistake invoking the condition resolver?"
+      ) unless $args->{foreign_values}->isa($rel_rsrc->result_class);
+
+      $args->{foreign_values} = { $args->{foreign_values}->get_columns };
+    }
+    elsif (! defined $args->{foreign_values} or ref $args->{foreign_values} eq 'HASH') {
+      my $ri = { map { $_ => 1 } $rel_rsrc->relationships };
+      my $ci = $rel_rsrc->columns_info;
+      ! exists $ci->{$_} and ! exists $ri->{$_} and $self->throw_exception(
+        "Key '$_' supplied as 'foreign_values' is not a column on related source '@{[ $rel_rsrc->source_name ]}'"
+      ) for keys %{ $args->{foreign_values} ||= {} };
+    }
+    else {
+      $self->throw_exception(
+        "Argument 'foreign_values' must be either an object inheriting from '@{[ $rel_rsrc->result_class ]}', "
+      . "or a hash reference, or undef"
+      );
+    }
+  }
+
+  my $ret;
+
+  if (ref $args->{condition} eq 'CODE') {
+
+    my $cref_args = {
+      rel_name => $args->{rel_name},
       self_resultsource => $self,
-      foreign_relname => $rel_name || ($obj_rel ? $as : $for),
-      self_rowobj => $obj_rel ? $for : undef
-    });
+      self_alias => $args->{self_alias},
+      foreign_alias => $args->{foreign_alias},
+      ( map
+        { (exists $args->{$_}) ? ( $_ => $args->{$_} ) : () }
+        qw( self_result_object foreign_values )
+      ),
+    };
 
-    my $cond_cols;
-    if ($joinfree_cond) {
+    # legacy - never remove these!!!
+    $cref_args->{foreign_relname} = $cref_args->{rel_name};
+
+    $cref_args->{self_rowobj} = $cref_args->{self_result_object}
+      if exists $cref_args->{self_result_object};
+
+    ($ret->{condition}, $ret->{join_free_condition}, my @extra) = $args->{condition}->($cref_args);
+
+    # sanity check
+    $self->throw_exception("A custom condition coderef can return at most 2 conditions, but $exception_rel_id returned extra values: @extra")
+      if @extra;
+
+    if (my $jfc = $ret->{join_free_condition}) {
+
+      $self->throw_exception (
+        "The join-free condition returned for $exception_rel_id must be a hash reference"
+      ) unless ref $jfc eq 'HASH';
+
+# TEMP
+      $rel_rsrc ||= $self->related_source($args->{rel_name});
+
+      my ($joinfree_alias, $joinfree_source);
+      if (defined $args->{self_result_object}) {
+        $joinfree_alias = $args->{foreign_alias};
+        $joinfree_source = $rel_rsrc;
+      }
+      elsif (defined $args->{foreign_values}) {
+        $joinfree_alias = $args->{self_alias};
+        $joinfree_source = $self;
+      }
 
       # FIXME sanity check until things stabilize, remove at some point
       $self->throw_exception (
-        "A join-free condition returned for relationship '$rel_name' without a row-object to chain from"
-      ) unless $obj_rel;
+        "A join-free condition returned for $exception_rel_id without a result object to chain from"
+      ) unless $joinfree_alias;
 
-      # FIXME another sanity check
-      if (
-        ref $joinfree_cond ne 'HASH'
-          or
-        first { $_ !~ /^\Q$relalias.\E.+/ } keys %$joinfree_cond
-      ) {
+      my $fq_col_list = { map
+        { ( "$joinfree_alias.$_" => 1 ) }
+        $joinfree_source->columns
+      };
+
+      exists $fq_col_list->{$_} or $self->throw_exception (
+        "The join-free condition returned for $exception_rel_id may only "
+      . 'contain keys that are fully qualified column names of the corresponding source '
+      . "(it returned '$_')"
+      ) for keys %$jfc;
+
+      (
+        length ref $_
+          and
+        defined blessed($_)
+          and
+        $_->isa('DBIx::Class::Row')
+          and
         $self->throw_exception (
-          "The join-free condition returned for relationship '$rel_name' must be a hash "
-         .'reference with all keys being valid columns on the related result source'
-        );
-      }
+          "The join-free condition returned for $exception_rel_id may not "
+        . 'contain result objects as values - perhaps instead of invoking '
+        . '->$something you meant to return ->get_column($something)'
+        )
+      ) for values %$jfc;
 
-      # normalize
-      for (values %$joinfree_cond) {
-        $_ = $_->{'='} if (
-          ref $_ eq 'HASH'
-            and
-          keys %$_ == 1
-            and
-          exists $_->{'='}
-        );
-      }
+    }
+  }
+  elsif (ref $args->{condition} eq 'HASH') {
 
-      # see which parts of the joinfree cond are conditionals
-      my $relcol_list = { map { $_ => 1 } $self->related_source($rel_name)->columns };
+    # the condition is static - use parallel arrays
+    # for a "pivot" depending on which side of the
+    # rel did we get as an object
+    my (@f_cols, @l_cols);
+    for my $fc (keys %{$args->{condition}}) {
+      my $lc = $args->{condition}{$fc};
 
-      for my $c (keys %$joinfree_cond) {
-        my ($colname) = $c =~ /^ (?: \Q$relalias.\E )? (.+)/x;
+      # FIXME STRICTMODE should probably check these are valid columns
+      $fc =~ s/^foreign\.// ||
+        $self->throw_exception("Invalid rel cond key '$fc'");
 
-        unless ($relcol_list->{$colname}) {
-          push @$cond_cols, $colname;
-          next;
+      $lc =~ s/^self\.// ||
+        $self->throw_exception("Invalid rel cond val '$lc'");
+
+      push @f_cols, $fc;
+      push @l_cols, $lc;
+    }
+
+    # construct the crosstable condition and the identity map
+    for  (0..$#f_cols) {
+      $ret->{condition}{"$args->{foreign_alias}.$f_cols[$_]"} = { -ident => "$args->{self_alias}.$l_cols[$_]" };
+      $ret->{identity_map}{$l_cols[$_]} = $f_cols[$_];
+    };
+
+    if ($args->{foreign_values}) {
+      $ret->{join_free_condition}{"$args->{self_alias}.$l_cols[$_]"} = $args->{foreign_values}{$f_cols[$_]}
+        for 0..$#f_cols;
+    }
+    elsif (defined $args->{self_result_object}) {
+
+      for my $i (0..$#l_cols) {
+        if ( $args->{self_result_object}->has_column_loaded($l_cols[$i]) ) {
+          $ret->{join_free_condition}{"$args->{foreign_alias}.$f_cols[$i]"} = $args->{self_result_object}->get_column($l_cols[$i]);
         }
+        else {
+          $self->throw_exception(sprintf
+            "Unable to resolve relationship '%s' from object '%s': column '%s' not "
+          . 'loaded from storage (or not passed to new() prior to insert()). You '
+          . 'probably need to call ->discard_changes to get the server-side defaults '
+          . 'from the database.',
+            $args->{rel_name},
+            $args->{self_result_object},
+            $l_cols[$i],
+          ) if $args->{self_result_object}->in_storage;
 
-        if (
-          ref $joinfree_cond->{$c}
-            and
-          ref $joinfree_cond->{$c} ne 'SCALAR'
-            and
-          ref $joinfree_cond->{$c} ne 'REF'
-        ) {
-          push @$cond_cols, $colname;
-          next;
+          # FIXME - temporarly force-override
+          delete $args->{require_join_free_condition};
+          $ret->{join_free_condition} = UNRESOLVABLE_CONDITION;
+          last;
         }
       }
-
-      return wantarray ? ($joinfree_cond, 0, $cond_cols) : $joinfree_cond;
+    }
+  }
+  elsif (ref $args->{condition} eq 'ARRAY') {
+    if (@{$args->{condition}} == 0) {
+      $ret = {
+        condition => UNRESOLVABLE_CONDITION,
+        join_free_condition => UNRESOLVABLE_CONDITION,
+      };
+    }
+    elsif (@{$args->{condition}} == 1) {
+      $ret = $self->_resolve_relationship_condition({
+        %$args,
+        condition => $args->{condition}[0],
+      });
     }
     else {
-      return wantarray ? ($crosstable_cond, 1) : $crosstable_cond;
-    }
-  }
-  elsif (ref $cond eq 'HASH') {
-    my %ret;
-    foreach my $k (keys %{$cond}) {
-      my $v = $cond->{$k};
-      # XXX should probably check these are valid columns
-      $k =~ s/^foreign\.// ||
-        $self->throw_exception("Invalid rel cond key ${k}");
-      $v =~ s/^self\.// ||
-        $self->throw_exception("Invalid rel cond val ${v}");
-      if (ref $for) { # Object
-        #warn "$self $k $for $v";
-        unless ($for->has_column_loaded($v)) {
-          if ($for->in_storage) {
-            $self->throw_exception(sprintf
-              "Unable to resolve relationship '%s' from object %s: column '%s' not "
-            . 'loaded from storage (or not passed to new() prior to insert()). You '
-            . 'probably need to call ->discard_changes to get the server-side defaults '
-            . 'from the database.',
-              $as,
-              $for,
-              $v,
-            );
-          }
-          return $UNRESOLVABLE_CONDITION;
-        }
-        $ret{$k} = $for->get_column($v);
-        #$ret{$k} = $for->get_column($v) if $for->has_column_loaded($v);
-        #warn %ret;
-      } elsif (!defined $for) { # undef, i.e. "no object"
-        $ret{$k} = undef;
-      } elsif (ref $as eq 'HASH') { # reverse hashref
-        $ret{$v} = $as->{$k};
-      } elsif (ref $as) { # reverse object
-        $ret{$v} = $as->get_column($k);
-      } elsif (!defined $as) { # undef, i.e. "no reverse object"
-        $ret{$v} = undef;
-      } else {
-        $ret{"${as}.${k}"} = { -ident => "${for}.${v}" };
+      # we are discarding inferred values here... likely incorrect...
+      # then again - the entire thing is an OR, so we *can't* use them anyway
+      for my $subcond ( map
+        { $self->_resolve_relationship_condition({ %$args, condition => $_ }) }
+        @{$args->{condition}}
+      ) {
+        $self->throw_exception('Either all or none of the OR-condition members must resolve to a join-free condition')
+          if ( $ret and ( $ret->{join_free_condition} xor $subcond->{join_free_condition} ) );
+
+        $subcond->{$_} and push @{$ret->{$_}}, $subcond->{$_} for (qw(condition join_free_condition));
       }
     }
-
-    return wantarray
-      ? ( \%ret, ($obj_rel || !defined $as || ref $as) ? 0 : 1 )
-      : \%ret
-    ;
-  }
-  elsif (ref $cond eq 'ARRAY') {
-    my (@ret, $crosstable);
-    for (@$cond) {
-      my ($cond, $crosstab) = $self->_resolve_condition($_, $as, $for, $rel_name);
-      push @ret, $cond;
-      $crosstable ||= $crosstab;
-    }
-    return wantarray ? (\@ret, $crosstable) : \@ret;
   }
   else {
-    $self->throw_exception ("Can't handle condition $cond for relationship '$rel_name' yet :(");
+    $self->throw_exception ("Can't handle condition $args->{condition} for $exception_rel_id yet :(");
   }
+
+  $self->throw_exception(ucfirst "$exception_rel_id does not resolve to a join-free condition fragment") if (
+    $args->{require_join_free_condition}
+      and
+    ( ! $ret->{join_free_condition} or $ret->{join_free_condition} eq UNRESOLVABLE_CONDITION )
+  );
+
+  my $storage = $self->schema->storage;
+
+  # we got something back - sanity check and infer values if we can
+  my @nonvalues;
+  if ( my $jfc = $ret->{join_free_condition} and $ret->{join_free_condition} ne UNRESOLVABLE_CONDITION ) {
+
+    my $jfc_eqs = $storage->_extract_fixed_condition_columns($jfc, 'consider_nulls');
+
+    if (keys %$jfc_eqs) {
+
+      for (keys %$jfc) {
+        # $jfc is fully qualified by definition
+        my ($col) = $_ =~ /\.(.+)/;
+
+        if (exists $jfc_eqs->{$_} and ($jfc_eqs->{$_}||'') ne UNRESOLVABLE_CONDITION) {
+          $ret->{inferred_values}{$col} = $jfc_eqs->{$_};
+        }
+        elsif ( !$args->{infer_values_based_on} or ! exists $args->{infer_values_based_on}{$col} ) {
+          push @nonvalues, $col;
+        }
+      }
+
+      # all or nothing
+      delete $ret->{inferred_values} if @nonvalues;
+    }
+  }
+
+  # did the user explicitly ask
+  if ($args->{infer_values_based_on}) {
+
+    $self->throw_exception(sprintf (
+      "Unable to complete value inferrence - custom $exception_rel_id returns conditions instead of values for column(s): %s",
+      map { "'$_'" } @nonvalues
+    )) if @nonvalues;
+
+
+    $ret->{inferred_values} ||= {};
+
+    $ret->{inferred_values}{$_} = $args->{infer_values_based_on}{$_}
+      for keys %{$args->{infer_values_based_on}};
+  }
+
+  # add the identities based on the main condition
+  # (may already be there, since easy to calculate on the fly in the HASH case)
+  if ( ! $ret->{identity_map} ) {
+
+    my $col_eqs = $storage->_extract_fixed_condition_columns($ret->{condition});
+
+    my $colinfos;
+    for my $lhs (keys %$col_eqs) {
+
+      next if $col_eqs->{$lhs} eq UNRESOLVABLE_CONDITION;
+
+# TEMP
+      $rel_rsrc ||= $self->related_source($args->{rel_name});
+
+      # there is no way to know who is right and who is left in a cref
+      # therefore a full blown resolution call, and figure out the
+      # direction a bit further below
+      $colinfos ||= $storage->_resolve_column_info([
+        { -alias => $args->{self_alias}, -rsrc => $self },
+        { -alias => $args->{foreign_alias}, -rsrc => $rel_rsrc },
+      ]);
+
+      next unless $colinfos->{$lhs};  # someone is engaging in witchcraft
+
+      if ( my $rhs_ref = is_literal_value( $col_eqs->{$lhs} ) ) {
+
+        if (
+          $colinfos->{$rhs_ref->[0]}
+            and
+          $colinfos->{$lhs}{-source_alias} ne $colinfos->{$rhs_ref->[0]}{-source_alias}
+        ) {
+          ( $colinfos->{$lhs}{-source_alias} eq $args->{self_alias} )
+            ? ( $ret->{identity_map}{$colinfos->{$lhs}{-colname}} = $colinfos->{$rhs_ref->[0]}{-colname} )
+            : ( $ret->{identity_map}{$colinfos->{$rhs_ref->[0]}{-colname}} = $colinfos->{$lhs}{-colname} )
+          ;
+        }
+      }
+      elsif (
+        $col_eqs->{$lhs} =~ /^ ( \Q$args->{self_alias}\E \. .+ ) /x
+          and
+        ($colinfos->{$1}||{})->{-result_source} == $rel_rsrc
+      ) {
+        my ($lcol, $rcol) = map
+          { $colinfos->{$_}{-colname} }
+          ( $lhs, $1 )
+        ;
+        carp_unique(
+          "The $exception_rel_id specifies equality of column '$lcol' and the "
+        . "*VALUE* '$rcol' (you did not use the { -ident => ... } operator)"
+        );
+      }
+    }
+  }
+
+  # FIXME - temporary, to fool the idiotic check in SQLMaker::_join_condition
+  $ret->{condition} = { -and => [ $ret->{condition} ] }
+    unless $ret->{condition} eq UNRESOLVABLE_CONDITION;
+
+  $ret;
 }
 
 =head2 related_source
@@ -1969,25 +2373,6 @@ sub throw_exception {
   ;
 }
 
-=head2 source_info
-
-Stores a hashref of per-source metadata.  No specific key names
-have yet been standardized, the examples below are purely hypothetical
-and don't actually accomplish anything on their own:
-
-  __PACKAGE__->source_info({
-    "_tablespace" => 'fast_disk_array_3',
-    "_engine" => 'InnoDB',
-  });
-
-=head2 new
-
-  $class->new();
-
-  $class->new({attribute_name => value});
-
-Creates a new ResultSource object.  Not normally called directly by end users.
-
 =head2 column_info_from_storage
 
 =over
@@ -2004,14 +2389,16 @@ Enables the on-demand automatic loading of the above column
 metadata from storage as necessary.  This is *deprecated*, and
 should not be used.  It will be removed before 1.0.
 
+=head1 FURTHER QUESTIONS?
 
-=head1 AUTHOR AND CONTRIBUTORS
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-See L<AUTHOR|DBIx::Class/AUTHOR> and L<CONTRIBUTORS|DBIx::Class/CONTRIBUTORS> in DBIx::Class
+=head1 COPYRIGHT AND LICENSE
 
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 
