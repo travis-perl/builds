@@ -1,18 +1,51 @@
 package Pod::Weaver::Section::Collect;
-{
-  $Pod::Weaver::Section::Collect::VERSION = '4.006';
-}
+# ABSTRACT: a section that gathers up specific commands
+$Pod::Weaver::Section::Collect::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::Transformer';
-# ABSTRACT: a section that gathers up specific commands
 
 use Moose::Autobox;
 
+#pod =head1 OVERVIEW
+#pod
+#pod Given the configuration:
+#pod
+#pod   [Collect / METHODS]
+#pod   command = method
+#pod
+#pod This plugin will start off by gathering and nesting any C<=method> commands
+#pod found in the C<pod_document>.  Those commands, along with their nestable
+#pod content, will be collected under a C<=head1 METHODS> header and placed in the
+#pod correct location in the output stream.  Their order will be preserved as it was
+#pod in the source document.
+#pod
+#pod =cut
 
 use Pod::Elemental::Element::Pod5::Region;
 use Pod::Elemental::Selectors -all;
 
+#pod =attr command
+#pod
+#pod The command that will be collected (e.g. C<attr> or C<method>).
+#pod (required)
+#pod
+#pod =attr new_command
+#pod
+#pod The command to be used in the output instead of the collected command.
+#pod (default: C<head2>)
+#pod
+#pod =attr header_command
+#pod
+#pod The section command for the section to be added.
+#pod (default: C<head1>)
+#pod
+#pod =attr header
+#pod
+#pod The title of the section to be added.
+#pod (default: the plugin name)
+#pod
+#pod =cut
 
 has command => (
   is  => 'ro',
@@ -52,7 +85,8 @@ sub transform_document {
 
   my $selector = s_command($self->command);
 
-  return unless $document->children->grep($selector)->length;
+  my $children = $document->children;
+  return unless $children->grep($selector)->length;
 
   my $nester = Pod::Elemental::Transformer::Nester->new({
      top_selector      => $selector,
@@ -62,10 +96,19 @@ sub transform_document {
      ],
   });
 
-  my $container = Pod::Elemental::Element::Nested->new({
-    command => $self->header_command,
-    content => $self->header,
-  });
+  # try and find array position of suitable host
+  my ( $container_id ) = grep {
+    my $c = $children->[$_];
+    $c->isa("Pod::Elemental::Element::Nested")
+      and $c->command eq $self->header_command and $c->content eq $self->header;
+  } 0 .. $#$children;
+
+  my $container = $container_id
+    ? splice @{ $children }, $container_id, 1 # excise host
+    : Pod::Elemental::Element::Nested->new({ # synthesize new host
+        command => $self->header_command,
+        content => $self->header,
+      });
 
   $self->__used_container($container);
 
@@ -75,10 +118,12 @@ sub transform_document {
   });
 
   $nester->transform_node($document);
-  $gatherer->transform_node($document);
+  my @children = @{$container->children}; # rescue children
+  $gatherer->transform_node($document); # insert host at position of first adopt-child and inject it with adopt-children
   $container->children->each_value(sub {
     $_->command( $self->new_command ) if $_->command eq $self->command;
   });
+  unshift @{$container->children}, @children; # give original children back to host
 }
 
 sub weave_section {
@@ -103,7 +148,6 @@ sub weave_section {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
 1;
 
 __END__
@@ -118,7 +162,7 @@ Pod::Weaver::Section::Collect - a section that gathers up specific commands
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::setup;
 # ABSTRACT: set up a basic global config file
-$Dist::Zilla::App::Command::setup::VERSION = '5.020';
+$Dist::Zilla::App::Command::setup::VERSION = '5.029';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -23,6 +23,11 @@ use autodie;
 
 sub abstract { 'set up a basic global config file' }
 
+sub description {
+  "This command will run through a short interactive process to set up\n" .
+  "a basic Dist::Zilla configuration in ~/.dzil/config.ini"
+}
+
 sub validate_args {
   my ($self, $opt, $args) = @_;
 
@@ -34,6 +39,7 @@ sub execute {
 
   my $chrome = $self->app->chrome;
 
+  require Dist::Zilla::Util;
   my $config_root = Dist::Zilla::Util->_global_config_root;
 
   if (
@@ -162,7 +168,7 @@ Dist::Zilla::App::Command::setup - set up a basic global config file
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

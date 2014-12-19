@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::Util;
 # ABSTRACT: random snippets of code that Dist::Zilla wants
-$Dist::Zilla::Util::VERSION = '5.020';
+$Dist::Zilla::Util::VERSION = '5.029';
 use Carp ();
 use Encode ();
 use String::RewritePrefix 0.002; # better string context behavior
@@ -24,7 +24,7 @@ use String::RewritePrefix 0.002; # better string context behavior
     my ($self, $event) = @_;
     return if $self->{abstract};
     return $self->{abstract} = $1
-      if $event->{content}=~ /^\s*#+\s*ABSTRACT:\s*(.+)$/m;
+      if $event->{content}=~ /^\s*#+\s*ABSTRACT:[ \t]*(\S.*)$/m;
     return;
   }
   sub handle_event {
@@ -77,8 +77,15 @@ sub abstract_from_file {
 #pod   my $pkg_name = Util->expand_config_package_name($string);
 #pod
 #pod This method, I<which is likely to change or go away>, rewrites the given string
-#pod into a package name.  Consult L<Dist::Zilla::Config|Dist::Zilla::Config> for
-#pod more information.
+#pod into a package name.
+#pod
+#pod Prefixes are rewritten as follows:
+#pod
+#pod =for :list
+#pod * C<=> becomes nothing
+#pod * C<@> becomes C<Dist::Zilla::PluginBundle::>
+#pod * C<%> becomes C<Dist::Zilla::Stash::>
+#pod * otherwise, C<Dist::Zilla::Plugin::> is prepended
 #pod
 #pod =cut
 
@@ -142,7 +149,7 @@ Dist::Zilla::Util - random snippets of code that Dist::Zilla wants
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 METHODS
 
@@ -157,8 +164,29 @@ C<=head1> section called "NAME" or a comment beginning with C<ABSTRACT:>.
   my $pkg_name = Util->expand_config_package_name($string);
 
 This method, I<which is likely to change or go away>, rewrites the given string
-into a package name.  Consult L<Dist::Zilla::Config|Dist::Zilla::Config> for
-more information.
+into a package name.
+
+Prefixes are rewritten as follows:
+
+=over 4
+
+=item *
+
+C<=> becomes nothing
+
+=item *
+
+C<@> becomes C<Dist::Zilla::PluginBundle::>
+
+=item *
+
+C<%> becomes C<Dist::Zilla::Stash::>
+
+=item *
+
+otherwise, C<Dist::Zilla::Plugin::> is prepended
+
+=back
 
 =head1 AUTHOR
 

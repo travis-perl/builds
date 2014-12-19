@@ -1,5 +1,7 @@
 package List::AllUtils;
-$List::AllUtils::VERSION = '0.08';
+# git description: v0.08-4-ga5ac545
+$List::AllUtils::VERSION = '0.09';
+
 use strict;
 use warnings;
 
@@ -29,13 +31,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 List::AllUtils - Combines List::Util and List::MoreUtils in one bite-sized package
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -51,12 +55,20 @@ version 0.08
 =head1 DESCRIPTION
 
 Are you sick of trying to remember whether a particular helper is
-defined in C<List::Util> or C<List::MoreUtils>? I sure am. Now you
+defined in L<List::Util> or L<List::MoreUtils>? I sure am. Now you
 don't have to remember. This module will export all of the functions
 that either of those two modules defines.
 
 Note that all function documentation has been shamelessly copied from
-L<List::Util> and <List::MoreUtils>.
+L<List::Util> and L<List::MoreUtils>.
+
+=head2 Which One Wins?
+
+Recently, L<List::Util> has started including some of the subs that used to
+only be in L<List::MoreUtils>. This module always exports the version provided
+by L<List::Util>.
+
+The docs below come from L<List::Util> 1.31 and L<List::MoreUtils> 0.28.
 
 =head1 LIST-REDUCTION FUNCTIONS
 

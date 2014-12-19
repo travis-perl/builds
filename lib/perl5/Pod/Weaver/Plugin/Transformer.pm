@@ -1,10 +1,8 @@
 package Pod::Weaver::Plugin::Transformer;
-{
-  $Pod::Weaver::Plugin::Transformer::VERSION = '4.006';
-}
+# ABSTRACT: apply arbitrary transformers
+$Pod::Weaver::Plugin::Transformer::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Dialect';
-# ABSTRACT: apply arbitrary transformers
 
 use namespace::autoclean;
 use Moose::Autobox;
@@ -13,6 +11,25 @@ use Module::Runtime qw(use_module);
 use List::MoreUtils qw(part);
 use String::RewritePrefix;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This plugin acts as a L<Pod::Weaver::Role::Dialect> that applies an arbitrary
+#pod L<Pod::Elemental::Transformer> to your input document.  It is configured like
+#pod this:
+#pod
+#pod   [-Transformer / Lists]
+#pod   transformer = List
+#pod   format_name = outline
+#pod
+#pod This will end up creating a transformer like this:
+#pod
+#pod   my $xform = Pod::Elemental::Transformer::List->new({
+#pod     format_name => 'outline',
+#pod   });
+#pod
+#pod and that transformer will then be handed the entire input Pod document.
+#pod
+#pod =cut
 
 has transformer => (is => 'ro', required => 1);
 
@@ -51,6 +68,7 @@ sub translate_dialect {
   $self->transformer->transform_node( $pod_document );
 }
 
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -65,7 +83,7 @@ Pod::Weaver::Plugin::Transformer - apply arbitrary transformers
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 
