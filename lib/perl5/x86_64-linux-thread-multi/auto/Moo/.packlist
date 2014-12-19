@@ -1,0 +1,17 @@
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Method/Generate/Accessor.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Method/Generate/BuildAll.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Method/Generate/Constructor.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Method/Generate/DemolishAll.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Method/Inliner.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/HandleMoose.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/HandleMoose/FakeMetaClass.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/HandleMoose/_TypeMap.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/Object.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/Role.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/_Utils.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/_mro.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Moo/sification.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Sub/Defer.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/Sub/Quote.pm
+/home/travis/.perlbrew/libs/5.12.0-thr@dbic/lib/perl5/oo.pm
