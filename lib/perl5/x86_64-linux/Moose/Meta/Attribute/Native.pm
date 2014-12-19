@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute::Native;
-$Moose::Meta::Attribute::Native::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Module::Runtime 'require_module';
 
 my @trait_names = qw(Bool Counter Number String Array Hash Code);
@@ -41,7 +42,7 @@ Moose::Meta::Attribute::Native - Delegate to native Perl types
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 

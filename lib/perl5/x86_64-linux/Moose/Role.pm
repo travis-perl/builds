@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 package Moose::Role;
-$Moose::Role::VERSION = '2.1212';
-use Scalar::Util 'blessed';
-use Carp         'croak';
+our $VERSION = '2.1403';
+
+use Scalar::Util ();
+use Carp ();
 use Class::Load  'is_class_loaded';
 use Module::Runtime 'module_notional_filename';
 
@@ -96,8 +97,8 @@ Moose::Exporter->setup_import_methods(
     ],
     as_is => [
         qw( extends super inner augment ),
-        \&Carp::confess,
-        \&Scalar::Util::blessed,
+        'Carp::confess',
+        'Scalar::Util::blessed',
     ],
 );
 
@@ -179,7 +180,7 @@ Moose::Role - The Moose Role
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 

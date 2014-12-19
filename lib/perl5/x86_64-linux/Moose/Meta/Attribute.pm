@@ -1,10 +1,11 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute;
-$Moose::Meta::Attribute::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use B ();
-use Scalar::Util 'blessed', 'weaken';
-use List::MoreUtils 'any';
+use Scalar::Util 'blessed';
+use List::Util 1.33 'any';
 use Try::Tiny;
 use overload     ();
 
@@ -883,7 +884,7 @@ sub _inline_init_from_default {
     my ($instance, $default, $tc, $coercion, $message, $for_lazy) = @_;
 
     if (!($self->has_default || $self->has_builder)) {
-	throw_exception( LazyAttributeNeedsADefault => attribute => $self );
+        throw_exception( LazyAttributeNeedsADefault => attribute => $self );
     }
 
     return (
@@ -1076,15 +1077,15 @@ sub install_delegation {
     my $associated_class = $self->associated_class;
     my $class_name = $associated_class->name;
 
-    foreach my $handle (sort keys %handles) {
+    foreach my $handle ( sort keys %handles ) {
         my $method_to_call = $handles{$handle};
-        my $name = "${class_name}::${handle}";
+        my $name           = "${class_name}::${handle}";
 
         if ( my $method = $associated_class->get_method($handle) ) {
-            throw_exception( CannotDelegateLocalMethodIsPresent => attribute => $self,
-                                                                   method    => $method,
-                           )
-		unless $method->is_stub;
+            throw_exception(
+                CannotDelegateLocalMethodIsPresent => attribute => $self,
+                method                             => $method,
+            ) unless $method->is_stub;
         }
 
         # NOTE:
@@ -1095,7 +1096,9 @@ sub install_delegation {
 
         # FIXME warn when $handle was explicitly specified, but not if the source is a regex or something
         #cluck("Not delegating method '$handle' because it is a core method") and
-        next if $class_name->isa("Moose::Object") and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
+        next
+            if $class_name->isa("Moose::Object")
+            and $handle =~ /^BUILD|DEMOLISH$/ || Moose::Object->can($handle);
 
         my $method = $self->_make_delegation_method($handle, $method_to_call);
 
@@ -1190,12 +1193,12 @@ sub _find_delegate_metaclass {
     my $role = $self->_does_metadata;
 
     if ( $class ) {
-	# make sure isa is actually a class
-	unless ( $self->type_constraint->isa("Moose::Meta::TypeConstraint::Class") ) {
-	    throw_exception( DelegationToATypeWhichIsNotAClass => attribute => $self );
-	}
+        # make sure isa is actually a class
+        unless ( $self->type_constraint->isa("Moose::Meta::TypeConstraint::Class") ) {
+            throw_exception( DelegationToATypeWhichIsNotAClass => attribute => $self );
+        }
 
-	# make sure the class is loaded
+        # make sure the class is loaded
         unless ( Moose::Util::_is_package_loaded($class) ) {
             throw_exception( DelegationToAClassWhichIsNotLoaded => attribute  => $self,
                                                                    class_name => $class
@@ -1216,7 +1219,7 @@ sub _find_delegate_metaclass {
         return Class::MOP::class_of($role);
     }
     else {
-	throw_exception( CannotFindDelegateMetaclass => attribute => $self );
+        throw_exception( CannotFindDelegateMetaclass => attribute => $self );
     }
 }
 
@@ -1270,7 +1273,8 @@ sub verify_against_type_constraint {
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
-$Moose::Meta::Attribute::Custom::Moose::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 sub register_implementation { 'Moose::Meta::Attribute' }
 1;
 
@@ -1288,7 +1292,7 @@ Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

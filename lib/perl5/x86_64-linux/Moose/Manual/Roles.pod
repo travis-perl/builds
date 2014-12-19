@@ -13,7 +13,7 @@ Moose::Manual::Roles - Roles, an alternative to deep hierarchies and base classe
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 WHAT IS A ROLE?
 
@@ -273,6 +273,9 @@ A role can be a collection of other roles:
 
   with ('Breakable', 'Breakdancer');
 
+When a role consumes another a role, the I<consuming> role's methods silently
+win in any conflict, and the consumed role's methods are simply ignored.
+
 =head1 METHOD EXCLUSION AND ALIASING
 
 If we want our C<FragileDancer> class to be able to call the methods
@@ -312,6 +315,24 @@ In some use cases we might alias and exclude methods from roles, but
 then provide a method of the same name in the class itself.
 
 Also see L<Moose::Cookbook::Roles::Restartable_AdvancedComposition> for an example.
+
+=head1 OVERLOADING
+
+When a Moose role uses overloading, that overloading is composed into any
+classes that consume the role. This includes the setting of the C<fallback>
+value for that role's overloading. Just as with methods and attributes, when a
+role consumes another role, that other role's overloading settings are applied
+to the role.
+
+Just as with methods, there can be conflicts with overloading implementations
+between multiple roles when they are all consumed by a class. If two roles
+both provide different overloading implementations for a given operator, that
+is a conflict. If two roles both implement overloading and have different
+C<fallback> values, that is also considered a conflict. These conflicts are
+detected when multiple roles are being composed into a class together.
+
+When a role consumes another role, the consuming role's overloading fallback
+and operator implementations silently "win" the conflict.
 
 =head1 ROLE EXCLUSION
 
