@@ -167,16 +167,16 @@ do{ my $x = [
        {},
        {},
        {
-         'inc_bundling_support' => {
-                                     'description' => 'Bundle Module::Build in inc/',
-                                     'requires' => {
-                                                     'ExtUtils::Installed' => '1.999',
-                                                     'ExtUtils::Install' => '1.54'
-                                                   }
-                                   },
-         'PPM_support' => {
-                            'description' => 'Generate PPM files for distributions'
-                          },
+         'dist_authoring' => {
+                               'recommends' => {
+                                                 'Module::Signature' => '0.21',
+                                                 'Pod::Readme' => '0.04'
+                                               },
+                               'requires' => {
+                                               'Archive::Tar' => '1.09'
+                                             },
+                               'description' => 'Create new distributions'
+                             },
          'HTML_support' => {
                              'description' => 'Create HTML documentation',
                              'requires' => {
@@ -184,21 +184,21 @@ do{ my $x = [
                                            }
                            },
          'license_creation' => {
-                                 'description' => 'Create licenses automatically in distributions',
                                  'requires' => {
                                                  'Software::License' => '0.103009'
-                                               }
-                               },
-         'dist_authoring' => {
-                               'recommends' => {
-                                                 'Pod::Readme' => '0.04',
-                                                 'Module::Signature' => '0.21'
                                                },
-                               'description' => 'Create new distributions',
-                               'requires' => {
-                                               'Archive::Tar' => '1.09'
-                                             }
-                             },
+                                 'description' => 'Create licenses automatically in distributions'
+                               },
+         'inc_bundling_support' => {
+                                     'requires' => {
+                                                     'ExtUtils::Install' => '1.54',
+                                                     'ExtUtils::Installed' => '1.999'
+                                                   },
+                                     'description' => 'Bundle Module::Build in inc/'
+                                   },
+         'PPM_support' => {
+                            'description' => 'Generate PPM files for distributions'
+                          },
          'manpage_support' => {
                                 'requires' => {
                                                 'Pod::Man' => 0
