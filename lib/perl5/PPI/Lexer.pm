@@ -62,7 +62,7 @@ use PPI::Exception  ();
 
 use vars qw{$VERSION $errstr *_PARENT %ROUND %RESOLVE};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	$errstr  = '';
 
 	# Faster than having another method call just
@@ -222,10 +222,7 @@ sub lex_tokenizer {
 
 	# Lex the token stream into the document
 	$self->{Tokenizer} = $Tokenizer;
-	eval {
-		$self->_lex_document($Document);
-	};
-	if ( $@ ) {
+	if ( !eval { $self->_lex_document($Document); 1 } ) {
 		# If an error occurs DESTROY the partially built document.
 		undef $Document;
 		if ( _INSTANCE($@, 'PPI::Exception') ) {
@@ -352,6 +349,10 @@ BEGIN {
 		'UNITCHECK' => 'PPI::Statement::Scheduled',
 		'INIT'      => 'PPI::Statement::Scheduled',
 		'END'       => 'PPI::Statement::Scheduled',
+
+		# Special subroutines for which 'sub' is optional
+		'AUTOLOAD'  => 'PPI::Statement::Sub',
+		'DESTROY'   => 'PPI::Statement::Sub',
 
 		# Loading and context statement
 		'package'   => 'PPI::Statement::Package',
@@ -1043,11 +1044,20 @@ BEGIN {
 		'map'  => 'PPI::Structure::Block',
 		'sort' => 'PPI::Structure::Block',
 		'do'   => 'PPI::Structure::Block',
+		# rely on 'continue' + block being handled elsewhere
+		# rely on 'eval' + block being handled elsewhere
 
 		# Hash constructors
 		'scalar' => 'PPI::Structure::Constructor',
 		'='      => 'PPI::Structure::Constructor',
 		'||='    => 'PPI::Structure::Constructor',
+		'&&='    => 'PPI::Structure::Constructor',
+		'//='    => 'PPI::Structure::Constructor',
+		'||'     => 'PPI::Structure::Constructor',
+		'&&'     => 'PPI::Structure::Constructor',
+		'//'     => 'PPI::Structure::Constructor',
+		'?'      => 'PPI::Structure::Constructor',
+		':'      => 'PPI::Structure::Constructor',
 		','      => 'PPI::Structure::Constructor',
 		'=>'     => 'PPI::Structure::Constructor',
 		'+'      => 'PPI::Structure::Constructor', # per perlref
@@ -1151,7 +1161,7 @@ sub _curly {
 	# We need to scan ahead.
 	my $Next;
 	my $position = 0;
-	my @delayed  = ();
+	my @delayed;
 	while ( $Next = $self->_get_token ) {
 		unless ( $Next->significant ) {
 			push @delayed, $Next;

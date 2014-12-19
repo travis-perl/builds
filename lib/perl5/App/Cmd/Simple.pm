@@ -2,9 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Simple;
-{
-  $App::Cmd::Simple::VERSION = '0.323';
-}
+$App::Cmd::Simple::VERSION = '0.326';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' }
 
@@ -13,6 +11,80 @@ BEGIN { our @ISA = 'App::Cmd::Command' }
 use App::Cmd;
 use Sub::Install;
 
+#pod =head1 SYNOPSIS
+#pod
+#pod in F<simplecmd>:
+#pod
+#pod   use YourApp::Cmd;
+#pod   Your::Cmd->run;
+#pod
+#pod in F<YourApp/Cmd.pm>:
+#pod
+#pod   package YourApp::Cmd;
+#pod   use base qw(App::Cmd::Simple);
+#pod
+#pod   sub opt_spec {
+#pod     return (
+#pod       [ "blortex|X",  "use the blortex algorithm" ],
+#pod       [ "recheck|r",  "recheck all results"       ],
+#pod     );
+#pod   }
+#pod
+#pod   sub validate_args {
+#pod     my ($self, $opt, $args) = @_;
+#pod
+#pod     # no args allowed but options!
+#pod     $self->usage_error("No args allowed") if @$args;
+#pod   }
+#pod
+#pod   sub execute {
+#pod     my ($self, $opt, $args) = @_;
+#pod
+#pod     my $result = $opt->{blortex} ? blortex() : blort();
+#pod
+#pod     recheck($result) if $opt->{recheck};
+#pod
+#pod     print $result;
+#pod   }
+#pod
+#pod and, finally, at the command line:
+#pod
+#pod   knight!rjbs$ simplecmd --recheck
+#pod
+#pod   All blorts successful.
+#pod
+#pod =head1 SUBCLASSING
+#pod
+#pod When writing a subclass of App::Cmd:Simple, there are only a few methods that
+#pod you might want to implement.  They behave just like the same-named methods in
+#pod App::Cmd.
+#pod
+#pod =head2 opt_spec
+#pod
+#pod This method should be overridden to provide option specifications.  (This is
+#pod list of arguments passed to C<describe_options> from Getopt::Long::Descriptive,
+#pod after the first.)
+#pod
+#pod If not overridden, it returns an empty list.
+#pod
+#pod =head2 validate_args
+#pod
+#pod   $cmd->validate_args(\%opt, \@args);
+#pod
+#pod This method is passed a hashref of command line options (as processed by
+#pod Getopt::Long::Descriptive) and an arrayref of leftover arguments.  It may throw
+#pod an exception (preferably by calling C<usage_error>) if they are invalid, or it
+#pod may do nothing to allow processing to continue.
+#pod
+#pod =head2 execute
+#pod
+#pod   Your::App::Cmd::Simple->execute(\%opt, \@args);
+#pod
+#pod This method does whatever it is the command should do!  It is passed a hash
+#pod reference of the parsed command-line options and an array reference of left
+#pod over arguments.
+#pod
+#pod =cut
 
 # The idea here is that the user will someday replace "Simple" in his ISA with
 # "Command" and then write a standard App::Cmd package.  To make that possible,
@@ -106,6 +178,26 @@ sub usage_desc {
 
 sub _cmd_pkg { }
 
+#pod =head1 WARNINGS
+#pod
+#pod B<This should be considered experimental!>  Although it is probably not going
+#pod to change much, don't build your business model around it yet, okay?
+#pod
+#pod App::Cmd::Simple is not rich in black magic, but it does do some somewhat
+#pod gnarly things to make an App::Cmd::Simple look as much like an
+#pod App::Cmd::Command as possible.  This means that you can't deviate too much from
+#pod the sort of thing shown in the synopsis as you might like.  If you're doing
+#pod something other than writing a fairly simple command, and you want to screw
+#pod around with the App::Cmd-iness of your program, Simple might not be the best
+#pod choice.
+#pod
+#pod B<One specific warning...>  if you are writing a program with the
+#pod App::Cmd::Simple class embedded in it, you B<must> call import on the class.
+#pod That's how things work.  You can just do this:
+#pod
+#pod   YourApp::Cmd->import->run;
+#pod
+#pod =cut
 
 1;
 
@@ -121,7 +213,7 @@ App::Cmd::Simple - a helper for building one-command App::Cmd applications
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 SYNOPSIS
 
@@ -221,7 +313,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

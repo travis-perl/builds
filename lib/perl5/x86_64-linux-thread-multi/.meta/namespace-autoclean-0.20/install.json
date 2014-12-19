@@ -1,1 +1,0 @@
-{"pathname":"E/ET/ETHER/namespace-autoclean-0.20.tar.gz","version":"0.20","target":"namespace::autoclean","name":"namespace::autoclean","provides":{"namespace::autoclean":{"file":"lib/namespace/autoclean.pm","version":"0.20"}},"dist":"namespace-autoclean-0.20"}

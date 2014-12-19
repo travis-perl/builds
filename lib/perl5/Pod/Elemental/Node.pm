@@ -1,6 +1,6 @@
 package Pod::Elemental::Node;
 # ABSTRACT: a thing with Pod::Elemental::Nodes as children
-$Pod::Elemental::Node::VERSION = '0.103001';
+$Pod::Elemental::Node::VERSION = '0.103002';
 use Moose::Role;
 
 use namespace::autoclean;
@@ -61,7 +61,7 @@ Pod::Elemental::Node - a thing with Pod::Elemental::Nodes as children
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

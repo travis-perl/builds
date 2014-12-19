@@ -1,5 +1,5 @@
 package Log::Dispatch::Email::MailSender;
-$Log::Dispatch::Email::MailSender::VERSION = '2.42';
+$Log::Dispatch::Email::MailSender::VERSION = '2.44';
 # By: Joseph Annino
 # (c) 2002
 # Licensed under the same terms as Perl
@@ -74,7 +74,7 @@ Log::Dispatch::Email::MailSender - Subclass of Log::Dispatch::Email that uses th
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

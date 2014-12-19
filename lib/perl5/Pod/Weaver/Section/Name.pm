@@ -1,14 +1,33 @@
 package Pod::Weaver::Section::Name;
-{
-  $Pod::Weaver::Section::Name::VERSION = '4.006';
-}
+# ABSTRACT: add a NAME section with abstract (for your Perl module)
+$Pod::Weaver::Section::Name::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
-# ABSTRACT: add a NAME section with abstract (for your Perl module)
 
 use Moose::Autobox;
+use Encode;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section plugin will produce a hunk of Pod giving the name of the document
+#pod as well as an abstract, like this:
+#pod
+#pod   =head1 NAME
+#pod
+#pod   Some::Document - a document for some
+#pod
+#pod It will determine the name and abstract by inspecting the C<ppi_document> which
+#pod must be given.  It looks for comments in the form:
+#pod
+#pod
+#pod   # ABSTRACT: a document for some
+#pod   # PODNAME: Some::Package::Name
+#pod
+#pod If no C<PODNAME> comment is present, but a package declaration can be found,
+#pod the package name will be used as the document name.
+#pod
+#pod =cut
 
 use Pod::Elemental::Element::Pod5::Command;
 use Pod::Elemental::Element::Pod5::Ordinary;
@@ -58,8 +77,10 @@ sub weave_section {
 
   my $filename = $input->{filename} || 'file';
 
-  my $docname  = $self->_get_docname($input);
-  my $abstract = $self->_get_abstract($input);
+  # We can do this becaue we know that PPI is working on bytes.  If PPI ever
+  # becomes a string parser, we'll need to rethink. -- rjbs, 2014-11-12
+  my $docname  = Encode::decode_utf8($self->_get_docname($input));
+  my $abstract = Encode::decode_utf8($self->_get_abstract($input));
 
   Carp::croak sprintf "couldn't determine document name for %s\nAdd something like this to %s:\n# PODNAME: bobby_tables.pl", $filename, $filename
     unless $docname;
@@ -80,6 +101,7 @@ sub weave_section {
   $document->children->push($name_para);
 }
 
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -94,7 +116,7 @@ Pod::Weaver::Section::Name - add a NAME section with abstract (for your Perl mod
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

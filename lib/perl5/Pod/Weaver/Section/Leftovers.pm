@@ -1,16 +1,25 @@
 package Pod::Weaver::Section::Leftovers;
-{
-  $Pod::Weaver::Section::Leftovers::VERSION = '4.006';
-}
+# ABSTRACT: a place to put everything that nothing else used
+$Pod::Weaver::Section::Leftovers::VERSION = '4.009';
 use Moose;
 with(
   'Pod::Weaver::Role::Section',
   'Pod::Weaver::Role::Finalizer',
 );
-# ABSTRACT: a place to put everything that nothing else used
 
 use Moose::Autobox;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section plugin is used to designate where in the output sequence all
+#pod unused parts of the input C<pod_document> should be placed.
+#pod
+#pod Other section plugins are expected to remove from the input Pod document any
+#pod sections that are consumed.  At the end of all section weaving, the Leftovers
+#pod section will inject any leftover input Pod into its position in the output
+#pod document.
+#pod
+#pod =cut
 
 use Pod::Elemental::Element::Pod5::Region;
 use Pod::Elemental::Types qw(FormatName);
@@ -36,7 +45,7 @@ sub weave_section {
     format_name => $self->_marker,
     content     => '',
   });
-  
+
   $document->children->push($placeholder);
 }
 
@@ -57,7 +66,6 @@ sub finalize_document {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
 1;
 
 __END__
@@ -72,7 +80,7 @@ Pod::Weaver::Section::Leftovers - a place to put everything that nothing else us
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

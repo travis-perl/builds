@@ -1,6 +1,6 @@
 package Pod::Elemental::Transformer::Nester;
 # ABSTRACT: group the document into sections
-$Pod::Elemental::Transformer::Nester::VERSION = '0.103001';
+$Pod::Elemental::Transformer::Nester::VERSION = '0.103002';
 use Moose;
 with 'Pod::Elemental::Transformer';
 
@@ -144,6 +144,8 @@ sub transform_node {
   return $node;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -158,7 +160,7 @@ Pod::Elemental::Transformer::Nester - group the document into sections
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

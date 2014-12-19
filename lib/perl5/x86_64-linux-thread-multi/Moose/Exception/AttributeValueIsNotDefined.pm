@@ -1,5 +1,6 @@
 package Moose::Exception::AttributeValueIsNotDefined;
-$Moose::Exception::AttributeValueIsNotDefined::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Instance', 'Moose::Exception::Role::Attribute';
