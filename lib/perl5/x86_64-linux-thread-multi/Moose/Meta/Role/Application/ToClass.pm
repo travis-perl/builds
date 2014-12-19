@@ -1,16 +1,15 @@
 package Moose::Meta::Role::Application::ToClass;
-$Moose::Meta::Role::Application::ToClass::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 use metaclass;
 
 use List::MoreUtils 'firstval';
-use Moose::Util  'english_list';
-use Scalar::Util 'weaken', 'blessed';
+use Moose::Util 'throw_exception';
+use Scalar::Util 'weaken';
 
 use parent 'Moose::Meta::Role::Application';
-
-use Moose::Util 'throw_exception';
 
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',
@@ -225,7 +224,7 @@ Moose::Meta::Role::Application::ToClass - Compose a role into a class
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 
