@@ -1,5 +1,6 @@
 package Moose::Exception::AttributeConflictInRoles;
-$Moose::Exception::AttributeConflictInRoles::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Role';
