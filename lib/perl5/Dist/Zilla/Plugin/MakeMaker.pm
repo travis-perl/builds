@@ -1,14 +1,13 @@
 package Dist::Zilla::Plugin::MakeMaker;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.020';
+$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.029';
 use Moose;
-use Moose::Autobox;
 
 use namespace::autoclean;
 
 use Config;
 use CPAN::Meta::Requirements 2.121; # requirements_for_module
-use List::MoreUtils qw(any uniq);
+use List::Util 'first';
 
 use Dist::Zilla::File::InMemory;
 use Dist::Zilla::Plugin::MakeMaker::Runner;
@@ -68,12 +67,13 @@ has '_runner' => (
 
 # This is here, rather than at the top, so that the "build" and "test" methods
 # will exist, as they are required by BuildRunner and TestRunner respectively.
-# I had originally fixed this with stub methods, but stub methods to not behave
+# I had originally fixed this with stub methods, but stub methods do not behave
 # properly with this use case until Moose 2.0300. -- rjbs, 2012-02-08
 with qw(
   Dist::Zilla::Role::BuildRunner
   Dist::Zilla::Role::InstallTool
   Dist::Zilla::Role::PrereqSource
+  Dist::Zilla::Role::FileGatherer
   Dist::Zilla::Role::TestRunner
   Dist::Zilla::Role::TextTemplate
 );
@@ -85,7 +85,7 @@ use warnings;
 
 {{ $perl_prereq ? qq[use $perl_prereq;] : ''; }}
 
-use ExtUtils::MakeMaker {{ defined $eumm_version ? $eumm_version : '' }};
+use ExtUtils::MakeMaker{{ defined $eumm_version && 0+$eumm_version ? ' ' . $eumm_version : '' }};
 
 {{ $share_dir_code{preamble} || '' }}
 
@@ -122,6 +122,20 @@ sub register_prereqs {
     { phase => 'configure' },
     'File::ShareDir::Install' => 0.06,
   );
+}
+
+sub gather_files {
+  my ($self) = @_;
+
+  require Dist::Zilla::File::InMemory;
+
+  my $file = Dist::Zilla::File::InMemory->new({
+    name    => 'Makefile.PL',
+    content => $template,   # template evaluated later
+  });
+
+  $self->add_file($file);
+  return;
 }
 
 sub share_dir_code {
@@ -162,14 +176,14 @@ sub write_makefile_args {
 
   (my $name = $self->zilla->name) =~ s/-/::/g;
 
-  my @exe_files =
-    $self->zilla->find_files(':ExecFiles')->map(sub { $_->name })->flatten;
+  my @exe_files = map { $_->name }
+    @{ $self->zilla->find_files(':ExecFiles') };
 
   $self->log_fatal("can't install files with whitespace in their names")
     if grep { /\s/ } @exe_files;
 
   my %test_dirs;
-  for my $file ($self->zilla->files->flatten) {
+  for my $file (@{ $self->zilla->files }) {
     next unless $file->name =~ m{\At/.+\.t\z};
     (my $dir = $file->name) =~ s{/[^/]+\.t\z}{/*.t}g;
 
@@ -179,7 +193,9 @@ sub write_makefile_args {
   my $prereqs = $self->zilla->prereqs;
   my $perl_prereq = $prereqs->requirements_for(qw(runtime requires))
     ->clone
+    ->add_requirements($prereqs->requirements_for(qw(configure requires)))
     ->add_requirements($prereqs->requirements_for(qw(build requires)))
+    ->add_requirements($prereqs->requirements_for(qw(test requires)))
     ->as_string_hash->{perl};
 
   $perl_prereq = version->parse($perl_prereq)->numify if $perl_prereq;
@@ -199,7 +215,7 @@ sub write_makefile_args {
   my %write_makefile_args = (
     DISTNAME  => $self->zilla->name,
     NAME      => $name,
-    AUTHOR    => $self->zilla->authors->join(q{, }),
+    AUTHOR    => join(q{, }, @{ $self->zilla->authors }),
     ABSTRACT  => $self->zilla->abstract,
     VERSION   => $self->zilla->version,
     LICENSE   => $self->zilla->license->meta_yml_name,
@@ -259,18 +275,21 @@ sub fallback_prereq_pm {
 }
 
 sub setup_installer {
-  my ($self, $arg) = @_;
+  my ($self) = @_;
 
   my $write_makefile_args = $self->write_makefile_args;
 
   $self->__write_makefile_args($write_makefile_args); # save for testing
 
-  my $perl_prereq = delete $write_makefile_args->{MIN_PERL_VERSION};
+  my $perl_prereq = $write_makefile_args->{MIN_PERL_VERSION};
 
   my $dumped_args = $self->_dump_as($write_makefile_args, '*WriteMakefileArgs');
 
+  my $file = first { $_->name eq 'Makefile.PL' } @{$self->zilla->files};
+
+  $self->log_debug([ 'updating contents of Makefile.PL in memory' ]);
   my $content = $self->fill_in_string(
-    $template,
+    $file->content,
     {
       eumm_version      => \($self->eumm_version),
       perl_prereq       => \$perl_prereq,
@@ -282,12 +301,8 @@ sub setup_installer {
     },
   );
 
-  my $file = Dist::Zilla::File::InMemory->new({
-    name    => 'Makefile.PL',
-    content => $content,
-  });
+  $file->content($content);
 
-  $self->add_file($file);
   return;
 }
 
@@ -327,7 +342,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

@@ -2,14 +2,77 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::help;
-{
-  $App::Cmd::Command::help::VERSION = '0.323';
-}
+$App::Cmd::Command::help::VERSION = '0.326';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
 # ABSTRACT: display a command's help screen
 
+#pod =head1 DESCRIPTION
+#pod
+#pod This command plugin implements a "help" command.  This command will either list
+#pod all of an App::Cmd's commands and their abstracts, or display the usage screen
+#pod for a subcommand with its description.
+#pod
+#pod =head1 USAGE
+#pod
+#pod The help text is generated from three sources:
+#pod
+#pod =for :list
+#pod * The C<usage_desc> method
+#pod * The C<description> method
+#pod * The C<opt_spec> data structure
+#pod
+#pod The C<usage_desc> method provides the opening usage line, following the
+#pod specification described in L<Getopt::Long::Descriptive>.  In some cases,
+#pod the default C<usage_desc> in L<App::Cmd::Command> may be sufficient and
+#pod you will only need to override it to provide additional command line
+#pod usage information.
+#pod
+#pod The C<opt_spec> data structure is used with L<Getopt::Long::Descriptive>
+#pod to generate the description of the options.
+#pod
+#pod Subcommand classes should override the C<discription> method to provide
+#pod additional information that is prepended before the option descriptions.
+#pod
+#pod For example, consider the following subcommand module:
+#pod
+#pod   package YourApp::Command::initialize;
+#pod
+#pod   # This is the default from App::Cmd::Command
+#pod   sub usage_desc {
+#pod     my ($self) = @_;
+#pod     my $desc = $self->SUPER::usage_desc; # "%c COMMAND %o"
+#pod     return "$desc [DIRECTORY]";
+#pod   }
+#pod
+#pod   sub description {
+#pod     return "The initialize command prepares the application...";
+#pod   }
+#pod
+#pod   sub opt_spec {
+#pod     return (
+#pod       [ "skip-refs|R",  "skip reference checks during init", ],
+#pod       [ "values|v=s@",  "starting values", { default => [ 0, 1, 3 ] } ],
+#pod     );
+#pod   }
+#pod
+#pod   ...
+#pod
+#pod That module would generate help output like this:
+#pod
+#pod   $ yourapp help initialize
+#pod   yourapp initialize [-Rv] [long options...] [DIRECTORY]
+#pod
+#pod   The initialize command prepares the application...
+#pod
+#pod         --help            This usage screen
+#pod         -R --skip-refs    skip reference checks during init
+#pod         -v --values       starting values
+#pod
+#pod =cut
+
+sub usage_desc { '%c help [subcommand]' }
 
 sub command_names { qw/help --help -h -?/ }
 
@@ -70,7 +133,7 @@ App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 DESCRIPTION
 
@@ -151,7 +214,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

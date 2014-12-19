@@ -2,11 +2,8 @@ use 5.008001; # sane UTF-8 support
 use strict;
 use warnings;
 package YAML::Tiny;
-BEGIN {
-  $YAML::Tiny::AUTHORITY = 'cpan:ADAMK';
-}
-# git description: v1.62-12-gb635350
-$YAML::Tiny::VERSION = '1.63';
+# git description: v1.63-12-g5dd832a
+$YAML::Tiny::VERSION = '1.64';
 # XXX-INGY is 5.8.1 too old/broken for utf8?
 # XXX-XDG Lancaster consensus was that it was sufficient until
 # proven otherwise
@@ -832,9 +829,10 @@ sub _can_flock {
 #####################################################################
 # Use Scalar::Util if possible, otherwise emulate it
 
+use Scalar::Util ();
 BEGIN {
     local $@;
-    if ( eval { require Scalar::Util; Scalar::Util->VERSION(1.18); } ) {
+    if ( eval { Scalar::Util->VERSION(1.18); } ) {
         *refaddr = *Scalar::Util::refaddr;
     }
     else {
@@ -856,8 +854,7 @@ END_PERL
     }
 }
 
-
-
+delete $YAML::Tiny::{refaddr};
 
 1;
 
@@ -882,7 +879,7 @@ YAML::Tiny - Read/Write YAML files with as little code as possible
 
 =head1 VERSION
 
-version 1.63
+version 1.64
 
 =head1 PREAMBLE
 

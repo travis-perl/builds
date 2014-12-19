@@ -1,19 +1,36 @@
 package Pod::Weaver::Plugin::SingleEncoding;
-{
-  $Pod::Weaver::Plugin::SingleEncoding::VERSION = '4.006';
-}
+# ABSTRACT: ensure that there is exactly one =encoding of known value
+$Pod::Weaver::Plugin::SingleEncoding::VERSION = '4.009';
 use Moose;
 with(
   'Pod::Weaver::Role::Dialect',
   'Pod::Weaver::Role::Finalizer',
 );
-# ABSTRACT: ensure that there is exactly one =encoding of known value
 
 use namespace::autoclean;
 use Moose::Autobox;
 
 use Pod::Elemental::Selectors -all;
 
+#pod =head1 OVERVIEW
+#pod
+#pod The SingleEncoding plugin is a Dialect and a Finalizer.
+#pod
+#pod During dialect translation, it will look for C<=encoding> directives.  If it
+#pod finds them, it will ensure that they all agree on one encoding and remove them.
+#pod
+#pod During document finalization, it will insert an C<=encoding> directive at the
+#pod top of the output, using the encoding previously detected.  If no encoding was
+#pod detected, the plugin's C<encoding> attribute will be used instead.  That
+#pod defaults to UTF-8.
+#pod
+#pod If you want to reject any C<=encoding> directive that doesn't match your
+#pod expectations, set the C<encoding> attribute by hand.
+#pod
+#pod No actual validation of the encoding is done.  Pod::Weaver, after all, deals in
+#pod text rather than bytes.
+#pod
+#pod =cut
 
 has encoding => (
   reader => 'encoding',
@@ -73,7 +90,7 @@ sub finalize_document {
   return;
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -88,7 +105,7 @@ Pod::Weaver::Plugin::SingleEncoding - ensure that there is exactly one =encoding
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

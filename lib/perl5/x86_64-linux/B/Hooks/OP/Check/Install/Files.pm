@@ -1,10 +1,10 @@
 package B::Hooks::OP::Check::Install::Files;
 
 $self = {
-          'typemaps' => [],
           'deps' => [],
+          'inc' => '',
           'libs' => '',
-          'inc' => ''
+          'typemaps' => []
         };
 
 @deps = @{ $self->{deps} };

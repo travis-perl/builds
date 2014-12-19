@@ -1,7 +1,5 @@
 package PerlIO::utf8_strict;
-{
-  $PerlIO::utf8_strict::VERSION = '0.004';
-}
+$PerlIO::utf8_strict::VERSION = '0.005';
 use strict;
 use warnings;
 
@@ -13,9 +11,11 @@ XSLoader::load(__PACKAGE__, __PACKAGE__->VERSION);
 
 #ABSTRACT: Fast and correct UTF-8 IO
 
-
+__END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -23,7 +23,7 @@ PerlIO::utf8_strict - Fast and correct UTF-8 IO
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 
@@ -86,7 +86,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-

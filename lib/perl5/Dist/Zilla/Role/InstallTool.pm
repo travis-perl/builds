@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::InstallTool;
 # ABSTRACT: something that creates an install program for a dist
-$Dist::Zilla::Role::InstallTool::VERSION = '5.020';
+$Dist::Zilla::Role::InstallTool::VERSION = '5.029';
 use Moose::Role;
 with qw(
   Dist::Zilla::Role::Plugin
@@ -8,8 +8,6 @@ with qw(
 );
 
 use namespace::autoclean;
-
-use Moose::Autobox;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -38,7 +36,7 @@ Dist::Zilla::Role::InstallTool - something that creates an install program for a
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

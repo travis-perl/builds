@@ -57,7 +57,7 @@ use PPI::Element    ();
 
 use vars qw{$VERSION @ISA *_PARENT};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	@ISA     = 'PPI::Element';
 	*_PARENT = *PPI::Element::_PARENT;
 }
@@ -373,9 +373,9 @@ sub find {
 	my $wanted = $self->_wanted(shift) or return undef;
 
 	# Use a queue based search, rather than a recursive one
-	my @found = ();
+	my @found;
 	my @queue = @{$self->{children}};
-	eval {
+	my $ok = eval {
 		while ( @queue ) {
 			my $Element = shift @queue;
 			my $rv      = &$wanted( $self, $Element );
@@ -397,8 +397,9 @@ sub find {
 				unshift @queue, @{$Element->{children}};
 			}
 		}
+		1;
 	};
-	if ( $@ ) {
+	if ( !$ok ) {
 		# Caught exception thrown from the wanted function
 		return undef;
 	}
@@ -431,18 +432,22 @@ sub find_first {
 
 	# Use the same queue-based search as for ->find
 	my @queue = @{$self->{children}};
-	my $rv    = eval {
+	my $rv;
+	my $ok = eval {
 		# The defined() here prevents a ton of calls to PPI::Util::TRUE
 		while ( @queue ) {
 			my $Element = shift @queue;
-			my $rv      = &$wanted( $self, $Element );
-			return $Element if $rv;
+			my $element_rv = $wanted->( $self, $Element );
+			if ( $element_rv ) {
+				$rv = $Element;
+				last;
+			}
 
 			# Support "don't descend on undef return"
-			next unless defined $rv;
+			next if !defined $element_rv;
 
 			# Skip if the Element doesn't have any children
-			next unless $Element->isa('PPI::Node');
+			next if !$Element->isa('PPI::Node');
 
 			# Depth-first keeps the queue size down and provides a
 			# better logical order.
@@ -454,8 +459,9 @@ sub find_first {
 				unshift @queue, @{$Element->{children}};
 			}
 		}
+		1;
 	};
-	if ( $@ ) {
+	if ( !$ok ) {
 		# Caught exception thrown from the wanted function
 		return undef;
 	}
@@ -539,7 +545,7 @@ sub prune {
 	# Use a depth-first queue search
 	my $pruned = 0;
 	my @queue  = $self->children;
-	eval {
+	my $ok = eval {
 		while ( my $element = shift @queue ) {
 			my $rv = &$wanted( $self, $element );
 			if ( $rv ) {
@@ -557,8 +563,9 @@ sub prune {
 				unshift @queue, $element->children;
 			}
 		}
+		1;
 	};
-	if ( $@ ) {
+	if ( !$ok ) {
 		# Caught exception thrown from the wanted function
 		return undef;		
 	}

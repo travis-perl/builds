@@ -5,7 +5,7 @@
       "Leon Timmermans <leont@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300039, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Dist::Zilla version 4.300039, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.140640",
    "license" : [
       "perl_5"
    ],

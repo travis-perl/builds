@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MetaTests;
 # ABSTRACT: common extra tests for META.yml
-$Dist::Zilla::Plugin::MetaTests::VERSION = '5.020';
+$Dist::Zilla::Plugin::MetaTests::VERSION = '5.029';
 use Moose;
 extends 'Dist::Zilla::Plugin::InlineFiles';
 with 'Dist::Zilla::Role::PrereqSource';
@@ -14,10 +14,8 @@ use namespace::autoclean;
 #pod
 #pod   xt/release/meta-yaml.t - a standard Test::CPAN::Meta test
 #pod
-#pod Note that this test doesn't actually do anything unless you have
-#pod L<Test::CPAN::Meta> installed.
-#pod
-#pod L<Test::CPAN::Meta> will be added as a C<develop requires> dependency.
+#pod L<Test::CPAN::Meta> will be added as a C<develop requires> dependency (which
+#pod can be installed via C<< dzil listdeps --author | cpanm >>).
 #pod
 #pod =head1 SEE ALSO
 #pod
@@ -56,7 +54,7 @@ Dist::Zilla::Plugin::MetaTests - common extra tests for META.yml
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 
@@ -65,10 +63,8 @@ following files:
 
   xt/release/meta-yaml.t - a standard Test::CPAN::Meta test
 
-Note that this test doesn't actually do anything unless you have
-L<Test::CPAN::Meta> installed.
-
-L<Test::CPAN::Meta> will be added as a C<develop requires> dependency.
+L<Test::CPAN::Meta> will be added as a C<develop requires> dependency (which
+can be installed via C<< dzil listdeps --author | cpanm >>).
 
 =head1 SEE ALSO
 

@@ -1,1 +1,1 @@
-{"pathname":"R/RJ/RJBS/Data-Section-0.200006.tar.gz","dist":"Data-Section-0.200006","provides":{"Data::Section":{"file":"lib/Data/Section.pm","version":"0.200006"}},"target":"Data::Section","version":"0.200006","name":"Data::Section"}
+{"dist":"Data-Section-0.200006","target":"Data::Section","name":"Data::Section","version":"0.200006","provides":{"Data::Section":{"version":"0.200006","file":"lib/Data/Section.pm"}},"pathname":"R/RJ/RJBS/Data-Section-0.200006.tar.gz"}

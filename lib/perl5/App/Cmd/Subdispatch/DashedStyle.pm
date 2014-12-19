@@ -2,14 +2,22 @@ use strict;
 use warnings;
 
 package App::Cmd::Subdispatch::DashedStyle;
-{
-  $App::Cmd::Subdispatch::DashedStyle::VERSION = '0.323';
-}
+$App::Cmd::Subdispatch::DashedStyle::VERSION = '0.326';
 use App::Cmd::Subdispatch;
 BEGIN { our @ISA = 'App::Cmd::Subdispatch' };
 
 # ABSTRACT: "app cmd --subcmd" style subdispatching
 
+#pod =method get_command
+#pod
+#pod   my ($subcommand, $opt, $args) = $subdispatch->get_command(@args)
+#pod
+#pod A version of get_command that chooses commands as options in the following
+#pod style:
+#pod
+#pod   mytool mycommand --mysubcommand
+#pod
+#pod =cut
 
 sub get_command {
 	my ($self, @args) = @_;
@@ -25,12 +33,21 @@ sub get_command {
   }
 }
 
+#pod =for Pod::Coverage prepare_default_command
+#pod
+#pod =cut
 
 sub prepare_default_command {
   my ( $self, $opt, @args ) = @_;
   $self->_prepare_command( "help" );
 }
 
+#pod =method opt_spec
+#pod
+#pod A version of C<opt_spec> that calculates the getopt specification from the
+#pod subcommands.
+#pod
+#pod =cut
 
 sub opt_spec {
 	my ($self, $app) = @_;
@@ -67,7 +84,7 @@ App::Cmd::Subdispatch::DashedStyle - "app cmd --subcmd" style subdispatching
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 METHODS
 
@@ -93,7 +110,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
