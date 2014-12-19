@@ -134,7 +134,7 @@ bind	Socket	binds an address to a socket
 binmode	I/O	prepare binary files for I/O
 bless	Objects	create an object
 break	Flow	break out of a C<given> block
-caller	Flow	Namespace	get context of the current subroutine call
+caller	Namespace	Flow	get context of the current subroutine call
 chdir	File	change your current working directory
 chmod	File	changes the permissions on a list of files
 chomp	String	remove a trailing record separator from a string
@@ -148,11 +148,11 @@ connect	Socket	connect to a remote socket
 continue	Flow	optional trailing block in a while or foreach
 cos	Math	cosine function
 crypt	String	one-way passwd-style encryption
-dbmclose	Objects	I/O	breaks binding on a tied dbm file
-dbmopen	Objects	I/O	create binding on a tied dbm file
+dbmclose	I/O	Objects	breaks binding on a tied dbm file
+dbmopen	I/O	Objects	create binding on a tied dbm file
 defined	Misc	test whether a value, variable, or function is defined
 delete	HASH	deletes a value from a hash
-die	Flow	I/O	raise an exception or bail out
+die	I/O	Flow	raise an exception or bail out
 do	Modules	Flow	turn a BLOCK into a TERM
 dump	Flow	create an immediate core dump
 each	ARRAY	HASH	retrieve the next key/value pair from a hash
@@ -242,7 +242,7 @@ open	File	open a file, pipe, or descriptor
 opendir	File	open a directory
 ord	String	find a character's numeric representation
 our	Namespace	declare and assign a package variable (lexical scoping)
-pack	Binary	String	convert a list into a binary representation
+pack	String	Binary	convert a list into a binary representation
 package	Modules	Objects	Namespace	declare a separate global namespace
 __PACKAGE__	Flow	the current package
 pipe	Process	open a pair of connected filehandles
