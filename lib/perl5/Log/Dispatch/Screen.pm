@@ -1,5 +1,5 @@
 package Log::Dispatch::Screen;
-$Log::Dispatch::Screen::VERSION = '2.42';
+$Log::Dispatch::Screen::VERSION = '2.44';
 use strict;
 use warnings;
 
@@ -59,7 +59,7 @@ Log::Dispatch::Screen - Object for logging to the screen
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

@@ -2,8 +2,8 @@ use strict;
 use warnings;
 
 package namespace::autoclean;
-# git description: 0.19-8-g7e15899
-$namespace::autoclean::VERSION = '0.20';
+# git description: 0.21-2-g546df0b
+$namespace::autoclean::VERSION = '0.22';
 # ABSTRACT: Keep imports out of your namespace
 # KEYWORDS: namespaces clean dirty imports exports subroutines methods development
 
@@ -130,7 +130,6 @@ use namespace::clean 0.20;
 #pod * L<Sub::Exporter::ForMethods>
 #pod * L<Sub::Name>
 #pod * L<Sub::Install>
-#pod * L<MooseX::MarkAsMethods>
 #pod * L<Test::CleanNamespaces>
 #pod * L<Dist::Zilla::Plugin::Test::CleanNamespaces>
 #pod
@@ -201,8 +200,8 @@ sub _method_check {
             my $coderef = do { no strict 'refs'; \&{ $package . '::' . $_[0] } };
             my $code_stash = Sub::Identify::stash_name($coderef);
             return 1 if $code_stash eq $package;
-            return 1 if $does && eval { $package->$does($code_stash) };
             return 1 if $code_stash eq 'constant';
+            return 1 if $does && eval { $package->$does($code_stash) };
             return 0;
         };
     }
@@ -219,6 +218,10 @@ __END__
 =head1 NAME
 
 namespace::autoclean - Keep imports out of your namespace
+
+=head1 VERSION
+
+version 0.22
 
 =head1 SYNOPSIS
 
@@ -360,10 +363,6 @@ L<Sub::Install>
 
 =item *
 
-L<MooseX::MarkAsMethods>
-
-=item *
-
 L<Test::CleanNamespaces>
 
 =item *
@@ -376,19 +375,26 @@ L<Dist::Zilla::Plugin::Test::CleanNamespaces>
 
 Florian Ragwitz <rafl@debian.org>
 
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Florian Ragwitz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =head1 CONTRIBUTORS
 
-=for stopwords Graham Knop Karen Etheridge Dave Rolsky Kent Fredric Tomas Doran Shawn M Moore Felix Ostmann Chris Prather Andrew Rodland
+=for stopwords Karen Etheridge Graham Knop Dave Rolsky Kent Fredric Tomas Doran Shawn M Moore Felix Ostmann Chris Prather Andrew Rodland
 
 =over 4
 
 =item *
 
-Graham Knop <haarg@haarg.org>
+Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Karen Etheridge <ether@cpan.org>
+Graham Knop <haarg@haarg.org>
 
 =item *
 
@@ -419,12 +425,5 @@ Chris Prather <cprather@hdpublishing.com>
 Andrew Rodland <andrew@hbslabs.com>
 
 =back
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2009 by Florian Ragwitz.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
 
 =cut

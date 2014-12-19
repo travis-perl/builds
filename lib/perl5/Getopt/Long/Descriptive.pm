@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Getopt::Long::Descriptive;
 # ABSTRACT: Getopt::Long, but simpler and more powerful
-$Getopt::Long::Descriptive::VERSION = '0.097';
+$Getopt::Long::Descriptive::VERSION = '0.098';
 use Carp qw(carp croak);
 use File::Basename ();
 use Getopt::Long 2.33;
@@ -13,248 +13,248 @@ use Scalar::Util ();
 use Getopt::Long::Descriptive::Opts;
 use Getopt::Long::Descriptive::Usage;
 
-# =head1 SYNOPSIS
-#
-#   use Getopt::Long::Descriptive;
-#
-#   my ($opt, $usage) = describe_options(
-#     'my-program %o <some-arg>',
-#     [ 'server|s=s', "the server to connect to", { required => 1  } ],
-#     [ 'port|p=i',   "the port to connect to",   { default  => 79 } ],
-#     [],
-#     [ 'verbose|v',  "print extra stuff"            ],
-#     [ 'help',       "print usage message and exit" ],
-#   );
-#
-#   print($usage->text), exit if $opt->help;
-#
-#   Client->connect( $opt->server, $opt->port );
-#
-#   print "Connected!\n" if $opt->verbose;
-#
-# ...and running C<my-program --help> will produce:
-#
-#   my-program [-psv] [long options...] <some-arg>
-#     -s --server     the server to connect to
-#     -p --port       the port to connect to
-#
-#     -v --verbose    print extra stuff
-#     --help          print usage message and exit
-#
-# =head1 DESCRIPTION
-#
-# Getopt::Long::Descriptive is yet another Getopt library.  It's built atop
-# Getopt::Long, and gets a lot of its features, but tries to avoid making you
-# think about its huge array of options.
-#
-# It also provides usage (help) messages, data validation, and a few other useful
-# features.
-#
-# =head1 FUNCTIONS
-#
-# Getopt::Long::Descriptive only exports one routine by default:
-# C<describe_options>.  All GLD's exports are exported by L<Sub::Exporter>.
-#
-# =head2 describe_options
-#
-#   my ($opt, $usage) = describe_options($usage_desc, @opt_spec, \%arg);
-#
-# This routine inspects C<@ARGV> for options that match the supplied spec. If all
-# the options are valid then it returns the options given and an object for
-# generating usage messages; if not then it dies with an explanation of what was
-# wrong and a usage message.
-#
-# The C<$opt> object will be a dynamically-generated subclass of
-# L<Getopt::Long::Descriptive::Opts>.  In brief, each of the options in
-# C<@opt_spec> becomes an accessor method on the object, using the first-given
-# name, with dashes converted to underscores.  For more information, see the
-# documentation for the Opts class.
-#
-# The C<$usage> object will be a L<Getopt::Long::Descriptive::Usage> object,
-# which provides a C<text> method to get the text of the usage message and C<die>
-# to die with it.  For more methods and options, consults the documentation for
-# the Usage class.
-#
-# =head3 $usage_desc
-#
-# The C<$usage_desc> parameter to C<describe_options> is a C<sprintf>-like string
-# that is used in generating the first line of the usage message.  It's a
-# one-line summary of how the command is to be invoked.  A typical usage
-# description might be:
-#
-#   $usage_desc = "%c %o <source> <desc>";
-#
-# C<%c> will be replaced with what Getopt::Long::Descriptive thinks is the
-# program name (it's computed from C<$0>, see L</prog_name>).
-#
-# C<%o> will be replaced with a list of the short options, as well as the text
-# "[long options...]" if any have been defined.
-#
-# The rest of the usage description can be used to summarize what arguments are
-# expected to follow the program's options, and is entirely free-form.
-#
-# Literal C<%> characters will need to be written as C<%%>, just like with
-# C<sprintf>.
-#
-# =head3 @opt_spec
-#
-# The C<@opt_spec> part of the args to C<describe_options> is used to configure
-# option parsing and to produce the usage message.  Each entry in the list is an
-# arrayref describing one option, like this:
-#
-#   @opt_spec = (
-#     [ "verbose|V" => "be noisy"       ],
-#     [ "logfile=s" => "file to log to" ],
-#   );
-#
-# The first value in the arrayref is a Getopt::Long-style option specification.
-# In brief, they work like this:  each one is a pipe-delimited list of names,
-# optionally followed by a type declaration.  Type declarations are '=x' or ':x',
-# where C<=> means a value is required and C<:> means it is optional.  I<x> may
-# be 's' to indicate a string is required, 'i' for an integer, or 'f' for a
-# number with a fractional part.  The type spec may end in C<@> to indicate that
-# the option may appear multiple times.
-#
-# For more information on how these work, see the L<Getopt::Long> documentation.
-#
-# The first name given should be the canonical name, as it will be used as the
-# accessor method on the C<$opt> object.  Dashes in the name will be converted to
-# underscores, and all letters will be lowercased.  For this reason, all options
-# should generally have a long-form name.
-#
-# The second value in the arrayref is a description of the option, for use in the
-# usage message.
-#
-# =head4 Special Option Specifications
-#
-# If the option specification (arrayref) is empty, it will have no effect other
-# than causing a blank line to appear in the usage message.
-#
-# If the option specification contains only one element, it will be printed in
-# the usage message with no other effect.
-#
-# If the option specification contains a third element, it adds extra constraints
-# or modifiers to the interpretation and validation of the value.  These are the
-# keys that may be present in that hashref, and how they behave:
-#
-# =over 4
-#
-# =item implies
-#
-#   implies => 'bar'
-#   implies => [qw(foo bar)]
-#   implies => { foo => 1, bar => 2 }
-#
-# If option I<A> has an "implies" entry, then if I<A> is given, other options
-# will be enabled.  The value may be a single option to set, an arrayref of
-# options to set, or a hashref of options to set to specific values.
-#
-# =item required
-#
-#   required => 1
-#
-# If an option is required, failure to provide the option will result in
-# C<describe_options> printing the usage message and exiting.
-#
-# =item hidden
-#
-#   hidden => 1
-#
-# This option will not show up in the usage text.
-#
-# You can achieve the same behavior by using the string "hidden" for the option's
-# description.
-#
-# =item one_of
-#
-#   one_of => \@subopt_specs
-#
-# This is useful for a group of options that are related.  Each option
-# spec is added to the list for normal parsing and validation.
-#
-# Your option name will end up with a value of the name of the
-# option that was chosen.  For example, given the following spec:
-#
-#   [ "mode" => hidden => { one_of => [
-#     [ "get|g"  => "get the value" ],
-#     [ "set|s"  => "set the value" ],
-#     [ "delete" => "delete it" ],
-#   ] } ],
-#
-# No usage text for 'mode' will be displayed, but text for get, set, and delete
-# will be displayed.
-#
-# If more than one of get, set, or delete is given, an error will be thrown.
-#
-# So, given the C<@opt_spec> above, and an C<@ARGV> of C<('--get')>, the
-# following would be true:
-#
-#   $opt->get == 1;
-#
-#   $opt->mode eq 'get';
-#
-# B<Note>: C<get> would not be set if C<mode> defaulted to 'get' and no arguments
-# were passed in.
-#
-# Even though the option sub-specs for C<one_of> are meant to be 'first
-# class' specs, some options don't make sense with them, e.g. C<required>.
-#
-# As a further shorthand, you may specify C<one_of> options using this form:
-#
-#   [ mode => \@option_specs, \%constraints ]
-#
-#
-# =item shortcircuit
-#
-#   shortcircuit => 1
-#
-# If this option is present no other options will be returned.  Other
-# options present will be checked for proper types, but I<not> for
-# constraints.  This provides a way of specifying C<--help> style options.
-#
-# =item Params::Validate
-#
-# In addition, any constraint understood by Params::Validate may be used.
-#
-# For example, to accept positive integers:
-#
-#   [ 'max-iterations=i', "maximum number of iterations",
-#     { callbacks => { positive => sub { shift() > 0 } } } ],
-#
-# (Internally, all constraints are translated into Params::Validate options or
-# callbacks.)
-#
-# =back
-#
-# =head3 %arg
-#
-# The C<%arg> to C<describe_options> is optional.  If the last parameter is a
-# hashref, it contains extra arguments to modify the way C<describe_options>
-# works.  Valid arguments are:
-#
-#   getopt_conf   - an arrayref of strings, passed to Getopt::Long::Configure
-#   show_defaults - a boolean which controls whether an option's default
-#                   value (if applicable) is shown as part of the usage message
-#                   (for backward compatibility this defaults to false)
-#
-# =head2 prog_name
-#
-# This routine, exported on demand, returns the basename of C<$0>, grabbed at
-# compile-time.  You can override this guess by calling C<prog_name($string)>
-# yourself.
-#
-# =head1 OTHER EXPORTS
-#
-# =head2 C<-types>
-#
-# Any of the Params::Validate type constants (C<SCALAR>, etc.) can be imported as
-# well.  You can get all of them at once by importing C<-types>.
-#
-# =head2 C<-all>
-#
-# This import group will import C<-type>, C<describe_options>, and C<prog_name>.
-#
-# =cut
+#pod =head1 SYNOPSIS
+#pod
+#pod   use Getopt::Long::Descriptive;
+#pod
+#pod   my ($opt, $usage) = describe_options(
+#pod     'my-program %o <some-arg>',
+#pod     [ 'server|s=s', "the server to connect to", { required => 1  } ],
+#pod     [ 'port|p=i',   "the port to connect to",   { default  => 79 } ],
+#pod     [],
+#pod     [ 'verbose|v',  "print extra stuff"            ],
+#pod     [ 'help',       "print usage message and exit" ],
+#pod   );
+#pod
+#pod   print($usage->text), exit if $opt->help;
+#pod
+#pod   Client->connect( $opt->server, $opt->port );
+#pod
+#pod   print "Connected!\n" if $opt->verbose;
+#pod
+#pod ...and running C<my-program --help> will produce:
+#pod
+#pod   my-program [-psv] [long options...] <some-arg>
+#pod     -s --server     the server to connect to
+#pod     -p --port       the port to connect to
+#pod
+#pod     -v --verbose    print extra stuff
+#pod     --help          print usage message and exit
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod Getopt::Long::Descriptive is yet another Getopt library.  It's built atop
+#pod Getopt::Long, and gets a lot of its features, but tries to avoid making you
+#pod think about its huge array of options.
+#pod
+#pod It also provides usage (help) messages, data validation, and a few other useful
+#pod features.
+#pod
+#pod =head1 FUNCTIONS
+#pod
+#pod Getopt::Long::Descriptive only exports one routine by default:
+#pod C<describe_options>.  All GLD's exports are exported by L<Sub::Exporter>.
+#pod
+#pod =head2 describe_options
+#pod
+#pod   my ($opt, $usage) = describe_options($usage_desc, @opt_spec, \%arg);
+#pod
+#pod This routine inspects C<@ARGV> for options that match the supplied spec. If all
+#pod the options are valid then it returns the options given and an object for
+#pod generating usage messages; if not then it dies with an explanation of what was
+#pod wrong and a usage message.
+#pod
+#pod The C<$opt> object will be a dynamically-generated subclass of
+#pod L<Getopt::Long::Descriptive::Opts>.  In brief, each of the options in
+#pod C<@opt_spec> becomes an accessor method on the object, using the first-given
+#pod name, with dashes converted to underscores.  For more information, see the
+#pod documentation for the Opts class.
+#pod
+#pod The C<$usage> object will be a L<Getopt::Long::Descriptive::Usage> object,
+#pod which provides a C<text> method to get the text of the usage message and C<die>
+#pod to die with it.  For more methods and options, consults the documentation for
+#pod the Usage class.
+#pod
+#pod =head3 $usage_desc
+#pod
+#pod The C<$usage_desc> parameter to C<describe_options> is a C<sprintf>-like string
+#pod that is used in generating the first line of the usage message.  It's a
+#pod one-line summary of how the command is to be invoked.  A typical usage
+#pod description might be:
+#pod
+#pod   $usage_desc = "%c %o <source> <desc>";
+#pod
+#pod C<%c> will be replaced with what Getopt::Long::Descriptive thinks is the
+#pod program name (it's computed from C<$0>, see L</prog_name>).
+#pod
+#pod C<%o> will be replaced with a list of the short options, as well as the text
+#pod "[long options...]" if any have been defined.
+#pod
+#pod The rest of the usage description can be used to summarize what arguments are
+#pod expected to follow the program's options, and is entirely free-form.
+#pod
+#pod Literal C<%> characters will need to be written as C<%%>, just like with
+#pod C<sprintf>.
+#pod
+#pod =head3 @opt_spec
+#pod
+#pod The C<@opt_spec> part of the args to C<describe_options> is used to configure
+#pod option parsing and to produce the usage message.  Each entry in the list is an
+#pod arrayref describing one option, like this:
+#pod
+#pod   @opt_spec = (
+#pod     [ "verbose|V" => "be noisy"       ],
+#pod     [ "logfile=s" => "file to log to" ],
+#pod   );
+#pod
+#pod The first value in the arrayref is a Getopt::Long-style option specification.
+#pod In brief, they work like this:  each one is a pipe-delimited list of names,
+#pod optionally followed by a type declaration.  Type declarations are '=x' or ':x',
+#pod where C<=> means a value is required and C<:> means it is optional.  I<x> may
+#pod be 's' to indicate a string is required, 'i' for an integer, or 'f' for a
+#pod number with a fractional part.  The type spec may end in C<@> to indicate that
+#pod the option may appear multiple times.
+#pod
+#pod For more information on how these work, see the L<Getopt::Long> documentation.
+#pod
+#pod The first name given should be the canonical name, as it will be used as the
+#pod accessor method on the C<$opt> object.  Dashes in the name will be converted to
+#pod underscores, and all letters will be lowercased.  For this reason, all options
+#pod should generally have a long-form name.
+#pod
+#pod The second value in the arrayref is a description of the option, for use in the
+#pod usage message.
+#pod
+#pod =head4 Special Option Specifications
+#pod
+#pod If the option specification (arrayref) is empty, it will have no effect other
+#pod than causing a blank line to appear in the usage message.
+#pod
+#pod If the option specification contains only one element, it will be printed in
+#pod the usage message with no other effect.
+#pod
+#pod If the option specification contains a third element, it adds extra constraints
+#pod or modifiers to the interpretation and validation of the value.  These are the
+#pod keys that may be present in that hashref, and how they behave:
+#pod
+#pod =over 4
+#pod
+#pod =item implies
+#pod
+#pod   implies => 'bar'
+#pod   implies => [qw(foo bar)]
+#pod   implies => { foo => 1, bar => 2 }
+#pod
+#pod If option I<A> has an "implies" entry, then if I<A> is given, other options
+#pod will be enabled.  The value may be a single option to set, an arrayref of
+#pod options to set, or a hashref of options to set to specific values.
+#pod
+#pod =item required
+#pod
+#pod   required => 1
+#pod
+#pod If an option is required, failure to provide the option will result in
+#pod C<describe_options> printing the usage message and exiting.
+#pod
+#pod =item hidden
+#pod
+#pod   hidden => 1
+#pod
+#pod This option will not show up in the usage text.
+#pod
+#pod You can achieve the same behavior by using the string "hidden" for the option's
+#pod description.
+#pod
+#pod =item one_of
+#pod
+#pod   one_of => \@subopt_specs
+#pod
+#pod This is useful for a group of options that are related.  Each option
+#pod spec is added to the list for normal parsing and validation.
+#pod
+#pod Your option name will end up with a value of the name of the
+#pod option that was chosen.  For example, given the following spec:
+#pod
+#pod   [ "mode" => hidden => { one_of => [
+#pod     [ "get|g"  => "get the value" ],
+#pod     [ "set|s"  => "set the value" ],
+#pod     [ "delete" => "delete it" ],
+#pod   ] } ],
+#pod
+#pod No usage text for 'mode' will be displayed, but text for get, set, and delete
+#pod will be displayed.
+#pod
+#pod If more than one of get, set, or delete is given, an error will be thrown.
+#pod
+#pod So, given the C<@opt_spec> above, and an C<@ARGV> of C<('--get')>, the
+#pod following would be true:
+#pod
+#pod   $opt->get == 1;
+#pod
+#pod   $opt->mode eq 'get';
+#pod
+#pod B<Note>: C<get> would not be set if C<mode> defaulted to 'get' and no arguments
+#pod were passed in.
+#pod
+#pod Even though the option sub-specs for C<one_of> are meant to be 'first
+#pod class' specs, some options don't make sense with them, e.g. C<required>.
+#pod
+#pod As a further shorthand, you may specify C<one_of> options using this form:
+#pod
+#pod   [ mode => \@option_specs, \%constraints ]
+#pod
+#pod
+#pod =item shortcircuit
+#pod
+#pod   shortcircuit => 1
+#pod
+#pod If this option is present no other options will be returned.  Other
+#pod options present will be checked for proper types, but I<not> for
+#pod constraints.  This provides a way of specifying C<--help> style options.
+#pod
+#pod =item Params::Validate
+#pod
+#pod In addition, any constraint understood by Params::Validate may be used.
+#pod
+#pod For example, to accept positive integers:
+#pod
+#pod   [ 'max-iterations=i', "maximum number of iterations",
+#pod     { callbacks => { positive => sub { shift() > 0 } } } ],
+#pod
+#pod (Internally, all constraints are translated into Params::Validate options or
+#pod callbacks.)
+#pod
+#pod =back
+#pod
+#pod =head3 %arg
+#pod
+#pod The C<%arg> to C<describe_options> is optional.  If the last parameter is a
+#pod hashref, it contains extra arguments to modify the way C<describe_options>
+#pod works.  Valid arguments are:
+#pod
+#pod   getopt_conf   - an arrayref of strings, passed to Getopt::Long::Configure
+#pod   show_defaults - a boolean which controls whether an option's default
+#pod                   value (if applicable) is shown as part of the usage message
+#pod                   (for backward compatibility this defaults to false)
+#pod
+#pod =head2 prog_name
+#pod
+#pod This routine, exported on demand, returns the basename of C<$0>, grabbed at
+#pod compile-time.  You can override this guess by calling C<prog_name($string)>
+#pod yourself.
+#pod
+#pod =head1 OTHER EXPORTS
+#pod
+#pod =head2 C<-types>
+#pod
+#pod Any of the Params::Validate type constants (C<SCALAR>, etc.) can be imported as
+#pod well.  You can get all of them at once by importing C<-types>.
+#pod
+#pod =head2 C<-all>
+#pod
+#pod This import group will import C<-type>, C<describe_options>, and C<prog_name>.
+#pod
+#pod =cut
 
 my $prog_name;
 sub prog_name { @_ ? ($prog_name = shift) : $prog_name }
@@ -613,29 +613,29 @@ sub _mk_only_one {
   }
 }
 
-# =head1 CUSTOMIZING
-#
-# Getopt::Long::Descriptive uses L<Sub::Exporter|Sub::Exporter> to build and
-# export the C<describe_options> routine.  By writing a new class that extends
-# Getopt::Long::Descriptive, the behavior of the constructed C<describe_options>
-# routine can be changed.
-#
-# The following methods can be overridden:
-#
-# =head2 usage_class
-#
-#   my $class = Getopt::Long::Descriptive->usage_class;
-#
-# This returns the class to be used for constructing a Usage object, and defaults
-# to Getopt::Long::Descriptive::Usage.
-#
-# =head1 SEE ALSO
-#
-# =for :list
-# * L<Getopt::Long>
-# * L<Params::Validate>
-#
-# =cut
+#pod =head1 CUSTOMIZING
+#pod
+#pod Getopt::Long::Descriptive uses L<Sub::Exporter|Sub::Exporter> to build and
+#pod export the C<describe_options> routine.  By writing a new class that extends
+#pod Getopt::Long::Descriptive, the behavior of the constructed C<describe_options>
+#pod routine can be changed.
+#pod
+#pod The following methods can be overridden:
+#pod
+#pod =head2 usage_class
+#pod
+#pod   my $class = Getopt::Long::Descriptive->usage_class;
+#pod
+#pod This returns the class to be used for constructing a Usage object, and defaults
+#pod to Getopt::Long::Descriptive::Usage.
+#pod
+#pod =head1 SEE ALSO
+#pod
+#pod =for :list
+#pod * L<Getopt::Long>
+#pod * L<Params::Validate>
+#pod
+#pod =cut
 
 1; # End of Getopt::Long::Descriptive
 
@@ -651,7 +651,7 @@ Getopt::Long::Descriptive - Getopt::Long, but simpler and more powerful
 
 =head1 VERSION
 
-version 0.097
+version 0.098
 
 =head1 SYNOPSIS
 

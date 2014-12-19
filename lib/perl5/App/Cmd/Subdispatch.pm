@@ -2,16 +2,19 @@ use strict;
 use warnings;
 
 package App::Cmd::Subdispatch;
-{
-  $App::Cmd::Subdispatch::VERSION = '0.323';
-}
-
+$App::Cmd::Subdispatch::VERSION = '0.326';
 use App::Cmd;
 use App::Cmd::Command;
 BEGIN { our @ISA = qw(App::Cmd::Command App::Cmd) } 
 
 # ABSTRACT: an App::Cmd::Command that is also an App::Cmd
 
+#pod =method new
+#pod
+#pod A hackish new that allows us to have an Command instance before they normally
+#pod exist.
+#pod
+#pod =cut
 
 sub new {
 	my ($inv, $fields, @args) = @_;
@@ -23,6 +26,14 @@ sub new {
 	}
 }
 
+#pod =method prepare
+#pod
+#pod   my $subcmd = $subdispatch->prepare($app, @args);
+#pod
+#pod An overridden version of L<App::Cmd::Command/prepare> that performs a new
+#pod dispatch cycle.
+#pod
+#pod =cut
 
 sub prepare {
 	my ($class, $app, @args) = @_;
@@ -49,9 +60,27 @@ sub _plugin_prepare {
   return $plugin->prepare($self->choose_parent_app($self->app, $plugin), @args);
 }
 
+#pod =method app
+#pod
+#pod   $subdispatch->app;
+#pod
+#pod This method returns the application that this subdispatch is a command of.
+#pod
+#pod =cut
 
 sub app { $_[0]{app} }
 
+#pod =method choose_parent_app
+#pod
+#pod   $subcmd->prepare(
+#pod     $subdispatch->choose_parent_app($app, $opt, $plugin),
+#pod     @$args
+#pod   );
+#pod
+#pod A method that chooses whether the parent app or the subdispatch is going to be
+#pod C<< $cmd->app >>.
+#pod
+#pod =cut
 
 sub choose_parent_app {
 	my ( $self, $app, $plugin ) = @_;
@@ -81,7 +110,7 @@ App::Cmd::Subdispatch - an App::Cmd::Command that is also an App::Cmd
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 METHODS
 
@@ -119,7 +148,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,16 +1,13 @@
 package Moose::Meta::Role::Composite;
-$Moose::Meta::Role::Composite::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
-
-use Moose::Util;
-
-use parent 'Moose::Meta::Role';
-
 use Moose::Util 'throw_exception';
+use parent 'Moose::Meta::Role';
 
 # NOTE:
 # we need to override the ->name
@@ -31,6 +28,17 @@ __PACKAGE__->meta->add_attribute('name' => (
 __PACKAGE__->meta->add_attribute('_methods' => (
     reader  => '_method_map',
     default => sub { {} },
+    Class::MOP::_definition_context(),
+));
+
+__PACKAGE__->meta->add_attribute('_overloads' => (
+    reader  => '_overload_map',
+    default => sub { {} },
+    Class::MOP::_definition_context(),
+));
+
+__PACKAGE__->meta->add_attribute('_overload_fallback' => (
+    accessor  => '_overload_fallback',
     Class::MOP::_definition_context(),
 ));
 
@@ -130,6 +138,39 @@ sub get_method {
     return $self->_method_map->{$method_name};
 }
 
+sub is_overloaded {
+    my ($self) = @_;
+    return keys %{ $self->_overload_map };
+}
+
+sub add_overloaded_operator {
+    my ( $self, $op_name, $overload ) = @_;
+
+    unless ( defined $op_name && $op_name ) {
+        throw_exception(
+            'MustDefineAnOverloadOperator',
+            instance => $self,
+        );
+    }
+
+    $self->_overload_map->{$op_name} = $overload;
+}
+
+sub get_overload_fallback_value {
+    my ($self) = @_;
+    return $self->_overload_fallback;
+}
+
+sub set_overload_fallback_value {
+    my $self = shift;
+    $self->_overload_fallback(shift);
+}
+
+sub get_all_overloaded_operators {
+    my ( $self, $method_name ) = @_;
+    return values %{ $self->_overload_map };
+}
+
 sub apply_params {
     my ($self, $role_params) = @_;
     Moose::Util::_load_user_class($self->application_role_summation_class);
@@ -174,7 +215,7 @@ Moose::Meta::Role::Composite - An object to represent the set of roles
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

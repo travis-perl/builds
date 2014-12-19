@@ -13,7 +13,7 @@ Moose::Manual::MethodModifiers - Moose's method modifiers
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 WHAT IS A METHOD MODIFIER?
 
@@ -86,7 +86,7 @@ modifiers work, but may not be the most natural usage.
 
 Method modifiers can be used to add behavior to methods without modifying the definition of those methods.
 
-=head2 BEFORE and AFTER modifiers
+=head2 Before and after Modifiers
 
 Method modifiers can be used to add behavior to a method that Moose
 generates for you, such as an attribute accessor:
@@ -121,7 +121,7 @@ was taken.
 Note that the return values of both before and after modifiers are
 ignored.
 
-=head2 AROUND modifiers
+=head2 Around modifiers
 
 An around modifier is more powerful than either a before or
 after modifier. It can modify the arguments being passed to the
@@ -188,6 +188,58 @@ dangerous.  Bear in mind that if your regular expression matches certain Perl
 and Moose reserved method names with a special meaning to Moose or Perl, such
 as C<meta>, C<new>, C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc, this could cause
 unintended (and hard to debug) problems and is best avoided.
+
+=head2 Execution order of method modifiers and inheritance
+
+When both a superclass and an inheriting class have the same method modifiers,
+the method modifiers of the inheriting class are wrapped around the method
+modifiers of the superclass, as the following example illustrates:
+
+Here is the parent class:
+
+  package Parent;
+  use Moose;
+  sub rant { printf "        RANTING!\n" }
+  before 'rant' => sub { printf "    In %s before\n", __PACKAGE__ };
+  after 'rant'  => sub { printf "    In %s after\n",  __PACKAGE__ };
+  around 'rant' => sub {
+      my $orig = shift;
+      my $self = shift;
+      printf "      In %s around before calling original\n", __PACKAGE__;
+      $self->$orig;
+      printf "      In %s around after calling original\n", __PACKAGE__;
+  };
+  1;
+
+And the child class:
+
+  package Child;
+  use Moose;
+  extends 'Parent';
+  before 'rant' => sub { printf "In %s before\n", __PACKAGE__ };
+  after 'rant'  => sub { printf "In %s after\n",  __PACKAGE__ };
+  around 'rant' => sub {
+      my $orig = shift;
+      my $self = shift;
+      printf "  In %s around before calling original\n", __PACKAGE__;
+      $self->$orig;
+      printf "  In %s around after calling original\n", __PACKAGE__;
+  };
+  1;
+
+And here's the output when we call the wrapped method (C<< Child->rant >>):
+
+  % perl -MChild -e 'Child->new->rant'
+
+  In Child before
+    In Child around before calling original
+      In Parent before
+        In Parent around before calling original
+          RANTING!
+        In Parent around after calling original
+      In Parent after
+    In Child around after calling original
+  In Child after
 
 =head1 INNER AND AUGMENT
 

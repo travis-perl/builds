@@ -3,9 +3,7 @@ use warnings;
 use 5.006;
 
 package App::Cmd;
-{
-  $App::Cmd::VERSION = '0.323';
-}
+$App::Cmd::VERSION = '0.326';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: write command line apps with less suffering
@@ -62,6 +60,95 @@ sub _setup_ignore {
 
 sub _plugin_plugins { return }
 
+#pod =head1 SYNOPSIS
+#pod
+#pod in F<yourcmd>:
+#pod
+#pod   use YourApp;
+#pod   YourApp->run;
+#pod
+#pod in F<YourApp.pm>:
+#pod
+#pod   package YourApp;
+#pod   use App::Cmd::Setup -app;
+#pod   1;
+#pod
+#pod in F<YourApp/Command/blort.pm>:
+#pod
+#pod   package YourApp::Command::blort;
+#pod   use YourApp -command;
+#pod   use strict; use warnings;
+#pod
+#pod   sub opt_spec {
+#pod     return (
+#pod       [ "blortex|X",  "use the blortex algorithm" ],
+#pod       [ "recheck|r",  "recheck all results"       ],
+#pod     );
+#pod   }
+#pod
+#pod   sub validate_args {
+#pod     my ($self, $opt, $args) = @_;
+#pod
+#pod     # no args allowed but options!
+#pod     $self->usage_error("No args allowed") if @$args;
+#pod   }
+#pod
+#pod   sub execute {
+#pod     my ($self, $opt, $args) = @_;
+#pod
+#pod     my $result = $opt->{blortex} ? blortex() : blort();
+#pod
+#pod     recheck($result) if $opt->{recheck};
+#pod
+#pod     print $result;
+#pod   }
+#pod
+#pod and, finally, at the command line:
+#pod
+#pod   knight!rjbs$ yourcmd blort --recheck
+#pod
+#pod   All blorts successful.
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod App::Cmd is intended to make it easy to write complex command-line applications
+#pod without having to think about most of the annoying things usually involved.
+#pod
+#pod For information on how to start using App::Cmd, see L<App::Cmd::Tutorial>.
+#pod
+#pod =method new
+#pod
+#pod   my $cmd = App::Cmd->new(\%arg);
+#pod
+#pod This method returns a new App::Cmd object.  During initialization, command
+#pod plugins will be loaded.
+#pod
+#pod Valid arguments are:
+#pod
+#pod   no_commands_plugin - if true, the command list plugin is not added
+#pod
+#pod   no_help_plugin     - if true, the help plugin is not added
+#pod
+#pod   no_version_plugin  - if true, the version plugin is not added
+#pod
+#pod   plugin_search_path - The path to search for commands in. Defaults to
+#pod                        results of plugin_search_path method
+#pod
+#pod If C<no_commands_plugin> is not given, L<App::Cmd::Command::commands> will be
+#pod required, and it will be registered to handle all of its command names not
+#pod handled by other plugins.
+#pod
+#pod If C<no_help_plugin> is not given, L<App::Cmd::Command::help> will be required,
+#pod and it will be registered to handle all of its command names not handled by
+#pod other plugins. B<Note:> "help" is the default command, so if you do not load
+#pod the default help plugin, you should provide your own or override the
+#pod C<default_command> method.
+#pod
+#pod If C<no_version_plugin> is not given, L<App::Cmd::Command::version> will be
+#pod required to show the application's version with command C<--version>. The
+#pod version command is not included in the command list.
+#pod
+#pod =cut
 
 sub new {
   my ($class, $arg) = @_;
@@ -195,6 +282,21 @@ sub _load_default_plugin {
   }
 }
 
+#pod =method run
+#pod
+#pod   $cmd->run;
+#pod
+#pod This method runs the application.  If called the class, it will instantiate a
+#pod new App::Cmd object to run.
+#pod
+#pod It determines the requested command (generally by consuming the first
+#pod command-line argument), finds the plugin to handle that command, parses the
+#pod remaining arguments according to that plugin's rules, and runs the plugin.
+#pod
+#pod It passes the contents of the global argument array (C<@ARGV>) to
+#pod L</C<prepare_command>>, but C<@ARGV> is not altered by running an App::Cmd.
+#pod
+#pod =cut
 
 sub run {
   my ($self) = @_;
@@ -210,6 +312,12 @@ sub run {
   $self->execute_command($cmd, $opt, @args);
 }
 
+#pod =method prepare_args
+#pod
+#pod Normally App::Cmd uses C<@ARGV> for its commandline arguments. You can override
+#pod this method to change that behavior for testing or otherwise.
+#pod
+#pod =cut
 
 sub prepare_args {
   my ($self) = @_;
@@ -218,13 +326,55 @@ sub prepare_args {
     : (@{$self->default_args});
 }
 
+#pod =method default_args
+#pod
+#pod If C<L</prepare_args>> is not changed and there are no arguments in C<@ARGV>,
+#pod this method is called and should return an arrayref to be used as the arguments
+#pod to the program.  By default, it returns an empty arrayref.
+#pod
+#pod =cut
 
 use constant default_args => [];
 
+#pod =method arg0
+#pod
+#pod =method full_arg0
+#pod
+#pod   my $program_name = $app->arg0;
+#pod
+#pod   my $full_program_name = $app->full_arg0;
+#pod
+#pod These methods return the name of the program invoked to run this application.
+#pod This is determined by inspecting C<$0> when the App::Cmd object is
+#pod instantiated, so it's probably correct, but doing weird things with App::Cmd
+#pod could lead to weird values from these methods.
+#pod
+#pod If the program was run like this:
+#pod
+#pod   knight!rjbs$ ~/bin/rpg dice 3d6
+#pod
+#pod Then the methods return:
+#pod
+#pod   arg0      - rpg
+#pod   full_arg0 - /Users/rjbs/bin/rpg
+#pod
+#pod These values are captured when the App::Cmd object is created, so it is safe to
+#pod assign to C<$0> later.
+#pod
+#pod =cut
 
 sub arg0      { $_[0]->{arg0} }
 sub full_arg0 { $_[0]->{full_arg0} }
 
+#pod =method prepare_command
+#pod
+#pod   my ($cmd, $opt, @args) = $app->prepare_command(@ARGV);
+#pod
+#pod This method will load the plugin for the requested command, use its options to
+#pod parse the command line arguments, and eventually return everything necessary to
+#pod actually execute the command.
+#pod
+#pod =cut
 
 sub prepare_command {
   my ($self, @args) = @_;
@@ -269,9 +419,22 @@ sub _bad_command {
 
 END { exit 1 if our $_bad };
 
+#pod =method default_command
+#pod
+#pod This method returns the name of the command to run if none is given on the
+#pod command line.  The default default is "help"
+#pod
+#pod =cut
 
 sub default_command { "help" }
 
+#pod =method execute_command
+#pod
+#pod   $app->execute_command($cmd, \%opt, @args);
+#pod
+#pod This method will invoke C<validate_args> and then C<run> on C<$cmd>.
+#pod
+#pod =cut
 
 sub execute_command {
   my ($self, $cmd, $opt, @args) = @_;
@@ -282,6 +445,16 @@ sub execute_command {
   $cmd->execute($opt, \@args);
 }
 
+#pod =method plugin_search_path
+#pod
+#pod This method returns the plugin_search_path as set.  The default implementation,
+#pod if called on "YourApp::Cmd" will return "YourApp::Cmd::Command"
+#pod
+#pod This is a method because it's fun to override it with, for example:
+#pod
+#pod   use constant plugin_search_path => __PACKAGE__;
+#pod
+#pod =cut
 
 sub _default_command_base {
   my ($self) = @_;
@@ -312,9 +485,31 @@ sub plugin_search_path {
   }
 }
 
+#pod =method allow_any_unambiguous_abbrev
+#pod
+#pod If this method returns true (which, by default, it does I<not>), then any
+#pod unambiguous abbreviation for a registered command name will be allowed as a
+#pod means to use that command.  For example, given the following commands:
+#pod
+#pod   reticulate
+#pod   reload
+#pod   rasterize
+#pod
+#pod Then the user could use C<ret> for C<reticulate> or C<ra> for C<rasterize> and
+#pod so on.
+#pod
+#pod =cut
 
 sub allow_any_unambiguous_abbrev { return 0 }
 
+#pod =method global_options
+#pod
+#pod   if ($cmd->app->global_options->{verbose}) { ... }
+#pod
+#pod This method returns the running application's global options as a hashref.  If
+#pod there are no options specified, an empty hashref is returned.
+#pod
+#pod =cut
 
 sub global_options {
 	my $self = shift;
@@ -322,18 +517,40 @@ sub global_options {
   return {};
 }
 
+#pod =method set_global_options
+#pod
+#pod   $app->set_global_options(\%opt);
+#pod
+#pod This method sets the global options.
+#pod
+#pod =cut
 
 sub set_global_options {
   my ($self, $opt) = @_;
   return $self->{global_options} = $opt;
 }
 
+#pod =method command_names
+#pod
+#pod   my @names = $cmd->command_names;
+#pod
+#pod This returns the commands names which the App::Cmd object will handle.
+#pod
+#pod =cut
 
 sub command_names {
   my ($self) = @_;
   keys %{ $self->_command };
 }
 
+#pod =method command_plugins
+#pod
+#pod   my @plugins = $cmd->command_plugins;
+#pod
+#pod This method returns the package names of the plugins that implement the
+#pod App::Cmd object's commands.
+#pod
+#pod =cut
 
 sub command_plugins {
   my ($self) = @_;
@@ -341,6 +558,14 @@ sub command_plugins {
   keys %seen;
 }
 
+#pod =method plugin_for
+#pod
+#pod   my $plugin = $cmd->plugin_for($command);
+#pod
+#pod This method returns the plugin (module) for the given command.  If no plugin
+#pod implements the command, it returns false.
+#pod
+#pod =cut
 
 sub plugin_for {
   my ($self, $command) = @_;
@@ -350,6 +575,13 @@ sub plugin_for {
   return $self->_command->{ $command };
 }
 
+#pod =method get_command
+#pod
+#pod   my ($command_name, $opt, @args) = $app->get_command(@args);
+#pod
+#pod Process arguments and into a command name and (optional) global options.
+#pod
+#pod =cut
 
 sub get_command {
   my ($self, @args) = @_;
@@ -381,21 +613,48 @@ sub _global_option_processing_params {
   );
 }
 
+#pod =method usage
+#pod
+#pod   print $self->app->usage->text;
+#pod
+#pod Returns the usage object for the global options.
+#pod
+#pod =cut
 
 sub usage { $_[0]{usage} };
 
+#pod =method usage_desc
+#pod
+#pod The top level usage line. Looks something like
+#pod
+#pod   "yourapp <command> [options]"
+#pod
+#pod =cut
 
 sub usage_desc {
   # my ($self) = @_; # no point in creating these ops, just to toss $self
   return "%c <command> %o";
 }
 
+#pod =method global_opt_spec
+#pod
+#pod Returns an empty list. Can be overridden for pre-dispatch option processing.
+#pod This is useful for flags like --verbose.
+#pod
+#pod =cut
 
 sub global_opt_spec {
   # my ($self) = @_; # no point in creating these ops, just to toss $self
   return;
 }
 
+#pod =method usage_error
+#pod
+#pod   $self->usage_error("Something's wrong!");
+#pod
+#pod Used to die with nice usage output, during C<validate_args>.
+#pod
+#pod =cut
 
 sub usage_error {
   my ($self, $error) = @_;
@@ -409,6 +668,14 @@ sub _usage_text {
   return $text;
 }
 
+#pod =head1 TODO
+#pod
+#pod =for :list
+#pod * publish and bring in Log::Speak (simple quiet/verbose output)
+#pod * publish and use our internal enhanced describe_options
+#pod * publish and use our improved simple input routines
+#pod
+#pod =cut
 
 1;
 
@@ -424,7 +691,7 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 SYNOPSIS
 
@@ -693,7 +960,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

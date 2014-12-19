@@ -2,14 +2,27 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::commands;
-{
-  $App::Cmd::Command::commands::VERSION = '0.323';
-}
+$App::Cmd::Command::commands::VERSION = '0.326';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' };
 
 # ABSTRACT: list the application's commands
 
+#pod =head1 DESCRIPTION
+#pod
+#pod This command plugin implements a "commands" command.  This command will list
+#pod all of an App::Cmd's commands and their abstracts.
+#pod
+#pod =method execute
+#pod
+#pod This is the command's primary method and raison d'etre.  It prints the
+#pod application's usage text (if any) followed by a sorted listing of the
+#pod application's commands and their abstracts.
+#pod
+#pod The commands are printed in sorted groups (created by C<sort_commands>); each
+#pod group is set off by blank lines.
+#pod
+#pod =cut
 
 sub execute {
   my ($self, $opt, $args) = @_;
@@ -41,6 +54,17 @@ sub execute {
   }
 }
 
+#pod =method C<sort_commands>
+#pod
+#pod   my @sorted = $cmd->sort_commands(@unsorted);
+#pod
+#pod This method orders the list of commands into sets which it returns as a list of
+#pod arrayrefs.
+#pod
+#pod By default, the first group is for the "help" and "commands" commands, and all
+#pod other commands are in the second group.
+#pod
+#pod =cut
 
 sub sort_commands {
   my ($self, @commands) = @_;
@@ -78,7 +102,7 @@ App::Cmd::Command::commands - list the application's commands
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 DESCRIPTION
 
@@ -112,7 +136,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,8 +1,5 @@
 #!/home/travis/perl5/perlbrew/perls/5.8.8-thr/bin/perl
 
-eval 'exec /home/travis/perl5/perlbrew/perls/5.8.8-thr/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
 use 5.004;
 use strict;
 use File::Which ();
