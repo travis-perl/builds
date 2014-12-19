@@ -1,7 +1,4 @@
 #!/home/travis/perl5/perlbrew/perls/5.12.5/bin/perl
-
-eval 'exec /home/travis/perl5/perlbrew/perls/5.12.5/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
 BEGIN {
     # @INC poking  no longer needed w/ new MakeMaker and Makefile.PL's
     # with $ENV{PERL_CORE} set
@@ -13,7 +10,7 @@ use warnings;
 use Getopt::Std;
 use Config;
 my @orig_ARGV = @ARGV;
-our $VERSION  = do { my @r = (q$Revision: 2.13 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+our $VERSION  = do { my @r = (q$Revision: 2.16 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 # These may get re-ordered.
 # RAW is a do_now as inserted by &enter
@@ -187,6 +184,7 @@ END
 
   if ($cname =~ /(\w+)\.xs$/)
    {
+    print C "#define PERL_NO_GET_CONTEXT\n";
     print C "#include <EXTERN.h>\n";
     print C "#include <perl.h>\n";
     print C "#include <XSUB.h>\n";
@@ -703,7 +701,12 @@ sub addstrings
    my $cpp = ($Config{d_cplusplus} || '') eq 'define';
    my $var = $^O eq 'MacOS' || $cpp ? 'extern' : 'static';
    my $const = $cpp ? '' : 'const';
-   print $fh "$var $const encpage_t $name\[",scalar(@{$a->{'Entries'}}),"];\n";
+   my $ccflags = $Config{ccflags};
+   if (defined $Config{ccwarnflags}) {
+       $ccflags .= " " . $Config{ccwarnflags};
+   }
+   my $count = $ccflags =~ /-Wc\+\+-compat/ ? '' : scalar(@{$a->{'Entries'}});
+   print $fh "$var $const encpage_t $name\[$count];\n";
   }
  $a->{'DoneStrings'} = 1;
  foreach my $b (@{$a->{'Entries'}})
@@ -1003,9 +1006,9 @@ sub make_configlocal_pm {
 	$mod =~ s/.*\bEncode\b/Encode/o;
 	$mod =~ s/\.pm\z//o;
 	$mod =~ s,/,::,og;
-	warn qq{ require $mod;\n};
 	eval qq{ require $mod; };
-	$@ and die "Can't require $mod: $@\n";
+        return if $@;
+        warn qq{ require $mod;\n};
 	for my $enc ( Encode->encodings() ) {
 	    no warnings;
 	    $in_core{$enc}                   and next;
@@ -1019,7 +1022,7 @@ sub make_configlocal_pm {
         $_ModLines .=
           qq(\$Encode::ExtModule{'$enc'} = "$LocalMod{$enc}";\n);
     }
-    warn $_ModLines;
+    warn $_ModLines if $_ModLines;
     $_LocalVer = _mkversion();
     $_E2X      = find_e2x();
     $_Inc      = $INC{"Encode.pm"};
