@@ -1,7 +1,0 @@
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl.pm
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl/ConnectionCache.pm
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl/HTTP.pm
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl/Headers.pm
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl/Request.pm
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl/Response.pm
-/home/travis/.perlbrew/libs/5.16.3@cover/lib/perl5/Furl/ZlibStream.pm
