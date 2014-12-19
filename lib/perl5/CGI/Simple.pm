@@ -1,6 +1,6 @@
 package CGI::Simple;
 
-require 5.004;
+require 5.006001;
 
 # this module is both strict (and warnings) compliant, but they are only used
 # in testing as they add an unnecessary compile time overhead in production.
@@ -13,7 +13,7 @@ use vars qw(
  $NPH $DEBUG $NO_NULL $FATAL *in
 );
 
-$VERSION = "1.113";
+$VERSION = "1.115";
 
 # you can hard code the global variable settings here if you want.
 # warning - do not delete the unless defined $VAR part unless you
@@ -781,14 +781,15 @@ sub upload {
     seek $fh, 0, 0;    # get ready for reading
     return $fh unless $writefile;
     my $buffer;
-    unless ( open OUT, ">$writefile" ) {
+    my $out;
+    unless ( open $out, '>', $writefile ) {
       $self->cgi_error( "500 Can't write to $writefile: $!\n" );
       return undef;
     }
-    binmode OUT;
+    binmode $out;
     binmode $fh;
-    print OUT $buffer while read( $fh, $buffer, 4096 );
-    close OUT;
+    print $out $buffer while read( $fh, $buffer, 4096 );
+    close $out;
     $self->{'.filehandles'}->{$filename} = undef;
     undef $fh;
     return 1;
@@ -1224,7 +1225,7 @@ sub cgi_error {
 sub _shift_if_ref { shift if ref $_[0] eq 'CGI::Simple' }
 
 sub ReadParse {
-  my $q = &_shift_if_ref || new CGI::Simple;
+  my $q = &_shift_if_ref || CGI::Simple->new;
   my $pkg = caller();
   no strict 'refs';
   *in
@@ -1487,7 +1488,7 @@ CGI::Simple - A Simple totally OO CGI interface that is CGI.pm compliant
 
 =head1 VERSION
 
-This document describes CGI::Simple version 1.113.
+This document describes CGI::Simple version 1.114.
 
 =head1 SYNOPSIS
 
@@ -1495,10 +1496,10 @@ This document describes CGI::Simple version 1.113.
     $CGI::Simple::POST_MAX = 1024;       # max upload via post default 100kB
     $CGI::Simple::DISABLE_UPLOADS = 0;   # enable uploads
 
-    $q = new CGI::Simple;
-    $q = new CGI::Simple( { 'foo'=>'1', 'bar'=>[2,3,4] } );
-    $q = new CGI::Simple( 'foo=1&bar=2&bar=3&bar=4' );
-    $q = new CGI::Simple( \*FILEHANDLE );
+    $q = CGI::Simple->new;
+    $q = CGI::Simple->new( { 'foo'=>'1', 'bar'=>[2,3,4] } );
+    $q = CGI::Simple->new( 'foo=1&bar=2&bar=3&bar=4' );
+    $q = CGI::Simple->new( \*FILEHANDLE );
 
     $q->save( \*FILEHANDLE );   # save current object to a file as used by new
 
@@ -1604,7 +1605,7 @@ Before you can call a CGI::Simple method you must create a CGI::Simple object.
 You do that by using the module and then calling the new() constructor:
 
     use CGI::Simple;
-    my $q = new CGI::Simple;
+    my $q = CGI::Simple->new;
 
 It is traditional to call your object $q for query or perhaps $cgi.
 
@@ -1633,6 +1634,9 @@ whereas if you ask for a scalar like this:
 
 then it returns only the first value (if more than one value for
 'foo' exists).
+
+In case you ased for a list it will return all the values preserving the
+order in which the values of the given key were passed in the request.
 
 Most CGI::Simple routines accept several arguments, sometimes as many as
 10 optional ones!  To simplify this interface, all routines use a named
@@ -1738,7 +1742,7 @@ You use exactly the same syntax when using CGI::Simple::Standard.
 The first step in using CGI::Simple is to create a new query object using
 the B<new()> constructor:
 
-     $q = new CGI::Simple;
+     $q = CGI::Simple->new;
 
 This will parse the input (from both POST and GET methods) and store
 it into an object called $q.
@@ -1746,11 +1750,15 @@ it into an object called $q.
 If you provide a file handle to the B<new()> method, it will read
 parameters from the file (or STDIN, or whatever).
 
-     open FH, "test.in" or die $!;
-     $q = new CGI::Simple(\*FH);
+Historically people were doing this way:
 
-     open $fh, "test.in" or die $!;
-     $q = new CGI::Simple($fh);
+     open FH, "test.in" or die $!;
+     $q = CGI::Simple->new(\*FH);
+
+but this is the recommended way:
+
+     open $fh, '<', "test.in" or die $!;
+     $q = CGI::Simple->new($fh);
 
 The file should be a series of newline delimited TAG=VALUE pairs.
 Conveniently, this type of file is created by the B<save()> method
@@ -1762,7 +1770,7 @@ CGI::Simple::Standard and want to initialize from a file handle,
 the way to do this is with B<restore_parameters()>.  This will (re)initialize
 the default CGI::Simple object from the indicated file handle.
 
-    restore_parameters(\*FH);
+    restore_parameters($fh);
 
 In fact for all intents and purposes B<restore_parameters()> is identical
 to B<new()> Note that B<restore_parameters()> does not exist in
@@ -1771,28 +1779,28 @@ CGI::Simple itself so you can't use it.
 You can also initialize the query object from an associative array
 reference:
 
-    $q = new CGI::Simple( { 'dinosaur' => 'barney',
+    $q = CGI::Simple->new( { 'dinosaur' => 'barney',
                             'song'     => 'I love you',
                             'friends'  => [qw/Jessica George Nancy/] }
                         );
 
 or from a properly formatted, URL-escaped query string:
 
-    $q = new CGI::Simple( 'dinosaur=barney&color=purple' );
+    $q = CGI::Simple->new( 'dinosaur=barney&color=purple' );
 
 or from a previously existing CGI::Simple object (this generates an identical clone
 including all global variable settings, etc that are stored in the object):
 
-    $old_query = new CGI::Simple;
-    $new_query = new CGI::Simple($old_query);
+    $old_query = CGI::Simple->new;
+    $new_query = CGI::Simple->new($old_query);
 
 To create an empty query, initialize it from an empty string or hash:
 
-    $empty_query = new CGI::Simple("");
+    $empty_query = CGI::Simple->new("");
 
        -or-
 
-    $empty_query = new CGI::Simple({});
+    $empty_query = CGI::Simple->new({});
 
 =head2 keywords() Fetching a list of keywords from a query
 
@@ -1982,7 +1990,7 @@ name/value pairs or keywords in the $ENV{'QUERY_STRING'}. You can override
 this by calling B<parse_query_string()> which will add the QUERY_STRING data to
 the data already in our CGI::Simple object if the REQUEST_METHOD was 'POST'
 
-    $q = new CGI::Simple;
+    $q = CGI::Simple->new;
     $q->parse_query_string;  # add $ENV{'QUERY_STRING'} data to our $q object
 
 If the REQUEST_METHOD was 'GET' then the QUERY_STRING will already be
@@ -2011,9 +2019,9 @@ represented as repeated names.  A session record is delimited by a
 single = symbol.  You can write out multiple records and read them
 back in with several calls to B<new()>.
 
-    open FH, "test.in" or die $!;
-    $q1 = new CGI::Simple(\*FH);  # get the first record
-    $q2 = new CGI::Simple(\*FH);  # get the next record
+    open my $fh, '<', "test.in" or die $!;
+    $q1 = CGI::Simple->new($fh);  # get the first record
+    $q2 = CGI::Simple->new($fh);  # get the next record
 
 Note: If you wish to use this method from the function-oriented (non-OO)
 interface, the exported name for this method is B<save_parameters()>.
@@ -2021,7 +2029,7 @@ Also if you want to initialize from a file handle, the way to do this is
 with B<restore_parameters()>.  This will (re)initialize
 the default CGI::Simple object from the indicated file handle.
 
-    restore_parameters(\*FH);
+    restore_parameters($fh);
 
 =cut
 
@@ -2071,10 +2079,10 @@ value you get from B<param()> in any way - you don't need to untaint it.
 Now to save the file you would just do something like:
 
     $save_path = '/path/to/write/file.name';
-    open FH, ">$save_path" or die "Oops $!\n";
-    binmode FH;
-    print FH $buffer while read( $fh, $buffer, 4096 );
-    close FH;
+    open my $out, '>', $save_path or die "Oops $!\n";
+    binmode $out;
+    print $out $buffer while read( $fh, $buffer, 4096 );
+    close $out;
 
 By utilizing a new feature of the upload method this process can be
 simplified to:
@@ -2145,7 +2153,7 @@ Alternatively you can enable uploads via the $DISABLE_UPLOADS global like this:
 
     use CGI::Simple;
     $CGI::Simple::DISABLE_UPLOADS = 0;
-    $q = new CGI::Simple;
+    $q = CGI::Simple->new;
 
 If you wish to set $DISABLE_UPLOADS you must do this *after* the
 use statement and *before* the new constructor call as shown above.
@@ -2157,7 +2165,7 @@ but you can set this to whatever you want using the $POST_MAX global.
     use CGI::Simple;
     $CGI::Simple::DISABLE_UPLOADS = 0;      # enable uploads
     $CGI::Simple::POST_MAX = 1_048_576;     # allow 1MB uploads
-    $q = new CGI::Simple;
+    $q = CGI::Simple->new;
 
 If you set to -1 infinite size uploads will be permitted, which is the CGI.pm
 default.
@@ -2359,7 +2367,7 @@ To retrieve a cookie, request it by name by calling B<cookie()> method
 without the B<-value> parameter:
 
     use CGI::Simple;
-    $q = new CGI::Simple;
+    $q = CGI::Simple->new;
     $riddle  = $q->cookie('riddle_name');
     %answers = $q->cookie('answers');
 
@@ -3360,12 +3368,12 @@ other cgi-lib.pl functions like this:
 
     &CGI::Simple::ReadParse;       # get hash values in %in
 
-    my $q = new CGI::Simple;
+    my $q = CGI::Simple->new;
     $q->ReadParse();                # same thing
 
     CGI::Simple::ReadParse(*field); # get hash values in %field function style
 
-    my $q = new CGI::Simple;
+    my $q = CGI::Simple->new;
     $q->ReadParse(*field);          # same thing
 
 Once you use B<ReadParse()> under the functional interface , you can retrieve

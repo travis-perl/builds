@@ -132,6 +132,7 @@ in older Perl releases:
     call_method
     call_pv
     call_sv
+    caller_cx
     ckWARN
     CopFILE
     CopFILE_set
@@ -1550,7 +1551,7 @@ package Devel::PPPort;
 use strict;
 use vars qw($VERSION $data);
 
-$VERSION = '3.24';
+$VERSION = '3.25';
 
 sub _init_data
 {
@@ -1806,6 +1807,7 @@ SKIP
 |>    -----------------------------------------------------------------------------------------
 |>    PL_parser                 NEED_PL_parser               NEED_PL_parser_GLOBAL
 |>    PL_signals                NEED_PL_signals              NEED_PL_signals_GLOBAL
+|>    caller_cx()               NEED_caller_cx               NEED_caller_cx_GLOBAL
 |>    eval_pv()                 NEED_eval_pv                 NEED_eval_pv_GLOBAL
 |>    grok_bin()                NEED_grok_bin                NEED_grok_bin_GLOBAL
 |>    grok_hex()                NEED_grok_hex                NEED_grok_hex_GLOBAL
@@ -2787,7 +2789,7 @@ call_list||5.004000|
 call_method|5.006000||p
 call_pv|5.006000||p
 call_sv|5.006000||p
-caller_cx||5.013005|
+caller_cx|5.013005|5.013005|p
 calloc||5.007002|n
 cando|||
 cast_i32||5.006000|
@@ -8153,6 +8155,90 @@ DPPP_(my_sv_unmagicext)(pTHX_ SV *const sv, const int type, MGVTBL *vtbl)
 #endif
 
 #endif /* USE_ITHREADS */
+
+#if (PERL_BCDVERSION >= 0x5006000)
+#ifndef caller_cx
+
+# if defined(NEED_caller_cx) || defined(NEED_caller_cx_GLOBAL)
+static I32
+DPPP_dopoptosub_at(const PERL_CONTEXT *cxstk, I32 startingblock)
+{
+    I32 i;
+
+    for (i = startingblock; i >= 0; i--) {
+	register const PERL_CONTEXT * const cx = &cxstk[i];
+	switch (CxTYPE(cx)) {
+	default:
+	    continue;
+	case CXt_EVAL:
+	case CXt_SUB:
+	case CXt_FORMAT:
+	    return i;
+	}
+    }
+    return i;
+}
+# endif
+
+# if defined(NEED_caller_cx)
+static const PERL_CONTEXT * DPPP_(my_caller_cx)(pTHX_ I32 count, const PERL_CONTEXT **dbcxp);
+static
+#else
+extern const PERL_CONTEXT * DPPP_(my_caller_cx)(pTHX_ I32 count, const PERL_CONTEXT **dbcxp);
+#endif
+
+#ifdef caller_cx
+#  undef caller_cx
+#endif
+#define caller_cx(a,b) DPPP_(my_caller_cx)(aTHX_ a,b)
+#define Perl_caller_cx DPPP_(my_caller_cx)
+
+#if defined(NEED_caller_cx) || defined(NEED_caller_cx_GLOBAL)
+
+const PERL_CONTEXT *
+DPPP_(my_caller_cx)(pTHX_ I32 count, const PERL_CONTEXT **dbcxp)
+{
+    register I32 cxix = DPPP_dopoptosub_at(cxstack, cxstack_ix);
+    register const PERL_CONTEXT *cx;
+    register const PERL_CONTEXT *ccstack = cxstack;
+    const PERL_SI *top_si = PL_curstackinfo;
+
+    for (;;) {
+	/* we may be in a higher stacklevel, so dig down deeper */
+	while (cxix < 0 && top_si->si_type != PERLSI_MAIN) {
+	    top_si = top_si->si_prev;
+	    ccstack = top_si->si_cxstack;
+	    cxix = DPPP_dopoptosub_at(ccstack, top_si->si_cxix);
+	}
+	if (cxix < 0)
+	    return NULL;
+	/* caller() should not report the automatic calls to &DB::sub */
+	if (PL_DBsub && GvCV(PL_DBsub) && cxix >= 0 &&
+		ccstack[cxix].blk_sub.cv == GvCV(PL_DBsub))
+	    count++;
+	if (!count--)
+	    break;
+	cxix = DPPP_dopoptosub_at(ccstack, cxix - 1);
+    }
+
+    cx = &ccstack[cxix];
+    if (dbcxp) *dbcxp = cx;
+
+    if (CxTYPE(cx) == CXt_SUB || CxTYPE(cx) == CXt_FORMAT) {
+        const I32 dbcxix = DPPP_dopoptosub_at(ccstack, cxix - 1);
+	/* We expect that ccstack[dbcxix] is CXt_SUB, anyway, the
+	   field below is defined for any cx. */
+	/* caller() should not report the automatic calls to &DB::sub */
+	if (PL_DBsub && GvCV(PL_DBsub) && dbcxix >= 0 && ccstack[dbcxix].blk_sub.cv == GvCV(PL_DBsub))
+	    cx = &ccstack[dbcxix];
+    }
+
+    return cx;
+}
+
+# endif
+#endif /* caller_cx */
+#endif /* 5.6.0 */
 #ifndef IN_PERL_COMPILETIME
 #  define IN_PERL_COMPILETIME            (PL_curcop == &PL_compiling)
 #endif

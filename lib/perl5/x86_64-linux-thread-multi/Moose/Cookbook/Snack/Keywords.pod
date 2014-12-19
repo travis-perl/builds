@@ -13,7 +13,7 @@ Moose::Cookbook::Snack::Keywords - Restricted "keywords" in Moose
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 
@@ -65,6 +65,8 @@ keywords:
 =item confess
 
 =item blessed
+
+=item meta
 
 =back
 
