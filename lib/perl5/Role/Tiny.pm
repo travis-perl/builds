@@ -6,7 +6,7 @@ sub _getstash { \%{"$_[0]::"} }
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '1.003003';
+our $VERSION = '1.003004';
 $VERSION = eval $VERSION;
 
 our %INFO;
@@ -368,8 +368,8 @@ sub _install_methods {
     # and &overload::nil in the code slot.
     next
       unless $i =~ /^\(/
-        && defined &overload::nil
-        && $methods->{$i} == \&overload::nil;
+        && ((defined &overload::nil && $methods->{$i} == \&overload::nil)
+            || (defined &overload::_nil && $methods->{$i} == \&overload::_nil));
 
     my $overload = ${ *{_getglob "${role}::${i}"}{SCALAR} };
     next
@@ -414,8 +414,9 @@ sub _install_does {
   # only add does() method to classes
   return if $me->is_role($to);
 
+  my $does = $me->can('does_role');
   # add does() only if they don't have one
-  *{_getglob "${to}::does"} = \&does_role unless $to->can('does');
+  *{_getglob "${to}::does"} = $does unless $to->can('does');
 
   return
     if $to->can('DOES') and $to->can('DOES') != (UNIVERSAL->can('DOES') || 0);
@@ -423,7 +424,7 @@ sub _install_does {
   my $existing = $to->can('DOES') || $to->can('isa') || $FALLBACK;
   my $new_sub = sub {
     my ($proto, $role) = @_;
-    Role::Tiny::does_role($proto, $role) or $proto->$existing($role);
+    $proto->$does($role) or $proto->$existing($role);
   };
   no warnings 'redefine';
   *{_getglob "${to}::DOES"} = $new_sub;

@@ -1,13 +1,10 @@
 package metaclass;
-$metaclass::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
 use Module::Runtime 'use_package_optimistically', 'use_module';
-use Class::Load  'load_class';
-use Scalar::Util 'blessed';
-use Try::Tiny;
-
 use Class::MOP;
 
 sub import {
@@ -59,7 +56,7 @@ metaclass - a pragma for installing and using Class::MOP metaclasses
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 
