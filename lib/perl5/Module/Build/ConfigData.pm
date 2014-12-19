@@ -167,11 +167,24 @@ do{ my $x = [
        {},
        {},
        {
+         'dist_authoring' => {
+                               'requires' => {
+                                               'Archive::Tar' => '1.09'
+                                             },
+                               'recommends' => {
+                                                 'Pod::Readme' => '0.04',
+                                                 'Module::Signature' => '0.21'
+                                               },
+                               'description' => 'Create new distributions'
+                             },
+         'PPM_support' => {
+                            'description' => 'Generate PPM files for distributions'
+                          },
          'inc_bundling_support' => {
                                      'description' => 'Bundle Module::Build in inc/',
                                      'requires' => {
-                                                     'ExtUtils::Install' => '1.54',
-                                                     'ExtUtils::Installed' => '1.999'
+                                                     'ExtUtils::Installed' => '1.999',
+                                                     'ExtUtils::Install' => '1.54'
                                                    }
                                    },
          'license_creation' => {
@@ -180,16 +193,6 @@ do{ my $x = [
                                                },
                                  'description' => 'Create licenses automatically in distributions'
                                },
-         'dist_authoring' => {
-                               'requires' => {
-                                               'Archive::Tar' => '1.09'
-                                             },
-                               'description' => 'Create new distributions',
-                               'recommends' => {
-                                                 'Module::Signature' => '0.21',
-                                                 'Pod::Readme' => '0.04'
-                                               }
-                             },
          'manpage_support' => {
                                 'requires' => {
                                                 'Pod::Man' => 0
@@ -201,10 +204,7 @@ do{ my $x = [
                              'requires' => {
                                              'Pod::Html' => 0
                                            }
-                           },
-         'PPM_support' => {
-                            'description' => 'Generate PPM files for distributions'
-                          }
+                           }
        }
      ];
 $x; }
