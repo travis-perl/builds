@@ -4,7 +4,7 @@
       "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.112150, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
@@ -12,11 +12,13 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Encode",
+   "name" : "Compress-Raw-Zlib",
    "no_index" : {
       "directory" : [
          "t",
-         "inc"
+         "inc",
+         "t",
+         "private"
       ]
    },
    "prereqs" : {
@@ -31,17 +33,9 @@
          }
       },
       "runtime" : {
-         "requires" : {
-            "Exporter" : "5.57",
-            "parent" : "0.221"
-         }
+         "requires" : {}
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "repository" : {
-         "url" : "https://github.com/dankogai/p5-encode"
-      }
-   },
-   "version" : "2.62"
+   "version" : "2.067"
 }

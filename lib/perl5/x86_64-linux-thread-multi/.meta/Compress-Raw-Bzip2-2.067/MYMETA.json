@@ -1,5 +1,5 @@
 {
-   "abstract" : "IO Interface to compressed data files/buffers",
+   "abstract" : "Low-Level Interface to bzip2 compression library",
    "author" : [
       "Paul Marquess <pmqs@cpan.org>"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "IO-Compress",
+   "name" : "Compress-Raw-Bzip2",
    "no_index" : {
       "directory" : [
          "t",
@@ -33,13 +33,9 @@
          }
       },
       "runtime" : {
-         "requires" : {
-            "Compress::Raw::Bzip2" : "2.066",
-            "Compress::Raw::Zlib" : "2.066",
-            "Scalar::Util" : "0"
-         }
+         "requires" : {}
       }
    },
    "release_status" : "stable",
-   "version" : "2.066"
+   "version" : "2.067"
 }
