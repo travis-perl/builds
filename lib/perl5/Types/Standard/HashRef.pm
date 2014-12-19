@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN {
 	$Types::Standard::HashRef::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Standard::HashRef::VERSION   = '1.000004';
+	$Types::Standard::HashRef::VERSION   = '1.000005';
 }
 
 use Type::Tiny ();
@@ -70,7 +70,7 @@ sub __inline_generator
 		"ref($v) eq 'HASH' and do { "
 		.  "my \$ok = 1; "
 		.  "for my \$i (values \%{$v}) { "
-		.    "\$ok = 0 && last unless $param_check "
+		.    "(\$ok = 0, last) unless $param_check "
 		.  "}; "
 		.  "\$ok "
 		."}"
