@@ -98,7 +98,18 @@ passing the database value through to perl does the right thing.
 
 =item L<DBIx::Class::Row>
 
-L<copy|DBIx::Class::Row/copy>, L<delete|DBIx::Class::Row/delete>, L<discard_changes|DBIx::Class::Row/discard_changes>, L<get_dirty_columns|DBIx::Class::Row/get_dirty_columns>, L<get_from_storage|DBIx::Class::Row/get_from_storage>, L<get_inflated_columns|DBIx::Class::Row/get_inflated_columns>, L<has_column_loaded|DBIx::Class::Row/has_column_loaded>, L<in_storage|DBIx::Class::Row/in_storage>, L<inflate_result|DBIx::Class::Row/inflate_result>, L<insert|DBIx::Class::Row/insert>, L<insert_or_update|DBIx::Class::Row/insert_or_update>, L<is_changed|DBIx::Class::Row/is_changed>, L<is_column_changed|DBIx::Class::Row/is_column_changed>, L<make_column_dirty|DBIx::Class::Row/make_column_dirty>, L<register_column|DBIx::Class::Row/register_column>, L<result_source|DBIx::Class::Row/result_source>, L<set_column|DBIx::Class::Row/set_column>, L<set_columns|DBIx::Class::Row/set_columns>, L<set_inflated_columns|DBIx::Class::Row/set_inflated_columns>, L<throw_exception|DBIx::Class::Row/throw_exception>, L<update_or_insert|DBIx::Class::Row/update_or_insert>
+L<copy|DBIx::Class::Row/copy>, L<delete|DBIx::Class::Row/delete>, L<discard_changes|DBIx::Class::Row/discard_changes>, L<get_dirty_columns|DBIx::Class::Row/get_dirty_columns>, L<get_from_storage|DBIx::Class::Row/get_from_storage>, L<get_inflated_columns|DBIx::Class::Row/get_inflated_columns>, L<in_storage|DBIx::Class::Row/in_storage>, L<inflate_result|DBIx::Class::Row/inflate_result>, L<insert|DBIx::Class::Row/insert>, L<insert_or_update|DBIx::Class::Row/insert_or_update>, L<is_changed|DBIx::Class::Row/is_changed>, L<is_column_changed|DBIx::Class::Row/is_column_changed>, L<make_column_dirty|DBIx::Class::Row/make_column_dirty>, L<register_column|DBIx::Class::Row/register_column>, L<result_source|DBIx::Class::Row/result_source>, L<set_column|DBIx::Class::Row/set_column>, L<set_columns|DBIx::Class::Row/set_columns>, L<set_inflated_columns|DBIx::Class::Row/set_inflated_columns>, L<throw_exception|DBIx::Class::Row/throw_exception>, L<update_or_insert|DBIx::Class::Row/update_or_insert>
 
 =back
+
+=head1 FURTHER QUESTIONS?
+
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
+
+=head1 COPYRIGHT AND LICENSE
+
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 

@@ -3,10 +3,11 @@ package DBIx::Class::Storage::DBI::Cursor;
 use strict;
 use warnings;
 
-use base qw/DBIx::Class::Cursor/;
+use base 'DBIx::Class::Cursor';
 
 use Try::Tiny;
-use Scalar::Util qw/refaddr weaken/;
+use Scalar::Util qw(refaddr weaken);
+use List::Util 'shuffle';
 use namespace::clean;
 
 __PACKAGE__->mk_group_accessors('simple' =>
@@ -177,7 +178,14 @@ sub all {
 
   (undef, $sth) = $self->storage->_select( @{$self->{args}} );
 
-  return @{$sth->fetchall_arrayref};
+  return (
+    DBIx::Class::_ENV_::SHUFFLE_UNORDERED_RESULTSETS
+      and
+    ! $self->{attrs}{order_by}
+  )
+    ? shuffle @{$sth->fetchall_arrayref}
+    : @{$sth->fetchall_arrayref}
+  ;
 }
 
 sub sth {
@@ -244,5 +252,18 @@ sub __finish_sth {
     $self->{sth} and ! try { ! $self->{sth}->FETCH('Active') }
   );
 }
+
+=head1 FURTHER QUESTIONS?
+
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
+
+=head1 COPYRIGHT AND LICENSE
+
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
+
+=cut
 
 1;
