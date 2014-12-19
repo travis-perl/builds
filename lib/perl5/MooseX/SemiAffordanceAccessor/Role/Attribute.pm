@@ -1,8 +1,5 @@
 package MooseX::SemiAffordanceAccessor::Role::Attribute;
-BEGIN {
-  $MooseX::SemiAffordanceAccessor::Role::Attribute::VERSION = '0.09';
-}
-
+$MooseX::SemiAffordanceAccessor::Role::Attribute::VERSION = '0.10';
 use strict;
 use warnings;
 
@@ -37,32 +34,37 @@ no Moose::Role;
 
 1;
 
-
+# ABSTRACT: This meta trait is applied to attributes in order to change writer names
 
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
-MooseX::SemiAffordanceAccessor::Role::Attribute
+MooseX::SemiAffordanceAccessor::Role::Attribute - This meta trait is applied to attributes in order to change writer names
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 SYNOPSIS
-
-  Moose::Util::MetaRole::apply_metaclass_roles(
-      for_class => $p{for_class},
-      attribute_metaclass_roles =>
-          ['MooseX::SemiAffordanceAccessor::Role::Attribute'],
-  );
 
 =head1 DESCRIPTION
 
 This role applies a method modifier to the C<_process_options()>
 method, and tweaks the reader and writer parameters so that they
 follow the semi-affordance naming style.
+
+=for test_synopsis BEGIN { die 'SKIP: no need to test this'; }
+
+  Moose::Util::MetaRole::apply_metaclass_roles(
+      for_class => $p{for_class},
+      attribute_metaclass_roles =>
+          ['MooseX::SemiAffordanceAccessor::Role::Attribute'],
+  );
 
 =head1 AUTHOR
 
@@ -77,4 +79,3 @@ This is free software, licensed under:
   The Artistic License 2.0 (GPL Compatible)
 
 =cut
-

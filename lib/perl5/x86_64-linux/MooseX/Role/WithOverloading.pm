@@ -1,9 +1,6 @@
 package MooseX::Role::WithOverloading;
-BEGIN {
-  $MooseX::Role::WithOverloading::AUTHORITY = 'cpan:FLORA';
-}
-# git description: v0.14-9-gae3b660
-$MooseX::Role::WithOverloading::VERSION = '0.15';
+# git description: v0.15-7-ga377afc
+$MooseX::Role::WithOverloading::VERSION = '0.16';
 # ABSTRACT: Roles which support overloading
 # KEYWORDS: moose extension role operator overload overloading
 
@@ -29,8 +26,8 @@ else
     XSLoader::load(
         __PACKAGE__,
         $MooseX::Role::WithOverloading::{VERSION}
-        ? ${ $MooseX::Role::WithOverloading::{VERSION} }
-        : ()
+            ? ${ $MooseX::Role::WithOverloading::{VERSION} }
+            : ()
     );
 
     Moose::Exporter->setup_import_methods(
@@ -58,7 +55,7 @@ MooseX::Role::WithOverloading - Roles which support overloading
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 SYNOPSIS
 
@@ -123,17 +120,17 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
-=for stopwords Dave Rolsky Florian Ragwitz Jesse Luehrs Tomas Doran (t0m)
+=for stopwords Karen Etheridge Dave Rolsky Jesse Luehrs Tomas Doran (t0m)
 
 =over 4
 
 =item *
 
-Dave Rolsky <autarch@urth.org>
+Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Florian Ragwitz <rafl@debian.org>
+Dave Rolsky <autarch@urth.org>
 
 =item *
 
@@ -142,10 +139,6 @@ Jesse Luehrs <doy@tozt.net>
 =item *
 
 Tomas Doran (t0m) <t0m@state51.co.uk>
-
-=item *
-
-Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 

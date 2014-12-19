@@ -4,7 +4,8 @@ use strict;
 use warnings FATAL => 'all';
 use base qw(Exporter);
 
-our $VERSION = '1.002002';
+our $VERSION = '1.003003';
+$VERSION = eval $VERSION;
 
 sub _choose_json_module {
     return 'Cpanel::JSON::XS' if $INC{'Cpanel/JSON/XS.pm'};
@@ -31,6 +32,11 @@ BEGIN {
 }
 
 our @EXPORT = qw(encode_json decode_json JSON);
+my @EXPORT_ALL = qw(is_bool);
+our @EXPORT_OK = qw(is_bool to_json from_json);
+our %EXPORT_TAGS = ( all => [ @EXPORT, @EXPORT_ALL ],
+                     legacy => [ @EXPORT, @EXPORT_OK ],
+                   );
 
 sub JSON () { our $JSON_Class }
 
@@ -42,11 +48,60 @@ sub new {
   return $new;
 }
 
+use Scalar::Util ();
+
+sub is_bool {
+  die 'is_bool is not a method' if $_[1];
+
+  Scalar::Util::blessed($_[0])
+    and ($_[0]->isa('JSON::XS::Boolean')
+      or $_[0]->isa('Cpanel::JSON::XS::Boolean')
+      or $_[0]->isa('JSON::PP::Boolean'));
+}
+
+# (mostly) CopyPasta from JSON.pm version 2.90
+use Carp ();
+
+sub from_json ($@) {
+    if ( ref($_[0]) =~ /^JSON/ or $_[0] =~ /^JSON/ ) {
+        Carp::croak "from_json should not be called as a method.";
+    }
+    my $json = JSON()->new;
+
+    if (@_ == 2 and ref $_[1] eq 'HASH') {
+        my $opt  = $_[1];
+        for my $method (keys %$opt) {
+            $json->$method( $opt->{$method} );
+        }
+    }
+
+    return $json->decode( $_[0] );
+}
+
+sub to_json ($@) {
+    if (
+        ref($_[0]) =~ /^JSON/
+        or (@_ > 2 and $_[0] =~ /^JSON/)
+          ) {
+               Carp::croak "to_json should not be called as a method.";
+    }
+    my $json = JSON()->new;
+
+    if (@_ == 2 and ref $_[1] eq 'HASH') {
+        my $opt  = $_[1];
+        for my $method (keys %$opt) {
+            $json->$method( $opt->{$method} );
+        }
+    }
+
+    $json->encode($_[0]);
+}
+
 1;
 
 =head1 NAME
 
-JSON::MaybeXS - use L<Cpanel::JSON::XS> with a fallback to L<JSON::XS> and L<JSON::PP>
+JSON::MaybeXS - Use L<Cpanel::JSON::XS> with a fallback to L<JSON::XS> and L<JSON::PP>
 
 =head1 SYNOPSIS
 
@@ -77,13 +132,30 @@ we provide our own C<new> method that supports that.
 
 =head1 EXPORTS
 
-All of C<encode_json>, C<decode_json> and C<JSON> are exported by default.
+C<encode_json>, C<decode_json> and C<JSON> are exported by default; C<is_bool>
+is exported on request.
 
 To import only some symbols, specify them on the C<use> line:
 
-  use JSON::MaybeXS qw(encode_json decode_json); # functions only
+  use JSON::MaybeXS qw(encode_json decode_json is_bool); # functions only
 
   use JSON::MaybeXS qw(JSON); # JSON constant only
+
+To import all available sensible symbols (C<encode_json>, C<decode_json>, and
+C<is_bool>), use C<:all>:
+
+  use JSON::MaybeXS ':all';
+
+To import all symbols including those needed by legacy apps that use L<JSON::PP>:
+
+  use JSON::MaybeXS ':legacy';
+
+This imports the C<to_json> and C<from_json> symbols as well as everything in
+C<:all>.  NOTE: This is to support legacy code that makes extensive
+use of C<to_json> and C<from_json> which you are not yet in a position to
+refactor.  DO NOT use this import tag in new code, in order to avoid
+the crawling horrors of getting UTF8 support subtly wrong.  See the
+documentation for L<JSON> for further details.
 
 =head2 encode_json
 
@@ -99,6 +171,11 @@ module, and takes a string of JSON text to deserialise to a perl data structure.
 
   my $data_structure = decode_json($json_text);
 
+=head2 to_json, from_json
+
+See L<JSON> for details.  These are included to support legacy code
+B<only>.
+
 =head2 JSON
 
 The C<JSON> constant returns the selected implementation module's name for
@@ -110,12 +187,24 @@ and that object can then be used normally:
 
   my $data_structure = $json_obj->decode($json_text); # etc.
 
+=head2 is_bool
+
+  $is_boolean = is_bool($scalar)
+
+Returns true if the passed scalar represents either C<true> or
+C<false>, two constants that act like C<1> and C<0>, respectively
+and are used to represent JSON C<true> and C<false> values in Perl.
+
+Since this is a bare sub in the various backend classes, it cannot be called as
+a class method like the other interfaces; it must be called as a function, with
+no invocant.  It supports the representation used in all JSON backends.
+
 =head1 CONSTRUCTOR
 
 =head2 new
 
 With L<JSON::PP>, L<JSON::XS> and L<Cpanel::JSON::XS> you are required to call
-mutators to set options, i.e.
+mutators to set options, such as:
 
   my $json = $class->new->utf8(1)->pretty(1);
 
@@ -125,6 +214,14 @@ Since this is a trifle irritating and noticeably un-perlish, we also offer:
 
 which works equivalently to the above (and in the usual tradition will accept
 a hashref instead of a hash, should you so desire).
+
+=head1 BOOLEANS
+
+To include JSON-aware booleans (C<true>, C<false>) in your data, just do:
+
+    use JSON::MaybeXS;
+    my $true = JSON->true;
+    my $false = JSON->false;
 
 =head1 AUTHOR
 
@@ -137,6 +234,8 @@ mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>
 =item * Clinton Gormley <drtech@cpan.org>
 
 =item * Karen Etheridge <ether@cpan.org>
+
+=item * Kieren Diment <diment@gmail.com>
 
 =back
 

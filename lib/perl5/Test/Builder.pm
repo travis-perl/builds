@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '1.001006';
+our $VERSION = '1.001009';
 $VERSION = eval $VERSION;    ## no critic (BuiltinFunctions::ProhibitStringyEval)
 
 BEGIN {
@@ -355,7 +355,7 @@ sub finalize {
     $self->parent->{Child_Name} = undef;
     unless ($self->{Bailed_Out}) {
         if ( $self->{Skip_All} ) {
-            $self->parent->skip($self->{Skip_All});
+            $self->parent->skip($self->{Skip_All}, $self->name);
         }
         elsif ( not @{ $self->{Test_Results} } ) {
             $self->parent->ok( 0, sprintf q[No tests run for subtest "%s"], $self->name );
@@ -1162,7 +1162,7 @@ sub cmp_ok {
         $self->croak("$type is not a valid comparison operator in cmp_ok()");
     }
 
-    my $test;
+    my ($test, $succ);
     my $error;
     {
         ## no critic (BuiltinFunctions::ProhibitStringyEval)
@@ -1172,9 +1172,10 @@ sub cmp_ok {
         my($pack, $file, $line) = $self->caller();
 
         # This is so that warnings come out at the caller's level
-        $test = eval qq[
+        $succ = eval qq[
 #line $line "(eval in cmp_ok) $file"
-\$got $type \$expect;
+\$test = (\$got $type \$expect);
+1;
 ];
         $error = $@;
     }
@@ -1188,7 +1189,7 @@ sub cmp_ok {
       ? '_unoverload_num'
       : '_unoverload_str';
 
-    $self->diag(<<"END") if $error;
+    $self->diag(<<"END") unless $succ;
 An error occurred while using $type:
 ------------------------------------
 $error
@@ -1292,8 +1293,9 @@ Skips the current test, reporting C<$why>.
 =cut
 
 sub skip {
-    my( $self, $why ) = @_;
+    my( $self, $why, $name ) = @_;
     $why ||= '';
+    $name = '' unless defined $name;
     $self->_unoverload_str( \$why );
 
     lock( $self->{Curr_Test} );
@@ -1303,7 +1305,7 @@ sub skip {
         {
             'ok'      => 1,
             actual_ok => 1,
-            name      => '',
+            name      => $name,
             type      => 'skip',
             reason    => $why,
         }
