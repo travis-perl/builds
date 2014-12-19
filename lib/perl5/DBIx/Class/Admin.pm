@@ -15,7 +15,7 @@ use MooseX::Types::JSON qw(JSON);
 use MooseX::Types::Path::Class qw(Dir File);
 use MooseX::Types::LoadableClass qw(LoadableClass);
 use Try::Tiny;
-use namespace::autoclean;
+use namespace::clean;
 
 =head1 NAME
 
@@ -451,7 +451,7 @@ sub insert {
   $rs ||= $self->resultset();
   $set ||= $self->set();
   my $resultset = $self->schema->resultset($rs);
-  my $obj = $resultset->create( $set );
+  my $obj = $resultset->new_result($set)->insert;
   print ''.ref($resultset).' ID: '.join(',',$obj->id())."\n" if (!$self->quiet);
 }
 
@@ -582,13 +582,16 @@ sub _find_stanza {
   return $cfg;
 }
 
-=head1 AUTHOR
+=head1 FURTHER QUESTIONS?
 
-See L<DBIx::Class/CONTRIBUTORS>.
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-You may distribute this code under the same terms as Perl itself
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 

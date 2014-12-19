@@ -33,7 +33,7 @@
       "runtime" : {
          "requires" : {
             "DBIx::Class" : "0",
-            "ExtUtils::MakeMaker" : "6.98",
+            "ExtUtils::MakeMaker" : "7.04",
             "Test::More" : "0"
          }
       }

@@ -2,12 +2,12 @@
 
 require 5;
 use 5.8.0;
-package Text::Unidecode;  # Time-stamp: "2014-08-15 04:23:21 MDT sburke@cpan.org"
+package Text::Unidecode;  # Time-stamp: "2014-12-07 05:15:04 MST sburke@cpan.org"
 use utf8;
 use strict;
 use integer; # vroom vroom!
 use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE);
-$VERSION = '1.22';
+$VERSION = '1.23';
 require Exporter;
 @ISA = ('Exporter');
 @EXPORT = ('unidecode');
@@ -44,6 +44,12 @@ sub unidecode {
 
   foreach my $n (@_) {
     next unless defined $n;    
+
+    # Shut up potentially fatal warnings about UTF-16 surrogate
+    # characters when running under perl -w
+    # This is per https://rt.cpan.org/Ticket/Display.html?id=97456
+    no warnings 'utf8';
+
     $n =~ s~([^\x00-\x7f])~${$Char[ord($1)>>8]||t($1)}[ord($1)&255]~egs;
   }
   # That means:
@@ -603,6 +609,8 @@ If you know that the text you're handling is probably in German, and
 you want to apply the "umlaut becomes -e" rule, here's how to do it
 for yourself (and then use Unidecode as I<the fallback> afterwards):
 
+  use utf8;  # <-- probably necessary.
+
   our( %German_Characters ) = qw(
    Ä AE   ä ae
    Ö OE   ö oe
@@ -697,6 +705,10 @@ tornado underlying its code.
 An article I wrote for I<The Perl Journal> about
 Unidecode:  L<http://interglacial.com/tpj/22/>
 (B<READ IT!>)
+
+Tom Christiansen's
+I<Perl Unicode Cookbook>,
+L<http://www.perl.com/pub/2012/04/perlunicook-standard-preamble.html>
 
 Unicode Consortium: L<http://www.unicode.org/>
 
