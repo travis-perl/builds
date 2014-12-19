@@ -1,8 +1,5 @@
 #!/home/travis/perl5/perlbrew/perls/5.8.8-thr/bin/perl
 
-eval 'exec /home/travis/perl5/perlbrew/perls/5.8.8-thr/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
 # pod2text -- Convert POD data to formatted ASCII text.
 #
 # Copyright 1999, 2000, 2001, 2004, 2006, 2008, 2010, 2012, 2013
