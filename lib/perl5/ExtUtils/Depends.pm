@@ -12,7 +12,7 @@ use File::Find;
 use File::Spec;
 use Data::Dumper;
 
-our $VERSION = '0.401';
+our $VERSION = '0.402';
 
 sub import {
 	my $class = shift;
@@ -114,6 +114,7 @@ sub install {
 sub save_config {
 	use Data::Dumper;
 	local $Data::Dumper::Terse = 0;
+	local $Data::Dumper::Sortkeys = 1;
 	use IO::File;
 
 	my ($self, $filename) = @_;

@@ -13,7 +13,7 @@ Moose::Manual::Delta - Important Changes in Moose
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 
@@ -27,6 +27,38 @@ for finding the lowest version of Moose that supported a given
 feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
+
+=head1 2.1400
+
+=over 4
+
+=item Overloading implementation has changed
+
+Overloading meta information used to be implemented by a
+C<Class::MOP::Method::Overload> class. This class has been removed, and
+overloading is now implemented by L<Class::MOP::Overload>. Overloading is not
+really equivalent to a method, so the former implementation didn't work
+properly for various cases.
+
+All of the overloading-related methods for classes and roles have the same
+names, but now returns L<Class::MOP::Overload> objects.
+
+=item Core support for overloading in roles
+
+Roles which use overloading now pass that overloading onto other classes (and
+roles) which consume that role.
+
+This works much like L<MooseX::Role::WithOverloading>, except that we properly
+detect overloading conflicts during role summation and when applying one role
+to another. L<MooseX::Role::WithOverloading> did not do any conflict
+detection.
+
+If you want to write code that uses overloading and works with previous
+versions of Moose and this one, upgrade to L<MooseX::Role::WithOverloading>
+version 0.15 or greater. That version will detect when Moose itself handles
+overloading and get out of the way.
+
+=back
 
 =head1 2.1200
 
@@ -337,6 +369,10 @@ developers to try to get conflicts support added to CPAN clients, and if/when
 that happens, the metadata already exists, and so the conflict checking will
 become automatic.
 
+=item The lazy_build attribute feature is discouraged
+
+While not deprecated, we strongly discourage you from using this feature.
+
 =item Most deprecated APIs/features are slated for removal in Moose 2.0200
 
 Most of the deprecated APIs and features in Moose will start throwing an error
@@ -344,10 +380,6 @@ in Moose 2.0200. Some of the features will go away entirely, and some will
 simply throw an error.
 
 The things on the chopping block are:
-
-=item The lazy_build attribute feature is discouraged
-
-While not deprecated, we strongly discourage you from using this feature.
 
 =over 8
 
