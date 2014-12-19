@@ -68,7 +68,7 @@ sub resolve {
     # vague error message as this is never supposed to happen
     "Unable to resolve moniker '%s' - please contact the dev team at %s",
     $_[0]->source_moniker,
-    'http://search.cpan.org/dist/DBIx-Class/lib/DBIx/Class.pm#GETTING_HELP/SUPPORT',
+    DBIx::Class::_ENV_::HELP_URL,
   ), 'full_stacktrace');
 }
 
@@ -128,9 +128,16 @@ sub STORABLE_thaw {
   }
 }
 
-=head1 AUTHOR
+=head1 FURTHER QUESTIONS?
 
-Ash Berlin C<< <ash@cpan.org> >>
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
+
+=head1 COPYRIGHT AND LICENSE
+
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 

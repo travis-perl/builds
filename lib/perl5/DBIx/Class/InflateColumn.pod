@@ -116,10 +116,6 @@ as dirty. This is directly analogous to L<DBIx::Class::Row/store_column>.
 
 =back
 
-=head1 AUTHOR
-
-Matt S. Trout <mst@shadowcatsystems.co.uk>
-
 =head1 INHERITED METHODS
 
 =over 4
@@ -130,13 +126,14 @@ L<copy|DBIx::Class::Row/copy>, L<delete|DBIx::Class::Row/delete>, L<discard_chan
 
 =back
 
-=head1 CONTRIBUTORS
+=head1 FURTHER QUESTIONS?
 
-Daniel Westermann-Clark <danieltwc@cpan.org> (documentation)
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-Jess Robinson <cpan@desert-island.demon.co.uk>
+=head1 COPYRIGHT AND LICENSE
 
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
