@@ -1,8 +1,7 @@
 package Dist::Zilla::Plugin::PruneCruft;
 # ABSTRACT: prune stuff that you probably don't mean to include
-$Dist::Zilla::Plugin::PruneCruft::VERSION = '5.020';
+$Dist::Zilla::Plugin::PruneCruft::VERSION = '5.029';
 use Moose;
-use Moose::Autobox;
 use Moose::Util::TypeConstraints;
 with 'Dist::Zilla::Role::FilePruner';
 
@@ -51,7 +50,7 @@ use namespace::autoclean;
 
 sub _dont_exclude_file {
   my ($self, $file) = @_;
-  for my $exception ($self->except->flatten) {
+  for my $exception (@{ $self->except }) {
     return 1 if $file->name =~ $exception;
   }
   return;
@@ -76,7 +75,7 @@ sub exclude_file {
   return 1 if substr($file->name, 0, 7) eq 'fatlib/';
 
   if ((my $file = $file->name) =~ s/\.c$//) {
-      for my $other ($self->zilla->files->flatten) {
+      for my $other (@{ $self->zilla->files }) {
           return 1 if $other->name eq "${file}.xs";
       }
   }
@@ -87,7 +86,8 @@ sub exclude_file {
 sub prune_files {
   my ($self) = @_;
 
-  for my $file ($self->zilla->files->flatten) {
+  # Copy list (break reference) so we can mutate.
+  for my $file ((), @{ $self->zilla->files }) {
     next unless $self->exclude_file($file);
 
     $self->log_debug([ 'pruning %s', $file->name ]);
@@ -113,7 +113,7 @@ Dist::Zilla::Plugin::PruneCruft - prune stuff that you probably don't mean to in
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

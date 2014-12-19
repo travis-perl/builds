@@ -1,5 +1,6 @@
 package Class::MOP::Method::Meta;
-$Class::MOP::Method::Meta::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
@@ -92,7 +93,7 @@ Class::MOP::Method::Meta - Method Meta Object for C<meta> methods
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

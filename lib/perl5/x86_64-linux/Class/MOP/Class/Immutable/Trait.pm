@@ -1,10 +1,10 @@
 package Class::MOP::Class::Immutable::Trait;
-$Class::MOP::Class::Immutable::Trait::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
 use MRO::Compat;
-use Scalar::Util 'blessed', 'weaken';
 use Module::Runtime 'use_module';
 
 # the original class of the metaclass instance
@@ -107,7 +107,7 @@ Class::MOP::Class::Immutable::Trait - Implements immutability for metaclass obje
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

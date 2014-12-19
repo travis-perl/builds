@@ -1,6 +1,6 @@
 package Pod::Elemental::Document;
 # ABSTRACT: a pod document
-$Pod::Elemental::Document::VERSION = '0.103001';
+$Pod::Elemental::Document::VERSION = '0.103002';
 use Moose;
 with 'Pod::Elemental::Node';
 
@@ -111,6 +111,8 @@ sub new_from_lol {
   return $self;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -125,7 +127,7 @@ Pod::Elemental::Document - a pod document
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 
