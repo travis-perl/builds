@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::new;
 # ABSTRACT: mint a new dist
-$Dist::Zilla::App::Command::new::VERSION = '5.020';
+$Dist::Zilla::App::Command::new::VERSION = '5.029';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -30,6 +30,12 @@ use Dist::Zilla::App -command;
 #pod This command would instruct C<dzil> to consult the Foo provider about the
 #pod directory of 'default' profile.
 #pod
+#pod Furthermore, it is possible to specify the default minting provider and profile
+#pod in the F<~/.dzil/config.ini> file, for example:
+#pod
+#pod   [%Mint]
+#pod   provider = FooCorp
+#pod   profile = work
 #pod
 #pod =cut
 
@@ -71,12 +77,16 @@ sub execute {
   my $dist = $arg->[0];
 
   require Dist::Zilla::Dist::Minter;
+  my $stash = $self->app->_build_global_stashes;
   my $minter = Dist::Zilla::Dist::Minter->_new_from_profile(
-    [ $opt->provider, $opt->profile ],
+    ( exists $stash->{'%Mint'} ?
+      [ $stash->{'%Mint'}->provider, $stash->{'%Mint'}->profile ] :
+      [ $opt->provider, $opt->profile ]
+    ),
     {
       chrome  => $self->app->chrome,
       name    => $dist,
-      _global_stashes => $self->app->_build_global_stashes,
+      _global_stashes => $stash,
     },
   );
 
@@ -99,7 +109,7 @@ Dist::Zilla::App::Command::new - mint a new dist
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 
@@ -125,6 +135,13 @@ exists, it will use a very simple configuration shipped with Dist::Zilla.
 
 This command would instruct C<dzil> to consult the Foo provider about the
 directory of 'default' profile.
+
+Furthermore, it is possible to specify the default minting provider and profile
+in the F<~/.dzil/config.ini> file, for example:
+
+  [%Mint]
+  provider = FooCorp
+  profile = work
 
 =head1 AUTHOR
 

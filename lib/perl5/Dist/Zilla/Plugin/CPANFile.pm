@@ -1,8 +1,7 @@
 package Dist::Zilla::Plugin::CPANFile;
 # ABSTRACT: produce a cpanfile prereqs file
-$Dist::Zilla::Plugin::CPANFile::VERSION = '5.020';
+$Dist::Zilla::Plugin::CPANFile::VERSION = '5.029';
 use Moose;
-use Moose::Autobox;
 with 'Dist::Zilla::Role::FileGatherer';
 
 use namespace::autoclean;
@@ -89,7 +88,7 @@ Dist::Zilla::Plugin::CPANFile - produce a cpanfile prereqs file
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

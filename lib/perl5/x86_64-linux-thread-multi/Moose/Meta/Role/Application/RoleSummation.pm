@@ -1,9 +1,11 @@
 package Moose::Meta::Role::Application::RoleSummation;
-$Moose::Meta::Role::Application::RoleSummation::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 use metaclass;
 
+use List::Util 1.33 qw( all );
 use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;
@@ -254,6 +256,71 @@ sub apply_method_modifiers {
     }
 }
 
+sub apply_overloading {
+    my ( $self, $c ) = @_;
+
+    my @overloaded_roles = grep { $_->is_overloaded } @{ $c->get_roles };
+    return unless @overloaded_roles;
+
+    my %fallback;
+    for my $role (@overloaded_roles) {
+        $fallback{ $role->name } = $role->get_overload_fallback_value;
+    }
+
+    for my $role_name ( keys %fallback ) {
+        for my $other_role_name ( grep { $_ ne $role_name } keys %fallback ) {
+            my @fb_values = @fallback{ $role_name, $other_role_name };
+            if ( all {defined} @fb_values ) {
+                next if $fallback{$role_name} eq $fallback{$other_role_name};
+                throw_exception(
+                    'OverloadConflictInSummation',
+                    role_names       => [ $role_name, $other_role_name ],
+                    role_application => $self,
+                    overloaded_op    => 'fallback',
+                );
+            }
+
+            next if all { !defined } @fb_values;
+            throw_exception(
+                'OverloadConflictInSummation',
+                role_names       => [ $role_name, $other_role_name ],
+                role_application => $self,
+                overloaded_op    => 'fallback',
+            );
+        }
+    }
+
+    if ( keys %fallback ) {
+        $c->set_overload_fallback_value( ( values %fallback )[0] );
+    }
+
+    my %overload_map;
+    for my $role (@overloaded_roles) {
+        for my $overload ( $role->get_all_overloaded_operators ) {
+            $overload_map{ $overload->operator }{ $role->name } = $overload;
+        }
+    }
+
+    for my $op_name ( keys %overload_map ) {
+        my @roles = keys %{ $overload_map{$op_name} };
+        my $overload = $overload_map{$op_name}{ $roles[0] };
+
+        if ( @roles > 1 && !all { $overload->_is_equal_to($_) }
+            values %{ $overload_map{$op_name} } ) {
+
+            throw_exception(
+                'OverloadConflictInSummation',
+                role_names       => [ @roles[ 0, 1 ] ],
+                role_application => $self,
+                overloaded_op    => $op_name,
+            );
+        }
+
+        $c->add_overloaded_operator(
+            $op_name => $overload_map{$op_name}{ $roles[0] } );
+    }
+}
+
 1;
 
 # ABSTRACT: Combine two or more roles
@@ -270,7 +337,7 @@ Moose::Meta::Role::Application::RoleSummation - Combine two or more roles
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 
@@ -309,15 +376,13 @@ bindings and 'disabling' the conflicting bindings
 
 =item B<apply_methods>
 
+=item B<apply_overloading>
+
 =item B<apply_method_modifiers>
 
 =item B<apply_override_method_modifiers>
 
 =back
-
-=head1 BUGS
-
-See L<Moose/BUGS> for details on reporting bugs.
 
 =head1 AUTHORS
 

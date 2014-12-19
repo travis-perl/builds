@@ -1,5 +1,5 @@
 package Log::Dispatch::Code;
-$Log::Dispatch::Code::VERSION = '2.42';
+$Log::Dispatch::Code::VERSION = '2.44';
 use strict;
 use warnings;
 
@@ -49,7 +49,7 @@ Log::Dispatch::Code - Object for logging to a subroutine reference
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

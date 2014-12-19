@@ -31,8 +31,10 @@
             "ExtUtils::MakeMaker" : "0"
          }
       },
-      "runtime" : {
-         "requires" : {}
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
       }
    },
    "release_status" : "stable",

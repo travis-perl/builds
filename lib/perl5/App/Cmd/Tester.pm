@@ -1,12 +1,60 @@
 use strict;
 use warnings;
 package App::Cmd::Tester;
-{
-  $App::Cmd::Tester::VERSION = '0.323';
-}
-
+$App::Cmd::Tester::VERSION = '0.326';
 # ABSTRACT: for capturing the result of running an app
 
+#pod =head1 SYNOPSIS
+#pod
+#pod   use Test::More tests => 4;
+#pod   use App::Cmd::Tester;
+#pod
+#pod   use YourApp;
+#pod
+#pod   my $result = test_app(YourApp => [ qw(command --opt value) ]);
+#pod
+#pod   like($result->stdout, qr/expected output/, 'printed what we expected');
+#pod
+#pod   is($result->stderr, '', 'nothing sent to sderr');
+#pod
+#pod   is($result->error, undef, 'threw no exceptions');
+#pod
+#pod   my $result = test_app(YourApp => [ qw(command --opt value --quiet) ]);
+#pod
+#pod   is($result->output, '', 'absolutely no output with --quiet');
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod One of the reasons that user-executed programs are so often poorly tested is
+#pod that they are hard to test.  App::Cmd::Tester is one of the tools App-Cmd
+#pod provides to help make it easy to test App::Cmd-based programs.
+#pod
+#pod It provides one routine: test_app.
+#pod
+#pod =method test_app
+#pod
+#pod B<Note>: while C<test_app> is a method, it is by default exported as a
+#pod subroutine into the namespace that uses App::Cmd::Tester.  In other words: you
+#pod probably don't need to think about this as a method unless you want to subclass
+#pod App::Cmd::Tester.
+#pod
+#pod   my $result = test_app($app_class => \@argv_contents);
+#pod
+#pod This will locally set C<@ARGV> to simulate command line arguments, and will
+#pod then call the C<run> method on the given application class (or application).
+#pod Output to the standard output and standard error filehandles  will be captured.
+#pod
+#pod C<$result> is an App::Cmd::Tester::Result object, which has methods to access
+#pod the following data:
+#pod
+#pod   stdout - the output sent to stdout
+#pod   stderr - the output sent to stderr
+#pod   output - the combined output of stdout and stderr
+#pod   error  - the exception thrown by running the application, or undef
+#pod   run_rv - the return value of the run method (generally irrelevant)
+#pod   exit_code - the numeric exit code that would've been issued (0 is 'okay')
+#pod
+#pod =cut
 
 use Sub::Exporter::Util qw(curry_method);
 use Sub::Exporter -setup => {
@@ -22,6 +70,9 @@ BEGIN {
   };
 }
 
+#pod =for Pod::Coverage result_class
+#pod
+#pod =cut
 
 sub result_class { 'App::Cmd::Tester::Result' }
 
@@ -82,11 +133,8 @@ sub _run_with_capture {
 
 {
   package App::Cmd::Tester::Result;
-{
-  $App::Cmd::Tester::Result::VERSION = '0.323';
-}
-
-  sub new {
+$App::Cmd::Tester::Result::VERSION = '0.326';
+sub new {
     my ($class, $arg) = @_;
     bless $arg => $class;
   }
@@ -101,10 +149,8 @@ sub _run_with_capture {
 
 {
   package App::Cmd::Tester::Exited;
-{
-  $App::Cmd::Tester::Exited::VERSION = '0.323';
-}
-  sub throw {
+$App::Cmd::Tester::Exited::VERSION = '0.326';
+sub throw {
     my ($class, $code) = @_;
     $code = 0 unless defined $code;
     my $self = (bless \$code => $class);
@@ -126,7 +172,7 @@ App::Cmd::Tester - for capturing the result of running an app
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 SYNOPSIS
 
@@ -188,7 +234,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -2,13 +2,10 @@ use strict;
 use warnings;
 package Dist::Zilla::App;
 # ABSTRACT: Dist::Zilla's App::Cmd
-$Dist::Zilla::App::VERSION = '5.020';
+$Dist::Zilla::App::VERSION = '5.029';
 use App::Cmd::Setup 0.309 -app; # better compilation error detection
 
 use Carp ();
-use Dist::Zilla::MVP::Reader::Finder;
-use Dist::Zilla::Util;
-use Moose::Autobox;
 use Try::Tiny;
 
 sub global_opt_spec {
@@ -30,10 +27,12 @@ sub _build_global_stashes {
 
   my $stash_registry = $self->{__global_stashes__} = {};
 
+  require Dist::Zilla::Util;
   my $config_dir  = Dist::Zilla::Util->_global_config_root;
 
   my $config_base = $config_dir->file('config');
 
+  require Dist::Zilla::MVP::Reader::Finder;
   require Dist::Zilla::MVP::Assembler::GlobalConfig;
   require Dist::Zilla::MVP::Section;
   my $assembler = Dist::Zilla::MVP::Assembler::GlobalConfig->new({
@@ -130,7 +129,7 @@ sub zilla {
 
     VERBOSE_PLUGIN: for my $plugin_name (grep { ! m{\A[-_]\z} } @v_plugins) {
       my @plugins = grep { $_->plugin_name =~ /\b\Q$plugin_name\E\b/ }
-                    $zilla->plugins->flatten;
+                    @{ $zilla->plugins };
 
       $zilla->log_fatal("can't find plugins matching $plugin_name to set debug")
         unless @plugins;
@@ -156,7 +155,7 @@ Dist::Zilla::App - Dist::Zilla's App::Cmd
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 METHODS
 
