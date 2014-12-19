@@ -2,10 +2,10 @@ use strict;
 use warnings;
 package Test::DZil;
 # ABSTRACT: tools for testing Dist::Zilla plugins
-$Test::DZil::VERSION = '5.020';
+$Test::DZil::VERSION = '5.029';
 use Dist::Zilla::Tester;
 use Params::Util qw(_HASH0);
-use JSON 2;
+use JSON::MaybeXS;
 use Scalar::Util qw(blessed);
 use Test::Deep ();
 use YAML::Tiny;
@@ -94,7 +94,7 @@ sub is_yaml {
 sub is_json {
   my ($json, $want, $comment) = @_;
 
-  my $have = JSON->new->ascii(1)->decode($json)
+  my $have = JSON::MaybeXS->new(ascii => 1)->decode($json)
     or die "Cannot decode JSON";
 
   local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -240,7 +240,7 @@ Test::DZil - tools for testing Dist::Zilla plugins
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

@@ -16,27 +16,43 @@
    "name" : "Try-Tiny",
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
+         "requires" : {}
       },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "6.30"
          }
       },
+      "develop" : {
+         "requires" : {
+            "Pod::Coverage::TrustPod" : "0",
+            "Test::More" : "0",
+            "Test::NoTabs" : "0",
+            "Test::Pod" : "1.41",
+            "Test::Pod::Coverage" : "1.08"
+         }
+      },
       "runtime" : {
          "requires" : {
             "Carp" : "0",
             "Exporter" : "5.57",
+            "constant" : "0",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "recommends" : {
+            "Capture::Tiny" : "0.12",
+            "Sub::Name" : "0",
+            "perl" : "5.010"
+         },
+         "requires" : {
             "File::Spec" : "0",
             "IO::Handle" : "0",
             "IPC::Open3" : "0",
             "Test::More" : "0",
-            "constant" : "0",
-            "if" : "0",
-            "strict" : "0",
-            "warnings" : "0"
+            "if" : "0"
          }
       }
    },
@@ -53,7 +69,9 @@
       },
       "homepage" : "http://metacpan.org/release/Try-Tiny",
       "repository" : {
-         "url" : "git://github.com/doy/try-tiny.git"
+         "type" : "git",
+         "url" : "git://github.com/doy/try-tiny.git",
+         "web" : "https://github.com/doy/try-tiny"
       }
    },
    "version" : "0.22",

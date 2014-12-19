@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::NextRelease;
 # ABSTRACT: update the next release number in your changelog
-$Dist::Zilla::Plugin::NextRelease::VERSION = '5.020';
+$Dist::Zilla::Plugin::NextRelease::VERSION = '5.029';
 use namespace::autoclean;
 
 use Moose;
@@ -120,6 +120,7 @@ sub after_release {
   my ($self) = @_;
   my $filename = $self->filename;
   my ($gathered_file) = grep { $_->name eq $filename } @{ $self->zilla->files };
+  $self->log_fatal("failed to find $filename in the distribution") if not $gathered_file;
   my $iolayer = sprintf(":raw:encoding(%s)", $gathered_file->encoding);
 
   # read original changelog
@@ -260,7 +261,7 @@ Dist::Zilla::Plugin::NextRelease - update the next release number in your change
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

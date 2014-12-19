@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MakeMaker::Runner;
 # ABSTRACT: Test and build dists with a Makefile.PL
-$Dist::Zilla::Plugin::MakeMaker::Runner::VERSION = '5.020';
+$Dist::Zilla::Plugin::MakeMaker::Runner::VERSION = '5.029';
 use Moose;
 with(
   'Dist::Zilla::Role::BuildRunner',
@@ -27,8 +27,11 @@ sub build {
   return
     if -e $makefile and (stat 'Makefile.PL')[9] <= (stat $makefile)[9];
 
-  system($^X => 'Makefile.PL') and die "error with Makefile.PL\n";
-  system($make)                and die "error running $make\n";
+  $self->log_debug("running $^X Makefile.PL");
+  system($^X => qw(Makefile.PL INSTALLMAN1DIR=none INSTALLMAN3DIR=none)) and die "error with Makefile.PL\n";
+
+  $self->log_debug("running $make");
+  system($make) and die "error running $make\n";
 
   return;
 }
@@ -47,6 +50,7 @@ sub test {
   my $ho = "HARNESS_OPTIONS";
   local $ENV{$ho} = $ENV{$ho} ? "$ENV{$ho}:$jobs" : $jobs;
 
+  $self->log_debug(join(' ', "running $make test", ( $self->zilla->logger->get_debug ? 'TEST_VERBOSE=1' : () )));
   system($make, 'test',
     ( $self->zilla->logger->get_debug ? 'TEST_VERBOSE=1' : () ),
   ) and die "error running $make test\n";
@@ -69,7 +73,7 @@ Dist::Zilla::Plugin::MakeMaker::Runner - Test and build dists with a Makefile.PL
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 AUTHOR
 

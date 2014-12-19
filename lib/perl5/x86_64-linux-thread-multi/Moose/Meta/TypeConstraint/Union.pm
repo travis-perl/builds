@@ -1,13 +1,13 @@
 package Moose::Meta::TypeConstraint::Union;
-$Moose::Meta::TypeConstraint::Union::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-use List::MoreUtils qw(all);
-use List::Util qw(first);
+use List::Util 1.33 qw(first all);
 
 use parent 'Moose::Meta::TypeConstraint';
 
@@ -208,7 +208,7 @@ Moose::Meta::TypeConstraint::Union - A union of Moose type constraints
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Config::INI::Writer;
-$Config::INI::Writer::VERSION = '0.024';
+$Config::INI::Writer::VERSION = '0.025';
 use Mixin::Linewise::Writers;
 # ABSTRACT: a subclassable .ini-file emitter
 
@@ -511,7 +511,7 @@ Config::INI::Writer - a subclassable .ini-file emitter
 
 =head1 VERSION
 
-version 0.024
+version 0.025
 
 =head1 SYNOPSIS
 
