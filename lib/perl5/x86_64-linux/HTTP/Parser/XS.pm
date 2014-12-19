@@ -19,7 +19,7 @@ use constant {
     HEADERS_AS_ARRAYREF =>2,    # Ordered ArrayRef : [ name, value, name2, value2 ... ]
 };
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 our $BACKEND;
 
@@ -209,29 +209,71 @@ C<parse_http_request()> simply ignores too-long header names.
 
 Copyright 2009- Kazuho Oku
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Kazuho Oku
-gfx
-mala
-tokuhirom
+=over 4
+
+=item *
+
+L<Kazuho Oku|https://metacpan.org/author/KAZUHO>
+
+=item *
+
+L<gfx|https://metacpan.org/author/GFUJI>
+
+=item *
+
+L<mala|https://metacpan.org/author/MALA>
+
+=item *
+
+L<tokuhirom|https://metacpan.org/author/TOKUHIROM>
+
+=back
 
 =head1 THANKS TO
 
-nothingmuch
-charsbar
+=over 4
+
+=item *
+
+L<nothingmuch|https://metacpan.org/author/NUFFIN>
+
+=item *
+
+L<charsbar|https://metacpan.org/author/CHARSBAR>
+
+=item *
+
+L<DOLMEN|https://metacpan.org/author/DOLMEN>
+
+=back
 
 =head1 SEE ALSO
 
+=over 4
+
+=item *
+
 L<http://github.com/kazuho/picohttpparser>
+
+=item *
 
 L<HTTP::Parser>
 
+=item *
+
 L<HTTP::HeaderParser::XS>
+
+=item *
 
 L<Plack>
 
+=item *
+
 L<PSGI>
+
+=back
 
 =head1 LICENSE
 

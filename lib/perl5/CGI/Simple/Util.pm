@@ -1,7 +1,7 @@
 package CGI::Simple::Util;
 use strict;
 use vars qw( $VERSION @EXPORT_OK @ISA $UTIL );
-$VERSION = '1.113';
+$VERSION = '1.114';
 require Exporter;
 @ISA       = qw( Exporter );
 @EXPORT_OK = qw(
@@ -237,7 +237,7 @@ sub utf8_chr ($) {
 # we do this on first initialization and store the results in in an object
 BEGIN {
 
-  $UTIL = new CGI::Simple::Util;    # initialize our $UTIL object
+  $UTIL = CGI::Simple::Util->new;    # initialize our $UTIL object
 
   sub new {
     my $class = shift;

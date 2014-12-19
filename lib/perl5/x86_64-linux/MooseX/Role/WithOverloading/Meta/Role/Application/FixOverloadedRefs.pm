@@ -1,9 +1,6 @@
 package MooseX::Role::WithOverloading::Meta::Role::Application::FixOverloadedRefs;
-BEGIN {
-  $MooseX::Role::WithOverloading::Meta::Role::Application::FixOverloadedRefs::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Fix up magic when applying roles to instances with magic on old perls
-$MooseX::Role::WithOverloading::Meta::Role::Application::FixOverloadedRefs::VERSION = '0.15';
+$MooseX::Role::WithOverloading::Meta::Role::Application::FixOverloadedRefs::VERSION = '0.16';
 use Moose::Role;
 use namespace::autoclean;
 
@@ -35,7 +32,7 @@ MooseX::Role::WithOverloading::Meta::Role::Application::FixOverloadedRefs - Fix 
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =for Pod::Coverage reset_amagic
 

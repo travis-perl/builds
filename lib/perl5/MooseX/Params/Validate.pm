@@ -1,11 +1,7 @@
 package MooseX::Params::Validate;
-{
-  $MooseX::Params::Validate::VERSION = '0.18';
-}
-BEGIN {
-  $MooseX::Params::Validate::AUTHORITY = 'cpan:STEVAN';
-}
+# git description: v0.18-5-g3bcb95b
 
+$MooseX::Params::Validate::VERSION = '0.19';
 use strict;
 use warnings;
 
@@ -201,6 +197,9 @@ sub _convert_to_param_validate_spec {
     $pv_spec{coerce} = $spec->{coerce}
         if exists $spec->{coerce};
 
+    $pv_spec{depends} = $spec->{depends}
+        if exists $spec->{depends};
+
     my $constraint;
     if ( defined $spec->{isa} ) {
         $constraint
@@ -262,7 +261,7 @@ MooseX::Params::Validate - an extension of Params::Validate using Moose's types
 
 =head1 VERSION
 
-version 0.18
+version 0.19
 
 =head1 SYNOPSIS
 
@@ -297,6 +296,8 @@ be considered the "official" one by any means though.
 
 You might also want to explore C<MooseX::Method::Signatures> and
 C<MooseX::Declare>.
+
+=encoding UTF-8
 
 =head1 CAVEATS
 
@@ -348,6 +349,11 @@ Params::Validate.
 If this is true and the parameter has a type constraint which has
 coercions, then the coercion will be called for this parameter. If the
 type does have coercions, then this parameter is ignored.
+
+=item I<depends>
+
+Another parameter that this one depends on. See the L<Params::Validate>
+documentation for more details.
 
 =back
 
@@ -428,9 +434,9 @@ below, simply pass them after the list of parameter validation specs:
 =head1 ALLOWING EXTRA PARAMETERS
 
 By default, any parameters not mentioned in the parameter spec cause this
-module to throw an error. However, you can have have this module simply ignore
-them by setting C<MX_PARAMS_VALIDATE_ALLOW_EXTRA> to a true value when calling
-a validation subroutine.
+module to throw an error. However, you can have this module simply ignore them
+by setting C<MX_PARAMS_VALIDATE_ALLOW_EXTRA> to a true value when calling a
+validation subroutine.
 
 When calling C<validated_hash> or C<pos_validated_list> the extra parameters
 are simply returned in the hash or list as appropriate. However, when you call
@@ -513,9 +519,29 @@ Dave Rolsky <autarch@urth.org>
 
 =back
 
+=head1 CONTRIBUTORS
+
+=for stopwords Dagfinn Ilmari Mannsåker Hans Staugaard Karen Etheridge
+
+=over 4
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+Hans Staugaard <h.staugaard@tweakker.com>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Stevan Little <stevan.little@iinteractive.com>.
+This software is copyright (c) 2013 - 2014 by Stevan Little <stevan.little@iinteractive.com>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
