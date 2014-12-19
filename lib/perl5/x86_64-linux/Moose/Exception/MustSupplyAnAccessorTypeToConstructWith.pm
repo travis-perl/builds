@@ -1,5 +1,6 @@
 package Moose::Exception::MustSupplyAnAccessorTypeToConstructWith;
-$Moose::Exception::MustSupplyAnAccessorTypeToConstructWith::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::ParamsHash';
