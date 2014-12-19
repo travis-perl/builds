@@ -1,0 +1,1 @@
+{"version":"6.02","pathname":"G/GA/GAAS/HTTP-Date-6.02.tar.gz","name":"HTTP::Date","provides":{"HTTP::Date":{"file":"lib/HTTP/Date.pm","version":"6.02"}},"target":"HTTP::Date","dist":"HTTP-Date-6.02"}
