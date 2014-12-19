@@ -1,2 +1,4 @@
 /home/travis/.perlbrew/libs/5.10.0-thr@moose/lib/perl5/x86_64-linux-thread-multi/List/MoreUtils.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@moose/lib/perl5/x86_64-linux-thread-multi/List/MoreUtils/PP.pm
+/home/travis/.perlbrew/libs/5.10.0-thr@moose/lib/perl5/x86_64-linux-thread-multi/List/MoreUtils/XS.pm
 /home/travis/.perlbrew/libs/5.10.0-thr@moose/lib/perl5/x86_64-linux-thread-multi/auto/List/MoreUtils/MoreUtils.so
