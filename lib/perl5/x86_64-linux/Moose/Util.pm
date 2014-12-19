@@ -1,5 +1,6 @@
 package Moose::Util;
-$Moose::Util::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
@@ -8,8 +9,7 @@ use Data::OptList;
 use Params::Util qw( _STRING );
 use Sub::Exporter;
 use Scalar::Util 'blessed';
-use List::Util qw(first);
-use List::MoreUtils qw(any all);
+use List::Util 1.33 qw(first any all);
 use overload ();
 use Try::Tiny;
 
@@ -541,7 +541,7 @@ Moose::Util - Utilities for working with Moose classes
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 
