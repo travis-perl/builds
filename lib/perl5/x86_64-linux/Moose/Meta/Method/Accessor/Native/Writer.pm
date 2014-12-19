@@ -1,9 +1,10 @@
 package Moose::Meta::Method::Accessor::Native::Writer;
-$Moose::Meta::Method::Accessor::Native::Writer::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
-use List::MoreUtils qw( any );
+use List::Util 1.33 qw( any );
 use Moose::Util;
 
 use Moose::Role;
