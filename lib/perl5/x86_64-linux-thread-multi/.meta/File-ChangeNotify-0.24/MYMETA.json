@@ -1,0 +1,72 @@
+{
+   "abstract" : "Watch for changes to files, cross-platform style",
+   "author" : [
+      "Dave Rolsky <autarch@urth.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.421",
+   "license" : [
+      "artistic_2"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "File-ChangeNotify",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.3601"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Carp" : "0",
+            "Class::Load" : "0",
+            "File::Find" : "0",
+            "File::Spec" : "0",
+            "List::MoreUtils" : "0",
+            "Module::Pluggable::Object" : "0",
+            "Moose" : "0",
+            "Moose::Util::TypeConstraints" : "0",
+            "MooseX::Params::Validate" : "0",
+            "MooseX::SemiAffordanceAccessor" : "0",
+            "Time::HiRes" : "0",
+            "namespace::autoclean" : "0",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Data::Dumper" : "0",
+            "Exporter" : "0",
+            "File::Path" : "0",
+            "File::Temp" : "0",
+            "FindBin" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0",
+            "base" : "0",
+            "lib" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-file-changenotify@rt.cpan.org",
+         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-ChangeNotify"
+      },
+      "repository" : {
+         "type" : "git",
+         "url" : "git://git.urth.org/File-ChangeNotify.git",
+         "web" : "http://git.urth.org/File-ChangeNotify.git"
+      }
+   },
+   "version" : "0.24"
+}
