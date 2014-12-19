@@ -11,10 +11,8 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Plugin::Git::CommitBuild;
-{
-  $Dist::Zilla::Plugin::Git::CommitBuild::VERSION = '2.024';
-}
 # ABSTRACT: checkin build results on separate branch
+$Dist::Zilla::Plugin::Git::CommitBuild::VERSION = '2.028';
 
 use Git::Wrapper 0.021 ();      # need -STDIN
 use IPC::Open3;
@@ -24,7 +22,6 @@ use File::Spec::Functions qw/ rel2abs catfile /;
 use File::Temp;
 use Moose;
 use namespace::autoclean;
-use MooseX::AttributeShortcuts;
 use Path::Tiny qw();
 use MooseX::Types::Path::Tiny qw( Path );
 use MooseX::Has::Sugar;
@@ -211,7 +208,7 @@ Dist::Zilla::Plugin::Git::CommitBuild - checkin build results on separate branch
 
 =head1 VERSION
 
-version 2.024
+version 2.028
 
 =head1 SYNOPSIS
 

@@ -15,21 +15,17 @@
    "name" : "Sub-Exporter",
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "Exporter" : "0",
-            "File::Spec" : "0",
-            "IO::Handle" : "0",
-            "IPC::Open3" : "0",
-            "Test::More" : "0.96",
-            "base" : "0",
-            "lib" : "0",
-            "overload" : "0",
-            "subs" : "0"
-         }
+         "requires" : {}
       },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41",
+            "version" : "0.9901"
          }
       },
       "runtime" : {
@@ -41,6 +37,19 @@
             "strict" : "0",
             "warnings" : "0"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Exporter" : "0",
+            "File::Spec" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::More" : "0.96",
+            "base" : "0",
+            "lib" : "0",
+            "overload" : "0",
+            "subs" : "0"
+         }
       }
    },
    "release_status" : "stable",
@@ -50,7 +59,9 @@
       },
       "homepage" : "https://github.com/rjbs/Sub-Exporter",
       "repository" : {
-         "url" : "https://github.com/rjbs/Sub-Exporter.git"
+         "type" : "git",
+         "url" : "https://github.com/rjbs/Sub-Exporter.git",
+         "web" : "https://github.com/rjbs/Sub-Exporter"
       }
    },
    "version" : "0.987",

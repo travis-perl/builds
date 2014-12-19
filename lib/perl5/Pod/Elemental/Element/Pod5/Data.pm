@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Pod5::Data;
 # ABSTRACT: a Pod data paragraph
-$Pod::Elemental::Element::Pod5::Data::VERSION = '0.103001';
+$Pod::Elemental::Element::Pod5::Data::VERSION = '0.103002';
 use Moose;
 extends 'Pod::Elemental::Element::Generic::Text';
 
@@ -14,6 +14,8 @@ extends 'Pod::Elemental::Element::Generic::Text';
 #pod =cut
 
 use namespace::autoclean;
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 
@@ -29,7 +31,7 @@ Pod::Elemental::Element::Pod5::Data - a Pod data paragraph
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

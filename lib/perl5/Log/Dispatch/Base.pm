@@ -1,5 +1,5 @@
 package Log::Dispatch::Base;
-$Log::Dispatch::Base::VERSION = '2.42';
+$Log::Dispatch::Base::VERSION = '2.44';
 use strict;
 use warnings;
 
@@ -59,7 +59,7 @@ Log::Dispatch::Base - Code shared by dispatch and output objects.
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

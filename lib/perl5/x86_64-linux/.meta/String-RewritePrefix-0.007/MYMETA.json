@@ -15,16 +15,17 @@
    "name" : "String-RewritePrefix",
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "File::Spec" : "0",
-            "IO::Handle" : "0",
-            "IPC::Open3" : "0",
-            "Test::More" : "0.96"
-         }
+         "requires" : {}
       },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41",
+            "version" : "0.9901"
          }
       },
       "runtime" : {
@@ -33,6 +34,14 @@
             "Sub::Exporter" : "0.972",
             "strict" : "0",
             "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::More" : "0.96"
          }
       }
    },
@@ -43,7 +52,9 @@
       },
       "homepage" : "https://github.com/rjbs/String-RewritePrefix",
       "repository" : {
-         "url" : "https://github.com/rjbs/String-RewritePrefix.git"
+         "type" : "git",
+         "url" : "https://github.com/rjbs/String-RewritePrefix.git",
+         "web" : "https://github.com/rjbs/String-RewritePrefix"
       }
    },
    "version" : "0.007",

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Log::Dispatchouli::Proxy;
 # ABSTRACT: a simple wrapper around Log::Dispatch
-$Log::Dispatchouli::Proxy::VERSION = '2.010';
+$Log::Dispatchouli::Proxy::VERSION = '2.012';
 use Params::Util qw(_ARRAY0 _HASH0);
 
 #pod =head1 DESCRIPTION
@@ -144,7 +144,7 @@ Log::Dispatchouli::Proxy - a simple wrapper around Log::Dispatch
 
 =head1 VERSION
 
-version 2.010
+version 2.012
 
 =head1 DESCRIPTION
 

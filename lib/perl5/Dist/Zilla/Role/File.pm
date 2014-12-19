@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::File;
 # ABSTRACT: something that can act like a file
-$Dist::Zilla::Role::File::VERSION = '5.020';
+$Dist::Zilla::Role::File::VERSION = '5.029';
 use Moose::Role;
 
 use Moose::Util::TypeConstraints;
@@ -28,17 +28,59 @@ has name => (
 
 #pod =attr added_by
 #pod
-#pod This is a string describing when and why the file was added to the
-#pod distribution.  It will generally be set by a plugin implementing the
-#pod L<FileInjector|Dist::Zilla::Role::FileInjector> role.
+#pod This is a list of strings describing when and why the file was added
+#pod to the distribution and when it was updated (its content, filename, or other attributes).  It will
+#pod generally be updated by a plugin implementing the
+#pod L<FileMunger|Dist::Zilla::Role::FileMunger> role.  Its accessor will return
+#pod the list of strings, concatenated with C<'; '>.
 #pod
 #pod =cut
 
 has added_by => (
-  is => 'ro',
-  writer => '_set_added_by',
-  isa => 'Str',
+  isa => 'ArrayRef[Str]',
+  lazy => 1,
+  default => sub { [] },
+  traits => ['Array'],
+  init_arg => undef,
+  handles => {
+    _push_added_by => 'push',
+    added_by => [ join => '; ' ],
+  },
 );
+
+around name => sub {
+  my $orig = shift;
+  my $self = shift;
+  if (@_) {
+    my ($pkg, $line) = $self->_caller_of('name');
+    $self->_push_added_by(sprintf("filename set by %s (%s line %s)", $self->_caller_plugin_name, $pkg, $line));
+  }
+  return $self->$orig(@_);
+};
+
+sub _caller_of {
+  my ($self, $function) = @_;
+
+  for (my $level = 1; $level < 50; ++$level)
+  {
+    my @frame = caller($level);
+    last if not defined $frame[0];
+    return ( (caller($level))[0,2] ) if $frame[3] =~ m/::${function}$/;
+  }
+  return 'unknown', '0';
+}
+
+sub _caller_plugin_name {
+  my $self = shift;
+
+  for (my $level = 1; $level < 50; ++$level)
+  {
+    my @frame = caller($level);
+    last if not defined $frame[0];
+    return $1 if $frame[0] =~ m/^Dist::Zilla::Plugin::(.+)$/;
+  }
+  return 'unknown';
+}
 
 #pod =attr mode
 #pod
@@ -127,7 +169,7 @@ Dist::Zilla::Role::File - something that can act like a file
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 
@@ -141,9 +183,11 @@ This is the name of the file to be written out.
 
 =head2 added_by
 
-This is a string describing when and why the file was added to the
-distribution.  It will generally be set by a plugin implementing the
-L<FileInjector|Dist::Zilla::Role::FileInjector> role.
+This is a list of strings describing when and why the file was added
+to the distribution and when it was updated (its content, filename, or other attributes).  It will
+generally be updated by a plugin implementing the
+L<FileMunger|Dist::Zilla::Role::FileMunger> role.  Its accessor will return
+the list of strings, concatenated with C<'; '>.
 
 =head2 mode
 

@@ -1,5 +1,6 @@
 package Moose::Exception::Role::TypeConstraint;
-$Moose::Exception::Role::TypeConstraint::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose::Role;
 
 has 'type_name' => (
