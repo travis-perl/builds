@@ -11,15 +11,16 @@
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Method/Generated.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Method/Inlined.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Method/Meta.pm
-/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Method/Overload.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Method/Wrapped.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/MiniTrait.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Mixin.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Mixin/AttributeCore.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Mixin/HasAttributes.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Mixin/HasMethods.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Mixin/HasOverloads.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Module.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Object.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Overload.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Class/MOP/Package.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Conflicts.pm
@@ -164,6 +165,7 @@
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidHandleValue.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidHasProvidedInARole.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidNameForType.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidOverloadOperator.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidRoleApplication.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidTypeConstraint.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/InvalidTypeGivenToCreateParameterizedTypeConstraint.pm
@@ -192,6 +194,7 @@
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MethodNameNotGiven.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MustDefineAMethodName.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MustDefineAnAttributeName.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MustDefineAnOverloadOperator.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MustHaveAtLeastOneValueToEnumerate.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MustPassAHashOfOptions.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/MustPassAMooseMetaRoleInstanceOrSubclass.pm
@@ -224,6 +227,13 @@
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/NoParentGivenToSubtype.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OnlyInstancesCanBeCloned.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OperatorIsRequired.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadConflictInSummation.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadRequiresAMetaClass.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadRequiresAMetaMethod.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadRequiresAMetaOverload.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadRequiresAMethodNameOrCoderef.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadRequiresAnOperator.pm
+/home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverloadRequiresNamesForCoderef.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverrideConflictInComposition.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/OverrideConflictInSummation.pm
 /home/travis/.perlbrew/libs/5.14.4@dzil/lib/perl5/x86_64-linux/Moose/Exception/PackageDoesNotUseMooseExporter.pm

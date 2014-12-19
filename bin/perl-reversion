@@ -1,7 +1,4 @@
 #!/home/travis/perl5/perlbrew/perls/5.14.4/bin/perl
-
-eval 'exec /home/travis/perl5/perlbrew/perls/5.14.4/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
 # vim: ts=4 sts=4 sw=4:
 #
 #  perl-reversion

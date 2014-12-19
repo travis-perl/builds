@@ -1,14 +1,25 @@
 package Pod::Weaver::Config;
-{
-  $Pod::Weaver::Config::VERSION = '4.006';
-}
-use Moose::Role;
 # ABSTRACT: stored configuration loader role
+$Pod::Weaver::Config::VERSION = '4.009';
+use Moose::Role;
 
 use Config::MVP 2;
-
 use Pod::Weaver::Config::Assembler;
 
+use namespace::autoclean;
+
+#pod =head1 DESCRIPTION
+#pod
+#pod The config role provides some helpers for writing a configuration loader using
+#pod the L<Config::MVP|Config::MVP> system to load and validate its configuration.
+#pod
+#pod =attr assembler
+#pod
+#pod The L<assembler> attribute must be a Config::MVP::Assembler, has a sensible
+#pod default that will handle the standard needs of a config loader.  Namely, it
+#pod will be pre-loaded with a starting section for root configuration.
+#pod
+#pod =cut
 
 sub build_assembler {
   my $assembler = Pod::Weaver::Config::Assembler->new;
@@ -22,7 +33,6 @@ sub build_assembler {
   return $assembler;
 }
 
-no Moose::Role;
 1;
 
 __END__
@@ -37,7 +47,7 @@ Pod::Weaver::Config - stored configuration loader role
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 DESCRIPTION
 

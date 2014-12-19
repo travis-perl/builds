@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgVersion;
 # ABSTRACT: add a $VERSION to your packages
-$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.020';
+$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.029';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -9,9 +9,6 @@ with(
   },
   'Dist::Zilla::Role::PPI',
 );
-
-use PPI;
-use MooseX::Types::Perl qw(LaxVersionStr);
 
 use namespace::autoclean;
 
@@ -26,7 +23,11 @@ use namespace::autoclean;
 #pod This plugin will add lines like the following to each package in each Perl
 #pod module or program (more or less) within the distribution:
 #pod
-#pod   $MyModule::VERSION = 0.001;
+#pod   $MyModule::VERSION = '0.001';
+#pod
+#pod or
+#pod
+#pod   { our $VERSION = '0.001'; }
 #pod
 #pod ...where 0.001 is the version of the dist, and MyModule is the name of the
 #pod package being given a version.  (In other words, it always uses fully-qualified
@@ -55,6 +56,13 @@ use namespace::autoclean;
 #pod will have different line numbers (off by one) than the source.  If
 #pod C<die_on_line_insertion> is true, PkgVersion will raise an exception rather
 #pod than insert a new line.
+#pod
+#pod =attr use_our
+#pod
+#pod If true, the inserted line looks like C<< { our $VERSION = '0.001'; } >>;
+#pod otherwise, it is C<< $Module::Name::VERSION = '0.001'; >>.  This attribute
+#pod defaults to false for now, but will change to true in the future without
+#pod warning.
 #pod
 #pod =attr finder
 #pod
@@ -101,15 +109,28 @@ has die_on_line_insertion => (
   default => 0,
 );
 
+has use_our => (
+  is  => 'ro',
+  isa => 'Bool',
+  default => 0,
+);
+
 sub munge_perl {
   my ($self, $file) = @_;
 
   my $version = $self->zilla->version;
 
+  require version;
   Carp::croak("invalid characters in version")
-    unless LaxVersionStr->check($version);
+    unless version::is_lax($version);
 
   my $document = $self->ppi_document_for_file($file);
+
+  my $package_stmts = $document->find('PPI::Statement::Package');
+  unless ($package_stmts) {
+    $self->log_debug([ 'skipping %s: no package statement found', $file->name ]);
+    return;
+  }
 
   if ($self->document_assigns_to_variable($document, '$VERSION')) {
     if ($self->die_on_existing_version) {
@@ -117,12 +138,6 @@ sub munge_perl {
     }
 
     $self->log([ 'skipping %s: assigns to $VERSION', $file->name ]);
-    return;
-  }
-
-  my $package_stmts = $document->find('PPI::Statement::Package');
-  unless ($package_stmts) {
-    $self->log_debug([ 'skipping %s: no package statement found', $file->name ]);
     return;
   }
 
@@ -151,7 +166,9 @@ sub munge_perl {
     # an assignment to version; it shouldn't be needed, but it's been annoying
     # enough in the past that I'm keeping it here until tests are better
     my $trial = $self->zilla->is_trial ? ' # TRIAL' : '';
-    my $perl = "\$$package\::VERSION\x20=\x20'$version';$trial";
+    my $perl = $self->use_our
+        ? "{ our \$VERSION\x20=\x20'$version'; }$trial"
+        : "\$$package\::VERSION\x20=\x20'$version';$trial";
 
     $self->log_debug([
       'adding $VERSION assignment to %s in %s',
@@ -164,9 +181,12 @@ sub munge_perl {
     {
       my $curr = $stmt;
       while (1) {
+        # avoid bogus locations due to insert_after
+        $document->flush_locations if $munged;
+        my $curr_line_number = $curr->line_number + 1;
         my $find = $document->find(sub {
-          return $_[1]->line_number == $curr->line_number + 1;
-          return;
+          my $line = $_[1]->line_number;
+          return $line > $curr_line_number ? undef : $line == $curr_line_number;
         });
 
         last unless $find and @$find == 1;
@@ -239,7 +259,7 @@ Dist::Zilla::Plugin::PkgVersion - add a $VERSION to your packages
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 
@@ -252,7 +272,11 @@ in dist.ini
 This plugin will add lines like the following to each package in each Perl
 module or program (more or less) within the distribution:
 
-  $MyModule::VERSION = 0.001;
+  $MyModule::VERSION = '0.001';
+
+or
+
+  { our $VERSION = '0.001'; }
 
 ...where 0.001 is the version of the dist, and MyModule is the name of the
 package being given a version.  (In other words, it always uses fully-qualified
@@ -283,6 +307,13 @@ doesn't, it will insert a new line, which means the shipped copy of the module
 will have different line numbers (off by one) than the source.  If
 C<die_on_line_insertion> is true, PkgVersion will raise an exception rather
 than insert a new line.
+
+=head2 use_our
+
+If true, the inserted line looks like C<< { our $VERSION = '0.001'; } >>;
+otherwise, it is C<< $Module::Name::VERSION = '0.001'; >>.  This attribute
+defaults to false for now, but will change to true in the future without
+warning.
 
 =head2 finder
 

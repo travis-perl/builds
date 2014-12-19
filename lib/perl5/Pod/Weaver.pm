@@ -1,12 +1,31 @@
 package Pod::Weaver;
-{
-  $Pod::Weaver::VERSION = '4.006';
-}
-use Moose;
 # ABSTRACT: weave together a Pod document from an outline
-
+$Pod::Weaver::VERSION = '4.009';
+use Moose;
 use namespace::autoclean;
 
+#pod =head1 SYNOPSIS
+#pod
+#pod   my $weaver = Pod::Weaver->new_with_default_config;
+#pod
+#pod   my $document = $weaver->weave_document({
+#pod     pod_document => $pod_elemental_document,
+#pod     ppi_document => $ppi_document,
+#pod
+#pod     license  => $software_license,
+#pod     version  => $version_string,
+#pod     authors  => \@author_names,
+#pod   })
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod Pod::Weaver is a system for building Pod documents from templates.  It doesn't
+#pod perform simple text substitution, but instead builds a
+#pod Pod::Elemental::Document.  Its plugins sketch out a series of sections
+#pod that will be produced based on an existing Pod document or other provided
+#pod information.
+#pod
+#pod =cut
 
 use File::Spec;
 use Log::Dispatchouli 1.100710; # proxy
@@ -17,6 +36,12 @@ use Pod::Weaver::Config::Finder;
 use Pod::Weaver::Role::Plugin;
 use String::Flogger 1;
 
+#pod =attr logger
+#pod
+#pod This attribute stores the logger, which must provide a log method.  The
+#pod weaver's log method delegates to the logger's log method.
+#pod
+#pod =cut
 
 has logger => (
   is      => 'ro',
@@ -31,6 +56,13 @@ has logger => (
   handles => [ qw(log log_fatal log_debug) ]
 );
 
+#pod =attr plugins
+#pod
+#pod This attribute is an arrayref of objects that can perform the
+#pod L<Pod::Weaver::Role::Plugin> role.  In general, its contents are found through
+#pod the C<L</plugins_with>> method.
+#pod
+#pod =cut
 
 has plugins => (
   is  => 'ro',
@@ -41,6 +73,15 @@ has plugins => (
   default  => sub { [] },
 );
 
+#pod =method plugins_with
+#pod
+#pod   my $plugins_array_ref = $weaver->plugins_with('-Section');
+#pod
+#pod This method will return an arrayref of plugins that perform the given role, in
+#pod the order of their registration.  If the role name begins with a hyphen, the
+#pod method will prepend C<Pod::Weaver::Role::>.
+#pod
+#pod =cut
 
 sub plugins_with {
   my ($self, $role) = @_;
@@ -51,6 +92,28 @@ sub plugins_with {
   return $plugins;
 }
 
+#pod =method weave_document
+#pod
+#pod   my $document = $weaver->weave_document(\%input);
+#pod
+#pod This is the most important method in Pod::Weaver.  Given a set of input
+#pod parameters, it will weave a new document.  Different section plugins will
+#pod expect different input parameters to be present, but some common ones include:
+#pod
+#pod   pod_document - a Pod::Elemental::Document for the original Pod document
+#pod   ppi_document - a PPI document for the source of the module being documented
+#pod   license      - a Software::License object for the source module's license
+#pod   version      - a version (string) to use in produced documentation
+#pod
+#pod The C<pod_document> should have gone through a L<Pod5
+#pod transformer|Pod::Elemental::Transformer::Pod5>, and should probably have had
+#pod its C<=head1> elements L<nested|Pod::Elemental::Transformer::Nester>.
+#pod
+#pod The method will return a new Pod::Elemental::Document.  The input documents may
+#pod be destructively altered during the weaving process.  If they should be
+#pod untouched, pass in copies.
+#pod
+#pod =cut
 
 sub weave_document {
   my ($self, $input) = @_;
@@ -80,6 +143,12 @@ sub weave_document {
   return $document;
 }
 
+#pod =method new_with_default_config
+#pod
+#pod This method returns a new Pod::Weaver with a stock configuration by using only
+#pod L<Pod::Weaver::PluginBundle::Default>.
+#pod
+#pod =cut
 
 sub new_with_default_config {
   my ($class, $arg) = @_;
@@ -151,7 +220,6 @@ sub new_from_config_sequence {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
 1;
 
 __END__
@@ -166,7 +234,7 @@ Pod::Weaver - weave together a Pod document from an outline
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 SYNOPSIS
 
