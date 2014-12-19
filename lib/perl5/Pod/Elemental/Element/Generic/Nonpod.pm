@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Generic::Nonpod;
 # ABSTRACT: a non-pod element in a Pod document
-$Pod::Elemental::Element::Generic::Nonpod::VERSION = '0.103001';
+$Pod::Elemental::Element::Generic::Nonpod::VERSION = '0.103002';
 use Moose;
 with 'Pod::Elemental::Flat';
 
@@ -12,6 +12,8 @@ use namespace::autoclean;
 #pod non-pod content found in the Pod stream.
 #pod
 #pod =cut
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 
@@ -27,7 +29,7 @@ Pod::Elemental::Element::Generic::Nonpod - a non-pod element in a Pod document
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

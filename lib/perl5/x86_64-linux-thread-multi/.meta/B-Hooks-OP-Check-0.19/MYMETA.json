@@ -4,7 +4,7 @@
       "Florian Ragwitz <rafl@debian.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.01, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Install version 1.01, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -30,8 +30,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::Depends" : "0.302",
-            "ExtUtils::MakeMaker" : "6.42"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {

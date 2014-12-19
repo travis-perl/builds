@@ -1,10 +1,8 @@
 package Class::MOP::Module;
-$Class::MOP::Module::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
-
-use Carp         'confess';
-use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Package';
 
@@ -104,7 +102,7 @@ Class::MOP::Module - Module Meta Object
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

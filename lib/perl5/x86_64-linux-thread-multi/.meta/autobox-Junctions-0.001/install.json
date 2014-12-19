@@ -1,1 +1,0 @@
-{"name":"autobox::Junctions","pathname":"R/RS/RSRCHBOY/autobox-Junctions-0.001.tar.gz","provides":{"autobox::Junctions":{"version":"0.001","file":"lib/autobox/Junctions.pm"},"autobox::Junctions::ARRAY":{"file":"lib/autobox/Junctions.pm","version":"0.001"}},"target":"autobox::Junctions","dist":"autobox-Junctions-0.001","version":"0.001"}

@@ -1,6 +1,6 @@
 package Dist::Zilla::File::FromCode;
 # ABSTRACT: a file whose content is (re-)built on demand
-$Dist::Zilla::File::FromCode::VERSION = '5.020';
+$Dist::Zilla::File::FromCode::VERSION = '5.029';
 use Moose;
 use Moose::Util::TypeConstraints;
 
@@ -96,9 +96,9 @@ sub encoded_content {
   }
 }
 
-around 'added_by' => sub {
-  my ($orig, $self) = @_;
-  return sprintf("%s from coderef set by %s", $self->code_return_type, $self->$orig);
+sub _set_added_by {
+  my ($self, $value) = @_;
+  return $self->_push_added_by(sprintf("%s from coderef added by %s", $self->code_return_type, $value));
 };
 
 __PACKAGE__->meta->make_immutable;
@@ -116,7 +116,7 @@ Dist::Zilla::File::FromCode - a file whose content is (re-)built on demand
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

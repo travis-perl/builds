@@ -4,7 +4,7 @@ package PPI::Statement::When;
 
 =head1 NAME
 
-PPI::Statement::When - Describes all compound statements
+PPI::Statement::When - A when statement
 
 =head1 SYNOPSIS
 
@@ -44,7 +44,7 @@ use PPI::Statement ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	@ISA     = 'PPI::Statement';
 }
 

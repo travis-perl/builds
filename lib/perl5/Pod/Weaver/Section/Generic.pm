@@ -1,17 +1,47 @@
 package Pod::Weaver::Section::Generic;
-{
-  $Pod::Weaver::Section::Generic::VERSION = '4.006';
-}
+# ABSTRACT: a generic section, found by lifting sections
+$Pod::Weaver::Section::Generic::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Section';
-# ABSTRACT: a generic section, found by lifting sections
 
 use Moose::Autobox;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section will find and include a located hunk of Pod.  In general, it will
+#pod find a C<=head1> command with a content of the plugin's name.
+#pod
+#pod In other words, if your configuration include:
+#pod
+#pod   [Generic]
+#pod   header = OVERVIEW
+#pod
+#pod ...then this weaver will look for "=head1 OVERVIEW" and include it at the
+#pod appropriate location in your output.
+#pod
+#pod Since you'll probably want to use Generic several times, and that will require
+#pod giving each use a unique name, you can omit C<header> if you provide a
+#pod plugin name, and it will default to the plugin name.  In other words, the
+#pod configuration above could be specified just as:
+#pod
+#pod   [Generic / OVERVIEW]
+#pod
+#pod If the C<required> attribute is given, and true, then an exception will be
+#pod raised if this section can't be found.
+#pod
+#pod =cut
 
 use Pod::Elemental::Element::Pod5::Region;
 use Pod::Elemental::Selectors -all;
 
+#pod =attr required
+#pod
+#pod A boolean value specifying whether this section is required to be present or not. Defaults
+#pod to false.
+#pod
+#pod If it's enabled and the section can't be found an exception will be raised.
+#pod
+#pod =cut
 
 has required => (
   is  => 'ro',
@@ -19,6 +49,11 @@ has required => (
   default => 0,
 );
 
+#pod =attr header
+#pod
+#pod The name of this section. Defaults to the plugin name.
+#pod
+#pod =cut
 
 has header => (
   is   => 'ro',
@@ -62,7 +97,6 @@ sub weave_section {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
 1;
 
 __END__
@@ -77,7 +111,7 @@ Pod::Weaver::Section::Generic - a generic section, found by lifting sections
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

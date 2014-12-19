@@ -1,5 +1,5 @@
 package Log::Dispatch::Email::MailSendmail;
-$Log::Dispatch::Email::MailSendmail::VERSION = '2.42';
+$Log::Dispatch::Email::MailSendmail::VERSION = '2.44';
 use strict;
 use warnings;
 
@@ -44,7 +44,7 @@ Log::Dispatch::Email::MailSendmail - Subclass of Log::Dispatch::Email that uses 
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

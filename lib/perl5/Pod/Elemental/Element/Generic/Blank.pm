@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Generic::Blank;
 # ABSTRACT: a series of blank lines
-$Pod::Elemental::Element::Generic::Blank::VERSION = '0.103001';
+$Pod::Elemental::Element::Generic::Blank::VERSION = '0.103002';
 use Moose;
 with 'Pod::Elemental::Flat';
 
@@ -17,6 +17,8 @@ use namespace::autoclean;
 
 sub as_debug_string { '|' }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -31,7 +33,7 @@ Pod::Elemental::Element::Generic::Blank - a series of blank lines
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 
