@@ -1,11 +1,46 @@
 use strict;
 use warnings;
 package Pod::Weaver::PluginBundle::Default;
-{
-  $Pod::Weaver::PluginBundle::Default::VERSION = '4.006';
-}
 # ABSTRACT: a bundle for the most commonly-needed prep work for a pod document
-
+$Pod::Weaver::PluginBundle::Default::VERSION = '4.009';
+#pod =head1 OVERVIEW
+#pod
+#pod This is the bundle used by default (specifically by Pod::Weaver's
+#pod C<new_with_default_config> method).  It may change over time, but should remain
+#pod fairly conservative and straightforward.
+#pod
+#pod It is nearly equivalent to the following:
+#pod
+#pod   [@CorePrep]
+#pod   
+#pod   [-SingleEncoding]
+#pod
+#pod   [Name]
+#pod   [Version]
+#pod
+#pod   [Region  / prelude]
+#pod
+#pod   [Generic / SYNOPSIS]
+#pod   [Generic / DESCRIPTION]
+#pod   [Generic / OVERVIEW]
+#pod
+#pod   [Collect / ATTRIBUTES]
+#pod   command = attr
+#pod
+#pod   [Collect / METHODS]
+#pod   command = method
+#pod
+#pod   [Collect / FUNCTIONS]
+#pod   command = func
+#pod
+#pod   [Leftovers]
+#pod
+#pod   [Region  / postlude]
+#pod
+#pod   [Authors]
+#pod   [Legal]
+#pod
+#pod =cut
 
 use namespace::autoclean;
 
@@ -51,7 +86,7 @@ Pod::Weaver::PluginBundle::Default - a bundle for the most commonly-needed prep 
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

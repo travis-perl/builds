@@ -1,5 +1,6 @@
 package Moose::Meta::Object::Trait;
-$Moose::Meta::Object::Trait::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Scalar::Util qw(blessed);
 
 sub _get_compatible_metaclass {
@@ -39,7 +40,7 @@ Moose::Meta::Object::Trait - Some overrides for L<Class::MOP::Object> functional
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

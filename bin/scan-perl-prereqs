@@ -1,18 +1,13 @@
 #!/home/travis/perl5/perlbrew/perls/5.8.9-thr/bin/perl
-
-eval 'exec /home/travis/perl5/perlbrew/perls/5.8.9-thr/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
 package Perl::PrereqScanner::App;
 # ABSTRACT: scan your working dir for likely prereqs
-$Perl::PrereqScanner::App::VERSION = '1.020';
+$Perl::PrereqScanner::App::VERSION = '1.021';
 use strict;
 use warnings;
 
-use File::Find;
-use File::Spec::Functions qw{ catdir updir };
-use FindBin qw{ $Bin };
-use lib catdir( $Bin, updir, 'lib' );
+use lib ();
 
+use File::Find;
 use List::Util qw{ max };
 use Perl::PrereqScanner;
 use CPAN::Meta::Requirements ();
@@ -22,12 +17,15 @@ use Getopt::Long::Descriptive;
 
 my ($opt, $usage) = describe_options(
   'scan-perl-prereqs %o [DIR|FILES]',
-  [ 'pretty'  => 'format for human consumption, not toolchain' ],
-  [ 'by-file' => 'emit one stanza per file'  ],
+  [ 'pretty'   => 'format for human consumption, not toolchain' ],
+  [ 'by-file'  => 'emit one stanza per file'  ],
+  [ 'lib|I=s@' => 'specifies include paths, like perl\'s -I' ],
 
   [ 'version' => 'print usage message and exit' ],
   [ 'help'    => 'print version and exit' ],
 );
+
+lib->import(@{ $opt->lib }) if $opt->lib;
 
 print('scan-perl-prereqs v' . (Perl::PrereqScanner->VERSION || 'DEV') . "\n")
   if $opt->version;
@@ -43,7 +41,7 @@ my %result;
 sub scan_dir {
     find( {
         no_chdir => 1,
-        wanted => sub { scan_file($_) if /\.(pl|PL|pm|cgi|psgi|t)$/; }
+        wanted => sub { scan_file($_) if /\.(pl|PL|pm|cgi|psgi|t)$/ && -f $_ }
     }, shift );
 }
 
@@ -115,7 +113,7 @@ Perl::PrereqScanner::App - scan your working dir for likely prereqs
 
 =head1 VERSION
 
-version 1.020
+version 1.021
 
 =head1 SYNOPSIS
 

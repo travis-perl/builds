@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Log::Dispatchouli;
 # ABSTRACT: a simple wrapper around Log::Dispatch
-$Log::Dispatchouli::VERSION = '2.010';
+$Log::Dispatchouli::VERSION = '2.012';
 use Carp ();
 use File::Spec ();
 use Log::Dispatch;
@@ -151,28 +151,28 @@ sub new {
   my $self = bless {} => $class;
 
   my $log = Log::Dispatch->new(
-    callbacks => sub {
-      return( ($pid_prefix ? "[$$] " : '') . {@_}->{message})
-    },
+    $pid_prefix
+    ? (
+        callbacks => sub {
+	  "[$$] ". {@_}->{message}
+	},
+      )
+    : ()
   );
 
   if ($arg->{to_file}) {
     require Log::Dispatch::File;
     my $log_file = File::Spec->catfile(
       ($arg->{log_path} || $self->env_value('PATH') || File::Spec->tmpdir),
-      $arg->{log_file} || sprintf('%s.%04u%02u%02u',
-        $ident,
-        ((localtime)[5] + 1900),
-        sprintf('%02d', (localtime)[4] + 1),
-        sprintf('%02d', (localtime)[3]),
-      )
+      $arg->{log_file} || do {
+        my @time = localtime;
+        sprintf('%s.%04u%02u%02u',
+          $ident,
+          $time[5] + 1900,
+          $time[4] + 1,
+          $time[3])
+      }
     );
-
-    my $format = $arg->{file_format} || sub {
-      # The time format returned here is subject to change. -- rjbs,
-      # 2008-11-21
-      return (localtime) . ' ' . $_[0] . "\n"
-    };
 
     $log->add(
       Log::Dispatch::File->new(
@@ -180,7 +180,15 @@ sub new {
         min_level => 'debug',
         filename  => $log_file,
         mode      => 'append',
-        callbacks => sub { $format->({@_}->{message}) },
+        callbacks => do {
+          if (my $format = $arg->{file_format}) {
+            sub { $format->({@_}->{message}) }
+          } else {
+            # The time format returned here is subject to change. -- rjbs,
+            # 2008-11-21
+            sub { (localtime) . ' ' . {@_}->{message} . "\n" }
+          }
+        },
       )
     );
   }
@@ -687,7 +695,7 @@ Log::Dispatchouli - a simple wrapper around Log::Dispatch
 
 =head1 VERSION
 
-version 2.010
+version 2.012
 
 =head1 SYNOPSIS
 

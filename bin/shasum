@@ -1,14 +1,11 @@
 #!/home/travis/perl5/perlbrew/perls/5.8.9-thr/bin/perl
 
-eval 'exec /home/travis/perl5/perlbrew/perls/5.8.9-thr/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
 	## shasum: filter for computing SHA digests (ref. sha1sum/md5sum)
 	##
 	## Copyright (C) 2003-2014 Mark Shelor, All Rights Reserved
 	##
-	## Version: 5.92
-	## Sun Jun  1 00:15:44 MST 2014
+	## Version: 5.93
+	## Sun Oct 26 06:00:48 MST 2014
 
 	## shasum SYNOPSIS adapted from GNU Coreutils sha1sum. Add
 	## "-a" option for algorithm selection,
@@ -104,7 +101,7 @@ L<Digest::SHA::PurePerl>.
 
 END_OF_POD
 
-my $VERSION = "5.92";
+my $VERSION = "5.93";
 
 sub usage {
 	my($err, $msg) = @_;

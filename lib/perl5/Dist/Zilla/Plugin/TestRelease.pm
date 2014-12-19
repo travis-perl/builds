@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::TestRelease;
 # ABSTRACT: extract archive and run tests before releasing the dist
-$Dist::Zilla::Plugin::TestRelease::VERSION = '5.020';
+$Dist::Zilla::Plugin::TestRelease::VERSION = '5.029';
 use Moose;
 with 'Dist::Zilla::Role::BeforeRelease';
 
@@ -24,7 +24,6 @@ use namespace::autoclean;
 #pod =cut
 
 use File::pushd ();
-use Moose::Autobox;
 use Path::Class ();
 
 sub before_release {
@@ -74,7 +73,7 @@ Dist::Zilla::Plugin::TestRelease - extract archive and run tests before releasin
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 
