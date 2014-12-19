@@ -6,7 +6,29 @@ DBI::Changes - List of significant changes to the DBI
 
 =cut
 
-=head2 Changes in DBI 1.631
+=head2 Changes in DBI 1.632
+
+    Fixed risk of memory corruption with many arguments to methods
+        originally reported by OSCHWALD for Callbacks but may apply
+        to other functionality in DBI method dispatch RT#86744.
+    Fixed DBD::PurePerl to not set $sth->{Active} true by default
+        drivers are expected to set it true as needed.
+    Fixed DBI::DBD::SqlEngine to complain loudly when prerequite
+        driver_prefix is not fulfilled (RT#93204) [Jens Rehsack]
+    Fixed redundant sprintf argument warning RT#97062 [Reini Urban]
+    Fixed security issue where DBD::File drivers would open files
+        from folders other than specifically passed using the
+        f_dir attribute RT#99508 [H.Merijn Brand]
+
+    Changed delete $h->{$key} to work for keys with 'private_' prefix
+        per request in RT#83156. local $h->{$key} works as before.
+
+    Added security notice to DBD::Proxy and DBI::ProxyServer because they
+        use Storable which is insecure. Thanks to ppisar@redhat.com RT#90475
+    Added note to AutoInactiveDestroy docs strongly recommending that it
+        is enabled in all new code.
+
+=head2 Changes in DBI 1.631 - 20th Jan 2014
 
 NOTE: This release changes the handle passed to Callbacks from being an 'inner'
 handle to being an 'outer' handle. If you have code that makes use of Callbacks,
