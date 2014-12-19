@@ -47,7 +47,7 @@ use PPI::Token::Unknown ();
 
 use vars qw{$VERSION @ISA %magic};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	@ISA     = 'PPI::Token::Symbol';
 
 	# Magic variables taken from perlvar.
@@ -149,7 +149,7 @@ sub __TOKENIZER__on_char {
 		}
 
 		if ( $c =~ /^\$\#\{/ ) {
-			# The $# is actually a case, and { is its block
+			# The $# is actually a cast, and { is its block
 			# Add the current token as the cast...
 			$t->{token} = PPI::Token::Cast->new( '$#' );
 			$t->_finalize_token;
@@ -181,6 +181,10 @@ sub __TOKENIZER__on_char {
 			# control character symbol (e.g. ${^MATCH})
 			$t->{token}->{content} .= $1;
 			$t->{line_cursor}      += length $1;
+		} elsif ( $c =~ /^\$\d+$/ and $t->{line} =~ /\G(\d+)/gc ) {
+			# Grab trailing digits of regex capture variables.
+			$t->{token}{content} .= $1;
+			$t->{line_cursor} += length $1;
 		}
 	}
 

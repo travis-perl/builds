@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Pod5::Region;
 # ABSTRACT: a region of Pod (this role likely to be removed)
-$Pod::Elemental::Element::Pod5::Region::VERSION = '0.103001';
+$Pod::Elemental::Element::Pod5::Region::VERSION = '0.103002';
 use Moose;
 with qw(
   Pod::Elemental::Paragraph
@@ -156,6 +156,7 @@ use Pod::Elemental::Types qw(ChompedString);
 has '+content' => (coerce => 1, isa => ChompedString);
 # END   Autochomp Replacement
 
+__PACKAGE__->meta->make_immutable;
 no Moose;
 1;
 
@@ -171,7 +172,7 @@ Pod::Elemental::Element::Pod5::Region - a region of Pod (this role likely to be 
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

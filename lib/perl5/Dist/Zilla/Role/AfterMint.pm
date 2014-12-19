@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::AfterMint;
 # ABSTRACT: something that runs after minting is mostly complete
-$Dist::Zilla::Role::AfterMint::VERSION = '5.020';
+$Dist::Zilla::Role::AfterMint::VERSION = '5.029';
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -32,7 +32,7 @@ Dist::Zilla::Role::AfterMint - something that runs after minting is mostly compl
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

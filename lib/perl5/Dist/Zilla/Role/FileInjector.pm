@@ -1,11 +1,9 @@
 package Dist::Zilla::Role::FileInjector;
 # ABSTRACT: something that can add files to the distribution
-$Dist::Zilla::Role::FileInjector::VERSION = '5.020';
+$Dist::Zilla::Role::FileInjector::VERSION = '5.029';
 use Moose::Role;
 
 use namespace::autoclean;
-
-use Moose::Autobox;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -31,7 +29,7 @@ sub add_file {
   );
 
   $self->log_debug([ 'adding file %s', $file->name ]);
-  $self->zilla->files->push($file);
+  push @{ $self->zilla->files }, $file;
 }
 
 1;
@@ -48,7 +46,7 @@ Dist::Zilla::Role::FileInjector - something that can add files to the distributi
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

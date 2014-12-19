@@ -2,10 +2,8 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::add;
 # ABSTRACT: add a module to a dist
-$Dist::Zilla::App::Command::add::VERSION = '5.020';
+$Dist::Zilla::App::Command::add::VERSION = '5.029';
 use Dist::Zilla::App -command;
-use Path::Class;
-use File::pushd ();
 
 #pod =head1 SYNOPSIS
 #pod
@@ -51,6 +49,9 @@ sub execute {
   my $zilla = $self->zilla;
   my $dist = $zilla->name;
 
+  require Path::Class;
+  require File::pushd;
+
   require Dist::Zilla::Dist::Minter;
   my $minter = Dist::Zilla::Dist::Minter->_new_from_profile(
     [ $opt->provider, $opt->profile ],
@@ -61,7 +62,7 @@ sub execute {
     },
   );
 
-  my $root = dir($zilla->root)->absolute;
+  my $root = Path::Class::dir($zilla->root)->absolute;
   my $wd = File::pushd::pushd($minter->root);
 
   my $factory = $minter->plugin_named(':DefaultModuleMaker');
@@ -89,7 +90,7 @@ Dist::Zilla::App::Command::add - add a module to a dist
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

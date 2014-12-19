@@ -1,8 +1,10 @@
-package Hook::LexWrap;
-use 5.006;
 use strict;
 use warnings;
-our $VERSION = '0.24';
+package Hook::LexWrap;
+# git description: v0.24-8-gd2290ba
+$Hook::LexWrap::VERSION = '0.25';
+# ABSTRACT: Lexically scoped subroutine wrappers
+
 use Carp;
 
 {
@@ -86,6 +88,8 @@ sub wrap (*@) {  ## no critic Prototypes
 }
 
 package Hook::LexWrap::Cleanup;
+# git description: v0.24-8-gd2290ba
+$Hook::LexWrap::Cleanup::VERSION = '0.25';
 
 sub DESTROY { $_[0]->() }
 use overload 
@@ -98,6 +102,9 @@ use overload
 
 __END__
 
+=pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -105,7 +112,7 @@ Hook::LexWrap - Lexically scoped subroutine wrappers
 
 =head1 VERSION
 
-This document describes version 0.23 of Hook::LexWrap.
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -114,11 +121,11 @@ This document describes version 0.23 of Hook::LexWrap.
 	sub doit { print "[doit:", caller, "]"; return {my=>"data"} }
 
 	SCOPED: {
-		wrap doit,
+		wrap doit =>
 			pre  => sub { print "[pre1: @_]\n" },
 			post => sub { print "[post1:@_]\n"; $_[1]=9; };
 
-		my $temporarily = wrap doit,
+		my $temporarily = wrap doit =>
 			post => sub { print "[post2:@_]\n" },
 			pre  => sub { print "[pre2: @_]\n  "};
 
@@ -128,7 +135,6 @@ This document describes version 0.23 of Hook::LexWrap.
 
 	@args = (4,5,6);
 	doit(@args);		# pre1->doit->post1
-
 
 =head1 DESCRIPTION
 
@@ -178,7 +184,6 @@ and after the subroutine itself, and will be passed the same argument list.
 The pre- and post-wrappers and the original subroutine also all see the same
 (correct!) values from C<caller> and C<wantarray>.
 
-
 =head2 Short-circuiting and long-circuiting return values
 
 The pre- and post-wrappers both receive an extra argument in their @_
@@ -205,19 +210,17 @@ Access to the arguments and return value is useful for implementing
 techniques such as memoization:
 
         my %cache;
-        wrap fibonacci,
+        wrap fibonacci =>
                 pre  => sub { $_[-1] = $cache{$_[0]} if $cache{$_[0]} },
                 post => sub { $cache{$_[0]} = $_[-1] };
-
 
 or for converting arguments and return values in a consistent manner:
 
 	# set_temp expects and returns degrees Fahrenheit,
 	# but we want to use Celsius
-        wrap set_temp,
+        wrap set_temp =>
                 pre   => sub { splice @_, 0, 1, $_[0] * 1.8 + 32 },
                 post  => sub { $_[-1] = ($_[0] - 32) / 1.8 };
-
 
 =head2 Lexically scoped wrappers
 
@@ -239,7 +242,6 @@ when it is explicitly destroyed (C<$lexical-E<gt>DESTROY>) --
 the corresponding wrapper is removed from around
 the original subroutine. Note, however, that all other wrappers around the
 subroutine are preserved.
-
 
 =head2 Anonymous wrappers
 
@@ -275,7 +277,6 @@ For example:
         # Show effects...
         original();             #   now prints "fa..ray..mi"
         $anon_wrapped->();      # still prints "do...ray"
-
 
 =head1 DIAGNOSTICS
 
@@ -313,15 +314,9 @@ subroutine reference.
 
 =back
 
-=head1 AUTHOR
-
-Damian Conway (damian@conway.org)
-
-
 =head1 BLAME
 
 Schwern made me do this (by implying it wasn't possible ;-)
-
 
 =head1 BUGS
 
@@ -329,13 +324,39 @@ There are undoubtedly serious bugs lurking somewhere in code this funky :-)
 
 Bug reports and other feedback are most welcome.
 
-
 =head1 SEE ALSO
 
 Sub::Prepend
 
-=head1 COPYRIGHT
+=head1 AUTHOR
 
-      Copyright (c) 2001, Damian Conway. All Rights Reserved.
-    This module is free software. It may be used, redistributed
-        and/or modified under the same terms as Perl itself.
+Damian Conway <damian@conway.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2001 by Damian Conway.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=head1 CONTRIBUTORS
+
+=for stopwords Alexandr Ciornii Karen Etheridge Father Chrysostomos
+
+=over 4
+
+=item *
+
+Alexandr Ciornii <alexchorny@gmail.com>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Father Chrysostomos <sprout@cpan.org>
+
+=back
+
+=cut

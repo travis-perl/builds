@@ -1,5 +1,6 @@
 package Class::MOP;
-$Class::MOP::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
@@ -7,13 +8,13 @@ use 5.008003;
 
 use MRO::Compat;
 use Class::Load 0.07 ();
-use Scalar::Util  'weaken', 'isweak', 'reftype', 'blessed';
+use Scalar::Util  'weaken', 'isweak', 'blessed';
 use Data::OptList;
-use Try::Tiny;
 
 use Class::MOP::Mixin::AttributeCore;
 use Class::MOP::Mixin::HasAttributes;
 use Class::MOP::Mixin::HasMethods;
+use Class::MOP::Mixin::HasOverloads;
 use Class::MOP::Class;
 use Class::MOP::Attribute;
 use Class::MOP::Method;
@@ -29,7 +30,7 @@ BEGIN {
 
 XSLoader::load(
     'Moose',
-    $Class::MOP::{VERSION} ? ${ $Class::MOP::{VERSION} } : ()
+    $VERSION,
 );
 
 {
@@ -167,7 +168,7 @@ Class::MOP::Mixin::HasMethods->meta->add_attribute(
 );
 
 ## --------------------------------------------------------
-## Class::MOP::Mixin::HasMethods
+## Class::MOP::Mixin::HasAttributes
 
 Class::MOP::Mixin::HasAttributes->meta->add_attribute(
     Class::MOP::Attribute->new('attributes' => (
@@ -194,6 +195,20 @@ Class::MOP::Mixin::HasAttributes->meta->add_attribute(
             'attribute_metaclass' => \&Class::MOP::Mixin::HasAttributes::attribute_metaclass
         },
         default  => 'Class::MOP::Attribute',
+        _definition_context(),
+    ))
+);
+
+## --------------------------------------------------------
+## Class::MOP::Mixin::HasOverloads
+
+Class::MOP::Mixin::HasOverloads->meta->add_attribute(
+    Class::MOP::Attribute->new('_overload_map' => (
+        reader   => {
+            '_overload_map' => \&Class::MOP::Mixin::HasOverloads::_overload_map
+        },
+        clearer => '_clear_overload_map',
+        default => sub { {} },
         _definition_context(),
     ))
 );
@@ -615,6 +630,46 @@ Class::MOP::Method::Constructor->meta->add_attribute(
 );
 
 ## --------------------------------------------------------
+## Class::MOP::Overload
+
+Class::MOP::Overload->meta->add_attribute(
+    Class::MOP::Attribute->new(
+        'operator' => (
+            reader   => { 'operator' => \&Class::MOP::Overload::operator },
+            required => 1,
+            _definition_context(),
+        )
+    )
+);
+
+for my $attr (qw( method_name coderef coderef_package coderef_name method )) {
+    Class::MOP::Overload->meta->add_attribute(
+        Class::MOP::Attribute->new(
+            $attr => (
+                reader    => { $attr => Class::MOP::Overload->can($attr) },
+                predicate => {
+                    'has_'
+                        . $attr => Class::MOP::Overload->can( 'has_' . $attr )
+                },
+                _definition_context(),
+            )
+        )
+    );
+}
+
+Class::MOP::Overload->meta->add_attribute(
+    Class::MOP::Attribute->new(
+        'associated_metaclass' => (
+            reader => {
+                'associated_metaclass' =>
+                    \&Class::MOP::Overload::associated_metaclass
+            },
+            _definition_context(),
+        )
+    )
+);
+
+## --------------------------------------------------------
 ## Class::MOP::Instance
 
 # NOTE:
@@ -709,7 +764,8 @@ $_->meta->make_immutable(
     Class::MOP::Method::Wrapped
 
     Class::MOP::Method::Meta
-    Class::MOP::Method::Overload
+
+    Class::MOP::Overload
 /;
 
 $_->meta->make_immutable(
@@ -721,6 +777,7 @@ $_->meta->make_immutable(
     Class::MOP::Mixin::AttributeCore
     Class::MOP::Mixin::HasAttributes
     Class::MOP::Mixin::HasMethods
+    Class::MOP::Mixin::HasOverloads
 /;
 
 1;
@@ -739,7 +796,7 @@ Class::MOP - A Meta Object Protocol for Perl 5
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

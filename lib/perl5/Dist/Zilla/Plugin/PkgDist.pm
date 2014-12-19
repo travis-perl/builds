@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgDist;
 # ABSTRACT: add a $DIST to your packages
-$Dist::Zilla::Plugin::PkgDist::VERSION = '5.020';
+$Dist::Zilla::Plugin::PkgDist::VERSION = '5.029';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -55,12 +55,12 @@ sub munge_perl {
 
   my $document = $self->ppi_document_for_file($file);
 
+  return unless my $package_stmts = $document->find('PPI::Statement::Package');
+
   if ($self->document_assigns_to_variable($document, '$DIST')) {
     $self->log([ 'skipping %s: assigns to $DIST', $file->name ]);
     return;
   }
-
-  return unless my $package_stmts = $document->find('PPI::Statement::Package');
 
   my %seen_pkg;
 
@@ -114,7 +114,7 @@ Dist::Zilla::Plugin::PkgDist - add a $DIST to your packages
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

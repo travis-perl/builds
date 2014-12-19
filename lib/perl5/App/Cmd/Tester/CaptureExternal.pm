@@ -1,15 +1,46 @@
 use strict;
 use warnings;
 package App::Cmd::Tester::CaptureExternal;
-{
-  $App::Cmd::Tester::CaptureExternal::VERSION = '0.323';
-}
-
+$App::Cmd::Tester::CaptureExternal::VERSION = '0.326';
 use parent 'App::Cmd::Tester';
 use Capture::Tiny 0.13 qw/capture/;
 
 # ABSTRACT: Extends App::Cmd::Tester to capture from external subprograms
 
+#pod =head1 SYNOPSIS
+#pod
+#pod   use Test::More tests => 4;
+#pod   use App::Cmd::Tester::CaptureExternal;
+#pod
+#pod   use YourApp;
+#pod
+#pod   my $result = test_app(YourApp => [ qw(command --opt value) ]);
+#pod
+#pod   like($result->stdout, qr/expected output/, 'printed what we expected');
+#pod
+#pod   is($result->stderr, '', 'nothing sent to sderr');
+#pod
+#pod   ok($result->output, "STDOUT concatenated with STDERR");
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod L<App::Cmd::Tester> provides a useful scaffold for testing applications, but it
+#pod is unable to capture output generated from any external subprograms that are
+#pod invoked from the application.
+#pod
+#pod This subclass uses an alternate mechanism for capturing output
+#pod (L<Capture::Tiny>) that does capture from external programs, with one
+#pod major limitation.
+#pod
+#pod It is not possible to capture externally from both STDOUT and STDERR while
+#pod also having appropriately interleaved combined output.  Therefore, the
+#pod C<output> from this subclass simply concatenates the two.
+#pod
+#pod You can still use C<output> for testing if there is any output at all or for
+#pod testing if something appeared in either output stream, but you can't rely on
+#pod the ordering being correct between lines to STDOUT and lines to STDERR.
+#pod
+#pod =cut
 
 sub _run_with_capture {
   my ($class, $app, $argv) = @_;
@@ -50,7 +81,7 @@ App::Cmd::Tester::CaptureExternal - Extends App::Cmd::Tester to capture from ext
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 SYNOPSIS
 
@@ -91,7 +122,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

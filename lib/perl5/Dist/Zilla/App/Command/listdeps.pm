@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::listdeps;
 # ABSTRACT: print your distribution's prerequisites
-$Dist::Zilla::App::Command::listdeps::VERSION = '5.020';
+$Dist::Zilla::App::Command::listdeps::VERSION = '5.029';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -52,6 +52,7 @@ sub opt_spec {
   [ 'missing', 'list only the missing dependencies' ],
   [ 'versions', 'include required version numbers in listing' ],
   [ 'json', 'list dependencies by phase, in JSON format' ],
+  [ 'omit-core=s', 'Omit dependencies that are shipped with the specified version of perl' ],
 }
 
 sub prereqs {
@@ -67,10 +68,31 @@ sub prereqs {
   my $prereqs = $zilla->prereqs;
 }
 
+my @phases = qw/configure build test runtime develop/;
+my @relationships = qw/requires recommends suggests/;
+
+sub filter_core {
+  my ($prereqs, $core_version) = @_;
+  $core_version = sprintf '%7.6f', $core_version if $core_version >= 5.010;
+  $prereqs = $prereqs->clone if $prereqs->is_finalized;
+  require Module::CoreList;
+  for my $phase (@phases) {
+    for my $relation (@relationships) {
+      my $req = $prereqs->requirements_for($phase, $relation);
+      for my $module ($req->required_modules) {
+        next if not exists $Module::CoreList::version{$core_version}{$module};
+        $req->clear_requirement($module) if $req->accepts_module($module, $Module::CoreList::version{$core_version}{$module});
+      }
+    }
+  }
+  return $prereqs;
+}
+
 sub extract_dependencies {
-  my ($self, $zilla, $phases, $missing) = @_;
+  my ($self, $zilla, $phases, $missing, $omit_core) = @_;
 
   my $prereqs = $self->prereqs($zilla);
+  $prereqs = filter_core($prereqs, $omit_core) if $omit_core;
 
   require CPAN::Meta::Requirements;
   my $req = CPAN::Meta::Requirements->new;
@@ -110,16 +132,18 @@ sub execute {
   my @phases = qw(build test configure runtime);
   push @phases, 'develop' if $opt->author;
 
+  my $omit_core = $opt->omit_core;
   if($opt->json) {
     my $prereqs = $self->prereqs($self->zilla);
+    $prereqs = filter_core($prereqs, $omit_core) if $omit_core;
     my $output = $prereqs->as_string_hash;
 
-    require JSON; JSON->VERSION(2);
-    print JSON->new->ascii(1)->canonical(1)->pretty->encode($output), "\n";
+    require JSON::MaybeXS;
+    print JSON::MaybeXS->new(ascii => 1, canonical => 1, pretty => 1)->encode($output), "\n";
     return 1;
   }
 
-  my %modules = $self->extract_dependencies($self->zilla, \@phases, $opt->missing);
+  my %modules = $self->extract_dependencies($self->zilla, \@phases, $opt->missing, $opt->omit_core);
 
   if($opt->versions) {
     for(sort { lc $a cmp lc $b } keys %modules) {
@@ -144,7 +168,7 @@ Dist::Zilla::App::Command::listdeps - print your distribution's prerequisites
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::AutoVersion;
 # ABSTRACT: take care of numbering versions so you don't have to
-$Dist::Zilla::Plugin::AutoVersion::VERSION = '5.020';
+$Dist::Zilla::Plugin::AutoVersion::VERSION = '5.029';
 use Moose;
 with(
   'Dist::Zilla::Role::VersionProvider',
@@ -72,13 +72,20 @@ sub provide_version {
   require DateTime;
   DateTime->VERSION('0.44'); # CLDR fixes
 
-  my $now = DateTime->now(time_zone => $self->time_zone);
+  my $now;
 
   my $version = $self->fill_in_string(
     $self->format,
     {
       major => \( $self->major ),
-      cldr  => sub { $now->format_cldr($_[0]) },
+      cldr  => sub {
+        $now ||= do {
+          require DateTime;
+          DateTime->VERSION('0.44'); # CLDR fixes
+          DateTime->now(time_zone => $self->time_zone);
+        };
+        $now->format_cldr($_[0])
+      },
     },
   );
 
@@ -115,7 +122,7 @@ Dist::Zilla::Plugin::AutoVersion - take care of numbering versions so you don't 
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

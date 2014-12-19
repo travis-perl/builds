@@ -1,7 +1,7 @@
 package Dist::Zilla::Role::PluginBundle::Easy;
 # ABSTRACT: something that bundles a bunch of plugins easily
 # This plugin was originally contributed by Christopher J. Madsen
-$Dist::Zilla::Role::PluginBundle::Easy::VERSION = '5.020';
+$Dist::Zilla::Role::PluginBundle::Easy::VERSION = '5.029';
 use Moose::Role;
 with 'Dist::Zilla::Role::PluginBundle';
 
@@ -30,7 +30,6 @@ use namespace::autoclean;
 #pod
 #pod =cut
 
-use Moose::Autobox;
 use MooseX::Types::Moose qw(Str ArrayRef HashRef);
 
 use String::RewritePrefix 0.005
@@ -98,7 +97,7 @@ sub bundle_config {
 
   $self->configure;
 
-  return $self->plugins->flatten;
+  return @{ $self->plugins };
 }
 
 #pod =method add_plugins
@@ -170,13 +169,12 @@ sub add_bundle {
 
   $bundle = "\@$bundle" unless $bundle =~ /^@/;
 
-  $self->plugins->push(
+  push @{ $self->plugins },
     $package->bundle_config({
       name    => $self->name . '/' . $bundle,
       package => $package,
       payload => $payload,
-    })
-  );
+    });
 }
 
 #pod =method config_slice
@@ -228,7 +226,7 @@ Dist::Zilla::Role::PluginBundle::Easy - something that bundles a bunch of plugin
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 
