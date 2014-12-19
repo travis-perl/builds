@@ -7,6 +7,7 @@ use base qw/DBIx::Class/;
 
 use Scalar::Util qw/weaken blessed/;
 use Try::Tiny;
+use DBIx::Class::_Util 'UNRESOLVABLE_CONDITION';
 use namespace::clean;
 
 =head1 NAME
@@ -38,11 +39,11 @@ methods, for predefined ones, look in L<DBIx::Class::Relationship>.
 
 =over 4
 
-=item Arguments: 'relname', 'Foreign::Class', $condition, $attrs
+=item Arguments: $rel_name, $foreign_class, $condition, $attrs
 
 =back
 
-  __PACKAGE__->add_relationship('relname',
+  __PACKAGE__->add_relationship('rel_name',
                                 'Foreign::Class',
                                 $condition, $attrs);
 
@@ -180,11 +181,32 @@ L<SQL::Abstract> and the resulting SQL will be used verbatim as the C<ON>
 clause of the C<JOIN> statement associated with this relationship.
 
 While every coderef-based condition must return a valid C<ON> clause, it may
-elect to additionally return a simplified join-free condition hashref when
-invoked as C<< $result->relationship >>, as opposed to
-C<< $rs->related_resultset('relationship') >>. In this case C<$result> is
-passed to the coderef as C<< $args->{self_rowobj} >>, so a user can do the
-following:
+elect to additionally return a simplified B<optional> join-free condition
+consisting of a hashref with B<all keys being fully qualified names of columns
+declared on the corresponding result source>. This boils down to two scenarios:
+
+=over
+
+=item *
+
+When relationship resolution is invoked after C<< $result->$rel_name >>, as
+opposed to C<< $rs->related_resultset($rel_name) >>, the C<$result> object
+is passed to the coderef as C<< $args->{self_result_object} >>.
+
+=item *
+
+Alternatively when the user-space invokes resolution via
+C<< $result->set_from_related( $rel_name => $foreign_values_or_object ) >>, the
+corresponding data is passed to the coderef as C<< $args->{foreign_values} >>,
+B<always> in the form of a hashref. If a foreign result object is supplied
+(which is valid usage of L</set_from_related>), its values will be extracted
+into hashref form by calling L<get_columns|DBIx::Class::Row/get_columns>.
+
+=back
+
+Note that the above scenarios are mutually exclusive, that is you will be supplied
+none or only one of C<self_result_object> and C<foreign_values>. In other words if
+you define your condition coderef as:
 
   sub {
     my $args = shift;
@@ -194,14 +216,17 @@ following:
         "$args->{foreign_alias}.artist" => { -ident => "$args->{self_alias}.artistid" },
         "$args->{foreign_alias}.year"   => { '>', "1979", '<', "1990" },
       },
-      $args->{self_rowobj} && {
-        "$args->{foreign_alias}.artist" => $args->{self_rowobj}->artistid,
+      ! $args->{self_result_object} ? () : {
+        "$args->{foreign_alias}.artist" => $args->{self_result_object}->artistid,
         "$args->{foreign_alias}.year"   => { '>', "1979", '<', "1990" },
       },
+      ! $args->{foreign_values} ? () : {
+        "$args->{self_alias}.artistid" => $args->{foreign_values}{artist},
+      }
     );
   }
 
-Now this code:
+Then this code:
 
     my $artist = $schema->resultset("Artist")->find({ id => 4 });
     $artist->cds_80s->all;
@@ -218,25 +243,46 @@ With the bind values:
 
     '4', '1990', '1979'
 
-Note that in order to be able to use
-L<< $result->create_related|DBIx::Class::Relationship::Base/create_related >>,
-the coderef must not only return as its second such a "simple" condition
-hashref which does not depend on joins being available, but the hashref must
-contain only plain values/deflatable objects, such that the result can be
-passed directly to L<DBIx::Class::Relationship::Base/set_from_related>. For
-instance the C<year> constraint in the above example prevents the relationship
-from being used to create related objects (an exception will be thrown).
+While this code:
+
+    my $cd = $schema->resultset("CD")->search({ artist => 1 }, { rows => 1 })->single;
+    my $artist = $schema->resultset("Artist")->new({});
+    $artist->set_from_related('cds_80s');
+
+Will properly set the C<< $artist->artistid >> field of this new object to C<1>
+
+Note that in order to be able to use L</set_from_related> (and by extension
+L<< $result->create_related|DBIx::Class::Relationship::Base/create_related >>),
+the returned join free condition B<must> contain only plain values/deflatable
+objects. For instance the C<year> constraint in the above example prevents
+the relationship from being used to create related objects using
+C<< $artst->create_related( cds_80s => { title => 'blah' } ) >> (an
+exception will be thrown).
 
 In order to allow the user to go truly crazy when generating a custom C<ON>
 clause, the C<$args> hashref passed to the subroutine contains some extra
 metadata. Currently the supplied coderef is executed as:
 
   $relationship_info->{cond}->({
-    self_alias        => The alias of the invoking resultset ('me' in case of a result object),
-    foreign_alias     => The alias of the to-be-joined resultset (often matches relname),
-    self_resultsource => The invocant's resultsource,
-    foreign_relname   => The relationship name (does *not* always match foreign_alias),
-    self_rowobj       => The invocant itself in case of a $result_object->$relationship call
+    self_resultsource   => The resultsource instance on which rel_name is registered
+    rel_name            => The relationship name (does *NOT* always match foreign_alias)
+
+    self_alias          => The alias of the invoking resultset
+    foreign_alias       => The alias of the to-be-joined resultset (does *NOT* always match rel_name)
+
+    # only one of these (or none at all) will ever be supplied to aid in the
+    # construction of a join-free condition
+
+    self_result_object  => The invocant *object* itself in case of a call like
+                           $result_object->$rel_name( ... )
+
+    foreign_values      => A *hashref* of related data: may be passed in directly or
+                           derived via ->get_columns() from a related object in case of
+                           $result_object->set_from_related( $rel_name, $foreign_result_object )
+
+    # deprecated inconsistent names, will be forever available for legacy code
+    self_rowobj         => Old deprecated slot for self_result_object
+    foreign_relname     => Old deprecated slot for rel_name
   });
 
 =head3 attributes
@@ -288,7 +334,7 @@ Then, assuming MyApp::Schema::LinerNotes has an accessor named notes, you can do
 
 For a 'belongs_to relationship, note the 'cascade_update':
 
-  MyApp::Schema::Track->belongs_to( cd => 'DBICTest::Schema::CD', 'cd,
+  MyApp::Schema::Track->belongs_to( cd => 'MyApp::Schema::CD', 'cd,
       { proxy => ['title'], cascade_update => 1 }
   );
   $track->title('New Title');
@@ -299,7 +345,7 @@ For a 'belongs_to relationship, note the 'cascade_update':
 A hashref where each key is the accessor you want installed in the main class,
 and its value is the name of the original in the foreign class.
 
-  MyApp::Schema::Track->belongs_to( cd => 'DBICTest::Schema::CD', 'cd', {
+  MyApp::Schema::Track->belongs_to( cd => 'MyApp::Schema::CD', 'cd', {
       proxy => { cd_title => 'title' },
   });
 
@@ -309,7 +355,7 @@ This will create an accessor named C<cd_title> on the C<$track> result object.
 
 NOTE: you can pass a nested struct too, for example:
 
-  MyApp::Schema::Track->belongs_to( cd => 'DBICTest::Schema::CD', 'cd', {
+  MyApp::Schema::Track->belongs_to( cd => 'MyApp::Schema::CD', 'cd', {
     proxy => [ 'year', { cd_title => 'title' } ],
   });
 
@@ -360,7 +406,7 @@ the relationship attributes.
 
 The C<belongs_to> relationship does not update across relationships
 by default, so if you have a 'proxy' attribute on a belongs_to and want to
-use 'update' on it, you muse set C<< cascade_update => 1 >>.
+use 'update' on it, you must set C<< cascade_update => 1 >>.
 
 This is not a RDMS style cascade update - it purely means that when
 an object has update called on it, all the related objects also
@@ -465,7 +511,9 @@ sub related_resultset {
 
   return $self->{related_resultsets}{$rel} = do {
 
-    my $rel_info = $self->relationship_info($rel)
+    my $rsrc = $self->result_source;
+
+    my $rel_info = $rsrc->relationship_info($rel)
       or $self->throw_exception( "No such relationship '$rel'" );
 
     my $attrs = (@_ > 1 && ref $_[$#_] eq 'HASH' ? pop(@_) : {});
@@ -475,26 +523,18 @@ sub related_resultset {
       if (@_ > 1 && (@_ % 2 == 1));
     my $query = ((@_ > 1) ? {@_} : shift);
 
-    my $rsrc = $self->result_source;
-
     # condition resolution may fail if an incomplete master-object prefetch
     # is encountered - that is ok during prefetch construction (not yet in_storage)
     my ($cond, $is_crosstable) = try {
       $rsrc->_resolve_condition( $rel_info->{cond}, $rel, $self, $rel )
     }
     catch {
-      if ($self->in_storage) {
-        $self->throw_exception ($_);
-      }
-
-      $DBIx::Class::ResultSource::UNRESOLVABLE_CONDITION;  # RV
+      $self->throw_exception ($_) if $self->in_storage;
+      UNRESOLVABLE_CONDITION;  # RV, no return()
     };
 
     # keep in mind that the following if() block is part of a do{} - no return()s!!!
-    if ($is_crosstable) {
-      $self->throw_exception (
-        "A cross-table relationship condition returned for statically declared '$rel'"
-      ) unless ref $rel_info->{cond} eq 'CODE';
+    if ($is_crosstable and ref $rel_info->{cond} eq 'CODE') {
 
       # A WHOREIFFIC hack to reinvoke the entire condition resolution
       # with the correct alias. Another way of doing this involves a
@@ -506,7 +546,12 @@ sub related_resultset {
       # root alias as 'me', instead of $rel (as opposed to invoking
       # $rs->search_related)
 
-      local $rsrc->{_relationships}{me} = $rsrc->{_relationships}{$rel};  # make the fake 'me' rel
+      # make the fake 'me' rel
+      local $rsrc->{_relationships}{me} = {
+        %{ $rsrc->{_relationships}{$rel} },
+        _original_name => $rel,
+      };
+
       my $obj_table_alias = lc($rsrc->source_name) . '__row';
       $obj_table_alias =~ s/\W+/_/g;
 
@@ -519,7 +564,7 @@ sub related_resultset {
       # FIXME - this conditional doesn't seem correct - got to figure out
       # at some point what it does. Also the entire UNRESOLVABLE_CONDITION
       # business seems shady - we could simply not query *at all*
-      if ($cond eq $DBIx::Class::ResultSource::UNRESOLVABLE_CONDITION) {
+      if ($cond eq UNRESOLVABLE_CONDITION) {
         my $reverse = $rsrc->reverse_relationship_info($rel);
         foreach my $rev_rel (keys %$reverse) {
           if ($reverse->{$rev_rel}{attrs}{accessor} && $reverse->{$rev_rel}{attrs}{accessor} eq 'multi') {
@@ -627,38 +672,15 @@ your storage until you call L<DBIx::Class::Row/insert> on it.
 =cut
 
 sub new_related {
-  my ($self, $rel, $values) = @_;
+  my ($self, $rel, $data) = @_;
 
-  # FIXME - this is a bad position for this (also an identical copy in
-  # set_from_related), but I have no saner way to hook, and I absolutely
-  # want this to throw at least for coderefs, instead of the "insert a NULL
-  # when it gets hard" insanity --ribasushi
-  #
-  # sanity check - currently throw when a complex coderef rel is encountered
-  # FIXME - should THROW MOAR!
-
-  if (ref $self) {  # cdbi calls this as a class method, /me vomits
-
-    my $rsrc = $self->result_source;
-    my $rel_info = $rsrc->relationship_info($rel)
-      or $self->throw_exception( "No such relationship '$rel'" );
-    my (undef, $crosstable, $cond_targets) = $rsrc->_resolve_condition (
-      $rel_info->{cond}, $rel, $self, $rel
-    );
-
-    $self->throw_exception("Custom relationship '$rel' does not resolve to a join-free condition fragment")
-      if $crosstable;
-
-    if (my @unspecified_rel_condition_chunks = grep { ! exists $values->{$_} } @{$cond_targets||[]} ) {
-      $self->throw_exception(sprintf (
-        "Custom relationship '%s' not definitive - returns conditions instead of values for column(s): %s",
-        $rel,
-        map { "'$_'" } @unspecified_rel_condition_chunks
-      ));
-    }
-  }
-
-  return $self->search_related($rel)->new_result($values);
+  return $self->search_related($rel)->new_result( $self->result_source->_resolve_relationship_condition (
+    infer_values_based_on => $data,
+    rel_name => $rel,
+    self_result_object => $self,
+    foreign_alias => $rel,
+    self_alias => 'me',
+  )->{inferred_values} );
 }
 
 =head2 create_related
@@ -792,44 +814,21 @@ call set_from_related on the book.
 This is called internally when you pass existing objects as values to
 L<DBIx::Class::ResultSet/create>, or pass an object to a belongs_to accessor.
 
-The columns are only set in the local copy of the object, call L</update> to
-set them in the storage.
+The columns are only set in the local copy of the object, call
+L<update|DBIx::Class::Row/update> to update them in the storage.
 
 =cut
 
 sub set_from_related {
   my ($self, $rel, $f_obj) = @_;
 
-  my $rsrc = $self->result_source;
-  my $rel_info = $rsrc->relationship_info($rel)
-    or $self->throw_exception( "No such relationship '$rel'" );
-
-  if (defined $f_obj) {
-    my $f_class = $rel_info->{class};
-    $self->throw_exception( "Object '$f_obj' isn't a ".$f_class )
-      unless blessed $f_obj and $f_obj->isa($f_class);
-  }
-
-
-  # FIXME - this is a bad position for this (also an identical copy in
-  # new_related), but I have no saner way to hook, and I absolutely
-  # want this to throw at least for coderefs, instead of the "insert a NULL
-  # when it gets hard" insanity --ribasushi
-  #
-  # sanity check - currently throw when a complex coderef rel is encountered
-  # FIXME - should THROW MOAR!
-  my ($cond, $crosstable, $cond_targets) = $rsrc->_resolve_condition (
-    $rel_info->{cond}, $f_obj, $rel, $rel
-  );
-  $self->throw_exception("Custom relationship '$rel' does not resolve to a join-free condition fragment")
-    if $crosstable;
-  $self->throw_exception(sprintf (
-    "Custom relationship '%s' not definitive - returns conditions instead of values for column(s): %s",
-    $rel,
-    map { "'$_'" } @$cond_targets
-  )) if $cond_targets;
-
-  $self->set_columns($cond);
+  $self->set_columns( $self->result_source->_resolve_relationship_condition (
+    infer_values_based_on => {},
+    rel_name => $rel,
+    foreign_values => $f_obj,
+    foreign_alias => $rel,
+    self_alias => 'me',
+  )->{inferred_values} );
 
   return 1;
 }
@@ -986,13 +985,16 @@ Removes the link between the current object and the related object. Note that
 the related object itself won't be deleted unless you call ->delete() on
 it. This method just removes the link between the two objects.
 
-=head1 AUTHOR AND CONTRIBUTORS
+=head1 FURTHER QUESTIONS?
 
-See L<AUTHOR|DBIx::Class/AUTHOR> and L<CONTRIBUTORS|DBIx::Class/CONTRIBUTORS> in DBIx::Class
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 
