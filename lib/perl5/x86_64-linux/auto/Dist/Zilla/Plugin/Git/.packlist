@@ -1,0 +1,13 @@
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/Check.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/Commit.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/CommitBuild.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/GatherDir.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/Init.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/NextVersion.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/Push.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Plugin/Git/Tag.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/PluginBundle/Git.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Role/Git/DirtyFiles.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Role/Git/Repo.pm
+/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/Dist/Zilla/Role/Git/StringFormatter.pm

@@ -1,0 +1,1 @@
+{"name":"Text::Template","dist":"Text-Template-1.46","target":"Text::Template","version":"1.46","provides":{"Text::Template":{"version":"1.46","file":"lib/Text/Template.pm"},"Text::Template::Preprocess":{"version":"1.46","file":"lib/Text/Template/Preprocess.pm"}},"pathname":"M/MJ/MJD/Text-Template-1.46.tar.gz"}
