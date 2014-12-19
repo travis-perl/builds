@@ -2,16 +2,17 @@ package DBIx::Class::FilterColumn;
 use strict;
 use warnings;
 
-use base qw/DBIx::Class::Row/;
+use base 'DBIx::Class::Row';
+use SQL::Abstract 'is_literal_value';
+use namespace::clean;
 
 sub filter_column {
   my ($self, $col, $attrs) = @_;
 
   my $colinfo = $self->column_info($col);
 
-  $self->throw_exception('FilterColumn does not work with InflateColumn')
-    if $self->isa('DBIx::Class::InflateColumn') &&
-      defined $colinfo->{_inflate_info};
+  $self->throw_exception("FilterColumn can not be used on a column with a declared InflateColumn inflator")
+    if defined $colinfo->{_inflate_info} and $self->isa('DBIx::Class::InflateColumn');
 
   $self->throw_exception("No such column $col to filter")
     unless $self->has_column($col);
@@ -31,9 +32,9 @@ sub filter_column {
 sub _column_from_storage {
   my ($self, $col, $value) = @_;
 
-  return $value unless defined $value;
+  return $value if is_literal_value($value);
 
-  my $info = $self->column_info($col)
+  my $info = $self->result_source->column_info($col)
     or $self->throw_exception("No column info for $col");
 
   return $value unless exists $info->{_filter_info};
@@ -46,7 +47,9 @@ sub _column_from_storage {
 sub _column_to_storage {
   my ($self, $col, $value) = @_;
 
-  my $info = $self->column_info($col) or
+  return $value if is_literal_value($value);
+
+  my $info = $self->result_source->column_info($col) or
     $self->throw_exception("No column info for $col");
 
   return $value unless exists $info->{_filter_info};
@@ -60,20 +63,25 @@ sub get_filtered_column {
   my ($self, $col) = @_;
 
   $self->throw_exception("$col is not a filtered column")
-    unless exists $self->column_info($col)->{_filter_info};
+    unless exists $self->result_source->column_info($col)->{_filter_info};
 
   return $self->{_filtered_column}{$col}
     if exists $self->{_filtered_column}{$col};
 
   my $val = $self->get_column($col);
 
-  return $self->{_filtered_column}{$col} = $self->_column_from_storage($col, $val);
+  return $self->{_filtered_column}{$col} = $self->_column_from_storage(
+    $col, $val
+  );
 }
 
 sub get_column {
   my ($self, $col) = @_;
+
   if (exists $self->{_filtered_column}{$col}) {
-    return $self->{_column_data}{$col} ||= $self->_column_to_storage ($col, $self->{_filtered_column}{$col});
+    return $self->{_column_data}{$col} ||= $self->_column_to_storage (
+      $col, $self->{_filtered_column}{$col}
+    );
   }
 
   return $self->next::method ($col);
@@ -83,10 +91,12 @@ sub get_column {
 sub get_columns {
   my $self = shift;
 
-  foreach my $col (keys %{$self->{_filtered_column}||{}}) {
-    $self->{_column_data}{$col} ||= $self->_column_to_storage ($col, $self->{_filtered_column}{$col})
-      if exists $self->{_filtered_column}{$col};
-  }
+  $self->{_column_data}{$_} = $self->_column_to_storage (
+    $_, $self->{_filtered_column}{$_}
+  ) for grep
+    { ! exists $self->{_column_data}{$_} }
+    keys %{$self->{_filtered_column}||{}}
+  ;
 
   $self->next::method (@_);
 }
@@ -100,54 +110,65 @@ sub store_column {
   $self->next::method(@_);
 }
 
+sub has_column_loaded {
+  my ($self, $col) = @_;
+  return 1 if exists $self->{_filtered_column}{$col};
+  return $self->next::method($col);
+}
+
 sub set_filtered_column {
   my ($self, $col, $filtered) = @_;
 
-  # do not blow up the cache via set_column unless necessary
-  # (filtering may be expensive!)
-  if (exists $self->{_filtered_column}{$col}) {
-    return $filtered
-      if ($self->_eq_column_values ($col, $filtered, $self->{_filtered_column}{$col} ) );
-
-    $self->make_column_dirty ($col); # so the comparison won't run again
+  # unlike IC, FC does not need to deal with the 'filter' abomination
+  # thus we can short-curcuit filtering entirely and never call set_column
+  # in case this is already a dirty change OR the row never touched storage
+  if (
+    ! $self->in_storage
+      or
+    $self->is_column_changed($col)
+  ) {
+    $self->make_column_dirty($col);
+    delete $self->{_column_data}{$col};
   }
-
-  $self->set_column($col, $self->_column_to_storage($col, $filtered));
+  else {
+    $self->set_column($col, $self->_column_to_storage($col, $filtered));
+  };
 
   return $self->{_filtered_column}{$col} = $filtered;
 }
 
 sub update {
-  my ($self, $attrs, @rest) = @_;
+  my ($self, $data, @rest) = @_;
 
-  foreach my $key (keys %{$attrs||{}}) {
-    if (
-      $self->has_column($key)
-        &&
-      exists $self->column_info($key)->{_filter_info}
-    ) {
-      $self->set_filtered_column($key, delete $attrs->{$key});
+  my $colinfos = $self->result_source->columns_info;
+
+  foreach my $col (keys %{$data||{}}) {
+    if ( exists $colinfos->{$col}{_filter_info} ) {
+      $self->set_filtered_column($col, delete $data->{$col});
 
       # FIXME update() reaches directly into the object-hash
       # and we may *not* have a filtered value there - thus
       # the void-ctx filter-trigger
-      $self->get_column($key) unless exists $self->{_column_data}{$key};
+      $self->get_column($col) unless exists $self->{_column_data}{$col};
     }
   }
 
-  return $self->next::method($attrs, @rest);
+  return $self->next::method($data, @rest);
 }
 
 sub new {
-  my ($class, $attrs, @rest) = @_;
-  my $source = $attrs->{-result_source}
+  my ($class, $data, @rest) = @_;
+
+  my $rsrc = $data->{-result_source}
     or $class->throw_exception('Sourceless rows are not supported with DBIx::Class::FilterColumn');
 
-  my $obj = $class->next::method($attrs, @rest);
-  foreach my $key (keys %{$attrs||{}}) {
-    if ($obj->has_column($key) &&
-          exists $obj->column_info($key)->{_filter_info} ) {
-      $obj->set_filtered_column($key, $attrs->{$key});
+  my $obj = $class->next::method($data, @rest);
+
+  my $colinfos = $rsrc->columns_info;
+
+  foreach my $col (keys %{$data||{}}) {
+    if (exists $colinfos->{$col}{_filter_info} ) {
+      $obj->set_filtered_column($col, $data->{$col});
     }
   }
 
@@ -155,6 +176,8 @@ sub new {
 }
 
 1;
+
+__END__
 
 =head1 NAME
 
@@ -240,3 +263,14 @@ and one, using code like this:-
 
 In this case the C<filter_from_storage> is not required, as just
 passing the database value through to perl does the right thing.
+
+=head1 FURTHER QUESTIONS?
+
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
+
+=head1 COPYRIGHT AND LICENSE
+
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
