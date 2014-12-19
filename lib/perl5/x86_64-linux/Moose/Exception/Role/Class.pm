@@ -1,5 +1,6 @@
 package Moose::Exception::Role::Class;
-$Moose::Exception::Role::Class::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose::Role;
 
 has 'class_name' => (
