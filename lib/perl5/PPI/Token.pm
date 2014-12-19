@@ -27,7 +27,7 @@ use PPI::Exception ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	@ISA     = 'PPI::Element';
 }
 
@@ -123,7 +123,7 @@ sub set_class {
 
 =head2 set_content $string
 
-The C<set_content> method allows to set/change the string that the
+The C<set_content> method allows you to set/change the string that the
 C<PPI::Token> object represents.
 
 Returns the string you set the Token to

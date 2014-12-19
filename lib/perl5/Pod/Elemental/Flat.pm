@@ -1,6 +1,6 @@
 package Pod::Elemental::Flat;
 # ABSTRACT: a content-only pod paragraph
-$Pod::Elemental::Flat::VERSION = '0.103001';
+$Pod::Elemental::Flat::VERSION = '0.103002';
 use Moose::Role;
 
 use namespace::autoclean;
@@ -41,7 +41,7 @@ Pod::Elemental::Flat - a content-only pod paragraph
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

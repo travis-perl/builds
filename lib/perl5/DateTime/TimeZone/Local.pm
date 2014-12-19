@@ -1,11 +1,12 @@
 package DateTime::TimeZone::Local;
-$DateTime::TimeZone::Local::VERSION = '1.74';
+$DateTime::TimeZone::Local::VERSION = '1.81';
 use strict;
 use warnings;
 
-use Class::Load qw( is_class_loaded load_class try_load_class );
 use DateTime::TimeZone;
 use File::Spec;
+use Module::Runtime qw( require_module );
+use Try::Tiny;
 
 sub TimeZone {
     my $class = shift;
@@ -44,13 +45,16 @@ sub TimeZone {
         my $os_name = $subclass{$^O} || $^O;
         my $subclass = $class . '::' . $os_name;
 
-        return $subclass if is_class_loaded($subclass);
+        return $subclass if $subclass->can('Methods');
 
-        return $subclass if try_load_class($subclass);
+        return $subclass if try {
+            local $SIG{__DIE__};
+            require_module($subclass);
+        };
 
         $subclass = $class . '::Unix';
 
-        load_class($subclass);
+        require_module($subclass);
 
         return $subclass;
     }
@@ -61,12 +65,11 @@ sub FromEnv {
 
     foreach my $var ( $class->EnvVars() ) {
         if ( $class->_IsValidName( $ENV{$var} ) ) {
-            my $tz;
-            {
-                local $@;
+            my $tz = try {
                 local $SIG{__DIE__};
-                $tz = eval { DateTime::TimeZone->new( name => $ENV{$var} ) };
-            }
+                DateTime::TimeZone->new( name => $ENV{$var} );
+            };
+
             return $tz if $tz;
         }
     }
@@ -91,15 +94,13 @@ __END__
 
 =pod
 
-=encoding UTF-8
-
 =head1 NAME
 
 DateTime::TimeZone::Local - Determine the local system's time zone
 
 =head1 VERSION
 
-version 1.74
+version 1.81
 
 =head1 SYNOPSIS
 

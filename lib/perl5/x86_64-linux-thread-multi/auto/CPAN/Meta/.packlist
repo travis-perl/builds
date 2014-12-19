@@ -2,6 +2,11 @@
 /home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/Converter.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/Feature.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/History.pm
+/home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/History/Meta_1_0.pod
+/home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/History/Meta_1_1.pod
+/home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/History/Meta_1_2.pod
+/home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/History/Meta_1_3.pod
+/home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/History/Meta_1_4.pod
 /home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/Merge.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/Prereqs.pm
 /home/travis/.perlbrew/libs/5.14.4-thr@dzil/lib/perl5/CPAN/Meta/Spec.pm

@@ -1,11 +1,10 @@
 package Dist::Zilla::Role::Plugin;
 # ABSTRACT: something that gets plugged in to Dist::Zilla
-$Dist::Zilla::Role::Plugin::VERSION = '5.020';
+$Dist::Zilla::Role::Plugin::VERSION = '5.029';
 use Moose::Role;
 with 'Dist::Zilla::Role::ConfigDumper';
 
 use Params::Util qw(_HASHLIKE);
-use Moose::Autobox;
 use MooseX::Types;
 
 use namespace::autoclean;
@@ -67,12 +66,11 @@ sub mvp_aliases         { return {} };
 sub plugin_from_config {
   my ($class, $name, $arg, $section) = @_;
 
-  my $self = $class->new(
-    $arg->merge({
-      plugin_name => $name,
-      zilla       => $section->sequence->assembler->zilla,
-    }),
-  );
+  my $self = $class->new({
+    %$arg,
+    plugin_name => $name,
+    zilla       => $section->sequence->assembler->zilla,
+  });
 }
 
 sub register_component {
@@ -84,7 +82,7 @@ sub register_component {
 
   $self->log_debug([ 'online, %s v%s', $self->meta->name, $version ]);
 
-  $self->zilla->plugins->push($self);
+  push @{ $self->zilla->plugins }, $self;
 
   return;
 }
@@ -103,7 +101,7 @@ Dist::Zilla::Role::Plugin - something that gets plugged in to Dist::Zilla
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

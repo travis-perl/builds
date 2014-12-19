@@ -2,36 +2,36 @@ use strict;
 use warnings;
 package Getopt::Long::Descriptive::Opts;
 # ABSTRACT: object representing command line switches
-$Getopt::Long::Descriptive::Opts::VERSION = '0.097';
+$Getopt::Long::Descriptive::Opts::VERSION = '0.098';
 use Scalar::Util qw(blessed weaken);
 
-# =head1 DESCRIPTION
-#
-# This class is the base class of all C<$opt> objects returned by
-# L<Getopt::Long::Descriptive>.  In general, you do not want to think about this
-# class, look at it, or alter it.  Seriously, it's pretty dumb.
-#
-# Every call to C<describe_options> will return a object of a new subclass of
-# this class.  It will have a method for the canonical name of each option
-# possible given the option specifications.
-#
-# Method names beginning with an single underscore are public, and are named that
-# way to avoid conflict with automatically generated methods.  Methods with
-# multiple underscores (in case you're reading the source) are private.
-#
-# =head1 METHODS
-#
-# B<Achtung!>  All methods beginning with an underscore are experimental as of
-# today, 2009-12-12.  They are likely to be formally made permanent soon.
-#
-# =head2 _specified
-#
-# This method returns true if the given name was specified on the command line.
-#
-# For example, if C<@ARGS> was "C<< --foo --bar 10 >>" and C<baz> is defined by a
-# default, C<_specified> will return true for foo and bar, and false for baz.
-#
-# =cut
+#pod =head1 DESCRIPTION
+#pod
+#pod This class is the base class of all C<$opt> objects returned by
+#pod L<Getopt::Long::Descriptive>.  In general, you do not want to think about this
+#pod class, look at it, or alter it.  Seriously, it's pretty dumb.
+#pod
+#pod Every call to C<describe_options> will return a object of a new subclass of
+#pod this class.  It will have a method for the canonical name of each option
+#pod possible given the option specifications.
+#pod
+#pod Method names beginning with an single underscore are public, and are named that
+#pod way to avoid conflict with automatically generated methods.  Methods with
+#pod multiple underscores (in case you're reading the source) are private.
+#pod
+#pod =head1 METHODS
+#pod
+#pod B<Achtung!>  All methods beginning with an underscore are experimental as of
+#pod today, 2009-12-12.  They are likely to be formally made permanent soon.
+#pod
+#pod =head2 _specified
+#pod
+#pod This method returns true if the given name was specified on the command line.
+#pod
+#pod For example, if C<@ARGS> was "C<< --foo --bar 10 >>" and C<baz> is defined by a
+#pod default, C<_specified> will return true for foo and bar, and false for baz.
+#pod
+#pod =cut
 
 my %_CREATED_OPTS;
 my $SERIAL_NUMBER = 1;
@@ -42,12 +42,12 @@ sub _specified {
   return $meta->{given}{ $name };
 }
 
-# =head2 _specified_opts
-#
-# This method returns an opt object in which only explicitly specified values are
-# defined.  Values which were set by defaults will appear undef.
-#
-# =cut
+#pod =head2 _specified_opts
+#pod
+#pod This method returns an opt object in which only explicitly specified values are
+#pod defined.  Values which were set by defaults will appear undef.
+#pod
+#pod =cut
 
 sub _specified_opts {
   my ($self) = @_;
@@ -70,12 +70,12 @@ sub _specified_opts {
   $meta->{specified_opts};
 }
 
-# =head2 _complete_opts
-#
-# This method returns the opts object with all values, including those set by
-# defaults.  It is probably not going to be very often-used.
-#
-# =cut
+#pod =head2 _complete_opts
+#pod
+#pod This method returns the opts object with all values, including those set by
+#pod defaults.  It is probably not going to be very often-used.
+#pod
+#pod =cut
 
 sub _complete_opts {
   my ($self) = @_;
@@ -145,7 +145,7 @@ Getopt::Long::Descriptive::Opts - object representing command line switches
 
 =head1 VERSION
 
-version 0.097
+version 0.098
 
 =head1 DESCRIPTION
 
