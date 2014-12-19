@@ -1,22 +1,36 @@
 package # hide from pause until we figure it all out
   DBIx::Class::Storage::BlockRunner;
 
+use warnings;
 use strict;
 
 use DBIx::Class::Exception;
 use DBIx::Class::Carp;
 use Context::Preserve 'preserve_context';
-use DBIx::Class::_Util 'is_exception';
+use DBIx::Class::_Util qw(is_exception qsub);
 use Scalar::Util qw(weaken blessed reftype);
 use Try::Tiny;
 
 # DO NOT edit away without talking to riba first, he will just put it back
+# BEGIN pre-Moo2 import block
 BEGIN {
+  my $initial_fatal_bits = (${^WARNING_BITS}||'') & $warnings::DeadBits{all};
+
   local $ENV{PERL_STRICTURES_EXTRA} = 0;
-  require Moo; Moo->import;
-  require Sub::Quote; Sub::Quote->import('quote_sub');
+  # load all of these now, so that lazy-loading does not escape
+  # the current PERL_STRICTURES_EXTRA setting
+  require Sub::Quote;
+  require Sub::Defer;
+  require Moo;
+  require Moo::Object;
+  require Method::Generate::Accessor;
+  require Method::Generate::Constructor;
+
+  Moo->import;
+  ${^WARNING_BITS} &= ( $initial_fatal_bits | ~ $warnings::DeadBits{all} );
 }
-use warnings NONFATAL => 'all';
+# END pre-Moo2 import block
+
 use namespace::clean;
 
 =head1 NAME
@@ -43,16 +57,16 @@ has wrap_txn => (
 has retry_handler => (
   is => 'ro',
   required => 1,
-  isa => quote_sub( q{
+  isa => qsub q{
     (Scalar::Util::reftype($_[0])||'') eq 'CODE'
       or DBIx::Class::Exception->throw('retry_handler must be a CODE reference')
-  }),
+  },
 );
 
 has retry_debug => (
   is => 'rw',
   # use a sub - to be evaluated on the spot lazily
-  default => quote_sub( '$ENV{DBIC_STORAGE_RETRY_DEBUG}' ),
+  default => qsub '$ENV{DBIC_STORAGE_RETRY_DEBUG}',
   lazy => 1,
 );
 
@@ -67,19 +81,19 @@ has failed_attempt_count => (
   writer => '_set_failed_attempt_count',
   default => 0,
   lazy => 1,
-  trigger => quote_sub(q{
+  trigger => qsub q{
     $_[0]->throw_exception( sprintf (
       'Reached max_attempts amount of %d, latest exception: %s',
       $_[0]->max_attempts, $_[0]->last_exception
     )) if $_[0]->max_attempts <= ($_[1]||0);
-  }),
+  },
 );
 
 has exception_stack => (
   is => 'ro',
   init_arg => undef,
   clearer => '_reset_exception_stack',
-  default => quote_sub(q{ [] }),
+  default => qsub q{ [] },
   lazy => 1,
 );
 
@@ -144,7 +158,7 @@ sub _run {
     my $storage = $self->storage;
     my $cur_depth = $storage->transaction_depth;
 
-    if (defined $txn_init_depth and $run_err eq '') {
+    if (defined $txn_init_depth and ! is_exception $run_err) {
       my $delta_txn = (1 + $txn_init_depth) - $cur_depth;
 
       if ($delta_txn) {
@@ -219,13 +233,16 @@ sub _run {
   };
 }
 
-=head1 AUTHOR AND CONTRIBUTORS
+=head1 FURTHER QUESTIONS?
 
-See L<AUTHOR|DBIx::Class/AUTHOR> and L<CONTRIBUTORS|DBIx::Class/CONTRIBUTORS> in DBIx::Class
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 

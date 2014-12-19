@@ -1,1 +1,1 @@
-{"pathname":"I/IL/ILMARI/multidimensional-0.011.tar.gz","dist":"multidimensional-0.011","target":"multidimensional","provides":{"multidimensional":{"file":"lib/multidimensional.pm","version":"0.011"}},"version":"0.011","name":"multidimensional"}
+{"name":"multidimensional","pathname":"I/IL/ILMARI/multidimensional-0.011.tar.gz","dist":"multidimensional-0.011","provides":{"multidimensional":{"version":"0.011","file":"lib/multidimensional.pm"}},"target":"multidimensional","version":"0.011"}

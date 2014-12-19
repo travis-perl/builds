@@ -343,7 +343,7 @@ Same as perl's -I, prepended to current @INC
 
 =head1 AUTHORS
 
-See L<DBIx::Class/CONTRIBUTORS>
+See L<DBIx::Class/AUTHORS>
 
 =head1 LICENSE
 
