@@ -13,13 +13,13 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '1.998';
+our $VERSION = '2.008';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
 use IO::Socket::SSL::PublicSuffix;
 use Exporter ();
-use Errno qw( EAGAIN ETIMEDOUT );
+use Errno qw( EWOULDBLOCK ETIMEDOUT EINTR );
 use Carp;
 use strict;
 
@@ -83,7 +83,7 @@ my $algo2digest = do {
 # global defaults
 my %DEFAULT_SSL_ARGS = (
     SSL_check_crl => 0,
-    SSL_version => 'SSLv23:!SSLv2',
+    SSL_version => 'SSLv23:!SSLv3:!SSLv2', # consider both SSL3.0 and SSL2.0 as broken
     SSL_verify_callback => undef,
     SSL_verifycn_scheme => undef,  # fallback cn verification
     SSL_verifycn_publicsuffix => undef,  # fallback default list verification
@@ -217,13 +217,23 @@ for(qw( SSLv2 SSLv3 TLSv1 TLSv1_1 TLSv11:TLSv1_1 TLSv1_2 TLSv12:TLSv1_2 )) {
     $SSL_OP_NO{$k} = eval { no strict 'refs'; &$sub } || 0;
 }
 
+# Make SSL_CTX_clear_options accessible through SSL_CTX_ctrl unless it is
+# already implemented in Net::SSLeay
+if (!defined &Net::SSLeay::CTX_clear_options) {
+    *Net::SSLeay::CTX_clear_options = sub {
+	my ($ctx,$opt) = @_;
+	# 77 = SSL_CTRL_CLEAR_OPTIONS
+	Net::SSLeay::CTX_ctrl($ctx,77,$opt,0);
+    };
+}
+
 our $DEBUG;
 use vars qw(@ISA $SSL_ERROR @EXPORT);
 
 {
     # These constants will be used in $! at return from SSL_connect,
     # SSL_accept, _generic_(read|write), thus notifying the caller
-    # the usual way of problems. Like with EAGAIN, EINPROGRESS..
+    # the usual way of problems. Like with EWOULDBLOCK, EINPROGRESS..
     # these are especially important for non-blocking sockets
 
     my $x = Net::SSLeay::ERROR_WANT_READ();
@@ -265,7 +275,10 @@ BEGIN {
     if ( $ip6 ) {
 	# if we have IO::Socket::IP >= 0.20 we will use this in preference
 	# because it can handle both IPv4 and IPv6
-	if ( eval { require IO::Socket::IP; IO::Socket::IP->VERSION(0.20); } ) {
+	if ( eval { 
+	    require IO::Socket::IP; 
+	    IO::Socket::IP->VERSION(0.20) && IO::Socket::IP->VERSION != 0.30; 
+	}) {
 	    @ISA = qw(IO::Socket::IP);
 	    constant->import( CAN_IPV6 => "IO::Socket::IP" );
 	    $IOCLASS = "IO::Socket::IP";
@@ -486,7 +499,7 @@ sub configure_SSL {
 
     # create context
     # this will fill in defaults in $arg_hash
-    $ctx ||= IO::Socket::SSL::SSL_Context->new($arg_hash);
+    $ctx ||= IO::Socket::SSL::SSL_Context->new($arg_hash) || return;
 
     ${*$self}{'_SSL_arguments'} = $arg_hash;
     ${*$self}{'_SSL_ctx'} = $ctx;
@@ -506,7 +519,7 @@ sub _skip_rw_error {
     } else {
 	return $err;
     }
-    $! ||= EAGAIN;
+    $! ||= EWOULDBLOCK;
     ${*$self}{'_SSL_last_err'} = $SSL_ERROR if ref($self);
     Net::SSLeay::ERR_clear_error();
     return 0;
@@ -592,13 +605,13 @@ sub connect_SSL {
 	    $DEBUG>=2 && DEBUG("not using SNI because openssl is too old");
 	}
 
-	$arg_hash->{PeerAddr} || $self->_update_peer;
+	$arg_hash->{PeerAddr} || $arg_hash->{PeerHost} || $self->_update_peer;
 	if ( $ctx->{verify_name_ref} ) {
 	    # need target name for update
 	    my $host = $arg_hash->{SSL_verifycn_name}
 		|| $arg_hash->{SSL_hostname};
 	    if ( ! defined $host ) {
-		if ( $host = $arg_hash->{PeerHost} || $arg_hash->{PeerAddr} ) {
+		if ( $host = $arg_hash->{PeerAddr} || $arg_hash->{PeerHost} ) {
 		    $host =~s{:[a-zA-Z0-9_\-]+$}{};
 		}
 	    }
@@ -620,7 +633,10 @@ sub connect_SSL {
 
 	my $session = $ctx->session_cache( $arg_hash->{SSL_session_key} ?
 	    ( $arg_hash->{SSL_session_key},1 ) :
-	    ( $arg_hash->{PeerAddr}, $arg_hash->{PeerPort} )
+	    ( 
+		$arg_hash->{PeerAddr} || $arg_hash->{PeerHost}, 
+		$arg_hash->{PeerPort} || $arg_hash->{PeerService}
+	    )
 	);
 	Net::SSLeay::set_session($ssl, $session) if ($session);
     }
@@ -733,10 +749,13 @@ sub connect_SSL {
     if ( $ctx->has_session_cache
 	and my $session = Net::SSLeay::get1_session($ssl)) {
 	my $arg_hash = ${*$self}{'_SSL_arguments'};
-	$arg_hash->{PeerAddr} || $self->_update_peer;
+	$arg_hash->{PeerAddr} || $arg_hash->{PeerHost} || $self->_update_peer;
 	$ctx->session_cache( $arg_hash->{SSL_session_key} ?
 	    ( $arg_hash->{SSL_session_key},1 ) :
-	    ( $arg_hash->{PeerAddr},$arg_hash->{PeerPort} ),
+	    ( 
+		$arg_hash->{PeerAddr} || $arg_hash->{PeerHost},
+		$arg_hash->{PeerPort} || $arg_hash->{PeerService}
+	    ),
 	    $session
 	);
     }
@@ -892,7 +911,7 @@ sub accept_SSL {
 	    redo;
 
 	} elsif ( $rv == 0 ) {
-	    $socket->error("SSL connect accept failed because of handshake problems" );
+	    $socket->error("SSL accept attempt failed because of handshake problems" );
 	    delete ${*$self}{'_SSL_opening'};
 	    ${*$socket}{'_SSL_opened'} = -1;
 	    return $socket->fatal_ssl_error();
@@ -1000,7 +1019,7 @@ sub _generic_write {
     }
     if ( !defined($written) ) {
 	if ( my $err = $self->_skip_rw_error( $ssl,-1 )) {
-	    $self->error("SSL write error");
+	    $self->error("SSL write error ($err)");
 	}
 	return;
     }
@@ -1047,6 +1066,7 @@ sub getc {
 
 sub readline {
     my $self = shift;
+    ${*$self}{_SSL_object} or return $self->SUPER::getline;
 
     if ( not defined $/ or wantarray) {
 	# read all and split
@@ -1055,9 +1075,9 @@ sub readline {
 	while (1) {
 	    my $rv = $self->sysread($buf,2**16,length($buf));
 	    if ( ! defined $rv ) {
-		next if $!{EINTR};                     # retry
-		last if $!{EAGAIN} || $!{EWOULDBLOCK}; # use everything so far
-		return;                                # return error
+		next if $! == EINTR;       # retry
+		last if $! == EWOULDBLOCK; # use everything so far
+		return;                    # return error
 	    } elsif ( ! $rv ) {
 		last
 	    }
@@ -1085,9 +1105,9 @@ sub readline {
 	while ( $size>length($buf)) {
 	    my $rv = $self->sysread($buf,$size-length($buf),length($buf));
 	    if ( ! defined $rv ) {
-		next if $!{EINTR};                     # retry
-		last if $!{EAGAIN} || $!{EWOULDBLOCK}; # use everything so far
-		return;                                # return error
+		next if $! == EINTR;       # retry
+		last if $! == EWOULDBLOCK; # use everything so far
+		return;                    # return error
 	    } elsif ( ! $rv ) {
 		last
 	    }
@@ -1106,7 +1126,7 @@ sub readline {
 	# wait until we have more data or eof
 	my $poke = Net::SSLeay::peek($ssl,1);
 	if ( ! defined $poke or $poke eq '' ) {
-	    next if $!{EINTR};
+	    next if $! == EINTR;
 	}
 
 	my $skip = 0;
@@ -1144,7 +1164,7 @@ sub readline {
 		$skip -= length($p);
 		next;
 	    }
-	    $!{EINTR} or last;
+	    $! == EINTR or last;
 	}
 
 	if ( $eod and ( $delim1 eq '' or $eod < length($buf))) {
@@ -1559,8 +1579,10 @@ if ( defined &Net::SSLeay::get_peer_cert_chain
 	if ( CAN_IPV6 and $identity =~m{:} ) {
 	    # no IPv4 or hostname have ':'  in it, try IPv6.
 	    $ipn = inet_pton(AF_INET6,$identity) or return; # invalid name
-	} elsif ( $identity =~m{^\d[\d\.]*\.\d+$} ) {
-	    $ipn = inet_aton($identity) or return; # invalid name
+	} elsif ( my @ip = $identity =~m{^(\d+)(?:\.(\d+)\.(\d+)\.(\d+)|[\d\.]*)$} ) {
+	    # check for invalid IP/hostname
+	    return if 4 != @ip or 4 != grep { defined($_) && $_<256 } @ip; 
+	    $ipn = pack("CCCC",@ip);
 	} else {
 	    # assume hostname, check for umlauts etc
 	    if ( $identity =~m{[^a-zA-Z0-9_.\-]} ) {
@@ -2082,6 +2104,8 @@ WARN
     }
 
     my $ssl_op = Net::SSLeay::OP_ALL();
+    $ssl_op |= &Net::SSLeay::OP_SINGLE_DH_USE;
+    $ssl_op |= &Net::SSLeay::OP_SINGLE_ECDH_USE if $can_ecdh;
 
     my $ver;
     for (split(/\s*:\s*/,$arg_hash->{SSL_version})) {
@@ -2135,6 +2159,13 @@ WARN
 
 	# SSL_OP_CIPHER_SERVER_PREFERENCE
 	$ssl_op |= 0x00400000 if $arg_hash->{SSL_honor_cipher_order};
+
+	if ($ver eq 'SSLv23' && !($ssl_op & $SSL_OP_NO{SSLv3})) {
+	    # At least LibreSSL disables SSLv3 by default in SSL_CTX_new.
+	    # If we really want SSL3.0 we need to explicitly allow it with
+	    # SSL_CTX_clear_options.
+	    Net::SSLeay::CTX_clear_options($ctx,$SSL_OP_NO{SSLv3});
+	}
 
 	Net::SSLeay::CTX_set_options($ctx,$ssl_op);
 

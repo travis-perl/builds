@@ -2,12 +2,11 @@ package CGI;
 require 5.008001;
 use if $] >= 5.019, 'deprecate';
 use Carp 'croak';
+use CGI::File::Temp;
+use HTML::Entities;
 
-$CGI::VERSION='4.04';
+$CGI::VERSION='4.13';
 
-# HARD-CODED LOCATION FOR FILE UPLOAD TEMPORARY FILES.
-# UNCOMMENT THIS ONLY IF YOU KNOW WHAT YOU'RE DOING.
-# $CGITempFile::TMPDIRECTORY = '/usr/tmp';
 use CGI::Util qw(rearrange rearrange_header make_attributes unescape escape expires ebcdic2ascii ascii2ebcdic);
 
 #use constant XHTML_DTD => ['-//W3C//DTD XHTML Basic 1.0//EN',
@@ -26,9 +25,10 @@ $MOD_PERL            = 0; # no mod_perl by default
 #global settings
 $POST_MAX            = -1; # no limit to uploaded files
 $DISABLE_UPLOADS     = 0;
+$UNLINK_TMP_FILES    = 1;
+$LIST_CONTEXT_WARN   = 1;
 
 @SAVED_SYMBOLS = ();
-
 
 # >>>>> Here are some globals that you might want to adjust <<<<<<
 sub initialize_globals {
@@ -60,13 +60,6 @@ sub initialize_globals {
     # Set to 2 to enable debugging from STDIN
     $DEBUG = 1;
 
-    # Set this to 1 to make the temporary files created
-    # during file uploads safe from prying eyes
-    # or do...
-    #    1) use CGI qw(:private_tempfiles)
-    #    2) CGI::private_tempfiles(1);
-    $PRIVATE_TEMPFILES = 0;
-
     # Set this to 1 to generate automatic tab indexes
     $TABINDEX = 0;
 
@@ -95,6 +88,9 @@ sub initialize_globals {
 
     # return everything as utf-8
     $PARAM_UTF8      = 0;
+
+    # make param('PUTDATA') act like file upload
+    $PUTDATA_UPLOAD = 0;
 
     # Other globals that you shouldn't worry about.
     undef $Q;
@@ -201,10 +197,31 @@ if ($OS eq 'VMS') {
   $CRLF = "\015\012";
 }
 
-if ($needs_binmode) {
-    $CGI::DefaultClass->binmode(\*main::STDOUT);
-    $CGI::DefaultClass->binmode(\*main::STDIN);
-    $CGI::DefaultClass->binmode(\*main::STDERR);
+_set_binmode() if ($needs_binmode);
+
+sub _set_binmode {
+
+	# rt #57524 - don't set binmode on filehandles if there are
+	# already none default layers set on them
+	my %default_layers = (
+		unix   => 1,
+		perlio => 1,
+		stdio  => 1,
+		crlf   => 1,
+	);
+
+	foreach my $fh (
+		\*main::STDOUT,
+		\*main::STDIN,
+		\*main::STDERR,
+	) {
+		my @modes = grep { ! $default_layers{$_} }
+			PerlIO::get_layers( $fh );
+
+		if ( ! @modes ) {
+			$CGI::DefaultClass->binmode( $fh );
+		}
+	}
 }
 
 %EXPORT_TAGS = (
@@ -365,23 +382,6 @@ sub new {
   return $self;
 }
 
-# We provide a DESTROY method so that we can ensure that
-# temporary files are closed (via Fh->DESTROY) before they
-# are unlinked (via CGITempFile->DESTROY) because it is not
-# possible to unlink an open file on Win32. We explicitly
-# call DESTROY on each, rather than just undefing them and
-# letting Perl DESTROY them by garbage collection, in case the
-# user is still holding any reference to them as well.
-sub DESTROY {
-  my $self = shift;
-  if ($OS eq 'WINDOWS' || $OS eq 'VMS') {
-    for my $href (values %{$self->{'.tmpfiles'}}) {
-      $href->{hndl}->DESTROY if defined $href->{hndl};
-      $href->{name}->DESTROY if defined $href->{name};
-    }
-  }
-}
-
 sub r {
   my $self = shift;
   my $r = $self->{'.r'};
@@ -402,7 +402,7 @@ sub upload_hook {
   $self->{'use_tempfile'} = $use_tempfile if defined $use_tempfile;
 }
 
-#### Method: param
+#### Method: param / multi_param
 # Returns the value(s)of a named parameter.
 # If invoked in a list context, returns the
 # entire list.  Otherwise returns the first
@@ -412,10 +412,33 @@ sub upload_hook {
 # If more than one argument is provided, the
 # second and subsequent arguments are used to
 # set the value of the parameter.
+#
+# note that calling param() in list context
+# will raise a warning about potential bad
+# things, hence the multi_param method
 ####
+sub multi_param {
+	# we don't need to set $LIST_CONTEXT_WARN to 0 here
+	# because param() will check the caller before warning
+	my @list_of_params = param( @_ );
+	return @list_of_params;
+}
+
 sub param {
     my($self,@p) = self_or_default(@_);
+
     return $self->all_parameters unless @p;
+
+	# list context can be dangerous so warn:
+	# http://blog.gerv.net/2014.10/new-class-of-vulnerability-in-perl-web-applications
+	if ( wantarray && $LIST_CONTEXT_WARN ) {
+		my ( $package, $filename, $line ) = caller;
+		if ( $package ne 'CGI' ) {
+			warn "CGI::param called in list context from package $package line $line, this can lead to vulnerabilities. "
+				. 'See the warning in "Fetching the value or values of a single named parameter"';
+		}
+	}
+
     my($name,$value,@other);
 
     # For compatibility between old calling style and use_named_parameters() style, 
@@ -444,7 +467,7 @@ sub param {
 
     my @result = @{$self->{param}{$name}};
 
-    if ($PARAM_UTF8) {
+    if ($PARAM_UTF8 && $name ne 'PUTDATA' && $name ne 'POSTDATA') {
       eval "require Encode; 1;" unless Encode->can('decode'); # bring in these functions
       @result = map {ref $_ ? $_ : $self->_decode_utf8($_) } @result;
     }
@@ -635,12 +658,24 @@ sub init {
       # the environment.
       if ($is_xforms || $meth=~/^(GET|HEAD|DELETE)$/) {
           $query_string = $self->_get_query_string_from_env;
+         $self->param($meth . 'DATA', $self->param('XForms:Model'))
+             if $is_xforms;
 	      last METHOD;
       }
 
       if ($meth eq 'POST' || $meth eq 'PUT') {
 	  if ( $content_length > 0 ) {
-	    $self->read_from_client(\$query_string,$content_length,0);
+        if ( ( $PUTDATA_UPLOAD || $self->{'.upload_hook'} ) && !$is_xforms && ($meth eq 'POST' || $meth eq 'PUT')
+            && defined($ENV{'CONTENT_TYPE'})
+            && $ENV{'CONTENT_TYPE'} !~ m|^application/x-www-form-urlencoded|
+        && $ENV{'CONTENT_TYPE'} !~ m|^multipart/form-data| ){
+            my $postOrPut = $meth . 'DATA' ; # POSTDATA/PUTDATA
+            $self->read_postdata_putdata( $postOrPut, $content_length, $ENV{'CONTENT_TYPE'}  );
+            $meth = ''; # to skip xform testing
+            undef $query_string ;
+        } else {
+            $self->read_from_client(\$query_string,$content_length,0);
+        }
 	  }
 	  # Some people want to have their cake and eat it too!
 	  # Uncomment this line to have the contents of the query string
@@ -935,11 +970,11 @@ sub _setup_symbols {
 	$DEBUG=0,                next if /^[:-]no_?[Dd]ebug$/;
 	$DEBUG=2,                next if /^[:-][Dd]ebug$/;
 	$USE_PARAM_SEMICOLONS++, next if /^[:-]newstyle_urls$/;
+	$PUTDATA_UPLOAD++,       next if /^[:-](?:putdata_upload|postdata_upload)$/;
 	$PARAM_UTF8++,           next if /^[:-]utf8$/;
 	$XHTML++,                next if /^[:-]xhtml$/;
 	$XHTML=0,                next if /^[:-]no_?xhtml$/;
 	$USE_PARAM_SEMICOLONS=0, next if /^[:-]oldstyle_urls$/;
-	$PRIVATE_TEMPFILES++,    next if /^[:-]private_tempfiles$/;
 	$TABINDEX++,             next if /^[:-]tabindex$/;
 	$CLOSE_UPLOAD_FILES++,   next if /^[:-]close_upload_files$/;
 	$EXPORT{$_}++,           next if /^[:-]any$/;
@@ -985,6 +1020,123 @@ sub element_tab {
   my $tab = $self->{'.etab'}++;
   return '' unless $TABINDEX or defined $new_value;
   return qq(tabindex="$tab" );
+}
+
+#####
+# subroutine: read_postdata_putdata
+# 
+# Unless file uploads are disabled
+# Reads BODY of POST/PUT request and stuffs it into tempfile
+# accessible as param POSTDATA/PUTDATA
+# 
+# Also respects      upload_hook
+# 
+# based on subroutine read_multipart_related
+#####
+sub read_postdata_putdata {
+    my ( $self, $postOrPut, $content_length, $content_type ) = @_;
+    my %header = (
+        "Content-Type" =>  $content_type,
+    );
+    my $param = $postOrPut;
+    # add this parameter to our list
+    $self->add_parameter($param);
+    
+    
+  UPLOADS: {
+
+        # If we get here, then we are dealing with a potentially large
+        # uploaded form.  Save the data to a temporary file, then open
+        # the file for reading.
+
+        # skip the file if uploads disabled
+        if ($DISABLE_UPLOADS) {
+            
+            #	      while (defined($data = $buffer->read)) { }
+            my $buff;
+            my $unit = $MultipartBuffer::INITIAL_FILLUNIT;
+            my $len  = $content_length;
+            while ( $len > 0 ) {
+                my $read = $self->read_from_client( \$buf, $unit, 0 );
+                $len -= $read;
+            }
+            last UPLOADS;
+        }
+
+        # SHOULD PROBABLY SKIP THIS IF NOT $self->{'use_tempfile'}
+        # BUT THE REST OF CGI.PM DOESN'T, SO WHATEVER
+		my $tmp_dir    = $CGI::OS eq 'WINDOWS'
+			? ( $ENV{TEMP} || $ENV{TMP} || ( $ENV{WINDIR} ? ( $ENV{WINDIR} . $SL . 'TEMP' ) : undef ) )
+			: undef; # File::Temp defaults to TMPDIR
+
+        my $filehandle = CGI::File::Temp->new(
+			UNLINK => $UNLINK_TMP_FILES,
+			DIR    => $tmp_dir,
+		);
+		$filehandle->_mp_filename( $postOrPut );
+
+        $CGI::DefaultClass->binmode($filehandle)
+          if $CGI::needs_binmode
+              && defined fileno($filehandle);
+
+        my ($data);
+        local ($\) = '';
+        my $totalbytes;
+        my $unit = $MultipartBuffer::INITIAL_FILLUNIT;
+        my $len  = $content_length;
+        $unit = $len;
+        my $ZERO_LOOP_COUNTER =0;
+
+        while( $len > 0 )
+        {
+            
+            my $bytesRead = $self->read_from_client( \$data, $unit, 0 );
+            $len -= $bytesRead ;
+
+            # An apparent bug in the Apache server causes the read()
+            # to return zero bytes repeatedly without blocking if the
+            # remote user aborts during a file transfer.  I don't know how
+            # they manage this, but the workaround is to abort if we get
+            # more than SPIN_LOOP_MAX consecutive zero reads.
+            if ($bytesRead <= 0) {
+                die  "CGI.pm: Server closed socket during read_postdata_putdata (client aborted?).\n" if $ZERO_LOOP_COUNTER++ >= $SPIN_LOOP_MAX;
+            } else {
+                $ZERO_LOOP_COUNTER = 0;
+            }
+            
+            if ( defined $self->{'.upload_hook'} ) {
+                $totalbytes += length($data);
+                &{ $self->{'.upload_hook'} }( $param, $data, $totalbytes,
+                    $self->{'.upload_data'} );
+            }
+            print $filehandle $data if ( $self->{'use_tempfile'} );
+            undef $data;
+        }
+
+        # back up to beginning of file
+        seek( $filehandle, 0, 0 );
+
+        ## Close the filehandle if requested this allows a multipart MIME
+        ## upload to contain many files, and we won't die due to too many
+        ## open file handles. The user can access the files using the hash
+        ## below.
+        close $filehandle if $CLOSE_UPLOAD_FILES;
+        $CGI::DefaultClass->binmode($filehandle) if $CGI::needs_binmode;
+
+        # Save some information about the uploaded file where we can get
+        # at it later.
+        # Use the typeglob + filename as the key, as this is guaranteed to be
+        # unique for each filehandle.  Don't use the file descriptor as
+        # this will be re-used for each filehandle if the
+        # close_upload_files feature is used.
+        $self->{'.tmpfiles'}->{$$filehandle . $filehandle} = {
+            hndl => $filehandle,
+			name => $filehandle->filename,
+            info => {%header},
+        };
+        push( @{ $self->{param}{$param} }, $filehandle );
+    }
+    return;
 }
 
 ###############################################################################
@@ -1727,7 +1879,7 @@ sub start_html {
     }
 
     if ($meta && ref($meta) && (ref($meta) eq 'HASH')) {
-	for (keys %$meta) { push(@result,$XHTML ? qq(<meta name="$_" content="$meta->{$_}" />) 
+	for (sort keys %$meta) { push(@result,$XHTML ? qq(<meta name="$_" content="$meta->{$_}" />) 
 			: qq(<meta name="$_" content="$meta->{$_}">)); }
     }
 
@@ -2266,32 +2418,7 @@ sub escapeHTML {
      push @_,$_[0] if @_==1 && $_[0] eq 'CGI';
      my ($self,$toencode,$newlinestoo) = CGI::self_or_default(@_);
      return undef unless defined($toencode);
-     $toencode =~ s{&}{&amp;}gso;
-     $toencode =~ s{<}{&lt;}gso;
-     $toencode =~ s{>}{&gt;}gso;
-     if ($DTD_PUBLIC_IDENTIFIER =~ /[^X]HTML 3\.2/i) {
-     # $quot; was accidentally omitted from the HTML 3.2 DTD -- see
-     # <http://validator.w3.org/docs/errors.html#bad-entity> /
-     # <http://lists.w3.org/Archives/Public/www-html/1997Mar/0003.html>.
-        $toencode =~ s{"}{&#34;}gso;
-     }
-     else {
-        $toencode =~ s{"}{&quot;}gso;
-     }
-
-    # Handle bug in some browsers with Latin charsets
-    if ($self->{'.charset'} 
-            && (uc($self->{'.charset'}) eq 'ISO-8859-1' 
-            || uc($self->{'.charset'}) eq 'WINDOWS-1252')) {
-                $toencode =~ s{'}{&#39;}gso;
-                $toencode =~ s{\x8b}{&#8249;}gso;
-                $toencode =~ s{\x9b}{&#8250;}gso;
-        if (defined $newlinestoo && $newlinestoo) {
-            $toencode =~ s{\012}{&#10;}gso;
-            $toencode =~ s{\015}{&#13;}gso;
-        }
-    }
-    return $toencode;
+	 return encode_entities($toencode);
 }
 END_OF_FUNC
 
@@ -2302,20 +2429,7 @@ sub unescapeHTML {
     push @_,$_[0] if @_==1 && $_[0] eq 'CGI';
     my ($self,$string) = CGI::self_or_default(@_);
     return undef unless defined($string);
-    my $latin = defined $self->{'.charset'} ? $self->{'.charset'} =~ /^(ISO-8859-1|WINDOWS-1252)$/i
-                                            : 1;
-    # thanks to Randal Schwartz for the correct solution to this one
-    $string=~ s[&([^\s&]*?);]{
-	local $_ = $1;
-	/^amp$/i	? "&" :
-	/^quot$/i	? '"' :
-        /^gt$/i		? ">" :
-	/^lt$/i		? "<" :
-	/^#(\d+)$/ && $latin	     ? chr($1) :
-	/^#x([0-9a-f]+)$/i && $latin ? chr(hex($1)) :
-	"&$_;"
-	}gex;
-    return $string;
+	return decode_entities($string);
 }
 END_OF_FUNC
 
@@ -2800,15 +2914,21 @@ sub url {
 
     my $path        =  $self->path_info;
     my $script_name =  $self->script_name;
-    my $request_uri =  unescape($self->request_uri) || '';
-    my $query_str   =  $self->query_string;
+    my $request_uri =  $self->request_uri || '';
+    my $query_str   =  $query ? $self->query_string : '';
 
-    my $rewrite_in_use = $request_uri && $request_uri !~ /^\Q$script_name/;
+    $request_uri    =~ s/\?.*$//s; # remove query string
+    $request_uri    =  unescape($request_uri);
 
     my $uri         =  $rewrite && $request_uri ? $request_uri : $script_name;
-    $uri            =~ s/\?.*$//s;                                # remove query string
-    $uri            =~ s/\Q$ENV{PATH_INFO}\E$// if defined $ENV{PATH_INFO};
-#    $uri            =~ s/\Q$path\E$//      if defined $path;      # remove path
+    $uri            =~ s/\?.*$//s; # remove query string
+
+	if ( defined( $ENV{PATH_INFO} ) ) {
+		# IIS sometimes sets PATH_INFO to the same value as SCRIPT_NAME so only sub it out
+		# if SCRIPT_NAME isn't defined or isn't the same value as PATH_INFO
+    	$uri =~ s/\Q$ENV{PATH_INFO}\E$//
+			if ( ! defined( $ENV{SCRIPT_NAME} ) or $ENV{PATH_INFO} ne $ENV{SCRIPT_NAME} );
+	}
 
     if ($full) {
         my $protocol = $self->protocol();
@@ -2978,7 +3098,13 @@ sub _name_and_path_from_env {
     $uri =~ s/\?.*//s;
     $uri = unescape($uri);
 
-    if ($uri ne "$script_name$path_info") {
+    if ( $IIS ) {
+      # IIS doesn't set $ENV{PATH_INFO} correctly. It sets it to
+      # $ENV{SCRIPT_NAME}path_info 
+      # IIS also doesn't set $ENV{REQUEST_URI} so we don't want to do
+      # the test below, hence this comes first
+      $path_info =~ s/^\Q$script_name\E(.*)/$1/;
+    } elsif ($uri ne "$script_name$path_info") {
         my $script_name_pattern = quotemeta($script_name);
         my $path_info_pattern = quotemeta($path_info);
         $script_name_pattern =~ s{(?:\\/)+}{/+}g;
@@ -3393,9 +3519,8 @@ END_OF_FUNC
 ####
 'private_tempfiles' => <<'END_OF_FUNC',
 sub private_tempfiles {
-    my ($self,$param) = self_or_CGI(@_);
-    $CGI::PRIVATE_TEMPFILES = $param if defined($param);
-    return $CGI::PRIVATE_TEMPFILES;
+	warn "private_tempfiles has been deprecated";
+    return 0;
 }
 END_OF_FUNC
 #### Method: close_upload_files
@@ -3559,7 +3684,6 @@ sub read_multipart {
 	    next;
 	}
 
-	my ($tmpfile,$tmp,$filehandle);
       UPLOADS: {
 	  # If we get here, then we are dealing with a potentially large
 	  # uploaded form.  Save the data to a temporary file, then open
@@ -3576,15 +3700,16 @@ sub read_multipart {
               $filename = "multipart/mixed";
           }
 
-	  # choose a relatively unpredictable tmpfile sequence number
-          my $seqno = unpack("%16C*",join('',localtime,grep {defined $_} values %ENV));
-          for (my $cnt=10;$cnt>0;$cnt--) {
-	    next unless $tmpfile = CGITempFile->new($seqno);
-	    $tmp = $tmpfile->as_string;
-	    last if defined($filehandle = Fh->new($filename,$tmp,$PRIVATE_TEMPFILES));
-            $seqno += int rand(100);
-          }
-          die "CGI.pm open of tmpfile $tmp/$filename failed: $!\n" unless defined $filehandle;
+	my $tmp_dir    = $CGI::OS eq 'WINDOWS'
+		? ( $ENV{TEMP} || $ENV{TMP} || ( $ENV{WINDIR} ? ( $ENV{WINDIR} . $SL . 'TEMP' ) : undef ) )
+		: undef; # File::Temp defaults to TMPDIR
+
+      my $filehandle = CGI::File::Temp->new(
+		UNLINK => $UNLINK_TMP_FILES,
+		DIR    => $tmp_dir,
+      );
+	  $filehandle->_mp_filename( $filename );
+
 	  $CGI::DefaultClass->binmode($filehandle) if $CGI::needs_binmode 
                      && defined fileno($filehandle);
 
@@ -3622,13 +3747,13 @@ sub read_multipart {
 
 	  # Save some information about the uploaded file where we can get
 	  # at it later.
-	  # Use the typeglob as the key, as this is guaranteed to be
+	  # Use the typeglob + filename as the key, as this is guaranteed to be
 	  # unique for each filehandle.  Don't use the file descriptor as
 	  # this will be re-used for each filehandle if the
 	  # close_upload_files feature is used.
-	  $self->{'.tmpfiles'}->{$$filehandle}= {
+      $self->{'.tmpfiles'}->{$$filehandle . $filehandle} = {
               hndl => $filehandle,
-	      name => $tmpfile,
+		  name => $filehandle->filename,
 	      info => {%header},
 	  };
 	  push(@{$self->{param}{$param}},$filehandle);
@@ -3676,7 +3801,6 @@ sub read_multipart_related {
 	# add this parameter to our list
 	$self->add_parameter($param);
 
-	my ($tmpfile,$tmp,$filehandle);
       UPLOADS: {
 	  # If we get here, then we are dealing with a potentially large
 	  # uploaded form.  Save the data to a temporary file, then open
@@ -3688,15 +3812,16 @@ sub read_multipart_related {
 	      last UPLOADS;
 	  }
 
-	  # choose a relatively unpredictable tmpfile sequence number
-          my $seqno = unpack("%16C*",join('',localtime,grep {defined $_} values %ENV));
-          for (my $cnt=10;$cnt>0;$cnt--) {
-	    next unless $tmpfile = CGITempFile->new($seqno);
-	    $tmp = $tmpfile->as_string;
-	    last if defined($filehandle = Fh->new($param,$tmp,$PRIVATE_TEMPFILES));
-            $seqno += int rand(100);
-          }
-          die "CGI open of tmpfile: $!\n" unless defined $filehandle;
+	my $tmp_dir    = $CGI::OS eq 'WINDOWS'
+		? ( $ENV{TEMP} || $ENV{TMP} || ( $ENV{WINDIR} ? ( $ENV{WINDIR} . $SL . 'TEMP' ) : undef ) )
+		: undef; # File::Temp defaults to TMPDIR
+
+      my $filehandle = CGI::File::Temp->new(
+		UNLINK => $UNLINK_TMP_FILES,
+		DIR    => $tmp_dir,
+	  );
+	  $filehandle->_mp_filename( $filehandle->filename );
+
 	  $CGI::DefaultClass->binmode($filehandle) if $CGI::needs_binmode 
                      && defined fileno($filehandle);
 
@@ -3724,13 +3849,13 @@ sub read_multipart_related {
 
 	  # Save some information about the uploaded file where we can get
 	  # at it later.
-	  # Use the typeglob as the key, as this is guaranteed to be
+	  # Use the typeglob + filename as the key, as this is guaranteed to be
 	  # unique for each filehandle.  Don't use the file descriptor as
 	  # this will be re-used for each filehandle if the
 	  # close_upload_files feature is used.
-	  $self->{'.tmpfiles'}->{$$filehandle}= {
+	  $self->{'.tmpfiles'}->{$$filehandle . $filehandle} = {
               hndl => $filehandle,
-	      name => $tmpfile,
+		  name => $filehandle->filename,
 	      info => {%header},
 	  };
 	  push(@{$self->{param}{$param}},$filehandle);
@@ -3753,16 +3878,15 @@ END_OF_FUNC
 'tmpFileName' => <<'END_OF_FUNC',
 sub tmpFileName {
     my($self,$filename) = self_or_default(@_);
-    return $self->{'.tmpfiles'}->{$$filename}->{name} ?
-	$self->{'.tmpfiles'}->{$$filename}->{name}->as_string
-	    : '';
+    return $self->{'.tmpfiles'}->{$$filename . $filename}->{name} || '';
 }
 END_OF_FUNC
 
 'uploadInfo' => <<'END_OF_FUNC',
 sub uploadInfo {
     my($self,$filename) = self_or_default(@_);
-    return $self->{'.tmpfiles'}->{$$filename}->{info};
+    return if ! defined $$filename;
+    return $self->{'.tmpfiles'}->{$$filename . $filename}->{info};
 }
 END_OF_FUNC
 
@@ -3811,82 +3935,6 @@ END_OF_AUTOLOAD
 #########################################################
 # Globals and stubs for other packages that we use.
 #########################################################
-
-################### Fh -- lightweight filehandle ###############
-package Fh;
-
-use overload 
-    '""'  => \&asString,
-    'cmp' => \&compare,
-    'fallback'=>1;
-
-$FH='fh00000';
-
-*Fh::AUTOLOAD = \&CGI::AUTOLOAD;
-
-sub DESTROY {
-    my $self = shift;
-    close $self;
-}
-
-$AUTOLOADED_ROUTINES = '';      # prevent -w error
-$AUTOLOADED_ROUTINES=<<'END_OF_AUTOLOAD';
-%SUBS =  (
-'asString' => <<'END_OF_FUNC',
-sub asString {
-    my $self = shift;
-    # get rid of package name
-    (my $i = $$self) =~ s/^\*(\w+::fh\d{5})+//; 
-    $i =~ s/%(..)/ chr(hex($1)) /eg;
-    return $i.$CGI::TAINTED;
-# BEGIN DEAD CODE
-# This was an extremely clever patch that allowed "use strict refs".
-# Unfortunately it relied on another bug that caused leaky file descriptors.
-# The underlying bug has been fixed, so this no longer works.  However
-# "strict refs" still works for some reason.
-#    my $self = shift;
-#    return ${*{$self}{SCALAR}};
-# END DEAD CODE
-}
-END_OF_FUNC
-
-'compare' => <<'END_OF_FUNC',
-sub compare {
-    my $self = shift;
-    my $value = shift;
-    return "$self" cmp $value;
-}
-END_OF_FUNC
-
-'new'  => <<'END_OF_FUNC',
-sub new {
-    my($pack,$name,$file,$delete) = @_;
-    _setup_symbols(@SAVED_SYMBOLS) if @SAVED_SYMBOLS;
-    require Fcntl unless defined &Fcntl::O_RDWR;
-    (my $safename = $name) =~ s/([':%])/ sprintf '%%%02X', ord $1 /eg;
-    my $fv = ++$FH . $safename;
-    my $ref = \*{"Fh::$fv"};
-
-    # Note this same regex is also used elsewhere in the same file for CGITempFile::new
-    $file =~ m!^([a-zA-Z0-9_ \'\":/.\$\\\+-]+)$! || return;
-    my $safe = $1;
-    sysopen($ref,$safe,Fcntl::O_RDWR()|Fcntl::O_CREAT()|Fcntl::O_EXCL(),0600) || return;
-    unlink($safe) if $delete;
-    CORE::delete $Fh::{$fv};
-    return bless $ref,$pack;
-}
-END_OF_FUNC
-
-'handle' => <<'END_OF_FUNC',
-sub handle {
-  my $self = shift;
-  eval "require IO::Handle" unless IO::Handle->can('new_from_fd');
-  return IO::Handle->new_from_fd(fileno $self,"<");
-}
-END_OF_FUNC
-
-);
-END_OF_AUTOLOAD
 
 ######################## MultipartBuffer ####################
 package MultipartBuffer;
@@ -4151,76 +4199,7 @@ END_OF_FUNC
 );
 END_OF_AUTOLOAD
 
-####################################################################################
-################################## TEMPORARY FILES #################################
-####################################################################################
-
-# FIXME: kill this package and just use File::Temp
-package CGITempFile;
-
-use File::Spec;
-
-sub find_tempdir {
-  $SL = $CGI::SL;
-  unless (defined $TMPDIRECTORY) {
-    for ($ENV{'TMPDIR'},File::Spec->tmpdir) {
-      next if ! defined;
-      do {$TMPDIRECTORY = $_; last} if -d $_ && -w _;
-    }
-  }
-}
-
-find_tempdir();
-
-$MAXTRIES = 5000;
-
-# cute feature, but overload implementation broke it
-# %OVERLOAD = ('""'=>'as_string');
-*CGITempFile::AUTOLOAD = \&CGI::AUTOLOAD;
-
-sub DESTROY {
-    my($self) = @_;
-    $$self =~ m!^([a-zA-Z0-9_ \'\":/.\$\\~-]+)$! || return;
-    my $safe = $1;             # untaint operation
-    unlink $safe;              # get rid of the file
-}
-
-###############################################################################
-################# THESE FUNCTIONS ARE AUTOLOADED ON DEMAND ####################
-###############################################################################
-$AUTOLOADED_ROUTINES = '';      # prevent -w error
-$AUTOLOADED_ROUTINES=<<'END_OF_AUTOLOAD';
-%SUBS = (
-
-'new' => <<'END_OF_FUNC',
-sub new {
-    my($package,$sequence) = @_;
-    my $filename;
-    unless (-w $TMPDIRECTORY) {
-        $TMPDIRECTORY = undef;
-        find_tempdir();
-    }
-    for (my $i = 0; $i < $MAXTRIES; $i++) {
-	last if ! -f ($filename = sprintf("\%s${SL}CGItemp%d", $TMPDIRECTORY, $sequence++));
-    }
-    # check that it is a more-or-less valid filename
-    # Note this same regex is also used elsewhere in the same file for Fh::new
-    return unless $filename =~ m!^([a-zA-Z0-9_ \'\":/.\$\\\+-]+)$!;
-    # this used to untaint, now it doesn't
-    # $filename = $1;
-    return bless \$filename;
-}
-END_OF_FUNC
-
-'as_string' => <<'END_OF_FUNC'
-sub as_string {
-    my($self) = @_;
-    return $$self;
-}
-END_OF_FUNC
-
-);
-END_OF_AUTOLOAD
+1;
 
 package CGI;
 
@@ -4247,6 +4226,10 @@ __END__
 
 CGI - Handle Common Gateway Interface requests and responses
 
+=for html
+<a href='https://travis-ci.org/leejo/CGI.pm?branch=master'><img src='https://travis-ci.org/leejo/CGI.pm.svg?branch=master' alt='Build Status' /></a>
+<a href='https://coveralls.io/r/leejo/CGI.pm'><img src='https://coveralls.io/repos/leejo/CGI.pm/badge.png?branch=master' alt='Coverage Status' /></a>
+
 =head1 SYNOPSIS
 
     use CGI;
@@ -4254,7 +4237,8 @@ CGI - Handle Common Gateway Interface requests and responses
     my $q = CGI->new;
 
     # Process an HTTP request
-     @values  = $q->param('form_field');
+     @values  = $q->multi_param('form_field');
+     $value   = $q->param('param_name');
 
      $fh      = $q->upload('file_field');
 
@@ -4293,7 +4277,7 @@ become a de-facto standard.
 
 =head1 CGI.pm HAS BEEN REMOVED FROM THE PERL CORE
 
-  L<http://perl5.git.perl.org/perl.git/commitdiff/e9fa5a80>
+L<http://perl5.git.perl.org/perl.git/commitdiff/e9fa5a80>
 
 If you upgrade to a new version of perl or if you rely on a
 system or vendor perl and get an updated version of perl through a system
@@ -4302,7 +4286,7 @@ package/manually. To make this a little easier the L<CGI::Fast> module has been
 split into its own distribution, meaning you do not need acces to a compiler
 to install CGI.pm
 
-The rational for this decision is that CGI.pm is no longer considered good
+The rationale for this decision is that CGI.pm is no longer considered good
 practice for developing web applications, B<including> quick prototyping and
 small web scripts. There are far better, cleaner, quicker, easier, safer,
 more scalable, more extensible, more modern alternatives available at this point
@@ -4310,7 +4294,7 @@ in time. These will be documented with L<CGI::Alternatives>.
 
 For more discussion on the removal of CGI.pm from core please see:
 
-  L<http://www.nntp.perl.org/group/perl.perl5.porters/2013/05/msg202130.html>
+L<http://www.nntp.perl.org/group/perl.perl5.porters/2013/05/msg202130.html>
 
 =head1 HTML Generation functions should no longer be used
 
@@ -4318,7 +4302,7 @@ B<All> HTML generation functions within CGI.pm are no longer being
 maintained. Any issues, bugs, or patches will be rejected unless
 they relate to fundamentally broken page rendering.
 
-The rational for this is that the HTML generation functions of CGI.pm
+The rationale for this is that the HTML generation functions of CGI.pm
 are an obfuscation at best and a maintenance nightmare at worst. You
 should be using a template engine for better separation of concerns.
 See L<CGI::Alternatives> for an example of using CGI.pm with the
@@ -4557,11 +4541,13 @@ parsed keywords can be obtained as an array using the keywords() method.
 
 =head2 Fetching the names of all the parameters passed to your script:
 
+     @names = $query->multi_param
+
      @names = $query->param
 
 If the script was invoked with a parameter list
-(e.g. "name1=value1&name2=value2&name3=value3"), the param() method
-will return the parameter names as a list.  If the script was invoked
+(e.g. "name1=value1&name2=value2&name3=value3"), the param() / multi_param()
+methods will return the parameter names as a list.  If the script was invoked
 as an <ISINDEX> script and contains a string without ampersands
 (e.g. "value1+value2+value3") , there will be a single parameter named
 "keywords" containing the "+"-delimited keywords.
@@ -4574,24 +4560,46 @@ of the spec, and so isn't guaranteed).
 
 =head2 Fetching the value or values of a single named parameter:
 
-    @values = $query->param('foo');
+    @values = $query->multi_param('foo');
 
 	      -or-
 
     $value = $query->param('foo');
 
-Pass the param() method a single argument to fetch the value of the
-named parameter. If the parameter is multivalued (e.g. from multiple
+Pass the param() / multi_param() method a single argument to fetch the value
+of the named parameter. If the parameter is multivalued (e.g. from multiple
 selections in a scrolling list), you can ask to receive an array.  Otherwise
 the method will return a single value.
+
+B<Warning> - calling param() in list context can lead to vulnerabilities if
+you do not sanitise user input as it is possible to inject other param
+keys and values into your code. This is why the multi_param() method exists,
+to make it clear that a list is being returned, note that param() can stil
+be called in list context and will return a list for back compatibility.
+
+The following code is an example of a vulnerability as the call to param will
+be evaluated in list context and thus possibly inject extra keys and values
+into the hash:
+
+	my %user_info = (
+		id   => 1,
+		name => $query->param('name'),
+	);
+
+The fix for the above is to force scalar context on the call to ->param by
+prefixing it with "scalar"
+
+	name => scalar $query->param('name'),
+
+If you call param() in list context with an argument a warning will be raised
+by CGI.pm, you can disable this warning by setting $CGI::LIST_CONTEXT_WARN to 0
+or by using the multi_param() method instead
 
 If a value is not given in the query string, as in the queries
 "name1=&name2=", it will be returned as an empty string.
 
-
 If the parameter does not exist at all, then param() will return undef
 in a scalar context, and the empty list in a list context.
-
 
 =head2 Setting the value(s) of a named parameter:
 
@@ -4678,6 +4686,10 @@ Likewise if PUTed data can be retrieved with code like this:
 only affects people trying to use CGI for XML processing and other
 specialized tasks.)
 
+PUTDATA/POSTDATA are also available via
+L<upload_hook|/Progress bars for file uploads and avoiding temp files>,
+and as L<file uploads|/Processing a file upload field> via L</-putdata_upload>
+option.
 
 =head2 Direct access to the parameter list:
 
@@ -5028,6 +5040,14 @@ expected to return utf-8 strings and convert them using code like this:
  use Encode;
  my $arg = decode utf8=>param('foo');
 
+=item -putdata_upload
+
+Makes C<<< $query->param('PUTDATA'); >>> and C<<< $query->param('POSTDATA'); >>>
+act like file uploads named PUTDATA and POSTDATA. See
+L</Handling non-urlencoded arguments> and L</Processing a file upload field>
+PUTDATA/POSTDATA are also available via
+L<upload_hook|/Progress bars for file uploads and avoiding temp files>.
+
 =item -nph
 
 This makes CGI.pm produce a header appropriate for an NPH (no
@@ -5080,34 +5100,6 @@ arguments from STDIN, producing the message "(offline mode: enter
 name=value pairs on standard input)" features.
 
 See the section on debugging for more details.
-
-=item -private_tempfiles
-
-CGI.pm can process uploaded file. Ordinarily it spools the uploaded
-file to a temporary directory, then deletes the file when done.
-However, this opens the risk of eavesdropping as described in the file
-upload section.  Another CGI script author could peek at this data
-during the upload, even if it is confidential information. On Unix
-systems, the -private_tempfiles pragma will cause the temporary file
-to be unlinked as soon as it is opened and before any data is written
-into it, reducing, but not eliminating the risk of eavesdropping
-(there is still a potential race condition).  To make life harder for
-the attacker, the program chooses tempfile names by calculating a 32
-bit checksum of the incoming HTTP headers.
-
-To ensure that the temporary file cannot be read by other CGI scripts,
-use suEXEC or a CGI wrapper program to run your script.  The temporary
-file is created with mode 0600 (neither world nor group readable).
-
-The temporary directory is selected using the following algorithm:
-
-    1. if $CGITempFile::TMPDIRECTORY is already set, use that
-
-    2. if the environment variable TMPDIR exists, use the location
-    indicated.
-
-    3. Otherwise use File::Spec->tmpdir to find a temp directory
-    (see File::Spec::Unix and File::Spec::Win32)
 
 =back
 
@@ -5242,7 +5234,13 @@ to use with certain servers that expect all their scripts to be NPH.
 
 The B<-charset> parameter can be used to control the character set
 sent to the browser.  If not provided, defaults to ISO-8859-1.  As a
-side effect, this sets the charset() method as well.
+side effect, this sets the charset() method as well. B<Note> that the
+default being ISO-8859-1 may not make sense for all content types, e.g.:
+
+    Content-Type: image/gif; charset=ISO-8859-1
+
+In the above case you need to pass -charset => '' to prevent the default
+being used.
 
 The B<-attachment> parameter can be used to turn the page into an
 attachment.  Instead of displaying the page, some browsers will prompt
@@ -5822,28 +5820,10 @@ is passed through a function called escapeHTML():
 
 =item $escaped_string = escapeHTML("unescaped string");
 
-Escape HTML formatting characters in a string.
+Escape HTML formatting characters in a string. Internally this calls
+L<HTML::Entities> (encode_entities) so really you should just use that instead
 
 =back
-
-Provided that you have specified a character set of ISO-8859-1 (the
-default), the standard HTML escaping rules will be used.  The "<"
-character becomes "&lt;", ">" becomes "&gt;", "&" becomes "&amp;", and
-the quote character becomes "&quot;".  In addition, the hexadecimal
-0x8b and 0x9b characters, which some browsers incorrectly interpret
-as the left and right angle-bracket characters, are replaced by their
-numeric character entities ("&#8249" and "&#8250;").  If you manually change
-the charset, either by calling the charset() method explicitly or by
-passing a -charset argument to header(), then B<all> characters will
-be replaced by their numeric entities, since CGI.pm has no lookup
-table for all the possible encodings.
-
-C<escapeHTML()> expects the supplied string to be a character string. This means you
-should Encode::decode data received from "outside" and Encode::encode your
-strings before sending them back outside. If your source code UTF-8 encoded and
-you want to upgrade string literals in your source to character strings, you
-can use "use utf8". See L<perlunitut>, L<perlunifaq> and L<perlunicode> for more
-information on how Perl handles the difference between bytes and characters.
 
 The automatic escaping does not apply to other shortcuts, such as
 h1().  You should call escapeHTML() yourself on untrusted data in
@@ -6198,16 +6178,11 @@ recognized.  See textfield() for details.
 
 =head3 Basics
 
-When the form is processed, you can retrieve an L<IO::Handle> compatible
+When the form is processed, you can retrieve an L<IO::File> compatible
 handle for a file upload field like this:
 
-  $lightweight_fh  = $q->upload('field_name');
-
   # undef may be returned if it's not a valid file handle
-  if (defined $lightweight_fh) {
-    # Upgrade the handle to one compatible with IO::Handle:
-    my $io_handle = $lightweight_fh->handle;
-
+  if ( my $io_handle = $q->upload('field_name') ) {
     open (OUTFILE,'>>','/usr/local/web/users/feedback');
     while ($bytesread = $io_handle->read($buffer,1024)) {
       print OUTFILE $buffer;
@@ -6242,9 +6217,9 @@ a hash containing all the document headers.
        }
 
 Note that you must use ->param to get the filename to pass into uploadInfo
-as internally this is represented as a Fh object (which is what will be
+as internally this is represented as a File::Temp object (which is what will be
 returned by ->param). When using ->Vars you will get the literal filename
-rather than the Fh object, which will not return anything when passed to
+rather than the File::Temp object, which will not return anything when passed to
 uploadInfo. So don't use ->Vars.
 
 If you are using a machine that recognizes "text" and "binary" data
@@ -6264,9 +6239,34 @@ upload by passing the file name to the tmpFileName() method:
        $tmpfilename = $query->tmpFileName($filename);
 
 The temporary file will be deleted automatically when your program exits unless
-you manually rename it. On some operating systems (such as Windows NT), you
-will need to close the temporary file's filehandle before your program exits.
-Otherwise the attempt to delete the temporary file will fail.
+you manually rename it or set $CGI::UNLINK_TMP_FILES to 0. On some operating
+systems (such as Windows NT), you will need to close the temporary file's
+filehandle before your program exits. Otherwise the attempt to delete the
+temporary file will fail.
+
+=head3 Changes in temporary file handling (v4.05+)
+
+CGI.pm had its temporary file handling significantly refactored. this logic is
+now all deferred to File::Temp (which is wrapped in a compatibility object,
+CGI::File::Temp - B<DO NOT USE THIS PACKAGE DIRECTLY>). As a consequence the
+PRIVATE_TEMPFILES variable has been removed along with deprecation of the
+private_tempfiles routine and B<complete> removal of the CGITempFile package.
+The $CGITempFile::TMPDIRECTORY is no longer used to set the temp directory,
+refer to the perldoc for File::Temp is you want to override the default
+settings in that package (the TMPDIR env variable is still available on some
+platforms). For Windows platforms the temporary directory order remains
+as before: TEMP > TMP > WINDIR ( > TMPDIR ) so if you have any of these in
+use in existing scripts they should still work.
+
+The Fh package still exists but does nothing, the CGI::File::Temp class is
+a subclass of both File::Temp and the empty Fh package, so if you have any
+code that checks that the filehandle isa Fh this should still work.
+
+When you get the internal file handle you will receive a File::Temp object,
+this should be transparent as File::Temp isa IO::Handle and isa IO::Seekable
+meaning it behaves as previously. if you are doing anything out of the ordinary
+with regards to temp files you should test your code before deploying this update
+and refer to the File::Temp documentation for more information.
 
 =head3 Handling interrupted file uploads
 
@@ -6345,10 +6345,10 @@ param() is not a filehandle at all, but a string.
 To solve this problem the upload() method was added, which always returns a
 lightweight filehandle. This generally works well, but will have trouble
 interoperating with some other modules because the file handle is not derived
-from L<IO::Handle>. So that brings us to current recommendation given above,
+from L<IO::File>. So that brings us to current recommendation given above,
 which is to call the handle() method on the file handle returned by upload().
-That upgrades the handle to an IO::Handle. It's a big win for compatibility for
-a small penalty of loading IO::Handle the first time you call it.
+That upgrades the handle to an IO::File. It's a big win for compatibility for
+a small penalty of loading IO::File the first time you call it.
 
 
 =head2 Creating a popup menu
@@ -7563,7 +7563,8 @@ execute the additional path information as a Perl script.
 If you use the ordinary file associations mapping, the
 path information will be present in the environment, 
 but incorrect.  The best thing to do is to avoid using additional
-path information in CGI scripts destined for use with IIS.
+path information in CGI scripts destined for use with IIS. A
+best attempt has been made to make CGI.pm do the right thing.
 
 =item B<path_translated()>
 
@@ -7967,20 +7968,11 @@ available for your use:
   * PrintEnv()
     This function is not available. You'll have to roll your own if you really need it.
 
-=head1 AUTHOR INFORMATION
+=head1 LICENSE
 
 The CGI.pm distribution is copyright 1995-2007, Lincoln D. Stein. It is
 distributed under GPL and the Artistic License 2.0. It is currently
-maintained by Lee Johnson with help from many contributors.
-
-Address bug reports and comments to: https://github.com/leejo/CGI.pm/issues
-
-The original bug tracker can be found at: https://rt.cpan.org/Public/Dist/Display.html?Queue=CGI.pm
-
-When sending bug reports, please provide the version of CGI.pm, the version of
-Perl, the name and version of your Web server, and the name and version of the
-operating system you are using.  If the problem is even remotely browser
-dependent, please provide information about the affected browsers as well.
+maintained by Lee Johnson (LEEJO) with help from many contributors.
 
 =head1 CREDITS
 
@@ -8118,7 +8110,14 @@ for suggestions and bug fixes.
 
 =head1 BUGS
 
-Please report them.
+Address bug reports and comments to: L<https://github.com/leejo/CGI.pm/issues>
+
+The original bug tracker can be found at: L<https://rt.cpan.org/Public/Dist/Display.html?Queue=CGI.pm>
+
+When sending bug reports, please provide the version of CGI.pm, the version of
+Perl, the name and version of your Web server, and the name and version of the
+operating system you are using.  If the problem is even remotely browser
+dependent, please provide information about the affected browsers as well.
 
 =head1 SEE ALSO
 
