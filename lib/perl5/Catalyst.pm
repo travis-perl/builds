@@ -127,7 +127,7 @@ __PACKAGE__->stats_class('Catalyst::Stats');
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90072';
+our $VERSION = '5.90077';
 
 sub import {
     my ( $class, @arguments ) = @_;
@@ -1775,7 +1775,15 @@ sub execute {
 
     if ( my $error = $@ ) {
         #rethow if this can be handled by middleware
-        if(blessed $error && ($error->can('as_psgi') || $error->can('code'))) {
+        if(
+          blessed $error && (
+            $error->can('as_psgi') ||
+            (
+              $error->can('code') &&
+              $error->code =~m/^[1-5][0-9][0-9]$/
+            )
+          )
+        ) {
             foreach my $err (@{$c->error}) {
                 $c->log->error($err);
             }
@@ -2101,7 +2109,15 @@ sub handle_request {
         $status = $c->finalize;
     } catch {
         #rethow if this can be handled by middleware
-        if(blessed $_ && ($_->can('as_psgi') || $_->can('code'))) {
+        if(
+          blessed($_) && (
+            $_->can('as_psgi') ||
+            (
+              $_->can('code') &&
+              $_->code =~m/^[1-5][0-9][0-9]$/
+            )
+          )
+        ) {
             $_->can('rethrow') ? $_->rethrow : croak $_;
         }
         chomp(my $error = $_);
@@ -3071,6 +3087,7 @@ sub _handle_unicode_decoding {
 
     return unless defined $value;
 
+    ## I think this mess is to support the old nested
     if ( ref $value eq 'ARRAY' ) {
         foreach ( @$value ) {
             $_ = $self->_handle_unicode_decoding($_);
@@ -3090,6 +3107,8 @@ sub _handle_unicode_decoding {
 
 sub _handle_param_unicode_decoding {
     my ( $self, $value ) = @_;
+    return unless defined $value; # not in love with just ignoring undefs - jnap
+
     my $enc = $self->encoding;
     return try {
         Encode::is_utf8( $value ) ?
