@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::run;
 # ABSTRACT: run stuff in a dir where your dist is built
-$Dist::Zilla::App::Command::run::VERSION = '5.020';
+$Dist::Zilla::App::Command::run::VERSION = '5.029';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -44,8 +44,13 @@ sub opt_spec {
                 { default => 1 } ],
 }
 
+sub description {
+  "This will build your dist and run the given 'command' in the build dir.\n" .
+  "If no command was specified, your shell will be run there instead."
+}
+
 sub usage_desc {
-  return '%c run %o [ run command [ arg1 arg2 ... ] ]';
+  return '%c run %o [ command [ arg1 arg2 ... ] ]';
 }
 
 sub execute {
@@ -77,7 +82,7 @@ Dist::Zilla::App::Command::run - run stuff in a dir where your dist is built
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

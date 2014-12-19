@@ -1,11 +1,12 @@
 package Class::MOP::Object;
-$Class::MOP::Object::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
 use parent 'Class::MOP::Mixin';
 use Scalar::Util 'blessed';
-use Module::Runtime 'use_module';
+use Module::Runtime;
 
 # introspection
 
@@ -114,7 +115,7 @@ Class::MOP::Object - Base class for metaclasses
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

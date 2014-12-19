@@ -126,6 +126,7 @@
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Role/TestRunner.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Role/TextTemplate.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Role/VersionProvider.pm
+/home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Stash/Mint.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Stash/PAUSE.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Stash/Rights.pm
 /home/travis/.perlbrew/libs/5.12.5-thr@dzil/lib/perl5/Dist/Zilla/Stash/User.pm
