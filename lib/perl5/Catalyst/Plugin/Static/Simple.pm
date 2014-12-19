@@ -9,7 +9,7 @@ use MooseX::Types::Moose qw/ArrayRef Str/;
 use Catalyst::Utils;
 use namespace::autoclean;
 
-our $VERSION = '0.32';
+our $VERSION = '0.33';
 
 has _static_file => ( is => 'rw' );
 has _static_debug_message => ( is => 'rw', isa => ArrayRef[Str] );
@@ -101,6 +101,14 @@ before setup_finalize => sub {
 
     $c->log->warn("Deprecated 'static' config key used, please use the key 'Plugin::Static::Simple' instead")
         if exists $c->config->{static};
+
+    if (exists $c->config->{static}->{include_path}) {
+        $c->config->{'Plugin::Static::Simple'}->{include_path} = [
+            @{$c->config->{'Plugin::Static::Simple'}->{include_path} || []},
+            @{delete $c->config->{static}->{include_path} || []}
+        ];
+    }
+    
     my $config
         = $c->config->{'Plugin::Static::Simple'}
         = $c->config->{'static'}
@@ -585,6 +593,18 @@ messages.
 =head2 setup
 
 C<setup> initializes all default values.
+
+=head1 DEPRECATIONS
+
+The old style of configuration using the C<'static'> config key was deprecated
+in version 0.30. A warning will be issued if this is used, and the contents of
+the config at this key will be merged with the newer C<'Plugin::Static::Simple'>
+key.
+
+Be aware that if the C<'include_path'> key under C<'static'> exists at all, it
+will be merged with any content of the same key under
+C<'Plugin::Static::Simple'>. Be careful not to set this to a non-arrayref,
+therefore.
 
 =head1 SEE ALSO
 

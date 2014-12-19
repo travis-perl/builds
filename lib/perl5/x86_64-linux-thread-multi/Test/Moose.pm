@@ -1,12 +1,13 @@
 package Test::Moose;
-$Test::Moose::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
 use Sub::Exporter;
 use Test::Builder;
 
-use List::MoreUtils 'all';
+use List::Util 1.33 'all';
 use Moose::Util 'does_role', 'find_meta';
 
 my @exports = qw[
@@ -97,7 +98,7 @@ Test::Moose - Test functions for Moose specific features
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 
