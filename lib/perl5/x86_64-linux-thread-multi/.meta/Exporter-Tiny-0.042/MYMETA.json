@@ -50,11 +50,11 @@
    "provides" : {
       "Exporter::Shiny" : {
          "file" : "lib/Exporter/Shiny.pm",
-         "version" : "0.040"
+         "version" : "0.042"
       },
       "Exporter::Tiny" : {
          "file" : "lib/Exporter/Tiny.pm",
-         "version" : "0.040"
+         "version" : "0.042"
       }
    },
    "release_status" : "stable",
@@ -74,5 +74,5 @@
       "x_IRC" : "irc://irc.perl.org/#moops",
       "x_identifier" : "http://purl.org/NET/cpan-uri/dist/Exporter-Tiny/project"
    },
-   "version" : "0.040"
+   "version" : "0.042"
 }

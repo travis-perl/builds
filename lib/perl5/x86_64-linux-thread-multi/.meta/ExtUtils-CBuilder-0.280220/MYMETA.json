@@ -5,7 +5,7 @@
       "The Perl 5 Porters"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
@@ -62,10 +62,10 @@
          "web" : "http://github.com/Perl-Toolchain-Gang/ExtUtils-CBuilder"
       }
    },
-   "version" : "0.280219",
+   "version" : "0.280220",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.020000"
+         "version" : "5.020001"
       },
       "plugins" : [
          {
