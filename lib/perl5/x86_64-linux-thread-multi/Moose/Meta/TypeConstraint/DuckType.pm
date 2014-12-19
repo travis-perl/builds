@@ -1,12 +1,13 @@
 package Moose::Meta::TypeConstraint::DuckType;
-$Moose::Meta::TypeConstraint::DuckType::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 use metaclass;
 
 use B;
 use Scalar::Util 'blessed';
-use List::MoreUtils qw(all);
+use List::Util 1.33 qw(all);
 use Moose::Util 'english_list';
 
 use Moose::Util::TypeConstraints ();
@@ -25,7 +26,7 @@ my $inliner = sub {
     return $self->parent->_inline_check($val)
          . ' && do {' . "\n"
              . 'my $val = ' . $val . ';' . "\n"
-             . '&List::MoreUtils::all(' . "\n"
+             . '&List::Util::all(' . "\n"
                  . 'sub { $val->can($_) },' . "\n"
                  . join(', ', map { B::perlstring($_) } @{ $self->methods })
              . ');' . "\n"
@@ -116,7 +117,7 @@ Moose::Meta::TypeConstraint::DuckType - Type constraint for duck typing
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 
