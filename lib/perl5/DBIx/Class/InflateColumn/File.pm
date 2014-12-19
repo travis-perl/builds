@@ -43,10 +43,14 @@ sub register_column {
 sub _file_column_file {
     my ($self, $column, $filename) = @_;
 
-    my $column_info = $self->column_info($column);
+    my $column_info = $self->result_source->column_info($column);
 
     return unless $column_info->{is_file_column};
 
+    # DO NOT CHANGE
+    # This call to id() is generally incorrect - will not DTRT on
+    # multicolumn key. However changing this may introduce
+    # backwards-comp regressions, thus leaving as is
     my $id = $self->id || $self->throw_exception(
         'id required for filename generation'
     );
@@ -60,8 +64,10 @@ sub _file_column_file {
 sub delete {
     my ( $self, @rest ) = @_;
 
-    for ( $self->columns ) {
-        if ( $self->column_info($_)->{is_file_column} ) {
+    my $colinfos = $self->result_source->columns_info;
+
+    for ( keys %$colinfos ) {
+        if ( $colinfos->{$_}{is_file_column} ) {
             rmtree( [$self->_file_column_file($_)->dir], 0, 0 );
             last; # if we've deleted one, we've deleted them all
         }
@@ -75,9 +81,11 @@ sub insert {
 
     # cache our file columns so we can write them to the fs
     # -after- we have a PK
+    my $colinfos = $self->result_source->columns_info;
+
     my %file_column;
-    for ( $self->columns ) {
-        if ( $self->column_info($_)->{is_file_column} ) {
+    for ( keys %$colinfos ) {
+        if ( $colinfos->{$_}{is_file_column} ) {
             $file_column{$_} = $self->$_;
             $self->store_column($_ => $self->$_->{filename});
         }
@@ -206,14 +214,16 @@ Method made to be overridden for callback purposes.
 
 sub _file_column_callback {}
 
-=head1 AUTHOR
+=head1 FURTHER QUESTIONS?
 
-Victor Igumnov
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-This library is free software, you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 

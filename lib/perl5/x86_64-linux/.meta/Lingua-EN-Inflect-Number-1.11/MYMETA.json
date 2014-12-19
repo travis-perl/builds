@@ -4,7 +4,7 @@
       "Simon Cozens <simon@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141170, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141170, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
