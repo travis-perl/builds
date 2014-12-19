@@ -1,9 +1,6 @@
 package MooseX::Role::WithOverloading::Meta::Role;
-BEGIN {
-  $MooseX::Role::WithOverloading::Meta::Role::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Roles which support overloading
-$MooseX::Role::WithOverloading::Meta::Role::VERSION = '0.15';
+$MooseX::Role::WithOverloading::Meta::Role::VERSION = '0.16';
 use Moose 0.94 ();
 use Moose::Role;
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Composite', 'CompositionRole';
@@ -28,7 +25,7 @@ MooseX::Role::WithOverloading::Meta::Role - Roles which support overloading
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHORS
 

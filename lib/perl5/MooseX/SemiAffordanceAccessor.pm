@@ -1,7 +1,6 @@
 package MooseX::SemiAffordanceAccessor;
-BEGIN {
-  $MooseX::SemiAffordanceAccessor::VERSION = '0.09';
-}
+# git description: v0.09-8-g87ddfb5
+$MooseX::SemiAffordanceAccessor::VERSION = '0.10';
 
 use strict;
 use warnings;
@@ -27,9 +26,11 @@ Moose::Exporter->setup_import_methods(%metaroles);
 
 # ABSTRACT: Name your accessors foo() and set_foo()
 
-
+__END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -37,7 +38,7 @@ MooseX::SemiAffordanceAccessor - Name your accessors foo() and set_foo()
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 SYNOPSIS
 
@@ -96,7 +97,3 @@ This is free software, licensed under:
   The Artistic License 2.0 (GPL Compatible)
 
 =cut
-
-
-__END__
-

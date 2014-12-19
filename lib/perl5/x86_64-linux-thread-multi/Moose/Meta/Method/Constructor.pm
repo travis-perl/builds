@@ -1,12 +1,10 @@
 package Moose::Meta::Method::Constructor;
-$Moose::Meta::Method::Constructor::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
-use Carp ();
-use List::MoreUtils 'any';
-use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
-use Try::Tiny;
+use Scalar::Util 'weaken';
 
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Constructor';
@@ -72,7 +70,7 @@ Moose::Meta::Method::Constructor - Method Meta Object for constructors
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 
