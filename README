@@ -1,0 +1,19 @@
+local::lib lwp for Perl 5.14.0 built by Travis Helpers: heads/master-0-g38736ba
+------------------------------------------------------------------------------
+
+This is perl 5, version 14, subversion 0 (v5.14.0) built for x86_64-linux
+
+Copyright 1987-2011, Larry Wall
+
+Perl may be copied only under the terms of either the Artistic License or the
+GNU General Public License, which may be found in the Perl 5 source kit.
+
+Complete documentation for Perl, including FAQ lists, should be found on
+this system using "man perl" or "perldoc perl".  If you have access to the
+Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+
+------------------------------------------------------------------------------
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=12.04
+DISTRIB_CODENAME=precise
+DISTRIB_DESCRIPTION="Ubuntu 12.04 LTS"
