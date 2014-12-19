@@ -11,15 +11,16 @@
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Method/Generated.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Method/Inlined.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Method/Meta.pm
-/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Method/Overload.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Method/Wrapped.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/MiniTrait.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Mixin.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Mixin/AttributeCore.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Mixin/HasAttributes.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Mixin/HasMethods.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Mixin/HasOverloads.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Module.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Object.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Overload.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Class/MOP/Package.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Conflicts.pm
@@ -164,6 +165,7 @@
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidHandleValue.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidHasProvidedInARole.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidNameForType.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidOverloadOperator.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidRoleApplication.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidTypeConstraint.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/InvalidTypeGivenToCreateParameterizedTypeConstraint.pm
@@ -192,6 +194,7 @@
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MethodNameNotGiven.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MustDefineAMethodName.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MustDefineAnAttributeName.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MustDefineAnOverloadOperator.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MustHaveAtLeastOneValueToEnumerate.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MustPassAHashOfOptions.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/MustPassAMooseMetaRoleInstanceOrSubclass.pm
@@ -224,6 +227,13 @@
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/NoParentGivenToSubtype.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OnlyInstancesCanBeCloned.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OperatorIsRequired.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadConflictInSummation.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadRequiresAMetaClass.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadRequiresAMetaMethod.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadRequiresAMetaOverload.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadRequiresAMethodNameOrCoderef.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadRequiresAnOperator.pm
+/home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverloadRequiresNamesForCoderef.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverrideConflictInComposition.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/OverrideConflictInSummation.pm
 /home/travis/.perlbrew/libs/5.18.2-thr@moose/lib/perl5/x86_64-linux-thread-multi/Moose/Exception/PackageDoesNotUseMooseExporter.pm
