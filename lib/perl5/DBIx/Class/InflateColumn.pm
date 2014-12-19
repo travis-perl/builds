@@ -3,7 +3,9 @@ package DBIx::Class::InflateColumn;
 use strict;
 use warnings;
 
-use base qw/DBIx::Class::Row/;
+use base 'DBIx::Class::Row';
+use SQL::Abstract 'is_literal_value';
+use namespace::clean;
 
 =head1 NAME
 
@@ -87,9 +89,8 @@ sub inflate_column {
 
   my $colinfo = $self->column_info($col);
 
-  $self->throw_exception("InflateColumn does not work with FilterColumn")
-    if $self->isa('DBIx::Class::FilterColumn') &&
-      defined $colinfo->{_filter_info};
+  $self->throw_exception("InflateColumn can not be used on a column with a declared FilterColumn filter")
+    if defined $colinfo->{_filter_info} and $self->isa('DBIx::Class::FilterColumn');
 
   $self->throw_exception("No such column $col to inflate")
     unless $self->has_column($col);
@@ -103,26 +104,45 @@ sub inflate_column {
 
 sub _inflated_column {
   my ($self, $col, $value) = @_;
-  return $value unless defined $value; # NULL is NULL is NULL
-  my $info = $self->column_info($col)
+
+  return $value if (
+    ! defined $value # NULL is NULL is NULL
+      or
+    is_literal_value($value) #that would be a not-yet-reloaded literal update
+  );
+
+  my $info = $self->result_source->column_info($col)
     or $self->throw_exception("No column info for $col");
+
   return $value unless exists $info->{_inflate_info};
-  my $inflate = $info->{_inflate_info}{inflate};
-  $self->throw_exception("No inflator for $col") unless defined $inflate;
-  return $inflate->($value, $self);
+
+  return (
+    $info->{_inflate_info}{inflate}
+      ||
+    $self->throw_exception("No inflator found for '$col'")
+  )->($value, $self);
 }
 
 sub _deflated_column {
   my ($self, $col, $value) = @_;
-#  return $value unless ref $value && blessed($value); # If it's not an object, don't touch it
-  ## Leave scalar refs (ala SQL::Abstract literal SQL), untouched, deflate all other refs
-  return $value unless (ref $value && ref($value) ne 'SCALAR');
-  my $info = $self->column_info($col) or
+
+  ## Deflate any refs except for literals, pass through plain values
+  return $value if (
+    ! length ref $value
+      or
+    is_literal_value($value)
+  );
+
+  my $info = $self->result_source->column_info($col) or
     $self->throw_exception("No column info for $col");
+
   return $value unless exists $info->{_inflate_info};
-  my $deflate = $info->{_inflate_info}{deflate};
-  $self->throw_exception("No deflator for $col") unless defined $deflate;
-  return $deflate->($value, $self);
+
+  return (
+    $info->{_inflate_info}{deflate}
+      ||
+    $self->throw_exception("No deflator found for '$col'")
+  )->($value, $self);
 }
 
 =head2 get_inflated_column
@@ -138,13 +158,15 @@ Throws an exception if the column requested is not an inflated column.
 
 sub get_inflated_column {
   my ($self, $col) = @_;
+
   $self->throw_exception("$col is not an inflated column")
-    unless exists $self->column_info($col)->{_inflate_info};
+    unless exists $self->result_source->column_info($col)->{_inflate_info};
+
+  # we take care of keeping things in sync
   return $self->{_inflated_column}{$col}
     if exists $self->{_inflated_column}{$col};
 
   my $val = $self->get_column($col);
-  return $val if ref $val eq 'SCALAR';  #that would be a not-yet-reloaded sclarref update
 
   return $self->{_inflated_column}{$col} = $self->_inflated_column($col, $val);
 }
@@ -159,15 +181,22 @@ analogous to L<DBIx::Class::Row/set_column>.
 =cut
 
 sub set_inflated_column {
-  my ($self, $col, $inflated) = @_;
-  $self->set_column($col, $self->_deflated_column($col, $inflated));
-#  if (blessed $inflated) {
-  if (ref $inflated && ref($inflated) ne 'SCALAR') {
-    $self->{_inflated_column}{$col} = $inflated;
-  } else {
+  my ($self, $col, $value) = @_;
+
+  # pass through deflated stuff
+  if (! length ref $value or is_literal_value($value)) {
+    $self->set_column($col, $value);
     delete $self->{_inflated_column}{$col};
   }
-  return $inflated;
+  # need to call set_column with the deflate cycle so that
+  # relationship caches are nuked if any
+  # also does the compare-for-dirtyness and change tracking dance
+  else {
+    $self->set_column($col, $self->_deflated_column($col, $value));
+    $self->{_inflated_column}{$col} = $value;
+  }
+
+  return $value;
 }
 
 =head2 store_inflated_column
@@ -180,15 +209,18 @@ as dirty. This is directly analogous to L<DBIx::Class::Row/store_column>.
 =cut
 
 sub store_inflated_column {
-  my ($self, $col, $inflated) = @_;
-#  unless (blessed $inflated) {
-  unless (ref $inflated && ref($inflated) ne 'SCALAR') {
-      delete $self->{_inflated_column}{$col};
-      $self->store_column($col => $inflated);
-      return $inflated;
+  my ($self, $col, $value) = @_;
+
+  if (! length ref $value or is_literal_value($value)) {
+    delete $self->{_inflated_column}{$col};
+    $self->store_column($col => $value);
   }
-  delete $self->{_column_data}{$col};
-  return $self->{_inflated_column}{$col} = $inflated;
+  else {
+    delete $self->{_column_data}{$col};
+    $self->{_inflated_column}{$col} = $value;
+  }
+
+  return $value;
 }
 
 =head1 SEE ALSO
@@ -201,19 +233,16 @@ sub store_inflated_column {
 
 =back
 
-=head1 AUTHOR
+=head1 FURTHER QUESTIONS?
 
-Matt S. Trout <mst@shadowcatsystems.co.uk>
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 CONTRIBUTORS
+=head1 COPYRIGHT AND LICENSE
 
-Daniel Westermann-Clark <danieltwc@cpan.org> (documentation)
-
-Jess Robinson <cpan@desert-island.demon.co.uk>
-
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 
