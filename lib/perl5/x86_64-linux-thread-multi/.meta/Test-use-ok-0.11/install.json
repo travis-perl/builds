@@ -1,1 +1,1 @@
-{"provides":{"ok":{"file":"lib/ok.pm","version":"0.11"},"Test::use::ok":{"file":"lib/Test/use/ok.pm","version":"0.11"}},"version":"0.11","target":"ok","dist":"Test-use-ok-0.11","name":"Test::use::ok","pathname":"A/AU/AUDREYT/Test-use-ok-0.11.tar.gz"}
+{"name":"Test::use::ok","pathname":"A/AU/AUDREYT/Test-use-ok-0.11.tar.gz","dist":"Test-use-ok-0.11","target":"ok","provides":{"ok":{"version":"0.11","file":"lib/ok.pm"},"Test::use::ok":{"file":"lib/Test/use/ok.pm","version":"0.11"}},"version":"0.11"}

@@ -20,8 +20,6 @@ use Try::Tiny;
 
 use namespace::clean -except => 'meta';
 
-=encoding utf8
-
 =head1 NAME
 
 DBIx::Class::Storage::DBI::Replicated - BETA Replicated database support
@@ -37,7 +35,7 @@ also define your arguments, such as which balancer you want and any arguments
 that the Pool object should get.
 
   my $schema = Schema::Class->clone;
-  $schema->storage_type( ['::DBI::Replicated', {balancer=>'::Random'}] );
+  $schema->storage_type(['::DBI::Replicated', { balancer_type => '::Random' }]);
   $schema->connection(...);
 
 Next, you need to add in the Replicants.  Basically this is an array of
@@ -265,7 +263,6 @@ my $method_dispatch = {
     build_datetime_parser
     last_insert_id
     insert
-    insert_bulk
     update
     delete
     dbh
@@ -315,6 +312,8 @@ my $method_dispatch = {
     _native_data_type
     _get_dbh
     sql_maker_class
+    insert_bulk
+    _insert_bulk
     _execute
     _do_query
     _dbh_execute
@@ -404,7 +403,7 @@ for my $method (@{$method_dispatch->{unimplemented}}) {
 
 =head2 read_handler
 
-Defines an object that implements the read side of L<BIx::Class::Storage::DBI>.
+Defines an object that implements the read side of L<DBIx::Class::Storage::DBI>.
 
 =cut
 
@@ -417,7 +416,7 @@ has 'read_handler' => (
 
 =head2 write_handler
 
-Defines an object that implements the write side of L<BIx::Class::Storage::DBI>,
+Defines an object that implements the write side of L<DBIx::Class::Storage::DBI>,
 as well as methods that don't write or read that can be called on only one
 storage, methods that return a C<$dbh>, and any methods that don't make sense to
 run on a replicant.
@@ -589,7 +588,8 @@ sub _build_read_handler {
 =head2 around: connect_replicants
 
 All calls to connect_replicants needs to have an existing $schema tacked onto
-top of the args, since L<DBIx::Storage::DBI> needs it, and any C<connect_info>
+top of the args, since L<DBIx::Class::Storage::DBI> needs it, and any
+L<connect_info|DBIx::Class::Storage::DBI/connect_info>
 options merged with the master, with replicant opts having higher priority.
 
 =cut
@@ -1080,7 +1080,8 @@ sub _get_server_version {
 Due to the fact that replicants can lag behind a master, you must take care to
 make sure you use one of the methods to force read queries to a master should
 you need realtime data integrity.  For example, if you insert a row, and then
-immediately re-read it from the database (say, by doing $result->discard_changes)
+immediately re-read it from the database (say, by doing
+L<< $result->discard_changes|DBIx::Class::Row/discard_changes >>)
 or you insert a row and then immediately build a query that expects that row
 to be an item, you should force the master to handle reads.  Otherwise, due to
 the lag, there is no certainty your data will be in the expected state.
@@ -1094,7 +1095,7 @@ attribute:
 
   my $result = $resultset->search(undef, {force_pool=>'master'})->find($pk);
 
-This attribute will safely be ignore by non replicated storages, so you can use
+This attribute will safely be ignored by non replicated storages, so you can use
 the same code for both types of systems.
 
 Lastly, you can use the L</execute_reliably> method, which works very much like
@@ -1112,18 +1113,16 @@ using the Schema clone method.
   ## $new_schema will use only the Master storage for all reads/writes while
   ## the $schema object will use replicated storage.
 
-=head1 AUTHOR
+=head1 FURTHER QUESTIONS?
 
-  John Napiorkowski <john.napiorkowski@takkle.com>
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-Based on code originated by:
+=head1 COPYRIGHT AND LICENSE
 
-  Norbert Csongrádi <bert@cpan.org>
-  Peter Siklósi <einon@einon.hu>
-
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 
