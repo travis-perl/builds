@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @EXPORT @EXPORT_OK @ISA $CurrentPackage @IncludeLibs $ScanFileRE );
 
-$VERSION   = '1.15';
+$VERSION   = '1.17';
 @EXPORT    = qw( scan_deps scan_deps_runtime );
 @EXPORT_OK = qw( scan_line scan_chunk add_deps scan_deps_runtime path_to_inc_name );
 
@@ -403,6 +403,7 @@ my %Preload;
         _glob_in_inc('MooseX/POE', 1),
         _glob_in_inc('MooseX/Async', 1),
     },
+    'Mozilla/CA.pm'                 => [qw( Mozilla/CA/cacert.pem )],
     'MozRepl.pm'                    => sub {
         qw( MozRepl/Log.pm MozRepl/Client.pm Module/Pluggable/Fast.pm ),
         _glob_in_inc('MozRepl/Plugin', 1),
@@ -467,6 +468,7 @@ my %Preload;
     'SQL/Translator/Schema.pm' => sub {
         _glob_in_inc('SQL/Translator', 1);
     },
+    'Sub/Exporter/Progressive.pm'   => [qw( Sub/Exporter.pm )],
     'SVK/Command.pm' => sub {
         _glob_in_inc('SVK', 1);
     },
@@ -493,14 +495,8 @@ my %Preload;
     'Tk/FBox.pm'        => [qw( Tk/folder.xpm Tk/file.xpm )],
     'Tk/Getopt.pm'      => [qw( Tk/openfolder.xpm Tk/win.xbm )],
     'Tk/Toplevel.pm'    => [qw( Tk/Wm.pm )],
-    'Unicode/UCD.pm'    => sub {
-        # add data files (cf. sub openunicode in Unicode::UCD)
-        'unicore/version',
-        grep /\.txt$/, map $_->{name}, _glob_in_inc('unicore', 0);
-    },
-    'URI.pm'            => sub {
-        grep !/urn/, _glob_in_inc('URI', 1);
-    },
+    'Unicode/UCD.pm'    => sub { @{ _get_preload('utf8.pm') } },
+    'URI.pm'            => sub { grep !/urn/, _glob_in_inc('URI', 1) },
     'utf8.pm' => sub {
         # Perl 5.6.x: "unicode", Perl 5.8.x and up: "unicore"
         my $unicore = _find_in_inc('unicore/Name.pl') ? 'unicore' : 'unicode';
@@ -510,7 +506,7 @@ my %Preload;
     'Win32/Exe.pm'         => 'sub',
     'Win32/TieRegistry.pm' => [qw( Win32API/Registry.pm )],
     'Win32/SystemInfo.pm'  => [qw( Win32/cpuspd.dll )],
-    'Wx.pm'  => [qw( attributes.pm Alien/wxWidgets/msw_2_8_10_uni_gcc_3_4/lib/wxbase28u_gcc_custom.dll)], #still cannot find this .dll
+    'Wx.pm'                => [qw( attributes.pm )],
     'XML/Parser.pm'        => sub {
         _glob_in_inc('XML/Parser/Style', 1),
         _glob_in_inc('XML/Parser/Encodings', 1),
@@ -772,22 +768,21 @@ sub scan_file{
         foreach my $pm (scan_line($line)) {
             last LINE if $pm eq '__END__';
 
-            # Skip Tk hits from Term::ReadLine and Tcl::Tk
-            my $pathsep = qr/\/|\\|::/;
-            if ($pm =~ /^Tk\b/) {
-                next if $file =~ /(?:^|${pathsep})Term${pathsep}ReadLine\.pm$/;
-                next if $file =~ /(?:^|${pathsep})Tcl${pathsep}Tk\W/;
-            }
             if ($pm eq '__POD__') {
                 while (<$FH>) {
                     last if (/^=cut/);
                 }
                 next LINE;
             }
+
+            # Skip Tk hits from Term::ReadLine and Tcl::Tk
+            my $pathsep = qr/\/|\\|::/;
+            if ($pm =~ /^Tk\b/) {
+                next if $file =~ /(?:^|${pathsep})Term${pathsep}ReadLine\.pm$/;
+                next if $file =~ /(?:^|${pathsep})Tcl${pathsep}Tk\W/;
+            }
             $SeenTk || do{$SeenTk = 1 if $pm =~ /Tk\.pm$/;};
-            # the following line does not make much sense here ???
-            # $file is an absolute path and will never match
-            #$pm = 'CGI/Apache.pm' if $file =~ /^Apache(?:\.pm)$/;
+
             $found{$pm}++;
         }
     }
@@ -968,10 +963,7 @@ sub scan_chunk {
             return \@mods;
         }
 
-        return $1 if /^(?:do|require)\s+[^"]*"(.*?)"/;
-        return $1 if /^(?:do|require)\s+[^']*'(.*?)'/;
-        return $1 if /[^\$]\b([\w:]+)->\w/ and $1 ne 'Tk' and $1 ne 'shift';
-        return $1 if /\b(\w[\w:]*)::\w+\(/ and $1 ne 'main' and $1 ne 'SUPER';
+        return $1 if /\b do \s+ ([\w:\.\-\\\/\"\']*)/x;
 
         if ($SeenTk) {
             my @modules;
@@ -992,6 +984,13 @@ sub scan_chunk {
             }
             return \@modules;
         }
+
+        # Module::Runtime
+        return $1 if /\b(?:require_module|use_module|use_package_optimistically) \s* \( \s* ([\w:"']+)/x;
+
+        # Test::More
+        return $1 if /\b(?:require_ok|use_ok) \s* \( \s* ([\w:"']+)/x;
+
         return;
     };
 

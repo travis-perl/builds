@@ -1,9 +1,6 @@
 package MooseX::Role::WithOverloading::Meta::Role::Application::Composite;
-BEGIN {
-  $MooseX::Role::WithOverloading::Meta::Role::Application::Composite::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Roles which support overloading
-$MooseX::Role::WithOverloading::Meta::Role::Application::Composite::VERSION = '0.15';
+$MooseX::Role::WithOverloading::Meta::Role::Application::Composite::VERSION = '0.16';
 use Moose::Role;
 use namespace::autoclean;
 
@@ -30,7 +27,7 @@ MooseX::Role::WithOverloading::Meta::Role::Application::Composite - Roles which 
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHORS
 
