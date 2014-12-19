@@ -1,0 +1,10 @@
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/bin/scan-perl-prereqs
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/bin/scan_prereqs
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner/Aliased.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner/Moose.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner/POE.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner/Perl5.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner/Superclass.pm
+/home/travis/.perlbrew/libs/5.14.0-thr@dzil/lib/perl5/Perl/PrereqScanner/Scanner/TestMore.pm
