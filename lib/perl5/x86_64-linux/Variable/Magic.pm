@@ -11,13 +11,13 @@ Variable::Magic - Associate user-defined magic to variables from Perl.
 
 =head1 VERSION
 
-Version 0.54
+Version 0.55
 
 =cut
 
 our $VERSION;
 BEGIN {
- $VERSION = '0.54';
+ $VERSION = '0.55';
 }
 
 =head1 SYNOPSIS
@@ -683,11 +683,6 @@ A C compiler.
 This module may happen to build with a C++ compiler as well, but don't rely on it, as no guarantee is made in this regard.
 
 L<Carp> (core since perl 5), L<XSLoader> (since 5.6.0).
-
-Copy tests need L<Tie::Array> (core since perl 5.005) and L<Tie::Hash> (since 5.002).
-Some uvar tests need L<Hash::Util::FieldHash> (since 5.9.4).
-Glob tests need L<Symbol> (since 5.002).
-Threads tests need L<threads> and L<threads::shared> (both since 5.7.3).
 
 =head1 SEE ALSO
 
