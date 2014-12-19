@@ -4,7 +4,7 @@ use strictures 1;
 use Moo::_Utils;
 use Import::Into;
 
-our $VERSION = '1.006000';
+our $VERSION = '1.006001';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -190,7 +190,10 @@ sub _constructor_maker_for {
           .'        '.$class.'->_constructor_maker_for($class);'."\n"
           .'        return $class->new(@_)'.";\n"
           .'      } elsif ($INC{"Moose.pm"} and my $meta = Class::MOP::get_metaclass_by_name($class)) {'."\n"
-          .'        return $meta->new_object($class->BUILDARGS(@_));'."\n"
+          .'        return $meta->new_object('."\n"
+          .'          $class->can("BUILDARGS") ? $class->BUILDARGS(@_)'."\n"
+          .'                      : $class->Moo::Object::BUILDARGS(@_)'."\n"
+          .'        );'."\n"
           .'      }'."\n"
         ),
       )
@@ -711,21 +714,21 @@ possible extensibility.
 
  before foo => sub { ... };
 
-See L<< Class::Method::Modifiers/before method(s) => sub { ... } >> for full
+See L<< Class::Method::Modifiers/before method(s) => sub { ... }; >> for full
 documentation.
 
 =head2 around
 
  around foo => sub { ... };
 
-See L<< Class::Method::Modifiers/around method(s) => sub { ... } >> for full
+See L<< Class::Method::Modifiers/around method(s) => sub { ... }; >> for full
 documentation.
 
 =head2 after
 
  after foo => sub { ... };
 
-See L<< Class::Method::Modifiers/after method(s) => sub { ... } >> for full
+See L<< Class::Method::Modifiers/after method(s) => sub { ... }; >> for full
 documentation.
 
 =head1 SUB QUOTE AWARE
@@ -929,13 +932,13 @@ to Moo by providing a more Moose-like interface.
 
 Users' IRC: #moose on irc.perl.org
 
-=for html <a href="http://chat.mibbit.com/#moose@irc.perl.org">(click for
-instant chatroom login)</a>
+=for :html
+L<(click for instance chatroom login)|http://chat.mibbit.com/#moose@irc.perl.org>
 
 Development and contribution IRC: #web-simple on irc.perl.org
 
-=for html <a href="http://chat.mibbit.com/#web-simple@irc.perl.org">(click for
-instant chatroom login)</a>
+=for :html
+L<(click for instance chatroom login)|http://chat.mibbit.com/#web-simple@irc.perl.org>
 
 Bugtracker: L<https://rt.cpan.org/Public/Dist/Display.html?Name=Moo>
 
