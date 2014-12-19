@@ -1,8 +1,5 @@
 #!/home/travis/perl5/perlbrew/perls/5.18.2-thr/bin/perl
 
-eval 'exec /home/travis/perl5/perlbrew/perls/5.18.2-thr/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
 $VERSION = '0.76';
 
 use strict;
@@ -12,23 +9,27 @@ use Module::ScanDeps;
 use ExtUtils::MakeMaker;
 use subs qw( _name _modtree );
 
+my $usage = "Usage: $0 [ -B ] [ -V ] [ -T ] [ -x [ --xargs STRING ] | -c ] [ -R ] [-C FILE ] [ -e STRING | FILE ... ]\n";
+
 my %opts;
 GetOptions(\%opts,
     "B|bundle",
     "C|cachedeps=s",
-    "c|compile".
+    "c|compile",
     "e|eval=s",
     "xargs=s",
     "R|no-recurse",
+    "T|modtree",
     "V|verbose",
     "x|execute",
-);
+) or die $usage;
 
 my (%map, %skip);
 my $core    = $opts{B};
 my $verbose = $opts{V};
 my $eval    = $opts{e};
 my $recurse = $opts{R} ? 0 : 1;
+my $modtree = {} unless $opts{T}; # i.e. disable it unless explicitly requested
 
 if ($eval) {
     require File::Temp;
@@ -43,7 +44,7 @@ if ($opts{x} && defined $opts{xargs}) {
     $opts{x} = [ Text::ParseWords::shellwords($opts{xargs}) ];
 }
 
-die "Usage: $0 [ -B ] [ -V ] [ -x | -c ] [ -R ] [-C FILE ] [ -e STRING | FILE ... ]\n" unless @ARGV;
+die $usage unless @ARGV;
 
 my @files = @ARGV;
 while (<>) {
@@ -139,7 +140,6 @@ sub _name {
     return $str;
 }
 
-my $modtree;
 sub _modtree {
     $modtree ||= eval {
         require CPANPLUS::Backend;
@@ -170,7 +170,8 @@ scandeps.pl - Scan file prerequisites
 F<scandeps.pl> is a simple-minded utility that prints out the
 C<PREREQ_PM> section needed by modules.
 
-If you have B<CPANPLUS> installed, modules that are part of an
+If the option C<-T> is specified and
+you have B<CPANPLUS> installed, modules that are part of an
 earlier module's distribution with be denoted with C<S>; modules
 without a distribution name on CPAN are marked with C<?>.
 
@@ -203,6 +204,7 @@ Compiles the code and inspects its C<%INC>, in addition to static scanning.
 =item B<-x>, B<--execute>
 
 Executes the code and inspects its C<%INC>, in addition to static scanning.
+You may use B<--xargs> to specify C<@ARGV> when executing the code.
 
 =item B<--xargs>=I<STRING>
 
@@ -231,6 +233,10 @@ false positives.
 
 Use CACHEFILE to speed up the scanning process by caching dependencies.
 Creates CACHEFILE if it does not exist yet.
+
+=item B<-T>, B<--modtree>
+
+Retrieves module information from CPAN if you have B<CPANPLUS> installed.
 
 =back
 

@@ -27,12 +27,15 @@
          }
       },
       "configure" : {
-         "requires" : {}
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
       },
       "runtime" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "0",
-            "Test::More" : "0"
+            "Test::More" : "0",
+            "perl" : "5.008001"
          }
       }
    },

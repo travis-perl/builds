@@ -1,1 +1,0 @@
-{"name":"Devel::StackTrace","provides":{"Devel::StackTrace::Frame":{"file":"lib/Devel/StackTrace/Frame.pm","version":"1.34"},"Devel::StackTrace":{"version":"1.34","file":"lib/Devel/StackTrace.pm"}},"dist":"Devel-StackTrace-1.34","version":"1.34","pathname":"D/DR/DROLSKY/Devel-StackTrace-1.34.tar.gz","target":"Devel::StackTrace"}

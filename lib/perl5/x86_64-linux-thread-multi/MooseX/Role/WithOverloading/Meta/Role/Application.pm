@@ -1,9 +1,6 @@
 package MooseX::Role::WithOverloading::Meta::Role::Application;
-BEGIN {
-  $MooseX::Role::WithOverloading::Meta::Role::Application::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Role application role for Roles which support overloading
-$MooseX::Role::WithOverloading::Meta::Role::Application::VERSION = '0.15';
+$MooseX::Role::WithOverloading::Meta::Role::Application::VERSION = '0.16';
 use Moose::Role 1.15;
 use overload ();
 use namespace::autoclean;
@@ -79,7 +76,7 @@ sub apply_overloading {
         # when using "use overload $op => 'method_name';" overload::nil is
         # installed into the code slot of the glob and the actual method called
         # is determined by the scalar slot of the same glob.
-        if ($meth == \&overload::nil) {
+        if ($meth == \&overload::nil || $meth == \&overload::_nil) {
             my $scalar_sym = qq{\$($op};
             $other->add_package_symbol(
                 $scalar_sym => ${ $role->get_package_symbol($scalar_sym) },
@@ -102,7 +99,7 @@ MooseX::Role::WithOverloading::Meta::Role::Application - Role application role f
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 METHODS
 

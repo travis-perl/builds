@@ -3,7 +3,8 @@ package HTTP::Tiny;
 use strict;
 use warnings;
 # ABSTRACT: A small, simple, correct HTTP/1.1 client
-our $VERSION = '0.049'; # VERSION
+
+our $VERSION = '0.053';
 
 use Carp ();
 
@@ -140,7 +141,9 @@ sub _set_proxies {
 
     # http proxy
     if (! exists $self->{http_proxy} ) {
-        $self->{http_proxy} = $ENV{http_proxy} || $self->{proxy};
+        # under CGI, bypass HTTP_PROXY as request sets it from Proxy header
+        local $ENV{HTTP_PROXY} if $ENV{REQUEST_METHOD};
+        $self->{http_proxy} = $ENV{http_proxy} || $ENV{HTTP_PROXY} || $self->{proxy};
     }
 
     if ( defined $self->{http_proxy} ) {
@@ -471,7 +474,7 @@ my %DefaultPort = (
 sub _agent {
     my $class = ref($_[0]) || $_[0];
     (my $default_agent = $class) =~ s{::}{-}g;
-    return $default_agent . "/" . ($class->VERSION || 0);
+    return $default_agent . "/" . $class->VERSION;
 }
 
 sub _request {
@@ -483,6 +486,7 @@ sub _request {
         method    => $method,
         scheme    => $scheme,
         host      => $host,
+        port      => $port,
         host_port => ($port == $DefaultPort{$scheme} ? $host : "$host:$port"),
         uri       => $path_query,
         headers   => {},
@@ -619,9 +623,9 @@ sub _create_proxy_tunnel {
 
     my $connect_request = {
         method    => 'CONNECT',
-        uri       => $request->{host_port},
+        uri       => "$request->{host}:$request->{port}",
         headers   => {
-            host => $request->{host_port},
+            host => "$request->{host}:$request->{port}",
             'user-agent' => $agent,
         }
     };
@@ -860,15 +864,6 @@ use warnings;
 
 use Errno      qw[EINTR EPIPE];
 use IO::Socket qw[SOCK_STREAM];
-
-# for thread safety, we need to know thread id or else fake it;
-# requires "threads.pm" to hide it from the minimum version detector
-if ( eval { require "threads.pm"; 1 } ) { ## no critic
-    *_get_tid = sub { threads->tid };
-}
-else {
-    *_get_tid = sub () { 0 };
-}
 
 # PERL_HTTP_TINY_IPV4_ONLY is a private environment variable to force old
 # behavior if someone is unable to boostrap CPAN from a new perl install; it is
@@ -1413,6 +1408,12 @@ sub _find_CA_file {
       . qq/Try installing Mozilla::CA from CPAN\n/;
 }
 
+# for thread safety, we need to know thread id if threads are loaded
+sub _get_tid {
+    no warnings 'reserved'; # for 'threads'
+    return threads->can("tid") ? threads->tid : 0;
+}
+
 sub _ssl_args {
     my ($self, $host) = @_;
 
@@ -1457,7 +1458,7 @@ HTTP::Tiny - A small, simple, correct HTTP/1.1 client
 
 =head1 VERSION
 
-version 0.049
+version 0.053
 
 =head1 SYNOPSIS
 
@@ -1843,7 +1844,7 @@ HTTP::Tiny supports the following proxy environment variables:
 
 =item *
 
-http_proxy
+http_proxy or HTTP_PROXY
 
 =item *
 
@@ -1854,6 +1855,11 @@ https_proxy or HTTPS_PROXY
 all_proxy or ALL_PROXY
 
 =back
+
+If the C<REQUEST_METHOD> environment variable is set, then this might be a CGI
+process and C<HTTP_PROXY> would be set from the C<Proxy:> header, which is a
+security risk.  If C<REQUEST_METHOD> is set, C<HTTP_PROXY> (the upper case
+variant only) is ignored.
 
 Tunnelling C<https> over an C<http> proxy using the CONNECT method is
 supported.  If your proxy uses C<https> itself, you can not tunnel C<https>
@@ -2022,13 +2028,53 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alan Gardner James Raspass Jess Robinson Lukas Eklund Martin J. Evans Martin-Louis Bright Mike Doherty Petr Písař Serguei Trouchelle Syohei YOSHIDA Sören Kornetzki Alessandro Ghedini Tom Hukins Tony Cook Brad Gilbert Chris Nehren Weyl Claes Jakobsson Clinton Gormley Craig Berry David Mitchell Edward Zborowski
+=for stopwords Alan Gardner Alessandro Ghedini Brad Gilbert Chris Nehren Weyl Claes Jakobsson Clinton Gormley Craig Berry David Mitchell Dean Pearce Edward Zborowski James Raspass Jess Robinson Lukas Eklund Martin J. Evans Martin-Louis Bright Mike Doherty Petr Písař Serguei Trouchelle Sören Kornetzki Syohei YOSHIDA Tom Hukins Tony Cook
 
 =over 4
 
 =item *
 
 Alan Gardner <gardner@pythian.com>
+
+=item *
+
+Alessandro Ghedini <al3xbio@gmail.com>
+
+=item *
+
+Brad Gilbert <bgills@cpan.org>
+
+=item *
+
+Chris Nehren <apeiron@cpan.org>
+
+=item *
+
+Chris Weyl <cweyl@alumni.drew.edu>
+
+=item *
+
+Claes Jakobsson <claes@surfar.nu>
+
+=item *
+
+Clinton Gormley <clint@traveljury.com>
+
+=item *
+
+Craig Berry <cberry@cpan.org>
+
+=item *
+
+David Mitchell <davem@iabyn.com>
+
+=item *
+
+Dean Pearce <pearce@pythian.com>
+
+=item *
+
+Edward Zborowski <ed@rubensteintech.com>
 
 =item *
 
@@ -2064,15 +2110,11 @@ Serguei Trouchelle <stro@cpan.org>
 
 =item *
 
-Syohei YOSHIDA <syohex@gmail.com>
-
-=item *
-
 Sören Kornetzki <soeren.kornetzki@delti.com>
 
 =item *
 
-Alessandro Ghedini <al3xbio@gmail.com>
+Syohei YOSHIDA <syohex@gmail.com>
 
 =item *
 
@@ -2081,38 +2123,6 @@ Tom Hukins <tom@eborcom.com>
 =item *
 
 Tony Cook <tony@develop-help.com>
-
-=item *
-
-Brad Gilbert <bgills@cpan.org>
-
-=item *
-
-Chris Nehren <apeiron@cpan.org>
-
-=item *
-
-Chris Weyl <rsrchboy@cpan.org>
-
-=item *
-
-Claes Jakobsson <claes@surfar.nu>
-
-=item *
-
-Clinton Gormley <clint@traveljury.com>
-
-=item *
-
-Craig Berry <cberry@cpan.org>
-
-=item *
-
-David Mitchell <davem@iabyn.com>
-
-=item *
-
-Edward Zborowski <ed@rubensteintech.com>
 
 =back
 
