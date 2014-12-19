@@ -1,10 +1,10 @@
 {
    "abstract" : "unknown",
    "author" : [
-      "Fergal Daly <fergal@esatclear.ie>"
+      "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.112150, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.141170, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "unknown"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Test-Tester",
+   "name" : "Algorithm-Diff",
    "no_index" : {
       "directory" : [
          "t",
@@ -31,11 +31,9 @@
          }
       },
       "runtime" : {
-         "requires" : {
-            "Test::Builder" : "0"
-         }
+         "requires" : {}
       }
    },
    "release_status" : "stable",
-   "version" : "0.109"
+   "version" : "1.1903"
 }

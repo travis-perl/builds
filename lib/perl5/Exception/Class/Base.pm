@@ -1,18 +1,17 @@
 package Exception::Class::Base;
-$Exception::Class::Base::VERSION = '1.38';
+$Exception::Class::Base::VERSION = '1.39';
 use strict;
 use warnings;
 
 use Class::Data::Inheritable 0.02;
-use Devel::StackTrace 1.20;
+use Devel::StackTrace 2.00;
 use Scalar::Util qw( blessed );
 
 use base qw(Class::Data::Inheritable);
 
 BEGIN {
     __PACKAGE__->mk_classdata('Trace');
-    __PACKAGE__->mk_classdata('NoRefs');
-    __PACKAGE__->NoRefs(1);
+    __PACKAGE__->mk_classdata('UnsafeRefCapture');
 
     __PACKAGE__->mk_classdata('NoContextInfo');
     __PACKAGE__->NoContextInfo(0);
@@ -22,6 +21,17 @@ BEGIN {
 
     __PACKAGE__->mk_classdata('MaxArgLength');
     __PACKAGE__->MaxArgLength(0);
+
+    sub NoRefs {
+        my $self = shift;
+        if (@_) {
+            my $val = shift;
+            return $self->UnsafeRefCapture(!$val);
+        }
+        else {
+            return $self->UnsafeRefCapture();
+        }
+    }
 
     sub Fields { () }
 }
@@ -124,11 +134,11 @@ sub _initialize {
         }
 
         $self->{trace} = Devel::StackTrace->new(
-            ignore_class     => \@ignore_class,
-            ignore_package   => \@ignore_package,
-            no_refs          => $self->NoRefs,
-            respect_overload => $self->RespectOverload,
-            max_arg_length   => $self->MaxArgLength,
+            ignore_class       => \@ignore_class,
+            ignore_package     => \@ignore_package,
+            unsafe_ref_capture => $self->UnsafeRefCapture,
+            respect_overload   => $self->RespectOverload,
+            max_arg_length     => $self->MaxArgLength,
         );
     }
 
@@ -250,7 +260,7 @@ Exception::Class::Base - A base class for exception objects
 
 =head1 VERSION
 
-version 1.38
+version 1.39
 
 =head1 SYNOPSIS
 
@@ -268,18 +278,19 @@ information about the exception.
 
 =for Pod::Coverage     Classes
     caught
+    NoRefs
 
 =head1 METHODS
 
 =head2 MyException->Trace($boolean)
 
 Each C<Exception::Class::Base> subclass can be set individually to
-include a stacktrace when the C<as_string> method is called.  The
-default is to not include a stacktrace.  Calling this method with a
-value changes this behavior.  It always returns the current value
+include a stacktrace when the C<as_string> method is called. The
+default is to not include a stacktrace. Calling this method with a
+value changes this behavior. It always returns the current value
 (after any change is applied).
 
-This value is inherited by any subclasses.  However, if this value is
+This value is inherited by any subclasses. However, if this value is
 set for a subclass, it will thereafter be independent of the value in
 C<Exception::Class::Base>.
 
@@ -290,22 +301,21 @@ control.
 
 This is a class method, not an object method.
 
-=head2 MyException->NoRefs($boolean)
+=head2 MyException->UnsafeRefCapture($boolean)
 
 When a C<Devel::StackTrace> object is created, it walks through the
 stack and stores the arguments which were passed to each subroutine on
-the stack.  If any of these arguments are references, then that means
-that the C<Devel::StackTrace> ends up increasing the refcount of these
+the stack. If any of these arguments are references, then that means
+that the C<Devel::StackTrace> ends up increasing the ref count of these
 references, delaying their destruction.
 
 Since C<Exception::Class::Base> uses C<Devel::StackTrace> internally,
 this method provides a way to tell C<Devel::StackTrace> not to store
-these references.  Instead, C<Devel::StackTrace> replaces references
+these references. Instead, C<Devel::StackTrace> replaces references
 with their stringified representation.
 
-This method defaults to true.  As with C<Trace()>, it is inherited by
-subclasses but setting it in a subclass makes it independent
-thereafter.
+This method defaults to false. As with C<Trace()>, it is inherited by
+subclasses but setting it in a subclass makes it independent thereafter.
 
 Do not call this on the C<Exception::Class::Base> class directly or
 you'll change it for all exception classes that use
@@ -321,7 +331,7 @@ Since C<Exception::Class::Base> uses C<Devel::StackTrace> internally,
 this method provides a way to tell C<Devel::StackTrace> to respect
 overloading.
 
-This method defaults to false.  As with C<Trace()>, it is inherited by
+This method defaults to false. As with C<Trace()>, it is inherited by
 subclasses but setting it in a subclass makes it independent
 thereafter.
 
@@ -365,13 +375,13 @@ control.
 
 =head2 MyException->throw( error => $error )
 
-This method creates a new object with the given error message.  If no
-error message is given, this will be an empty string.  It then dies
+This method creates a new object with the given error message. If no
+error message is given, this will be an empty string. It then dies
 with this object as its argument.
 
 This method also takes a C<show_trace> parameter which indicates
 whether or not the particular exception object being created should
-show a stacktrace when its C<as_string()> method is called.  This
+show a stacktrace when its C<as_string()> method is called. This
 overrides the value of C<Trace()> for this class if it is given.
 
 The frames included in the trace can be controlled by the C<ignore_class>
@@ -395,14 +405,14 @@ via the C<throw()> method.
 =head2 MyException->description()
 
 Returns the description for the given C<Exception::Class::Base>
-subclass.  The C<Exception::Class::Base> class's description is
-"Generic exception" (this may change in the future).  This is also an
+subclass. The C<Exception::Class::Base> class's description is
+"Generic exception" (this may change in the future). This is also an
 object method.
 
 =head2 $exception->rethrow()
 
-Simply dies with the object as its sole argument.  It's just syntactic
-sugar.  This does not change any of the object's attribute values.
+Simply dies with the object as its sole argument. It's just syntactic
+sugar. This does not change any of the object's attribute values.
 However, it will cause C<caller()> to report the die as coming from
 within the C<Exception::Class::Base> class rather than where rethrow
 was called.
@@ -492,15 +502,15 @@ stringified.
 =head2 $exception->as_string()
 
 Returns a string form of the error message (something like what you'd
-expect from die).  If the class or object is set to show traces then
-then the full trace is also included.  The result looks like
+expect from die). If the class or object is set to show traces then
+then the full trace is also included. The result looks like
 C<Carp::confess()>.
 
 =head2 $exception->full_message()
 
-Called by the C<as_string()> method to get the message.  By default,
+Called by the C<as_string()> method to get the message. By default,
 this is the same as calling the C<message()> method, but may be
-overridden by a subclass.  See below for details.
+overridden by a subclass. See below for details.
 
 =head1 LIGHTWEIGHT EXCEPTIONS
 
@@ -524,10 +534,10 @@ time, pid, uid, euid, gid, or egid. It only has a message.
 =head1 OVERLOADING
 
 C<Exception::Class::Base> objects are overloaded so that
-stringification produces a normal error message.  This just calls the
-C<< $exception->as_string() >> method described above.  This means
+stringification produces a normal error message. This just calls the
+C<< $exception->as_string() >> method described above. This means
 that you can just C<print $@> after an C<eval> and not worry about
-whether or not its an actual object.  It also means an application or
+whether or not its an actual object. It also means an application or
 module could do this:
 
  $SIG{__DIE__} = sub { Exception::Class::Base->throw( error => join '', @_ ); };
@@ -547,7 +557,7 @@ include those fields in the stringified error.
 
 Inside the C<as_string()> method, the message (non-stack trace)
 portion of the error is generated by calling the C<full_message()>
-method.  This can be easily overridden.  For example:
+method. This can be easily overridden. For example:
 
   sub full_message {
       my $self = shift;
@@ -565,7 +575,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Dave Rolsky.
+This software is copyright (c) 2014 by David Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
