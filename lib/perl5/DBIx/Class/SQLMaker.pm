@@ -44,8 +44,16 @@ use namespace::clean;
 
 __PACKAGE__->mk_group_accessors (simple => qw/quote_char name_sep limit_dialect/);
 
+sub _quoting_enabled {
+  ( defined $_[0]->{quote_char} and length $_[0]->{quote_char} ) ? 1 : 0
+}
+
 # for when I need a normalized l/r pair
 sub _quote_chars {
+
+  # in case we are called in the old !!$sm->_quote_chars fashion
+  return () if !wantarray and ( ! defined $_[0]->{quote_char} or ! length $_[0]->{quote_char} );
+
   map
     { defined $_ ? $_ : '' }
     ( ref $_[0]->{quote_char} ? (@{$_[0]->{quote_char}}) : ( ($_[0]->{quote_char}) x 2 ) )
@@ -110,7 +118,7 @@ sub select {
   my ($self, $table, $fields, $where, $rs_attrs, $limit, $offset) = @_;
 
 
-  $fields = $self->_recurse_fields($fields);
+  ($fields, @{$self->{select_bind}}) = $self->_recurse_fields($fields);
 
   if (defined $offset) {
     $self->throw_exception('A supplied offset must be a non-negative integer')
@@ -231,42 +239,47 @@ sub _recurse_fields {
   return $$fields if $ref eq 'SCALAR';
 
   if ($ref eq 'ARRAY') {
-    return join(', ', map { $self->_recurse_fields($_) } @$fields);
+    my (@select, @bind);
+    for my $field (@$fields) {
+      my ($select, @new_bind) = $self->_recurse_fields($field);
+      push @select, $select;
+      push @bind, @new_bind;
+    }
+    return (join(', ', @select), @bind);
   }
   elsif ($ref eq 'HASH') {
     my %hash = %$fields;  # shallow copy
 
     my $as = delete $hash{-as};   # if supplied
 
-    my ($func, $args, @toomany) = %hash;
+    my ($func, $rhs, @toomany) = %hash;
 
     # there should be only one pair
     if (@toomany) {
       $self->throw_exception( "Malformed select argument - too many keys in hash: " . join (',', keys %$fields ) );
     }
 
-    if (lc ($func) eq 'distinct' && ref $args eq 'ARRAY' && @$args > 1) {
+    if (lc ($func) eq 'distinct' && ref $rhs eq 'ARRAY' && @$rhs > 1) {
       $self->throw_exception (
         'The select => { distinct => ... } syntax is not supported for multiple columns.'
-       .' Instead please use { group_by => [ qw/' . (join ' ', @$args) . '/ ] }'
-       .' or { select => [ qw/' . (join ' ', @$args) . '/ ], distinct => 1 }'
+       .' Instead please use { group_by => [ qw/' . (join ' ', @$rhs) . '/ ] }'
+       .' or { select => [ qw/' . (join ' ', @$rhs) . '/ ], distinct => 1 }'
       );
     }
 
+    my ($rhs_sql, @rhs_bind) = $self->_recurse_fields($rhs);
     my $select = sprintf ('%s( %s )%s',
       $self->_sqlcase($func),
-      $self->_recurse_fields($args),
+      $rhs_sql,
       $as
         ? sprintf (' %s %s', $self->_sqlcase('as'), $self->_quote ($as) )
         : ''
     );
 
-    return $select;
+    return ($select, @rhs_bind);
   }
-  # Is the second check absolutely necessary?
   elsif ( $ref eq 'REF' and ref($$fields) eq 'ARRAY' ) {
-    push @{$self->{select_bind}}, @{$$fields}[1..$#$$fields];
-    return $$fields->[0];
+    return @{$$fields};
   }
   else {
     $self->throw_exception( $ref . qq{ unexpected in _recurse_fields()} );
@@ -288,11 +301,9 @@ sub _parse_rs_attrs {
   my $sql = '';
 
   if ($arg->{group_by}) {
-    # horrible horrible, waiting for refactor
-    local $self->{select_bind};
-    if (my $g = $self->_recurse_fields($arg->{group_by}) ) {
-      $sql .= $self->_sqlcase(' group by ') . $g;
-      push @{$self->{group_bind} ||= []}, @{$self->{select_bind}||[]};
+    if ( my ($group_sql, @group_bind) = $self->_recurse_fields($arg->{group_by}) ) {
+      $sql .= $self->_sqlcase(' group by ') . $group_sql;
+      push @{$self->{group_bind}}, @group_bind;
     }
   }
 
@@ -441,8 +452,6 @@ sub _join_condition {
 
   # Backcompat for the old days when a plain hashref
   # { 't1.col1' => 't2.col2' } meant ON t1.col1 = t2.col2
-  # Once things settle we should start warning here so that
-  # folks unroll their hacks
   if (
     ref $cond eq 'HASH'
       and
@@ -452,6 +461,12 @@ sub _join_condition {
       and
     ! ref ( (values %$cond)[0] )
   ) {
+    carp_unique(
+      "ResultSet {from} structures with conditions not conforming to the "
+    . "SQL::Abstract syntax are deprecated: you either need to stop abusing "
+    . "{from} altogether, or express the condition properly using the "
+    . "{ -ident => ... } operator"
+    );
     $cond = { keys %$cond => { -ident => values %$cond } }
   }
   elsif ( ref $cond eq 'ARRAY' ) {
@@ -518,14 +533,17 @@ sub _where_op_multicolumn_in {
   \[ join( ' IN ', shift @$$lhs, shift @$$rhs ), @$$lhs, @$$rhs ];
 }
 
-1;
+=head1 FURTHER QUESTIONS?
 
-=head1 AUTHORS
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-See L<DBIx::Class/CONTRIBUTORS>.
+=head1 COPYRIGHT AND LICENSE
 
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
+
+1;
