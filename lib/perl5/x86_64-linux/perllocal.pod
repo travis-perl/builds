@@ -1,4 +1,4 @@
-=head2 Tue Sep 23 13:40:30 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
+=head2 Fri Dec 19 22:15:11 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 6.98>
+C<VERSION: 7.04>
 
 =item *
 
@@ -20,7 +20,7 @@ C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Tue Sep 23 13:40:34 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Fri Dec 19 22:15:14 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:40:35 2014: C<Module> L<Carp|Carp>
+=head2 Fri Dec 19 22:15:15 2014: C<Module> L<Carp|Carp>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:40:37 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Fri Dec 19 22:15:16 2014: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:40:39 2014: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Fri Dec 19 22:15:18 2014: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Tue Sep 23 13:40:55 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Fri Dec 19 22:15:31 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -130,7 +130,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:40:56 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Fri Dec 19 22:15:32 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.14.4@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.008>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 19 22:15:34 2014: C<Module> L<YAML|YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.14.4@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 19 22:15:35 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -152,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:40:57 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Fri Dec 19 22:15:36 2014: C<Module> L<HTTP::Tiny|HTTP::Tiny>
 
 =over 4
 
@@ -166,73 +210,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.998>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Sep 23 13:40:59 2014: C<Module> L<YAML|YAML>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.14.4@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.12>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Sep 23 13:41:02 2014: C<Module> L<Class::Accessor::Lite|Class::Accessor::Lite>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.14.4@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.06>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Sep 23 13:41:05 2014: C<Module> L<HTTP::Parser::XS|HTTP::Parser::XS>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.14.4@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.16>
+C<VERSION: 0.053>
 
 =item *
 
