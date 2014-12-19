@@ -1,5 +1,6 @@
 package Moose::Exception::ClassNamesDoNotMatch;
-$Moose::Exception::ClassNamesDoNotMatch::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose;
 extends 'Moose::Exception';
 
