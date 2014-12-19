@@ -10,10 +10,8 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Plugin::Git::NextVersion;
-{
-  $Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.024';
-}
 # ABSTRACT: provide a version number by bumping the last git release tag
+$Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.028';
 
 use Dist::Zilla 4 ();
 use version 0.80 ();
@@ -204,7 +202,7 @@ Dist::Zilla::Plugin::Git::NextVersion - provide a version number by bumping the 
 
 =head1 VERSION
 
-version 2.024
+version 2.028
 
 =head1 SYNOPSIS
 

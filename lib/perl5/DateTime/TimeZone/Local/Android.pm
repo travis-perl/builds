@@ -1,7 +1,9 @@
 package DateTime::TimeZone::Local::Android;
-$DateTime::TimeZone::Local::Android::VERSION = '1.74';
+$DateTime::TimeZone::Local::Android::VERSION = '1.81';
 use strict;
 use warnings;
+
+use Try::Tiny;
 
 use parent 'DateTime::TimeZone::Local';
 
@@ -19,23 +21,19 @@ sub EnvVars { return 'TZ' }
 sub FromGetProp {
     my $name = `getprop persist.sys.timezone`;
     chomp $name;
-    my $tz;
-    {
-        local $@;
+    my $tz = try {
         local $SIG{__DIE__};
-        $tz = eval { DateTime::TimeZone->new( name => $name ) };
-    }
+        DateTime::TimeZone->new( name => $name );
+    };
 
     return $tz if $tz;
 }
 
 # See the link above. Android always defaults to UTC
 sub FromDefault {
-    my $tz;
-    {
-        local $@;
+    my $tz = try {
         local $SIG{__DIE__};
-        $tz = eval { DateTime::TimeZone->new( name => 'UTC' ) };
+        $tz = DateTime::TimeZone->new( name => 'UTC' );
     }
 
     return $tz if $tz;

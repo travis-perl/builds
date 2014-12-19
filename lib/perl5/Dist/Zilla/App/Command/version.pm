@@ -2,11 +2,14 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::version;
 # ABSTRACT: display dzil's version
-$Dist::Zilla::App::Command::version::VERSION = '5.020';
+$Dist::Zilla::App::Command::version::VERSION = '5.029';
 use Dist::Zilla::App -command;
-use Moose;
-extends 'App::Cmd::Command::version';
-
+use App::Cmd::Command::version;
+BEGIN {
+  ## parent and base dont work here. ??? -- kentnl 2014-10-31
+  our @ISA;
+  unshift @ISA, 'App::Cmd::Command::version';
+}
 
 #pod =head1 SYNOPSIS
 #pod
@@ -37,7 +40,7 @@ Dist::Zilla::App::Command::version - display dzil's version
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::build;
 # ABSTRACT: build your dist
-$Dist::Zilla::App::Command::build::VERSION = '5.020';
+$Dist::Zilla::App::Command::build::VERSION = '5.029';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -65,6 +65,8 @@ sub execute {
     $zilla->is_trial(1) if $opt->trial;
     $zilla->$method;
   }
+
+  $self->zilla->log('built in ' . $self->zilla->built_in);
 }
 
 1;
@@ -81,7 +83,7 @@ Dist::Zilla::App::Command::build - build your dist
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Prereqs;
 # ABSTRACT: list simple prerequisites
-$Dist::Zilla::Plugin::Prereqs::VERSION = '5.020';
+$Dist::Zilla::Plugin::Prereqs::VERSION = '5.029';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
@@ -142,6 +142,7 @@ sub BUILDARGS {
 
   # Handle magic plugin names:
   unless (($other{phase} and $other{type})
+            # plugin comes from a bundle
           or $name =~ m! (?: \A | / ) Prereqs? \z !x) {
 
     my ($phase, $type) = $name =~ /\A
@@ -212,7 +213,7 @@ Dist::Zilla::Plugin::Prereqs - list simple prerequisites
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 
