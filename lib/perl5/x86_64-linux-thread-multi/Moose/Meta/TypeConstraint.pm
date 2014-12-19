@@ -1,5 +1,6 @@
 package Moose::Meta::TypeConstraint;
-$Moose::Meta::TypeConstraint::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 use metaclass;
@@ -9,9 +10,8 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
              bool     => sub { 1 },
              fallback => 1;
 
-use Class::Load qw(load_class);
 use Eval::Closure;
-use Scalar::Util qw(blessed refaddr);
+use Scalar::Util qw(refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
 
@@ -375,7 +375,7 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

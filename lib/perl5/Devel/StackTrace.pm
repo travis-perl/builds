@@ -1,5 +1,7 @@
 package Devel::StackTrace;
-$Devel::StackTrace::VERSION = '1.34';
+# git description: v1.34-10-g810fd3f
+
+$Devel::StackTrace::VERSION = '2.00';
 use 5.006;
 
 use strict;
@@ -17,10 +19,8 @@ sub new {
     my $class = shift;
     my %p     = @_;
 
-    # Backwards compatibility - this parameter was renamed to no_refs
-    # ages ago.
-    $p{no_refs} = delete $p{no_object_refs}
-        if exists $p{no_object_refs};
+    $p{unsafe_ref_capture} = !delete $p{no_refs}
+        if exists $p{no_refs};
 
     my $self = bless {
         index  => undef,
@@ -60,13 +60,14 @@ sub _record_caller_data {
 
         my $raw = {
             caller => \@c,
-            args => \@args,
+            args   => \@args,
         };
 
         next if $filter && !$filter->($raw);
 
-        if ( $self->{no_refs} ) {
-            $raw->{args} = [ map { ref $_ ? $self->_ref_to_string($_) : $_ } @{$raw->{args}} ];
+        unless ( $self->{unsafe_ref_capture} ) {
+            $raw->{args} = [ map { ref $_ ? $self->_ref_to_string($_) : $_ }
+                    @{ $raw->{args} } ];
         }
 
         push @{ $self->{raw} }, $raw;
@@ -97,7 +98,7 @@ sub _make_frames {
 
     my $raw = delete $self->{raw};
     for my $r ( @{$raw} ) {
-        next if $filter && ! $filter->($r);
+        next if $filter && !$filter->($r);
 
         $self->_add_frame( $r->{caller}, $r->{args} );
     }
@@ -248,7 +249,7 @@ sub as_string {
 }
 
 {
-    package
+    package    # hide from PAUSE
         Devel::StackTraceFrame;
 
     our @ISA = 'Devel::StackTrace::Frame';
@@ -268,7 +269,7 @@ Devel::StackTrace - An object representing a stack trace
 
 =head1 VERSION
 
-version 1.34
+version 2.00
 
 =head1 SYNOPSIS
 
@@ -301,6 +302,8 @@ available from C<caller()>.
 
 This code was created to support my L<Exception::Class::Base> class (part of
 L<Exception::Class>) but may be useful in other contexts.
+
+=encoding UTF-8
 
 =head1 'TOP' AND 'BOTTOM' OF THE STACK
 
@@ -352,9 +355,9 @@ false if it should be skipped.
 =item * filter_frames_early => $boolean
 
 If this parameter is true, C<frame_filter> will be called as soon as the
-stacktrace is created, and before refs are stringified (if C<no_refs> is
-true), rather than being filtered lazily when L<Devel::StackTrace::Frame>
-objects are first needed.
+stacktrace is created, and before refs are stringified (if
+C<unsafe_ref_capture> is not set), rather than being filtered lazily when
+L<Devel::StackTrace::Frame> objects are first needed.
 
 This is useful if you want to filter based on the frame's arguments and want
 to be able to examine object properties, for example.
@@ -381,13 +384,18 @@ stack trace. This prevents the frames from being captured at all, and applies
 before the C<frame_filter>, C<ignore_package>, or C<ignore_class> options,
 even with C<filter_frames_early>.
 
-=item * no_refs => $boolean
+=item * unsafe_ref_capture => $boolean
 
-If this parameter is true, then Devel::StackTrace will not store
-references internally when generating stacktrace frames. This lets
-your objects go out of scope.
+If this parameter is true, then Devel::StackTrace will store
+references internally when generating stacktrace frames.
 
-Devel::StackTrace replaces any references with their stringified
+B<This option is very dangerous, and should never be used with exception
+objects>. Using this option will keep any objects or references alive past
+their normal lifetime, until the stack trace object goes out of scope. It can
+keep objects alive even after their C<DESTROY> sub is called, resulting it it
+being called multiple times on the same object.
+
+If not set, Devel::StackTrace replaces any references with their stringified
 representation.
 
 =item * no_args => $boolean
@@ -488,9 +496,33 @@ or via email at bug-devel-stacktrace@rt.cpan.org.
 
 Dave Rolsky <autarch@urth.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Dagfinn Ilmari Mannsåker David Cantrell Graham Knop Ricardo Signes
+
+=over 4
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+David Cantrell <david@cantrell.org.uk>
+
+=item *
+
+Graham Knop <haarg@haarg.org>
+
+=item *
+
+Ricardo Signes <rjbs@cpan.org>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by Dave Rolsky.
+This software is Copyright (c) 2000 - 2014 by David Rolsky.
 
 This is free software, licensed under:
 
