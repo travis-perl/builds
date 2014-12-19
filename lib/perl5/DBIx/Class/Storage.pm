@@ -227,6 +227,7 @@ sub txn_commit {
     $self->debugobj->txn_commit() if $self->debug;
     $self->_exec_txn_commit;
     $self->{transaction_depth}--;
+    $self->savepoints([]);
   }
   elsif($self->transaction_depth > 1) {
     $self->{transaction_depth}--;
@@ -252,6 +253,7 @@ sub txn_rollback {
     $self->debugobj->txn_rollback() if $self->debug;
     $self->_exec_txn_rollback;
     $self->{transaction_depth}--;
+    $self->savepoints([]);
   }
   elsif ($self->transaction_depth > 1) {
     $self->{transaction_depth}--;
@@ -434,10 +436,10 @@ shell environment.
 
 =head2 debugfh
 
-Set or retrieve the filehandle used for trace/debug output.  This should be
-an IO::Handle compatible object (only the C<print> method is used.  Initially
-set to be STDERR - although see information on the
-L<DBIC_TRACE> environment variable.
+An opportunistic proxy to L<< ->debugobj->debugfh(@_)
+|DBIx::Class::Storage::Statistics/debugfh >>
+If the currently set L</debugobj> does not have a L</debugfh> method, caling
+this is a no-op.
 
 =cut
 
@@ -634,7 +636,6 @@ filename the file is read with L<Config::Any> and the results are
 used as the configuration for tracing.  See L<SQL::Abstract::Tree/new>
 for what that structure should look like.
 
-
 =head2 DBIX_CLASS_STORAGE_DBI_DEBUG
 
 Old name for DBIC_TRACE
@@ -644,13 +645,16 @@ Old name for DBIC_TRACE
 L<DBIx::Class::Storage::DBI> - reference storage implementation using
 SQL::Abstract and DBI.
 
-=head1 AUTHOR AND CONTRIBUTORS
+=head1 FURTHER QUESTIONS?
 
-See L<AUTHOR|DBIx::Class/AUTHOR> and L<CONTRIBUTORS|DBIx::Class/CONTRIBUTORS> in DBIx::Class
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
 
