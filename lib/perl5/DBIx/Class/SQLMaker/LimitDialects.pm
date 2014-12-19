@@ -61,7 +61,7 @@ sub _LimitOffset {
 
 =head2 LimitXY
 
- SELECT ... LIMIT $offset $limit
+ SELECT ... LIMIT $offset, $limit
 
 Supported by B<MySQL> and any L<SQL::Statement> based DBD
 
@@ -221,7 +221,7 @@ sub _FirstSkip {
 Depending on the resultset attributes one of:
 
  SELECT * FROM (
-  SELECT *, ROWNUM rownum__index FROM (
+  SELECT *, ROWNUM AS rownum__index FROM (
    SELECT ...
   ) WHERE ROWNUM <= ($limit+$offset)
  ) WHERE rownum__index >= ($offset+1)
@@ -229,7 +229,7 @@ Depending on the resultset attributes one of:
 or
 
  SELECT * FROM (
-  SELECT *, ROWNUM rownum__index FROM (
+  SELECT *, ROWNUM AS rownum__index FROM (
     SELECT ...
   )
  ) WHERE rownum__index BETWEEN ($offset+1) AND ($limit+$offset)
@@ -278,7 +278,7 @@ EOS
   if (
     $rs_attrs->{order_by}
       and
-    $rs_attrs->{_rsroot_rsrc}->storage->_order_by_is_stable(
+    $rs_attrs->{result_source}->storage->_order_by_is_stable(
       @{$rs_attrs}{qw/from order_by where/}
     )
   ) {
@@ -286,7 +286,7 @@ EOS
 
     return <<EOS;
 SELECT $sq_attrs->{selection_outer} FROM (
-  SELECT $sq_attrs->{selection_outer}, ROWNUM $idx_name FROM (
+  SELECT $sq_attrs->{selection_outer}, ROWNUM AS $idx_name FROM (
     SELECT $sq_attrs->{selection_inner} $sq_attrs->{query_leftover}${order_group_having}
   ) $qalias WHERE ROWNUM <= ?
 ) $qalias WHERE $idx_name >= ?
@@ -297,7 +297,7 @@ EOS
 
     return <<EOS;
 SELECT $sq_attrs->{selection_outer} FROM (
-  SELECT $sq_attrs->{selection_outer}, ROWNUM $idx_name FROM (
+  SELECT $sq_attrs->{selection_outer}, ROWNUM AS $idx_name FROM (
     SELECT $sq_attrs->{selection_inner} $sq_attrs->{query_leftover}${order_group_having}
   ) $qalias
 ) $qalias WHERE $idx_name BETWEEN ? AND ?
@@ -331,7 +331,7 @@ sub _prep_for_skimming_limit {
     if ($sq_attrs->{order_by_requested}) {
       $self->throw_exception (
         'Unable to safely perform "skimming type" limit with supplied unstable order criteria'
-      ) unless ($rs_attrs->{_rsroot_rsrc}->schema->storage->_order_by_is_stable(
+      ) unless ($rs_attrs->{result_source}->schema->storage->_order_by_is_stable(
         $rs_attrs->{from},
         $requested_order,
         $rs_attrs->{where},
@@ -343,11 +343,11 @@ sub _prep_for_skimming_limit {
       $inner_order = [ map
         { "$rs_attrs->{alias}.$_" }
         ( @{
-          $rs_attrs->{_rsroot_rsrc}->_identifying_column_set
+          $rs_attrs->{result_source}->_identifying_column_set
             ||
           $self->throw_exception(sprintf(
             'Unable to auto-construct stable order criteria for "skimming type" limit '
-          . "dialect based on source '%s'", $rs_attrs->{_rsroot_rsrc}->name) );
+          . "dialect based on source '%s'", $rs_attrs->{result_source}->name) );
         } )
       ];
     }
@@ -532,29 +532,37 @@ Currently used by B<Sybase ASE>, due to lack of any other option.
 sub _GenericSubQ {
   my ($self, $sql, $rs_attrs, $rows, $offset) = @_;
 
-  my $root_rsrc = $rs_attrs->{_rsroot_rsrc};
+  my $main_rsrc = $rs_attrs->{result_source};
 
   # Explicitly require an order_by
   # GenSubQ is slow enough as it is, just emulating things
   # like in other cases is not wise - make the user work
   # to shoot their DBA in the foot
-  my $supplied_order = delete $rs_attrs->{order_by} or $self->throw_exception (
+  $self->throw_exception (
     'Generic Subquery Limit does not work on resultsets without an order. Provide a stable, '
-  . 'root-table-based order criteria.'
+  . 'main-table-based order criteria.'
+  ) unless $rs_attrs->{order_by};
+
+  my $usable_order_colinfo = $main_rsrc->storage->_extract_colinfo_of_stable_main_source_order_by_portion(
+    $rs_attrs
   );
 
-  my $usable_order_ci = $root_rsrc->storage->_main_source_order_by_portion_is_stable(
-    $root_rsrc,
-    $supplied_order,
-    $rs_attrs->{where},
-  ) or $self->throw_exception(
-    'Generic Subquery Limit can not work with order criteria based on sources other than the current one'
+  $self->throw_exception(
+    'Generic Subquery Limit can not work with order criteria based on sources other than the main one'
+  ) if (
+    ! keys %{$usable_order_colinfo||{}}
+      or
+    grep
+      { $_->{-source_alias} ne $rs_attrs->{alias} }
+      (values %$usable_order_colinfo)
   );
 
 ###
 ###
 ### we need to know the directions after we figured out the above - reextract *again*
 ### this is eyebleed - trying to get it to work at first
+  my $supplied_order = delete $rs_attrs->{order_by};
+
   my @order_bits = do {
     local $self->{quote_char};
     local $self->{order_bind};
@@ -562,20 +570,20 @@ sub _GenericSubQ {
   };
 
   # truncate to what we'll use
-  $#order_bits = ( (keys %$usable_order_ci) - 1 );
+  $#order_bits = ( (keys %$usable_order_colinfo) - 1 );
 
   # @order_bits likely will come back quoted (due to how the prefetch
   # rewriter operates
   # Hence supplement the column_info lookup table with quoted versions
   if ($self->quote_char) {
-    $usable_order_ci->{$self->_quote($_)} = $usable_order_ci->{$_}
-      for keys %$usable_order_ci;
+    $usable_order_colinfo->{$self->_quote($_)} = $usable_order_colinfo->{$_}
+      for keys %$usable_order_colinfo;
   }
 
 # calculate the condition
   my $count_tbl_alias = 'rownum__emulation';
-  my $root_alias = $rs_attrs->{alias};
-  my $root_tbl_name = $root_rsrc->name;
+  my $main_alias = $rs_attrs->{alias};
+  my $main_tbl_name = $main_rsrc->name;
 
   my (@unqualified_names, @qualified_names, @is_desc, @new_order_by);
 
@@ -584,17 +592,17 @@ sub _GenericSubQ {
     ($bit, my $is_desc) = $self->_split_order_chunk($bit);
 
     push @is_desc, $is_desc;
-    push @unqualified_names, $usable_order_ci->{$bit}{-colname};
-    push @qualified_names, $usable_order_ci->{$bit}{-fq_colname};
+    push @unqualified_names, $usable_order_colinfo->{$bit}{-colname};
+    push @qualified_names, $usable_order_colinfo->{$bit}{-fq_colname};
 
-    push @new_order_by, { ($is_desc ? '-desc' : '-asc') => $usable_order_ci->{$bit}{-fq_colname} };
+    push @new_order_by, { ($is_desc ? '-desc' : '-asc') => $usable_order_colinfo->{$bit}{-fq_colname} };
   };
 
   my (@where_cond, @skip_colpair_stack);
   for my $i (0 .. $#order_bits) {
-    my $ci = $usable_order_ci->{$order_bits[$i]};
+    my $ci = $usable_order_colinfo->{$order_bits[$i]};
 
-    my ($subq_col, $main_col) = map { "$_.$ci->{-colname}" } ($count_tbl_alias, $root_alias);
+    my ($subq_col, $main_col) = map { "$_.$ci->{-colname}" } ($count_tbl_alias, $main_alias);
     my $cur_cond = { $subq_col => { ($is_desc[$i] ? '>' : '<') => { -ident => $main_col } } };
 
     push @skip_colpair_stack, [
@@ -683,7 +691,7 @@ WHERE ( SELECT COUNT(*) FROM %s %s $counted_where ) $rownum_cond
 $inner_order_sql
   ", map { $self->_quote ($_) } (
     $rs_attrs->{alias},
-    $root_tbl_name,
+    $main_tbl_name,
     $count_tbl_alias,
   ));
 }
@@ -693,7 +701,7 @@ $inner_order_sql
 #
 # Generates inner/outer select lists for various limit dialects
 # which result in one or more subqueries (e.g. RNO, Top, RowNum)
-# Any non-root-table columns need to have their table qualifier
+# Any non-main-table columns need to have their table qualifier
 # turned into a column alias (otherwise names in subqueries clash
 # and/or lose their source table)
 #
@@ -725,23 +733,22 @@ sub _subqueried_limit_attrs {
 
   my ($re_sep, $re_alias) = map { quotemeta $_ } ( $self->{name_sep}, $rs_attrs->{alias} );
 
-  # insulate from the multiple _recurse_fields calls below
-  local $self->{select_bind};
-
   # correlate select and as, build selection index
   my (@sel, $in_sel_index);
   for my $i (0 .. $#{$rs_attrs->{select}}) {
 
     my $s = $rs_attrs->{select}[$i];
-    my $sql_sel = $self->_recurse_fields ($s);
     my $sql_alias = (ref $s) eq 'HASH' ? $s->{-as} : undef;
+
+    # we throw away the @bind here deliberately
+    my ($sql_sel) = $self->_recurse_fields ($s);
 
     push @sel, {
       arg => $s,
       sql => $sql_sel,
       unquoted_sql => do {
         local $self->{quote_char};
-        $self->_recurse_fields ($s);
+        ($self->_recurse_fields ($s))[0]; # ignore binds again
       },
       as =>
         $sql_alias
@@ -822,14 +829,17 @@ sub _unqualify_colname {
   return $fqcn;
 }
 
-1;
+=head1 FURTHER QUESTIONS?
 
-=head1 AUTHORS
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-See L<DBIx::Class/CONTRIBUTORS>.
+=head1 COPYRIGHT AND LICENSE
 
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.
 
 =cut
+
+1;

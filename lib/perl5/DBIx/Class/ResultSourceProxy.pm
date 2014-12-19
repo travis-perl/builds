@@ -4,9 +4,10 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-use base qw/DBIx::Class/;
-use Scalar::Util qw/blessed/;
-use Sub::Name qw/subname/;
+use base 'DBIx::Class';
+
+use Scalar::Util 'blessed';
+use DBIx::Class::_Util 'quote_sub';
 use namespace::clean;
 
 __PACKAGE__->mk_group_accessors('inherited_ro_instance' => 'source_name');
@@ -80,10 +81,11 @@ for my $method_to_proxy (qw/
   relationship_info
   has_relationship
 /) {
-  no strict qw/refs/;
-  *{__PACKAGE__."::$method_to_proxy"} = subname $method_to_proxy => sub {
-    shift->result_source_instance->$method_to_proxy (@_);
-  };
+  quote_sub __PACKAGE__."::$method_to_proxy", sprintf( <<'EOC', $method_to_proxy );
+    DBIx::Class::_ENV_::ASSERT_NO_INTERNAL_INDIRECT_CALLS and DBIx::Class::_Util::fail_on_internal_call;
+    shift->result_source_instance->%s (@_);
+EOC
+
 }
 
 1;

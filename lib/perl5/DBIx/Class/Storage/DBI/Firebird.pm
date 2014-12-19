@@ -8,8 +8,9 @@ use warnings;
 # in ::Storage::DBI::InterBase as opposed to inheriting
 # directly from ::Storage::DBI::Firebird::Common
 use base qw/DBIx::Class::Storage::DBI::InterBase/;
-
 use mro 'c3';
+
+1;
 
 =head1 NAME
 
@@ -21,17 +22,13 @@ L<DBD::Firebird>
 This is an empty subclass of L<DBIx::Class::Storage::DBI::InterBase> for use
 with L<DBD::Firebird>, see that driver for details.
 
-=cut
+=head1 FURTHER QUESTIONS?
 
-1;
+Check the list of L<additional DBIC resources|DBIx::Class/GETTING HELP/SUPPORT>.
 
-=head1 AUTHOR
+=head1 COPYRIGHT AND LICENSE
 
-See L<DBIx::Class/AUTHOR> and L<DBIx::Class/CONTRIBUTORS>.
-
-=head1 LICENSE
-
-You may distribute this code under the same terms as Perl itself.
-
-=cut
-# vim:sts=2 sw=2:
+This module is free software L<copyright|DBIx::Class/COPYRIGHT AND LICENSE>
+by the L<DBIx::Class (DBIC) authors|DBIx::Class/AUTHORS>. You can
+redistribute it and/or modify it under the same terms as the
+L<DBIx::Class library|DBIx::Class/COPYRIGHT AND LICENSE>.

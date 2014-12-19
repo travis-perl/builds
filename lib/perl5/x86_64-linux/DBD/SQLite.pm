@@ -5,7 +5,7 @@ use strict;
 use DBI   1.57 ();
 use DynaLoader ();
 
-our $VERSION = '1.42';
+our $VERSION = '1.46';
 our @ISA     = 'DynaLoader';
 
 # sqlite_version cache (set in the XS bootstrap)
@@ -55,8 +55,8 @@ sub driver {
         DBD::SQLite::db->install_method('sqlite_table_column_metadata', { O => 0x0004 });
         DBD::SQLite::db->install_method('sqlite_db_filename', { O => 0x0004 });
         DBD::SQLite::db->install_method('sqlite_db_status', { O => 0x0004 });
-
         DBD::SQLite::st->install_method('sqlite_st_status', { O => 0x0004 });
+        DBD::SQLite::db->install_method('sqlite_create_module');
 
         $methods_are_installed++;
     }
@@ -112,17 +112,13 @@ sub connect {
 
     # To avoid unicode and long file name problems on Windows,
     # convert to the shortname if the file (or parent directory) exists.
-    if ( $^O =~ /MSWin32/ and $real ne ':memory:' and $real ne '' and $real !~ /^file:/) {
-        require Win32;
+    if ( $^O =~ /MSWin32/ and $real ne ':memory:' and $real ne '' and $real !~ /^file:/ and !-f $real ) {
         require File::Basename;
         my ($file, $dir, $suffix) = File::Basename::fileparse($real);
-        my $short = Win32::GetShortPathName($real);
-        if ( $short && -f $short ) {
-            # Existing files will work directly.
-            $real = $short;
-        } elsif ( -d $dir ) {
-            # We are creating a new file.
-            # Does the directory it's in at least exist?
+        # We are creating a new file.
+        # Does the directory it's in at least exist?
+        if ( -d $dir ) {
+            require Win32;
             $real = join '', grep { defined } Win32::GetShortPathName($dir), $file, $suffix;
         } else {
             # SQLite can't do mkpath anyway.
@@ -315,7 +311,8 @@ SELECT NULL TABLE_CAT
 FROM (
      SELECT 'TABLE' tt                  UNION
      SELECT 'VIEW' tt                   UNION
-     SELECT 'LOCAL TEMPORARY' tt
+     SELECT 'LOCAL TEMPORARY' tt        UNION
+     SELECT 'SYSTEM TABLE' tt
 ) t
 ORDER BY TABLE_TYPE
 END_SQL
@@ -459,6 +456,7 @@ sub primary_key_info {
                 }
             }
 
+            my $key_name = $row->{sql} =~ /\bCONSTRAINT\s+(\S+|"[^"]+")\s+PRIMARY\s+KEY\s*\(/i ? $1 : 'PRIMARY KEY';
             my $key_seq = 0;
             foreach my $pk_field (@pk) {
                 push @pk_info, {
@@ -466,7 +464,7 @@ sub primary_key_info {
                     TABLE_NAME  => $tbname,
                     COLUMN_NAME => $pk_field,
                     KEY_SEQ     => ++$key_seq,
-                    PK_NAME     => 'PRIMARY KEY',
+                    PK_NAME     => $key_name,
                 };
             }
         }
@@ -1042,6 +1040,30 @@ is gone (notably under MS Windows).
 If you don't need to keep or share a temporary database,
 use ":memory:" database instead. It's much handier and cleaner
 for ordinary testing.
+
+=head2 DBD::SQLite and fork()
+
+Follow the advice in the SQLite FAQ (L<https://sqlite.org/faq.html>).
+
+=over 4
+
+Under Unix, you should not carry an open SQLite database across
+a fork() system call into the child process. Problems will result
+if you do.
+
+=back
+
+You shouldn't (re)use a database handle you created (probably to
+set up a database schema etc) before you fork(). Otherwise, you
+might see a database corruption in the worst case.
+
+If you need to fork(), (re)open a database after you fork().
+You might also want to tweak C<sqlite_busy_timeout> and
+C<sqlite_use_immediate_transaction> (see below), depending
+on your needs.
+
+If you need a higher level of concurrency than SQLite supports,
+consider using other client/server database engines.
 
 =head2 Accessing A Database With Other Tools
 
@@ -1731,7 +1753,7 @@ current number of seconds since the epoch:
 
   $dbh->sqlite_create_function( 'now', 0, sub { return time } );
 
-After this, it could be use from SQL as:
+After this, it could be used from SQL as:
 
   INSERT INTO mytable ( now() );
 
@@ -2134,6 +2156,13 @@ Returns a hash reference that holds a set of status information of SQLite statem
 
 You may also pass 0 as an argument to reset the status.
 
+=head2 $sth->sqlite_create_module()
+
+Registers a name for a I<virtual table module>. Module names must be
+registered before creating a new virtual table using the module and
+before using a preexisting virtual table for the module.
+Virtual tables are explained in L<DBD::SQLite::VirtualTable>.
+
 =head1 DRIVER CONSTANTS
 
 A subset of SQLite C constants are made available to Perl,
@@ -2332,238 +2361,14 @@ need to call the L</create_collation> method directly.
 
 =head1 FULLTEXT SEARCH
 
-The FTS extension module within SQLite allows users to create special
-tables with a built-in full-text index (hereafter "FTS tables"). The
-full-text index allows the user to efficiently query the database for
-all rows that contain one or more instances of a specified word (hereafter
-a "token"), even if the table contains many large documents.
+SQLite is bundled with an extension module for full-text
+indexing. Tables with this feature enabled can be efficiently queried
+to find rows that contain one or more instances of some specified
+words, in any column, even if the table contains many large documents.
 
-=head2 Short introduction to FTS
+Explanations for using this feature are provided in a separate document:
+see L<DBD::SQLite::Fulltext_search>.
 
-The first full-text search modules for SQLite were called C<FTS1> and C<FTS2>
-and are now obsolete. The latest recommended module is C<FTS4>; however
-the former module C<FTS3> is still supporter. 
-Detailed documentation for both C<FTS4> and C<FTS3> can be found
-at L<http://www.sqlite.org/fts3.html>, including explanations about the
-differences between these two versions.
-
-Here is a very short example of using FTS :
-
-  $dbh->do(<<"") or die DBI::errstr;
-  CREATE VIRTUAL TABLE fts_example USING fts4(content)
-  
-  my $sth = $dbh->prepare("INSERT INTO fts_example(content) VALUES (?)");
-  $sth->execute($_) foreach @docs_to_insert;
-  
-  my $results = $dbh->selectall_arrayref(<<"");
-  SELECT docid, snippet(fts_example) FROM fts_example WHERE content MATCH 'foo'
-  
-
-The key points in this example are :
-
-=over
-
-=item *
-
-The syntax for creating FTS tables is 
-
-  CREATE VIRTUAL TABLE <table_name> USING fts4(<columns>)
-
-where C<< <columns> >> is a list of column names. Columns may be
-typed, but the type information is ignored. If no columns
-are specified, the default is a single column named C<content>.
-In addition, FTS tables have an implicit column called C<docid>
-(or also C<rowid>) for numbering the stored documents.
-
-=item *
-
-Statements for inserting, updating or deleting records 
-use the same syntax as for regular SQLite tables.
-
-=item *
-
-Full-text searches are specified with the C<MATCH> operator, and an
-operand which may be a single word, a word prefix ending with '*', a
-list of words, a "phrase query" in double quotes, or a boolean combination
-of the above.
-
-=item *
-
-The builtin function C<snippet(...)> builds a formatted excerpt of the
-document text, where the words pertaining to the query are highlighted.
-
-=back
-
-There are many more details to building and searching
-FTS tables, so we strongly invite you to read
-the full documentation at L<http://www.sqlite.org/fts3.html>.
-
-B<Incompatible change> : 
-starting from version 1.31, C<DBD::SQLite> uses the new, recommended
-"Enhanced Query Syntax" for binary set operators (AND, OR, NOT, possibly 
-nested with parenthesis). Previous versions of C<DBD::SQLite> used the
-"Standard Query Syntax" (see L<http://www.sqlite.org/fts3.html#section_3_2>).
-Unfortunately this is a compilation switch, so it cannot be tuned
-at runtime; however, since FTS3 was never advertised in versions prior
-to 1.31, the change should be invisible to the vast majority of 
-C<DBD::SQLite> users. If, however, there are any applications
-that nevertheless were built using the "Standard Query" syntax,
-they have to be migrated, because the precedence of the C<OR> operator
-has changed. Conversion from old to new syntax can be 
-automated through L<DBD::SQLite::FTS3Transitional>, published
-in a separate distribution.
-
-=head2 Tokenizers
-
-The behaviour of full-text indexes strongly depends on how
-documents are split into I<tokens>; therefore FTS table
-declarations can explicitly specify how to perform
-tokenization: 
-
-  CREATE ... USING fts4(<columns>, tokenize=<tokenizer>)
-
-where C<< <tokenizer> >> is a sequence of space-separated
-words that triggers a specific tokenizer. Tokenizers can
-be SQLite builtins, written in C code, or Perl tokenizers.
-Both are as explained below.
-
-=head3 SQLite builtin tokenizers
-
-SQLite comes with three builtin tokenizers :
-
-=over
-
-=item simple
-
-Under the I<simple> tokenizer, a term is a contiguous sequence of
-eligible characters, where eligible characters are all alphanumeric
-characters, the "_" character, and all characters with UTF codepoints
-greater than or equal to 128. All other characters are discarded when
-splitting a document into terms. They serve only to separate adjacent
-terms.
-
-All uppercase characters within the ASCII range (UTF codepoints less
-than 128), are transformed to their lowercase equivalents as part of
-the tokenization process. Thus, full-text queries are case-insensitive
-when using the simple tokenizer.
-
-=item porter
-
-The I<porter> tokenizer uses the same rules to separate the input
-document into terms, but as well as folding all terms to lower case it
-uses the Porter Stemming algorithm to reduce related English language
-words to a common root.
-
-=item icu
-
-If SQLite is compiled with the SQLITE_ENABLE_ICU
-pre-processor symbol defined, then there exists a built-in tokenizer
-named "icu" implemented using the ICU library, and taking an
-ICU locale identifier as argument (such as "tr_TR" for
-Turkish as used in Turkey, or "en_AU" for English as used in
-Australia). For example:
-
-  CREATE VIRTUAL TABLE thai_text USING fts4(text, tokenize=icu th_TH)
-
-The ICU tokenizer implementation is very simple. It splits the input
-text according to the ICU rules for finding word boundaries and
-discards any tokens that consist entirely of white-space. This may be
-suitable for some applications in some locales, but not all. If more
-complex processing is required, for example to implement stemming or
-discard punctuation, use the perl tokenizer as explained below.
-
-=back
-
-=head3 Perl tokenizers
-
-In addition to the builtin SQLite tokenizers, C<DBD::SQLite>
-implements a I<perl> tokenizer, that can hook to any tokenizing
-algorithm written in Perl. This is specified as follows :
-
-  CREATE ... USING fts4(<columns>, tokenize=perl '<perl_function>')
-
-where C<< <perl_function> >> is a fully qualified Perl function name
-(i.e. prefixed by the name of the package in which that function is
-declared). So for example if the function is C<my_func> in the main 
-program, write
-
-  CREATE ... USING fts4(<columns>, tokenize=perl 'main::my_func')
-
-That function should return a code reference that takes a string as
-single argument, and returns an iterator (another function), which
-returns a tuple C<< ($term, $len, $start, $end, $index) >> for each
-term. Here is a simple example that tokenizes on words according to
-the current perl locale
-
-  sub locale_tokenizer {
-    return sub {
-      my $string = shift;
-
-      use locale;
-      my $regex      = qr/\w+/;
-      my $term_index = 0;
-
-      return sub { # closure
-        $string =~ /$regex/g or return; # either match, or no more token
-        my ($start, $end) = ($-[0], $+[0]);
-        my $len           = $end-$start;
-        my $term          = substr($string, $start, $len);
-        return ($term, $len, $start, $end, $term_index++);
-      }
-    };
-  }
-
-There must be three levels of subs, in a kind of "Russian dolls" structure,
-because :
-
-=over
-
-=item *
-
-the external, named sub is called whenever accessing a FTS table
-with that tokenizer
-
-=item *
-
-the inner, anonymous sub is called whenever a new string
-needs to be tokenized (either for inserting new text into the table,
-or for analyzing a query).
-
-=item *
-
-the innermost, anonymous sub is called repeatedly for retrieving
-all terms within that string.
-
-=back
-
-Instead of writing tokenizers by hand, you can grab one of those
-already implemented in the L<Search::Tokenizer> module. For example,
-if you want ignore differences between accented characters, you can
-write :
-
-  use Search::Tokenizer;
-  $dbh->do(<<"") or die DBI::errstr;
-  CREATE ... USING fts4(<columns>, 
-                        tokenize=perl 'Search::Tokenizer::unaccent')
-
-Alternatively, you can use L<Search::Tokenizer/new> to build
-your own tokenizer.
-
-
-=head2 Incomplete handling of utf8 characters
-
-The current FTS implementation in SQLite is far from complete with
-respect to utf8 handling : in particular, variable-length characters
-are not treated correctly by the builtin functions
-C<offsets()> and C<snippet()>.
-
-=head2 Database space for FTS
-
-By default, FTS stores a complete copy of the indexed documents, together with
-the fulltext index. On a large collection of documents, this can
-consume quite a lot of disk space. However, FTS has some options
-for compressing the documents, or even for not storing them at all
--- see L<http://www.sqlite.org/fts3.html#fts4_options>.
 
 =head1 R* TREE SUPPORT
 
@@ -2603,6 +2408,38 @@ For more detail, please see the SQLite R-Tree page
 (L<http://www.sqlite.org/rtree.html>). Note that custom R-Tree
 queries using callbacks, as mentioned in the prior link, have not been
 implemented yet.
+
+=head1 VIRTUAL TABLES IMPLEMENTED IN PERL
+
+SQLite has a concept of "virtual tables" which look like regular
+tables but are implemented internally through specific functions.
+The fulltext or R* tree features described in the previous chapters
+are examples of such virtual tables, implemented in C code.
+
+C<DBD::SQLite> also supports virtual tables implemented in I<Perl code>:
+see L<DBD::SQLite::VirtualTable> for using or implementing such
+virtual tables. These can have many interesting uses
+for joining regular DBMS data with some other kind of data within your
+Perl programs. Bundled with the present distribution are :
+
+=over 
+
+=item *
+
+L<DBD::SQLite::VirtualTable::FileContent> : implements a virtual
+column that exposes file contents. This is especially useful
+in conjunction with a fulltext index; see L<DBD::SQLite::Fulltext_search>.
+
+=item *
+
+L<DBD::SQLite::VirtualTable::PerlData> : binds to a Perl array
+within the Perl program. This can be used for simple import/export
+operations, for debugging purposes, for joining data from different
+sources, etc.
+
+=back
+
+Other Perl virtual tables may also be published separately on CPAN.
 
 =head1 FOR DBD::SQLITE EXTENSION AUTHORS
 
