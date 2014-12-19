@@ -1,5 +1,5 @@
 package Log::Dispatch::Email;
-$Log::Dispatch::Email::VERSION = '2.42';
+$Log::Dispatch::Email::VERSION = '2.44';
 use strict;
 use warnings;
 
@@ -7,6 +7,7 @@ use Log::Dispatch::Output;
 
 use base qw( Log::Dispatch::Output );
 
+use Devel::GlobalDestruction qw( in_global_destruction );
 use Params::Validate qw(validate SCALAR ARRAYREF BOOLEAN);
 Params::Validate::validation_options( allow_extra => 1 );
 
@@ -84,7 +85,20 @@ sub flush {
 sub DESTROY {
     my $self = shift;
 
-    $self->flush;
+    if (   in_global_destruction()
+        && $self->{buffered}
+        && @{ $self->{buffer} } ) {
+
+        my $name  = $self->name();
+        my $class = ref $self;
+        my $message
+            = "Log messages for the $name output (a $class object) remain unsent but the program is terminating.\n";
+        $message .= "The messages are:\n";
+        $message .= "  $_\n" for @{ $self->{buffer} };
+    }
+    else {
+        $self->flush();
+    }
 }
 
 1;
@@ -103,7 +117,7 @@ Log::Dispatch::Email - Base class for objects that send log messages via email
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

@@ -1,12 +1,10 @@
 package Dist::Zilla::Plugin::RemovePrereqs;
 # ABSTRACT: a plugin to remove gathered prereqs
-$Dist::Zilla::Plugin::RemovePrereqs::VERSION = '5.020';
+$Dist::Zilla::Plugin::RemovePrereqs::VERSION = '5.029';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
 use namespace::autoclean;
-
-use Moose::Autobox;
 
 use MooseX::Types::Moose qw(ArrayRef);
 use MooseX::Types::Perl  qw(ModuleName);
@@ -65,7 +63,7 @@ sub register_prereqs {
 
   for my $p (@phases) {
     for my $t (@types) {
-      for my $m ($self->modules_to_remove->flatten) {
+      for my $m (@{ $self->modules_to_remove }) {
         $prereqs->requirements_for($p, $t)->clear_requirement($m);
       }
     }
@@ -87,7 +85,7 @@ Dist::Zilla::Plugin::RemovePrereqs - a plugin to remove gathered prereqs
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

@@ -1,15 +1,25 @@
 package Pod::Weaver::Section::Version;
-{
-  $Pod::Weaver::Section::Version::VERSION = '4.006';
-}
+# ABSTRACT: add a VERSION pod section
+$Pod::Weaver::Section::Version::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
-# ABSTRACT: add a VERSION pod section
 
 use Module::Runtime qw(use_module);
 use namespace::autoclean;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section plugin will produce a hunk of Pod meant to indicate the version of
+#pod the document being viewed, like this:
+#pod
+#pod   =head1 VERSION
+#pod
+#pod   version 1.234
+#pod
+#pod It will do nothing if there is no C<version> entry in the input.
+#pod
+#pod =cut
 
 use DateTime;
 use Moose::Autobox;
@@ -53,6 +63,55 @@ use String::Formatter 0.100680 stringf => {
 # Needed by Config::MVP.
 sub mvp_multivalue_args { 'format' }
 
+#pod =attr format
+#pod
+#pod The string to use when generating the version string.
+#pod
+#pod Default: version %v
+#pod
+#pod The following variables are available:
+#pod
+#pod =begin :list
+#pod
+#pod * v - the version
+#pod
+#pod * V - the version, suffixed by "-TRIAL" if a trial release
+#pod
+#pod * d - the CLDR format for L<DateTime>
+#pod
+#pod * n - a newline
+#pod
+#pod * t - a tab
+#pod
+#pod * s - a space
+#pod
+#pod * r - the name of the dist, present only if you use L<Dist::Zilla> to generate
+#pod       the POD!
+#pod
+#pod * m - the name of the module, present only if L<PPI> parsed the document and it
+#pod       contained a package declaration!
+#pod
+#pod * T - special: at the beginning of the line, followed by any amount of
+#pod       whitespace, indicates that the line should only be included in trial
+#pod       releases; otherwise, results in a fatal error
+#pod
+#pod =end :list
+#pod
+#pod If multiple strings are supplied as an array ref, a line of POD is
+#pod produced for each string.  Each line will be separated by a newline.
+#pod This is useful for splitting longer text across multiple lines in a
+#pod C<weaver.ini> file, for example:
+#pod
+#pod   ; weaver.ini
+#pod   [Version]
+#pod   format = version %v
+#pod   format =
+#pod   format = This module's version numbers follow the conventions described at
+#pod   format = L<semver.org|http://semver.org/>.
+#pod   format = %T
+#pod   format = %T This is a trial release!
+#pod
+#pod =cut
 
 subtype 'Pod::Weaver::Section::Version::_Format',
   as 'ArrayRef[Str]';
@@ -68,6 +127,13 @@ has format => (
   default => 'version %v',
 );
 
+#pod =attr is_verbatim
+#pod
+#pod A boolean value specifying whether the version paragraph should be verbatim or not.
+#pod
+#pod Default: false
+#pod
+#pod =cut
 
 has is_verbatim => (
   is  => 'ro',
@@ -75,6 +141,13 @@ has is_verbatim => (
   default => 0,
 );
 
+#pod =attr time_zone
+#pod
+#pod The timezone to use when using L<DateTime> for the format.
+#pod
+#pod Default: local
+#pod
+#pod =cut
 
 has time_zone => (
   is  => 'ro',
@@ -82,6 +155,17 @@ has time_zone => (
   default => 'local',
 );
 
+#pod =method build_content
+#pod
+#pod   my @pod_elements = $section->build_content(\%input);
+#pod
+#pod This method is passed the same C<\%input> that goes to the C<weave_section>
+#pod method, and should return a list of pod elements to insert.
+#pod
+#pod In almost all cases, this method is used internally, but could be usefully
+#pod overridden in a subclass.
+#pod
+#pod =cut
 
 sub build_content {
   my ($self, $input) = @_;
@@ -146,7 +230,6 @@ sub weave_section {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
 1;
 
 __END__
@@ -161,7 +244,7 @@ Pod::Weaver::Section::Version - add a VERSION pod section
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

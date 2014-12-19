@@ -1,6 +1,6 @@
 package Git::Wrapper::Statuses;
 # ABSTRACT: Multiple git statuses information
-$Git::Wrapper::Statuses::VERSION = '0.037';
+$Git::Wrapper::Statuses::VERSION = '0.038';
 use 5.006;
 use strict;
 use warnings;
@@ -43,7 +43,7 @@ Git::Wrapper::Statuses - Multiple git statuses information
 
 =head1 VERSION
 
-version 0.037
+version 0.038
 
 =head1 METHODS
 

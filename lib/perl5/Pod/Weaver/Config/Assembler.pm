@@ -1,13 +1,13 @@
 package Pod::Weaver::Config::Assembler;
-{
-  $Pod::Weaver::Config::Assembler::VERSION = '4.006';
-}
+# ABSTRACT: Pod::Weaver-specific subclass of Config::MVP::Assembler
+$Pod::Weaver::Config::Assembler::VERSION = '4.009';
 use Moose;
 extends 'Config::MVP::Assembler';
 with 'Config::MVP::Assembler::WithBundles';
-# ABSTRACT: Pod::Weaver-specific subclass of Config::MVP::Assembler
 
 use String::RewritePrefix;
+
+use namespace::autoclean;
 
 sub expand_package {
   my $str = $_[1];
@@ -23,7 +23,7 @@ sub expand_package {
   );
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -38,7 +38,7 @@ Pod::Weaver::Config::Assembler - Pod::Weaver-specific subclass of Config::MVP::A
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 AUTHOR
 

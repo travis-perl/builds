@@ -1,5 +1,5 @@
 package Module::Build::Tiny;
-$Module::Build::Tiny::VERSION = '0.038';
+$Module::Build::Tiny::VERSION = '0.039';
 use strict;
 use warnings;
 use Exporter 5.57 'import';
@@ -81,7 +81,10 @@ sub find {
 my %actions = (
 	build => sub {
 		my %opt = @_;
-		system $^X, $_ and die "$_ returned $?\n" for find(qr/\.PL$/, 'lib');
+		for my $pl_file (find(qr/\.PL$/, 'lib')) {
+                       (my $pm = $pl_file) =~ s/\.PL$//;
+			system $^X, $pl_file, $pm and die "$pl_file returned $?\n";
+		}
 		my %modules = map { $_ => catfile('blib', $_) } find(qr/\.p(?:m|od)$/, 'lib');
 		my %scripts = map { $_ => catfile('blib', $_) } find(qr//, 'script');
 		my %shared  = map { $_ => catfile(qw/blib lib auto share dist/, $opt{meta}->name, abs2rel($_, 'share')) } find(qr//, 'share');
@@ -166,7 +169,7 @@ Module::Build::Tiny - A tiny replacement for Module::Build
 
 =head1 VERSION
 
-version 0.038
+version 0.039
 
 =head1 SYNOPSIS
 

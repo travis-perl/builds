@@ -1,16 +1,26 @@
 package Pod::Weaver::Section::Authors;
-{
-  $Pod::Weaver::Section::Authors::VERSION = '4.006';
-}
+# ABSTRACT: a section listing authors
+$Pod::Weaver::Section::Authors::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Section';
-# ABSTRACT: a section listing authors
 
 use Moose::Autobox;
 
 use Pod::Elemental::Element::Nested;
 use Pod::Elemental::Element::Pod5::Verbatim;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section adds a listing of the documents authors.  It expects a C<authors>
+#pod input parameter to be an arrayref of strings.  If no C<authors> parameter is
+#pod given, it will do nothing.  Otherwise, it produces a hunk like this:
+#pod
+#pod   =head1 AUTHORS
+#pod
+#pod     Author One <a1@example.com>
+#pod     Author Two <a2@example.com>
+#pod
+#pod =cut
 
 sub weave_section {
   my ($self, $document, $input) = @_;
@@ -51,7 +61,7 @@ sub weave_section {
   );
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -66,7 +76,7 @@ Pod::Weaver::Section::Authors - a section listing authors
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

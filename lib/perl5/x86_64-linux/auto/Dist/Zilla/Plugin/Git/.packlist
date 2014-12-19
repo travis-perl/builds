@@ -10,3 +10,4 @@
 /home/travis/.perlbrew/libs/5.12.5@dzil/lib/perl5/Dist/Zilla/PluginBundle/Git.pm
 /home/travis/.perlbrew/libs/5.12.5@dzil/lib/perl5/Dist/Zilla/Role/Git/DirtyFiles.pm
 /home/travis/.perlbrew/libs/5.12.5@dzil/lib/perl5/Dist/Zilla/Role/Git/Repo.pm
+/home/travis/.perlbrew/libs/5.12.5@dzil/lib/perl5/Dist/Zilla/Role/Git/StringFormatter.pm

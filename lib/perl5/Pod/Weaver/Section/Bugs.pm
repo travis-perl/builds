@@ -1,14 +1,51 @@
 package Pod::Weaver::Section::Bugs;
-{
-  $Pod::Weaver::Section::Bugs::VERSION = '4.006';
-}
+# ABSTRACT: a section for bugtracker info
+$Pod::Weaver::Section::Bugs::VERSION = '4.009';
 use Moose;
 use Text::Wrap ();
 with 'Pod::Weaver::Role::Section';
-# ABSTRACT: a section for bugtracker info
 
 use Moose::Autobox;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section plugin will produce a hunk of Pod giving bug reporting
+#pod information for the document, like this:
+#pod
+#pod   =head1 BUGS
+#pod
+#pod   Please report any bugs or feature requests on the bugtracker website
+#pod   http://rt.cpan.org/Dist/Display.html?Queue=Pod-Weaver
+#pod
+#pod   When submitting a bug or request, please include a test-file or a
+#pod   patch to an existing test-file that illustrates the bug or desired
+#pod   feature.
+#pod
+#pod This plugin requires a C<distmeta> parameter containing a hash reference of
+#pod L<CPAN::Meta::Spec> distribution metadata and at least one of one of the
+#pod parameters C<web> or C<mailto> defined in
+#pod C<< $meta->{resources}{bugtracker} >>.
+#pod
+#pod =head2 Using Pod::Weaver::Section::Bugs with Dist::Zilla
+#pod
+#pod When the PodWeaver plugin is used, the C<distmeta> parameter comes from the
+#pod dist's distmeta data.  Since this section is skipped when no bugtracker data is
+#pod in the distmeta, you'll need to make sure it's there.  A number of plugins set
+#pod this data up automatically.  To manually configure your bugtracker data, you
+#pod can add something like the following to C<dist.ini>:
+#pod
+#pod   [MetaResources]
+#pod   bugtracker.web = http://rt.cpan.org/NoAuth/Bugs.html?Dist=Pod-Weaver-Example
+#pod   bugtracker.mailto = bug-pod-weaver-example@rt.cpan.org
+#pod
+#pod   ; Perhaps add repository stuff here:
+#pod   repository.url =
+#pod   repository.web =
+#pod   repository.type =
+#pod
+#pod   [PodWeaver]
+#pod
+#pod =cut
 
 sub weave_section {
   my ($self, $document, $input) = @_;
@@ -49,7 +86,7 @@ HERE
   );
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -64,7 +101,7 @@ Pod::Weaver::Section::Bugs - a section for bugtracker info
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 
