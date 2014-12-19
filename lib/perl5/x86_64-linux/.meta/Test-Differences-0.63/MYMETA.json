@@ -35,10 +35,6 @@
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "repository" : {
-         "url" : "https://github.com/Ovid/Test-Differences"
-      }
-   },
-   "version" : "0.62"
+   "resources" : {},
+   "version" : "0.63"
 }

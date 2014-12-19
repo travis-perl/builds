@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 5.023, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "apache_2_0"
    ],
@@ -39,7 +39,7 @@
          "requires" : {
             "Carp" : "0",
             "Exporter" : "0",
-            "ExtUtils::MakeMaker" : "0",
+            "ExtUtils::MakeMaker" : "6.17",
             "File::Spec" : "0",
             "File::Temp" : "0",
             "IO::File" : "0",
@@ -47,6 +47,7 @@
             "Scalar::Util" : "0",
             "Test::More" : "0.62",
             "lib" : "0",
+            "perl" : "5.006",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -55,7 +56,7 @@
    "provides" : {
       "Capture::Tiny" : {
          "file" : "lib/Capture/Tiny.pm",
-         "version" : "0.25"
+         "version" : "0.27"
       }
    },
    "release_status" : "stable",
@@ -68,7 +69,7 @@
          "url" : "https://github.com/dagolden/Capture-Tiny.git"
       }
    },
-   "version" : "0.25",
+   "version" : "0.27",
    "x_authority" : "cpan:DAGOLDEN",
    "x_contributors" : [
       "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>",

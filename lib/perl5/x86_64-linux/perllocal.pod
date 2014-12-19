@@ -1,4 +1,4 @@
-=head2 Tue Sep 23 13:50:32 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Fri Dec 19 22:43:34 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:34 2014: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Fri Dec 19 22:43:37 2014: C<Module> L<Devel::StackTrace|Devel::StackTrace>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.34>
+C<VERSION: 2.00>
 
 =item *
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:35 2014: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+=head2 Fri Dec 19 22:43:38 2014: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:36 2014: C<Module> L<Exception::Class|Exception::Class>
+=head2 Fri Dec 19 22:43:38 2014: C<Module> L<Exception::Class|Exception::Class>
 
 =over 4
 
@@ -78,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.38>
+C<VERSION: 1.39>
 
 =item *
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:38 2014: C<Module> L<Algorithm::Diff|Algorithm::Diff>
+=head2 Fri Dec 19 22:43:41 2014: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -100,7 +100,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.1902>
+C<VERSION: 1.1903>
 
 =item *
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:38 2014: C<Module> L<Text::Diff|Text::Diff>
+=head2 Fri Dec 19 22:43:41 2014: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:39 2014: C<Module> L<Capture::Tiny|Capture::Tiny>
+=head2 Fri Dec 19 22:43:42 2014: C<Module> L<Capture::Tiny|Capture::Tiny>
 
 =over 4
 
@@ -144,7 +144,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.25>
+C<VERSION: 0.27>
 
 =item *
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:41 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Fri Dec 19 22:43:44 2014: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:42 2014: C<Module> L<Test::Tester|Test::Tester>
+=head2 Fri Dec 19 22:43:45 2014: C<Module> L<Test::Tester|Test::Tester>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:43 2014: C<Module> L<Test::NoWarnings|Test::NoWarnings>
+=head2 Fri Dec 19 22:43:46 2014: C<Module> L<Test::NoWarnings|Test::NoWarnings>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:44 2014: C<Module> L<Test::Deep|Test::Deep>
+=head2 Fri Dec 19 22:43:47 2014: C<Module> L<Test::Deep|Test::Deep>
 
 =over 4
 
@@ -232,7 +232,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.113>
+C<VERSION: 0.114>
 
 =item *
 
@@ -240,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 13:50:44 2014: C<Module> L<Test::Most|Test::Most>
+=head2 Fri Dec 19 22:43:47 2014: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
