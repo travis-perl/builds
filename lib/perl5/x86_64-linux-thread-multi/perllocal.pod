@@ -1,4 +1,4 @@
-=head2 Tue Sep 23 14:08:19 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Fri Dec 19 23:01:22 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 14:08:19 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Fri Dec 19 23:01:23 2014: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 14:08:22 2014: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Fri Dec 19 23:01:26 2014: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Tue Sep 23 14:08:25 2014: C<Module> L<YAML|YAML>
+=head2 Fri Dec 19 23:01:29 2014: C<Module> L<HTTP::Tiny|HTTP::Tiny>
 
 =over 4
 
@@ -78,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.12>
+C<VERSION: 0.053>
 
 =item *
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 14:08:29 2014: C<Module> L<HTTP::Parser::XS|HTTP::Parser::XS>
+=head2 Fri Dec 19 23:01:30 2014: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -100,7 +100,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.16>
+C<VERSION: 1.13>
 
 =item *
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 14:08:31 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Fri Dec 19 23:01:32 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -130,29 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 14:08:33 2014: C<Module> L<Class::Accessor::Lite|Class::Accessor::Lite>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.18.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.06>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Sep 23 14:09:00 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Fri Dec 19 23:01:47 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -174,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Sep 23 14:09:01 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Fri Dec 19 23:01:49 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -188,7 +166,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.998>
+C<VERSION: 2.008>
 
 =item *
 
