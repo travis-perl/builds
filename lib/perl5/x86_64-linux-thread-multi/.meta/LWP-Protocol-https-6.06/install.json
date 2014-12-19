@@ -1,0 +1,1 @@
+{"pathname":"M/MS/MSCHILLI/LWP-Protocol-https-6.06.tar.gz","target":"LWP::Protocol::https","dist":"LWP-Protocol-https-6.06","version":"6.06","name":"LWP::Protocol::https","provides":{"LWP::Protocol::https::Socket":{"version":"6.06","file":"lib/LWP/Protocol/https.pm"},"LWP::Protocol::https":{"version":"6.06","file":"lib/LWP/Protocol/https.pm"}}}
