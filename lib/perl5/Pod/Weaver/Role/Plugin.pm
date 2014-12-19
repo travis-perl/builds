@@ -1,14 +1,22 @@
 package Pod::Weaver::Role::Plugin;
-{
-  $Pod::Weaver::Role::Plugin::VERSION = '4.006';
-}
-use Moose::Role;
 # ABSTRACT: a Pod::Weaver plugin
+$Pod::Weaver::Role::Plugin::VERSION = '4.009';
+use Moose::Role;
 
 use Params::Util qw(_HASHLIKE);
 
 use namespace::autoclean;
 
+#pod =head1 IMPLEMENTING
+#pod
+#pod This is the most basic role that all plugins must perform.
+#pod
+#pod =attr plugin_name
+#pod
+#pod This name must be unique among all other plugins loaded into a weaver.  In
+#pod general, this will be set up by the configuration reader.
+#pod
+#pod =cut
 
 has plugin_name => (
   is  => 'ro',
@@ -16,6 +24,12 @@ has plugin_name => (
   required => 1,
 );
 
+#pod =attr weaver
+#pod
+#pod This is the Pod::Weaver object into which the plugin was loaded.  In general,
+#pod this will be set up when the weaver is instantiated from config.
+#pod
+#pod =cut
 
 has weaver => (
   is  => 'ro',
@@ -49,7 +63,7 @@ Pod::Weaver::Role::Plugin - a Pod::Weaver plugin
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 ATTRIBUTES
 

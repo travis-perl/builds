@@ -1,5 +1,6 @@
 package Moose::Meta::Method::Accessor;
-$Moose::Meta::Method::Accessor::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
@@ -136,7 +137,7 @@ Moose::Meta::Method::Accessor - A Moose Method metaclass for accessors
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

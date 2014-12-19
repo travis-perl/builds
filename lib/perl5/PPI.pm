@@ -8,7 +8,7 @@ use strict;
 # Set the version for CPAN
 use vars qw{$VERSION $XS_COMPATIBLE @XS_EXCLUDE};
 BEGIN {
-	$VERSION       = '1.218';
+	$VERSION       = '1.220';
 	$XS_COMPATIBLE = '0.845';
 	@XS_EXCLUDE    = ();
 }
@@ -29,11 +29,10 @@ use PPI::Tokenizer            ();
 use PPI::Lexer                ();
 
 # If it is installed, load in PPI::XS
-unless ( $PPI::XS_DISABLE ) {
-	eval { require PPI::XS };
-	# Only ignore the failure to load PPI::XS if not installed
-	die if $@ && $@ !~ /^Can't locate .*? at /;
-}
+die
+  if !$PPI::XS_DISABLE
+  and !eval { require PPI::XS; 1 }
+  and $@ !~ /^Can't locate .*? at /;    # ignore failure to load if not installed
 
 1;
 

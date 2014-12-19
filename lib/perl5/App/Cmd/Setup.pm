@@ -1,11 +1,73 @@
 use strict;
 use warnings;
 package App::Cmd::Setup;
-{
-  $App::Cmd::Setup::VERSION = '0.323';
-}
+$App::Cmd::Setup::VERSION = '0.326';
 # ABSTRACT: helper for setting up App::Cmd classes
 
+#pod =head1 OVERVIEW
+#pod
+#pod App::Cmd::Setup is a helper library, used to set up base classes that will be
+#pod used as part of an App::Cmd program.  For the most part you should refer to
+#pod L<the tutorial|App::Cmd::Tutorial> for how you should use this library.
+#pod
+#pod This class is useful in three scenarios:
+#pod
+#pod =begin :list
+#pod
+#pod = when writing your App::Cmd subclass
+#pod
+#pod Instead of writing:
+#pod
+#pod   package MyApp;
+#pod   use base 'App::Cmd';
+#pod
+#pod ...you can write:
+#pod
+#pod   package MyApp;
+#pod   use App::Cmd::Setup -app;
+#pod
+#pod The benefits of doing this are mostly minor, and relate to sanity-checking your
+#pod class.  The significant benefit is that this form allows you to specify
+#pod plugins, as in:
+#pod
+#pod   package MyApp;
+#pod   use App::Cmd::Setup -app => { plugins => [ 'Prompt' ] };
+#pod
+#pod Plugins are described in L<App::Cmd::Tutorial> and L<App::Cmd::Plugin>.
+#pod
+#pod = when writing abstract base classes for commands
+#pod
+#pod That is: when you write a subclass of L<App::Cmd::Command> that is intended for
+#pod other commands to use as their base class, you should use App::Cmd::Setup.  For
+#pod example, if you want all the commands in MyApp to inherit from MyApp::Command,
+#pod you may want to write that package like this:
+#pod
+#pod   package MyApp::Command;
+#pod   use App::Cmd::Setup -command;
+#pod
+#pod Do not confuse this with the way you will write specific commands:
+#pod
+#pod   package MyApp::Command::mycmd;
+#pod   use MyApp -command;
+#pod
+#pod Again, this form mostly performs some validation and setup behind the scenes
+#pod for you.  You can use C<L<base>> if you prefer.
+#pod
+#pod = when writing App::Cmd plugins
+#pod
+#pod L<App::Cmd::Plugin> is a mechanism that allows an App::Cmd class to inject code
+#pod into all its command classes, providing them with utility routines.
+#pod
+#pod To write a plugin, you must use App::Cmd::Setup.  As seen above, you must also
+#pod use App::Cmd::Setup to set up your App::Cmd subclass if you wish to consume
+#pod plugins.
+#pod
+#pod For more information on writing plugins, see L<App::Cmd::Manual> and
+#pod L<App::Cmd::Plugin>.
+#pod
+#pod =end :list
+#pod
+#pod =cut
 
 use App::Cmd ();
 use App::Cmd::Command ();
@@ -152,7 +214,7 @@ App::Cmd::Setup - helper for setting up App::Cmd classes
 
 =head1 VERSION
 
-version 0.323
+version 0.326
 
 =head1 OVERVIEW
 
@@ -223,7 +285,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Ricardo Signes.
+This software is copyright (c) 2014 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

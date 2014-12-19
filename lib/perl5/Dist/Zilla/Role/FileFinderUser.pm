@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::FileFinderUser;
 # ABSTRACT: something that uses FileFinder plugins
-$Dist::Zilla::Role::FileFinderUser::VERSION = '5.020';
+$Dist::Zilla::Role::FileFinderUser::VERSION = '5.029';
 use MooseX::Role::Parameterized;
 
 use namespace::autoclean;
@@ -151,7 +151,7 @@ role {
 
     my %by_name = map {; $_->name, $_ } map { @$_ } @filesets;
 
-    return [ values %by_name ];
+    return [ map {; $by_name{$_} } sort keys %by_name ];
   };
 };
 
@@ -169,7 +169,7 @@ Dist::Zilla::Role::FileFinderUser - something that uses FileFinder plugins
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

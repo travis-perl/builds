@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Generic::Command;
 # ABSTRACT: a Pod =command element
-$Pod::Elemental::Element::Generic::Command::VERSION = '0.103001';
+$Pod::Elemental::Element::Generic::Command::VERSION = '0.103002';
 use Moose;
 
 use namespace::autoclean;
@@ -27,6 +27,8 @@ has command => (
 
 with 'Pod::Elemental::Command';
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -41,7 +43,7 @@ Pod::Elemental::Element::Generic::Command - a Pod =command element
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

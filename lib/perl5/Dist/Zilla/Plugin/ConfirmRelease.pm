@@ -1,19 +1,17 @@
 package Dist::Zilla::Plugin::ConfirmRelease;
 # ABSTRACT: prompt for confirmation before releasing
-$Dist::Zilla::Plugin::ConfirmRelease::VERSION = '5.020';
+$Dist::Zilla::Plugin::ConfirmRelease::VERSION = '5.029';
 use Moose;
 with 'Dist::Zilla::Role::BeforeRelease';
 
 use namespace::autoclean;
-
-use Moose::Autobox;
 
 sub before_release {
   my ($self, $tgz) = @_;
 
   my $releasers = join q{, },
                   map {; $_->plugin_name }
-                  $self->zilla->plugins_with(-Releaser)->flatten;
+                  @{ $self->zilla->plugins_with(-Releaser) };
 
   $self->log("*** Preparing to release $tgz with $releasers ***");
   my $prompt = "Do you want to continue the release process?";
@@ -55,7 +53,7 @@ Dist::Zilla::Plugin::ConfirmRelease - prompt for confirmation before releasing
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

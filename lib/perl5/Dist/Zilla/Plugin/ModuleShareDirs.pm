@@ -1,11 +1,9 @@
 package Dist::Zilla::Plugin::ModuleShareDirs;
 # ABSTRACT: install a directory's contents as module-based "ShareDir" content
-$Dist::Zilla::Plugin::ModuleShareDirs::VERSION = '5.020';
+$Dist::Zilla::Plugin::ModuleShareDirs::VERSION = '5.029';
 use Moose;
 
 use namespace::autoclean;
-
-use Moose::Autobox;
 
 #pod =head1 SYNOPSIS
 #pod
@@ -30,10 +28,9 @@ sub find_files {
 
   for my $mod ( keys %$modmap ) {
     my $dir = $modmap->{$mod};
-    my $mod_files = $self->zilla->files->grep(
-      sub { index($_->name, "$dir/") == 0 }
-    );
-    push @files, @$mod_files;
+    my @mod_files = grep { index($_->name, "$dir/") == 0 }
+      @{ $self->zilla->files };
+    push @files, @mod_files;
   }
 
   return \@files;
@@ -77,7 +74,7 @@ Dist::Zilla::Plugin::ModuleShareDirs - install a directory's contents as module-
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 
