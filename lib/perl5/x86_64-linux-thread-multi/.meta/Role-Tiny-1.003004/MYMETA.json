@@ -4,7 +4,7 @@
       "mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.9, CPAN::Meta::Converter version 2.140640",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -59,10 +59,10 @@
       ],
       "repository" : {
          "type" : "git",
-         "url" : "git://git.shadowcat.co.uk/gitmo/Role-Tiny.git",
-         "web" : "http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=gitmo/Role-Tiny.git"
+         "url" : "git://github.com/moose/Role-Tiny.git",
+         "web" : "https://github.com/moose/Role-Tiny"
       },
       "x_IRC" : "irc://irc.perl.org/#moose"
    },
-   "version" : "1.003003"
+   "version" : "1.003004"
 }
