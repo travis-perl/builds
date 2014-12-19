@@ -4,7 +4,8 @@ use warnings;
 
 package Path::Tiny;
 # ABSTRACT: File path utility
-our $VERSION = '0.057'; # VERSION
+
+our $VERSION = '0.061';
 
 # Dependencies
 use Config;
@@ -40,7 +41,7 @@ sub THAW   { return path( $_[2] ) }
 my $HAS_UU; # has Unicode::UTF8; lazily populated
 
 sub _check_UU {
-    eval { require Unicode::UTF8; Unicode::UTF8->VERSION(0.58); 1 };
+    !!eval { require Unicode::UTF8; Unicode::UTF8->VERSION(0.58); 1 };
 }
 
 my $HAS_FLOCK = $Config{d_flock} || $Config{d_fcntl_can_lock} || $Config{d_lockf};
@@ -191,6 +192,8 @@ sub _get_args {
 #pod This optimizes copies without proliferating references unexpectedly if a copy is
 #pod made by code outside your control.
 #pod
+#pod Current API available since 0.017.
+#pod
 #pod =cut
 
 sub path {
@@ -246,6 +249,8 @@ sub path {
 #pod This is just like C<path>, but with method call overhead.  (Why would you
 #pod do that?)
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 sub new { shift; path(@_) }
@@ -260,6 +265,8 @@ sub new { shift; path(@_) }
 #pod
 #pod C<cwd> may be exported on request and used as a function instead of as a
 #pod method.
+#pod
+#pod Current API available since 0.018.
 #pod
 #pod =cut
 
@@ -278,6 +285,8 @@ sub cwd {
 #pod
 #pod C<rootdir> may be exported on request and used as a function instead of as a
 #pod method.
+#pod
+#pod Current API available since 0.018.
 #pod
 #pod =cut
 
@@ -312,6 +321,8 @@ sub rootdir { path( File::Spec->rootdir ) }
 #pod
 #pod Both C<tempfile> and C<tempdir> may be exported on request and used as
 #pod functions instead of as methods.
+#pod
+#pod Current API available since 0.018.
 #pod
 #pod =cut
 
@@ -384,6 +395,8 @@ sub _splitpath {
 #pod On Windows, an absolute path without a volume component will have it added
 #pod based on the current drive.
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 sub absolute {
@@ -419,8 +432,15 @@ sub absolute {
 #pod     path("foo.txt")->append_utf8(@data);
 #pod
 #pod Appends data to a file.  The file is locked with C<flock> prior to writing.  An
-#pod optional hash reference may be used to pass options.  The only option is
-#pod C<binmode>, which is passed to C<binmode()> on the handle used for writing.
+#pod optional hash reference may be used to pass options.  Valid options are:
+#pod
+#pod =for :list
+#pod * C<binmode>: passed to C<binmode()> on the handle used for writing.
+#pod * C<truncate>: truncates the file after locking and before appending
+#pod
+#pod The C<truncate> option is a way to replace the contents of a file
+#pod B<in place>, unlike L</spew> which writes to a temporary file and then
+#pod replaces the original (if it exists).
 #pod
 #pod C<append_raw> is like C<append> with a C<binmode> of C<:unix> for fast,
 #pod unbuffered, raw write.
@@ -429,29 +449,41 @@ sub absolute {
 #pod C<:unix:encoding(UTF-8)>.  If L<Unicode::UTF8> 0.58+ is installed, a raw
 #pod append will be done instead on the data encoded with C<Unicode::UTF8>.
 #pod
+#pod Current API available since 0.060.
+#pod
 #pod =cut
 
 sub append {
     my ( $self, @data ) = @_;
     my $args = ( @data && ref $data[0] eq 'HASH' ) ? shift @data : {};
-    $args = _get_args( $args, qw/binmode/ );
+    $args = _get_args( $args, qw/binmode truncate/ );
     my $binmode = $args->{binmode};
     $binmode = ( ( caller(0) )[10] || {} )->{'open>'} unless defined $binmode;
-    my $fh = $self->filehandle( { locked => 1 }, ">>", $binmode );
+    my $mode = $args->{truncate} ? ">" : ">>";
+    my $fh = $self->filehandle( { locked => 1 }, $mode, $binmode );
     print {$fh} map { ref eq 'ARRAY' ? @$_ : $_ } @data;
     close $fh or $self->_throw('close');
 }
 
-sub append_raw { splice @_, 1, 0, { binmode => ":unix" }; goto &append }
+sub append_raw {
+    my ( $self, @data ) = @_;
+    my $args = ( @data && ref $data[0] eq 'HASH' ) ? shift @data : {};
+    $args = _get_args( $args, qw/binmode truncate/ );
+    $args->{binmode} = ':unix';
+    append( $self, $args, @data );
+}
 
 sub append_utf8 {
-    if ( defined($HAS_UU) ? $HAS_UU : $HAS_UU = _check_UU() ) {
-        my $self = shift;
-        append( $self, { binmode => ":unix" }, map { Unicode::UTF8::encode_utf8($_) } @_ );
+    my ( $self, @data ) = @_;
+    my $args = ( @data && ref $data[0] eq 'HASH' ) ? shift @data : {};
+    $args = _get_args( $args, qw/binmode truncate/ );
+    if ( defined($HAS_UU) ? $HAS_UU : ( $HAS_UU = _check_UU() ) ) {
+        $args->{binmode} = ":unix";
+        append( $self, $args, map { Unicode::UTF8::encode_utf8($_) } @data );
     }
     else {
-        splice @_, 1, 0, { binmode => ":unix:encoding(UTF-8)" };
-        goto &append;
+        $args->{binmode} = ":unix:encoding(UTF-8)";
+        append( $self, $args, @data );
     }
 }
 
@@ -467,6 +499,8 @@ sub append_utf8 {
 #pod Given a list of suffixes as strings or regular expressions, any that match at
 #pod the end of the file portion or last directory portion will be removed before
 #pod the result is returned.
+#pod
+#pod Current API available since 0.054.
 #pod
 #pod =cut
 
@@ -489,6 +523,8 @@ sub basename {
 #pod the platform.  In particular, this means directory separators
 #pod will be C<\> on Windows.
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 sub canonpath { $_[0]->[CANON] }
@@ -501,6 +537,8 @@ sub canonpath { $_[0]->[CANON] }
 #pod Returns a new C<Path::Tiny> object relative to the original.  Works
 #pod like C<catfile> or C<catdir> from File::Spec, but without caring about
 #pod file or directories.
+#pod
+#pod Current API available since 0.001.
 #pod
 #pod =cut
 
@@ -523,6 +561,8 @@ sub child {
 #pod
 #pod     @paths = path("/tmp")->children( qr/^foo/ );
 #pod     # matches children like the glob foo*
+#pod
+#pod Current API available since 0.028.
 #pod
 #pod =cut
 
@@ -563,6 +603,8 @@ sub children {
 #pod are required for each clause, multiple ops are not allowed and permissions
 #pod C<stugoX> are not supported.  (See L<File::chmod> for more complex needs.)
 #pod
+#pod Current API available since 0.053.
+#pod
 #pod =cut
 
 sub chmod {
@@ -590,6 +632,8 @@ sub chmod {
 #pod
 #pod Copies a file using L<File::Copy>'s C<copy> function.
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 # XXX do recursively for directories?
@@ -613,6 +657,8 @@ sub copy {
 #pod
 #pod Any subsequent arguments are passed to the constructor for L<Digest> to select
 #pod an algorithm.  If no arguments are given, the default is SHA-256.
+#pod
+#pod Current API available since 0.056.
 #pod
 #pod =cut
 
@@ -647,6 +693,8 @@ sub digest {
 #pod A better, more consistently approach is likely C<< $path->parent->stringify >>,
 #pod which will not have a trailing slash except for a root directory.
 #pod
+#pod Deprecated in 0.056.
+#pod
 #pod =cut
 
 sub dirname {
@@ -670,6 +718,7 @@ sub dirname {
 #pod
 #pod Use C<-f> instead if you really mean to check for a plain file.
 #pod
+#pod Current API available since 0.053.
 #pod
 #pod =cut
 
@@ -695,6 +744,8 @@ sub is_dir { -d $_[0]->[PATH] }
 #pod acquired.
 #pod
 #pod See C<openr>, C<openw>, C<openrw>, and C<opena> for sugar.
+#pod
+#pod Current API available since 0.039.
 #pod
 #pod =cut
 
@@ -778,6 +829,8 @@ sub filehandle {
 #pod
 #pod Booleans for whether the path appears absolute or relative.
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 sub is_absolute { substr( $_[0]->dirname, 0, 1 ) eq '/' }
@@ -798,6 +851,8 @@ sub is_relative { substr( $_[0]->dirname, 0, 1 ) ne '/' }
 #pod
 #pod     path("C:/")->is_rootdir;             # true
 #pod     path("//server/share/")->is_rootdir; #true
+#pod
+#pod Current API available since 0.038.
 #pod
 #pod =cut
 
@@ -837,6 +892,8 @@ sub is_rootdir {
 #pod
 #pod For a more powerful, recursive iterator with built-in loop avoidance, see
 #pod L<Path::Iterator::Rule>.
+#pod
+#pod Current API available since 0.016.
 #pod
 #pod =cut
 
@@ -915,6 +972,8 @@ sub iterator {
 #pod intensive.  If memory use is a concern, consider C<openr_utf8> and
 #pod iterating directly on the handle.
 #pod
+#pod Current API available since 0.048.
+#pod
 #pod =cut
 
 sub lines {
@@ -957,7 +1016,7 @@ sub lines_raw {
 sub lines_utf8 {
     my $self = shift;
     my $args = _get_args( shift, qw/binmode chomp count/ );
-    if (   ( defined($HAS_UU) ? $HAS_UU : $HAS_UU = _check_UU() )
+    if (   ( defined($HAS_UU) ? $HAS_UU : ( $HAS_UU = _check_UU() ) )
         && $args->{chomp}
         && !$args->{count} )
     {
@@ -978,6 +1037,8 @@ sub lines_utf8 {
 #pod is passed through to C<make_path>.  Errors will be trapped and an exception
 #pod thrown.  Returns the list of directories created or an empty list if
 #pod the directories already exist, just like C<make_path>.
+#pod
+#pod Current API available since 0.001.
 #pod
 #pod =cut
 
@@ -1000,6 +1061,8 @@ sub mkpath {
 #pod     path("foo.txt")->move("bar.txt");
 #pod
 #pod Just like C<rename>.
+#pod
+#pod Current API available since 0.001.
 #pod
 #pod =cut
 
@@ -1040,6 +1103,8 @@ sub move {
 #pod     $fh = path("foo.txt")->openrw_utf8( { locked => 1 } );
 #pod
 #pod See L</filehandle> for more on locking.
+#pod
+#pod Current API available since 0.011.
 #pod
 #pod =cut
 
@@ -1088,6 +1153,8 @@ while ( my ( $k, $v ) = each %opens ) {
 #pod original directory or file. An optional positive integer argument is the number
 #pod of parent directories upwards to return.  C<parent> by itself is equivalent to
 #pod C<parent(1)>.
+#pod
+#pod Current API available since 0.014.
 #pod
 #pod =cut
 
@@ -1142,6 +1209,8 @@ sub _non_empty {
 #pod
 #pod     $real = path("doesnt_exist/foo")->realpath; # dies
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 sub realpath {
@@ -1163,6 +1232,8 @@ sub realpath {
 #pod Given the trickiness of this, it's a thin wrapper around
 #pod C<< File::Spec->abs2rel() >>.
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 # Easy to get wrong, so wash it through File::Spec (sigh)
@@ -1172,11 +1243,11 @@ sub relative { path( File::Spec->abs2rel( $_[0]->[PATH], $_[1] ) ) }
 #pod
 #pod     path("foo.txt")->remove;
 #pod
-#pod B<Note: as of 0.012, remove only works on files>.
-#pod
 #pod This is just like C<unlink>, except for its error handling: if the path does
 #pod not exist, it returns false; if deleting the file fails, it throws an
 #pod exception.
+#pod
+#pod Current API available since 0.012.
 #pod
 #pod =cut
 
@@ -1205,6 +1276,8 @@ sub remove {
 #pod
 #pod     rmdir path("foo/bar/baz/");
 #pod
+#pod Current API available since 0.013.
+#pod
 #pod =cut
 
 sub remove_tree {
@@ -1222,6 +1295,24 @@ sub remove_tree {
         Carp::croak("remove_tree failed for $file: $message");
     }
     return $count;
+}
+
+#pod =method sibling
+#pod
+#pod     $foo = path("/tmp/foo.txt");
+#pod     $sib = $foo->sibling("bar.txt");        # /tmp/bar.txt
+#pod     $sib = $foo->sibling("baz", "bam.txt"); # /tmp/baz/bam.txt
+#pod
+#pod Returns a new C<Path::Tiny> object relative to the parent of the original.
+#pod This is slightly more efficient than C<< $path->parent->child(...) >>.
+#pod
+#pod Current API available since 0.058.
+#pod
+#pod =cut
+
+sub sibling {
+    my $self = shift;
+    return path( $self->parent->[PATH], @_ );
 }
 
 #pod =method slurp, slurp_raw, slurp_utf8
@@ -1243,6 +1334,8 @@ sub remove_tree {
 #pod slurp will be done instead and the result decoded with C<Unicode::UTF8>.
 #pod This is just as strict and is roughly an order of magnitude faster than
 #pod using C<:encoding(UTF-8)>.
+#pod
+#pod Current API available since 0.004.
 #pod
 #pod =cut
 
@@ -1268,7 +1361,7 @@ sub slurp {
 sub slurp_raw { $_[1] = { binmode => ":unix" }; goto &slurp }
 
 sub slurp_utf8 {
-    if ( defined($HAS_UU) ? $HAS_UU : $HAS_UU = _check_UU() ) {
+    if ( defined($HAS_UU) ? $HAS_UU : ( $HAS_UU = _check_UU() ) ) {
         return Unicode::UTF8::decode_utf8( slurp( $_[0], { binmode => ":unix" } ) );
     }
     else {
@@ -1297,6 +1390,14 @@ sub slurp_utf8 {
 #pod If L<Unicode::UTF8> 0.58+ is installed, a raw spew will be done instead on
 #pod the data encoded with C<Unicode::UTF8>.
 #pod
+#pod B<NOTE>: because the file is written to a temporary file and then renamed, the
+#pod new file will wind up with permissions based on your current umask.  This is a
+#pod feature to protect you from a race condition that would otherwise give
+#pod different permissions than you might expect.  If you really want to keep the
+#pod original mode flags, use L</append> with the C<truncate> option.
+#pod
+#pod Current API available since 0.011.
+#pod
 #pod =cut
 
 # XXX add "unsafe" option to disable flocking and atomic?  Check benchmarks on append() first.
@@ -1322,7 +1423,7 @@ sub spew {
 sub spew_raw { splice @_, 1, 0, { binmode => ":unix" }; goto &spew }
 
 sub spew_utf8 {
-    if ( defined($HAS_UU) ? $HAS_UU : $HAS_UU = _check_UU() ) {
+    if ( defined($HAS_UU) ? $HAS_UU : ( $HAS_UU = _check_UU() ) ) {
         my $self = shift;
         spew( $self, { binmode => ":unix" }, map { Unicode::UTF8::encode_utf8($_) } @_ );
     }
@@ -1338,6 +1439,8 @@ sub spew_utf8 {
 #pod     $stat = path("/some/symlink")->lstat;
 #pod
 #pod Like calling C<stat> or C<lstat> from L<File::stat>.
+#pod
+#pod Current API available since 0.001.
 #pod
 #pod =cut
 
@@ -1362,6 +1465,8 @@ sub lstat {
 #pod Returns a string representation of the path.  Unlike C<canonpath>, this method
 #pod returns the path standardized with Unix-style C</> directory separators.
 #pod
+#pod Current API available since 0.001.
+#pod
 #pod =cut
 
 sub stringify { $_[0]->[PATH] }
@@ -1384,6 +1489,8 @@ sub stringify { $_[0]->[PATH] }
 #pod     my $p1 = path("foo/bar")->realpath;
 #pod     my $p2 = path("foo/bar/../baz")->realpath;
 #pod     if ( $p1->subsumes($p2) ) { ... }
+#pod
+#pod Current API available since 0.048.
 #pod
 #pod =cut
 
@@ -1436,6 +1543,8 @@ sub subsumes {
 #pod
 #pod     path("foo.txt")->touch->spew( $content );
 #pod
+#pod Current API available since 0.015.
+#pod
 #pod =cut
 
 sub touch {
@@ -1457,6 +1566,8 @@ sub touch {
 #pod Combines C<mkpath> and C<touch>.  Creates the parent directory if it doesn't exist,
 #pod before touching the file.  Returns the path object like C<touch> does.
 #pod
+#pod Current API available since 0.022.
+#pod
 #pod =cut
 
 sub touchpath {
@@ -1475,6 +1586,8 @@ sub touchpath {
 #pod equivalent to what L<File::Spec> would give from C<splitpath> and thus
 #pod usually is the empty string on Unix-like operating systems or the
 #pod drive letter for an absolute path on C<MSWin32>.
+#pod
+#pod Current API available since 0.001.
 #pod
 #pod =cut
 
@@ -1514,7 +1627,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.057
+version 0.061
 
 =head1 SYNOPSIS
 
@@ -1620,12 +1733,16 @@ stringified copy is made.
 This optimizes copies without proliferating references unexpectedly if a copy is
 made by code outside your control.
 
+Current API available since 0.017.
+
 =head2 new
 
     $path = Path::Tiny->new("foo/bar");
 
 This is just like C<path>, but with method call overhead.  (Why would you
 do that?)
+
+Current API available since 0.001.
 
 =head2 cwd
 
@@ -1638,6 +1755,8 @@ This is slightly faster than C<< path(".")->absolute >>.
 C<cwd> may be exported on request and used as a function instead of as a
 method.
 
+Current API available since 0.018.
+
 =head2 rootdir
 
     $path = Path::Tiny->rootdir; # /
@@ -1648,6 +1767,8 @@ picky for C<path("/")>.
 
 C<rootdir> may be exported on request and used as a function instead of as a
 method.
+
+Current API available since 0.018.
 
 =head2 tempfile, tempdir
 
@@ -1679,6 +1800,8 @@ C<< File::Temp->newdir >> instead.
 Both C<tempfile> and C<tempdir> may be exported on request and used as
 functions instead of as methods.
 
+Current API available since 0.018.
+
 =head1 METHODS
 
 =head2 absolute
@@ -1698,6 +1821,8 @@ resolved, you must call the more expensive C<realpath> method instead.
 On Windows, an absolute path without a volume component will have it added
 based on the current drive.
 
+Current API available since 0.001.
+
 =head2 append, append_raw, append_utf8
 
     path("foo.txt")->append(@data);
@@ -1707,8 +1832,23 @@ based on the current drive.
     path("foo.txt")->append_utf8(@data);
 
 Appends data to a file.  The file is locked with C<flock> prior to writing.  An
-optional hash reference may be used to pass options.  The only option is
-C<binmode>, which is passed to C<binmode()> on the handle used for writing.
+optional hash reference may be used to pass options.  Valid options are:
+
+=over 4
+
+=item *
+
+C<binmode>: passed to C<binmode()> on the handle used for writing.
+
+=item *
+
+C<truncate>: truncates the file after locking and before appending
+
+=back
+
+The C<truncate> option is a way to replace the contents of a file
+B<in place>, unlike L</spew> which writes to a temporary file and then
+replaces the original (if it exists).
 
 C<append_raw> is like C<append> with a C<binmode> of C<:unix> for fast,
 unbuffered, raw write.
@@ -1716,6 +1856,8 @@ unbuffered, raw write.
 C<append_utf8> is like C<append> with a C<binmode> of
 C<:unix:encoding(UTF-8)>.  If L<Unicode::UTF8> 0.58+ is installed, a raw
 append will be done instead on the data encoded with C<Unicode::UTF8>.
+
+Current API available since 0.060.
 
 =head2 basename
 
@@ -1730,6 +1872,8 @@ Given a list of suffixes as strings or regular expressions, any that match at
 the end of the file portion or last directory portion will be removed before
 the result is returned.
 
+Current API available since 0.054.
+
 =head2 canonpath
 
     $canonical = path("foo/bar")->canonpath; # foo\bar on Windows
@@ -1737,6 +1881,8 @@ the result is returned.
 Returns a string with the canonical format of the path name for
 the platform.  In particular, this means directory separators
 will be C<\> on Windows.
+
+Current API available since 0.001.
 
 =head2 child
 
@@ -1746,6 +1892,8 @@ will be C<\> on Windows.
 Returns a new C<Path::Tiny> object relative to the original.  Works
 like C<catfile> or C<catdir> from File::Spec, but without caring about
 file or directories.
+
+Current API available since 0.001.
 
 =head2 children
 
@@ -1761,6 +1909,8 @@ for matching:
 
     @paths = path("/tmp")->children( qr/^foo/ );
     # matches children like the glob foo*
+
+Current API available since 0.028.
 
 =head2 chmod
 
@@ -1779,11 +1929,15 @@ match C<< qr/\A([augo]+)([=+-])([rwx]+)\z/ >>, which defines "who", "op" and
 are required for each clause, multiple ops are not allowed and permissions
 C<stugoX> are not supported.  (See L<File::chmod> for more complex needs.)
 
+Current API available since 0.053.
+
 =head2 copy
 
     path("/tmp/foo.txt")->copy("/tmp/bar.txt");
 
 Copies a file using L<File::Copy>'s C<copy> function.
+
+Current API available since 0.001.
 
 =head2 digest
 
@@ -1799,6 +1953,8 @@ into memory to compute the digest.
 Any subsequent arguments are passed to the constructor for L<Digest> to select
 an algorithm.  If no arguments are given, the default is SHA-256.
 
+Current API available since 0.056.
+
 =head2 dirname (deprecated)
 
     $name = path("/tmp/foo.txt")->dirname; # "/tmp/"
@@ -1811,6 +1967,8 @@ B<deprecated>.
 
 A better, more consistently approach is likely C<< $path->parent->stringify >>,
 which will not have a trailing slash except for a root directory.
+
+Deprecated in 0.056.
 
 =head2 exists, is_file, is_dir
 
@@ -1826,6 +1984,8 @@ C<-f> means "plain file", excluding symlinks, devices, etc. that often can be
 read just like files.
 
 Use C<-f> instead if you really mean to check for a plain file.
+
+Current API available since 0.053.
 
 =head2 filehandle
 
@@ -1844,12 +2004,16 @@ acquired.
 
 See C<openr>, C<openw>, C<openrw>, and C<opena> for sugar.
 
+Current API available since 0.039.
+
 =head2 is_absolute, is_relative
 
     if ( path("/tmp")->is_absolute ) { ... }
     if ( path("/tmp")->is_relative ) { ... }
 
 Booleans for whether the path appears absolute or relative.
+
+Current API available since 0.001.
 
 =head2 is_rootdir
 
@@ -1865,6 +2029,8 @@ This works even on C<MSWin32> with drives and UNC volumes:
 
     path("C:/")->is_rootdir;             # true
     path("//server/share/")->is_rootdir; #true
+
+Current API available since 0.038.
 
 =head2 iterator
 
@@ -1897,6 +2063,8 @@ The default is the same as:
 For a more powerful, recursive iterator with built-in loop avoidance, see
 L<Path::Iterator::Rule>.
 
+Current API available since 0.016.
+
 =head2 lines, lines_raw, lines_utf8
 
     @contents = path("/tmp/foo.txt")->lines;
@@ -1928,6 +2096,8 @@ actually faster than relying on C<:encoding(UTF-8)>, though a bit memory
 intensive.  If memory use is a concern, consider C<openr_utf8> and
 iterating directly on the handle.
 
+Current API available since 0.048.
+
 =head2 mkpath
 
     path("foo/bar/baz")->mkpath;
@@ -1938,11 +2108,15 @@ is passed through to C<make_path>.  Errors will be trapped and an exception
 thrown.  Returns the list of directories created or an empty list if
 the directories already exist, just like C<make_path>.
 
+Current API available since 0.001.
+
 =head2 move
 
     path("foo.txt")->move("bar.txt");
 
 Just like C<rename>.
+
+Current API available since 0.001.
 
 =head2 openr, openw, openrw, opena
 
@@ -1975,6 +2149,8 @@ locked with C<LOCK_EX>; otherwise, they are locked for C<LOCK_SH>.
 
 See L</filehandle> for more on locking.
 
+Current API available since 0.011.
+
 =head2 parent
 
     $parent = path("foo/bar/baz")->parent; # foo/bar
@@ -1986,6 +2162,8 @@ Returns a C<Path::Tiny> object corresponding to the parent directory of the
 original directory or file. An optional positive integer argument is the number
 of parent directories upwards to return.  C<parent> by itself is equivalent to
 C<parent(1)>.
+
+Current API available since 0.014.
 
 =head2 realpath
 
@@ -2001,6 +2179,8 @@ an exception will be thrown:
 
     $real = path("doesnt_exist/foo")->realpath; # dies
 
+Current API available since 0.001.
+
 =head2 relative
 
     $rel = path("/tmp/foo/bar")->relative("/tmp"); # foo/bar
@@ -2009,15 +2189,17 @@ Returns a C<Path::Tiny> object with a relative path name.
 Given the trickiness of this, it's a thin wrapper around
 C<< File::Spec->abs2rel() >>.
 
+Current API available since 0.001.
+
 =head2 remove
 
     path("foo.txt")->remove;
 
-B<Note: as of 0.012, remove only works on files>.
-
 This is just like C<unlink>, except for its error handling: if the path does
 not exist, it returns false; if deleting the file fails, it throws an
 exception.
+
+Current API available since 0.012.
 
 =head2 remove_tree
 
@@ -2035,6 +2217,19 @@ If you want to remove a directory only if it is empty, use the built-in
 C<rmdir> function instead.
 
     rmdir path("foo/bar/baz/");
+
+Current API available since 0.013.
+
+=head2 sibling
+
+    $foo = path("/tmp/foo.txt");
+    $sib = $foo->sibling("bar.txt");        # /tmp/bar.txt
+    $sib = $foo->sibling("baz", "bam.txt"); # /tmp/baz/bam.txt
+
+Returns a new C<Path::Tiny> object relative to the parent of the original.
+This is slightly more efficient than C<< $path->parent->child(...) >>.
+
+Current API available since 0.058.
 
 =head2 slurp, slurp_raw, slurp_utf8
 
@@ -2056,6 +2251,8 @@ slurp will be done instead and the result decoded with C<Unicode::UTF8>.
 This is just as strict and is roughly an order of magnitude faster than
 using C<:encoding(UTF-8)>.
 
+Current API available since 0.004.
+
 =head2 spew, spew_raw, spew_utf8
 
     path("foo.txt")->spew(@data);
@@ -2076,12 +2273,22 @@ C<spew_utf8> is like C<spew> with a C<binmode> of C<:unix:encoding(UTF-8)>.
 If L<Unicode::UTF8> 0.58+ is installed, a raw spew will be done instead on
 the data encoded with C<Unicode::UTF8>.
 
+B<NOTE>: because the file is written to a temporary file and then renamed, the
+new file will wind up with permissions based on your current umask.  This is a
+feature to protect you from a race condition that would otherwise give
+different permissions than you might expect.  If you really want to keep the
+original mode flags, use L</append> with the C<truncate> option.
+
+Current API available since 0.011.
+
 =head2 stat, lstat
 
     $stat = path("foo.txt")->stat;
     $stat = path("/some/symlink")->lstat;
 
 Like calling C<stat> or C<lstat> from L<File::stat>.
+
+Current API available since 0.001.
 
 =head2 stringify
 
@@ -2090,6 +2297,8 @@ Like calling C<stat> or C<lstat> from L<File::stat>.
 
 Returns a string representation of the path.  Unlike C<canonpath>, this method
 returns the path standardized with Unix-style C</> directory separators.
+
+Current API available since 0.001.
 
 =head2 subsumes
 
@@ -2110,6 +2319,8 @@ the filesystem with C<realpath>:
     my $p2 = path("foo/bar/../baz")->realpath;
     if ( $p1->subsumes($p2) ) { ... }
 
+Current API available since 0.048.
+
 =head2 touch
 
     path("foo.txt")->touch;
@@ -2123,12 +2334,16 @@ Returns the path object so it can be easily chained with spew:
 
     path("foo.txt")->touch->spew( $content );
 
+Current API available since 0.015.
+
 =head2 touchpath
 
     path("bar/baz/foo.txt")->touchpath;
 
 Combines C<mkpath> and C<touch>.  Creates the parent directory if it doesn't exist,
 before touching the file.  Returns the path object like C<touch> does.
+
+Current API available since 0.022.
 
 =head2 volume
 
@@ -2139,6 +2354,8 @@ Returns the volume portion of the path.  This is equivalent
 equivalent to what L<File::Spec> would give from C<splitpath> and thus
 usually is the empty string on Unix-like operating systems or the
 drive letter for an absolute path on C<MSWin32>.
+
+Current API available since 0.001.
 
 =for Pod::Coverage openr_utf8 opena_utf8 openw_utf8 openrw_utf8
 openr_raw opena_raw openw_raw openrw_raw
@@ -2311,29 +2528,13 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Chris Williams Michael G. Schwern Smylers Toby Inkster 김도형 - Keedi Kim David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Karen Etheridge Martin Kjeldsen
+=for stopwords Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop Karen Etheridge Martin Kjeldsen Michael G. Schwern Smylers Toby Inkster 김도형 - Keedi Kim
 
 =over 4
 
 =item *
 
 Chris Williams <bingos@cpan.org>
-
-=item *
-
-Michael G. Schwern <mschwern@cpan.org>
-
-=item *
-
-Smylers <Smylers@stripey.com>
-
-=item *
-
-Toby Inkster <tobyink@cpan.org>
-
-=item *
-
-김도형 - Keedi Kim <keedi@cpan.org>
 
 =item *
 
@@ -2365,17 +2566,37 @@ Goro Fuji <gfuji@cpan.org>
 
 =item *
 
+Graham Knop <haarg@haarg.org>
+
+=item *
+
 Karen Etheridge <ether@cpan.org>
 
 =item *
 
 Martin Kjeldsen <mk@bluepipe.dk>
 
+=item *
+
+Michael G. Schwern <mschwern@cpan.org>
+
+=item *
+
+Smylers <Smylers@stripey.com>
+
+=item *
+
+Toby Inkster <tobyink@cpan.org>
+
+=item *
+
+김도형 - Keedi Kim <keedi@cpan.org>
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2013 by David Golden.
+This software is Copyright (c) 2014 by David Golden.
 
 This is free software, licensed under:
 

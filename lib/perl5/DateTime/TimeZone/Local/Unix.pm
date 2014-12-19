@@ -1,16 +1,18 @@
 package DateTime::TimeZone::Local::Unix;
-$DateTime::TimeZone::Local::Unix::VERSION = '1.74';
+$DateTime::TimeZone::Local::Unix::VERSION = '1.81';
 use strict;
 use warnings;
 
 use Cwd 3;
+use Try::Tiny;
+
 use parent 'DateTime::TimeZone::Local';
 
 sub Methods {
     return qw(
         FromEnv
-        FromEtcLocaltime
         FromEtcTimezone
+        FromEtcLocaltime
         FromEtcTIMEZONE
         FromEtcSysconfigClock
         FromEtcDefaultInit
@@ -54,12 +56,10 @@ sub FromEtcLocaltime {
                 : $parts[$x]
             );
 
-            my $tz;
-            {
-                local $@;
+            my $tz = try {
                 local $SIG{__DIE__};
-                $tz = eval { DateTime::TimeZone->new( name => $name ) };
-            }
+                DateTime::TimeZone->new( name => $name );
+            };
 
             return $tz if $tz;
         }
@@ -89,10 +89,10 @@ sub _FindMatchingZoneinfoFile {
     my $size = -s $file_to_match;
 
     my $real_name;
-    local $@;
-    local $SIG{__DIE__};
-    local $_;
-    eval {
+    try {
+        local $SIG{__DIE__};
+        local $_;
+
         File::Find::find(
             {
                 wanted => sub {
@@ -119,12 +119,12 @@ sub _FindMatchingZoneinfoFile {
             },
             $ZoneinfoDir,
         );
+    }
+    catch {
+        die $_ unless ref $_ && $_->{found};
     };
 
-    if ($@) {
-        return $real_name if ref $@ && $@->{found};
-        die $@;
-    }
+    return $real_name;
 }
 
 sub FromEtcTimezone {
@@ -142,9 +142,10 @@ sub FromEtcTimezone {
 
     return unless $class->_IsValidName($name);
 
-    local $@;
-    local $SIG{__DIE__};
-    return eval { DateTime::TimeZone->new( name => $name ) };
+    return try {
+        local $SIG{__DIE__};
+        DateTime::TimeZone->new( name => $name );
+    };
 }
 
 sub FromEtcTIMEZONE {
@@ -168,9 +169,10 @@ sub FromEtcTIMEZONE {
 
     return unless $class->_IsValidName($name);
 
-    local $@;
-    local $SIG{__DIE__};
-    return eval { DateTime::TimeZone->new( name => $name ) };
+    return try {
+        local $SIG{__DIE__};
+        DateTime::TimeZone->new( name => $name );
+    };
 }
 
 # RedHat uses this
@@ -184,9 +186,10 @@ sub FromEtcSysconfigClock {
 
     return unless $class->_IsValidName($name);
 
-    local $@;
-    local $SIG{__DIE__};
-    return eval { DateTime::TimeZone->new( name => $name ) };
+    return try {
+        local $SIG{__DIE__};
+        DateTime::TimeZone->new( name => $name );
+    };
 }
 
 # this is a separate function so that it can be overridden in the test suite
@@ -213,9 +216,10 @@ sub FromEtcDefaultInit {
 
     return unless $class->_IsValidName($name);
 
-    local $@;
-    local $SIG{__DIE__};
-    return eval { DateTime::TimeZone->new( name => $name ) };
+    return try {
+        local $SIG{__DIE__};
+        DateTime::TimeZone->new( name => $name );
+    };
 }
 
 # this is a separate function so that it can be overridden in the test
@@ -241,15 +245,13 @@ __END__
 
 =pod
 
-=encoding UTF-8
-
 =head1 NAME
 
 DateTime::TimeZone::Local::Unix - Determine the local system's time zone on Unix
 
 =head1 VERSION
 
-version 1.74
+version 1.81
 
 =head1 SYNOPSIS
 

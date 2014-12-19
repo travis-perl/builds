@@ -4,7 +4,7 @@
       "Barrie Slaymaker <barries@slaysys.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.92, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.142060",
+   "generated_by" : "ExtUtils::MakeMaker version 6.92, CPAN::Meta::Converter version 2.140640, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "open_source"
    ],

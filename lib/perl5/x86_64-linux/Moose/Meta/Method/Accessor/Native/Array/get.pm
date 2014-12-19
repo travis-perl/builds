@@ -1,5 +1,6 @@
 package Moose::Meta::Method::Accessor::Native::Array::get;
-$Moose::Meta::Method::Accessor::Native::Array::get::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 

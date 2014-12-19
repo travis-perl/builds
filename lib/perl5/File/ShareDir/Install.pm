@@ -9,7 +9,7 @@ use Carp;
 use File::Spec;
 use IO::Dir;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 our @DIRS;
 our %ALREADY;
@@ -215,7 +215,7 @@ sub _scan_share_dir
             else {
                 next if $entry =~ /^\./;
             }
-            _scan_share_dir( $files, File::Spec->catdir( $idir, $entry ), $full );
+            _scan_share_dir( $files, File::Spec->catdir( $idir, $entry ), $full, $def );
         }
     }
 }
