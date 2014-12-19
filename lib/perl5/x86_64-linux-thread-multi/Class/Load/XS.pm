@@ -1,9 +1,6 @@
 package Class::Load::XS;
-BEGIN {
-  $Class::Load::XS::AUTHORITY = 'cpan:SARTAK';
-}
-# git description: v0.07-5-gd41f383
-$Class::Load::XS::VERSION = '0.08';
+# git description: v0.08-18-g349ac6e
+$Class::Load::XS::VERSION = '0.09';
 
 use strict;
 use warnings;
@@ -14,13 +11,14 @@ use XSLoader;
 XSLoader::load(
     __PACKAGE__,
     exists $Class::Load::XS::{VERSION}
-    ? ${ $Class::Load::XS::{VERSION} }
-    : (),
+        ? ${ $Class::Load::XS::{VERSION} }
+        : (),
 );
 
 1;
 
 # ABSTRACT: XS implementation of parts of Class::Load
+# KEYWORDS: class module load require use runtime XS
 
 __END__
 
@@ -34,7 +32,7 @@ Class::Load::XS - XS implementation of parts of Class::Load
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -61,7 +59,13 @@ This is free software, licensed under:
 
 =head1 CONTRIBUTORS
 
+=for stopwords Karen Etheridge Jesse Luehrs hurricup
+
 =over 4
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
 
 =item *
 
@@ -69,7 +73,11 @@ Jesse Luehrs <doy@tozt.net>
 
 =item *
 
-Karen Etheridge <ether@cpan.org>
+Karen Etheridge <github@froods.org>
+
+=item *
+
+hurricup <hurricup@gmail.com>
 
 =back
 
