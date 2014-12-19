@@ -1,5 +1,6 @@
 package Class::MOP::Instance;
-$Class::MOP::Instance::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
@@ -284,7 +285,7 @@ Class::MOP::Instance - Instance Meta Object
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

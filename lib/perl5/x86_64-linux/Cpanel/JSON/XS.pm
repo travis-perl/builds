@@ -21,6 +21,14 @@ Cpanel::JSON::XS - JSON::XS for Cpanel, fast and correct serialising, also for 5
  # Note that 5.6 misses most smart utf8 and encoding functionalities
  # of newer releases.
 
+ # Note that L<JSON::MaybeXS> will automatically use Cpanel::JSON::XS
+ # if available, at virtually no speed overhead either, so you should
+ # be able to just:
+ 
+ use JSON::MaybeXS;
+
+ # and do the same things, except that you have a pure-perl fallback now.
+
 =head1 DESCRIPTION
 
 This module converts Perl data structures to JSON and vice versa. Its
@@ -42,7 +50,7 @@ values and vice versa.
 
 =over 4
 
-=item * smart Unicode handling
+=item * correct Unicode handling
 
 This module knows how to handle Unicode with Perl version higher than 5.8.5,
 documents how and when it does so, and even documents what "correct" means.
@@ -94,6 +102,14 @@ or        L<https://rt.cpan.org/Public/Dist/Display.html?Queue=Cpanel-JSON-XS>
 
 B<Changes to JSON::XS>
 
+- fixed encode of numbers for dual-vars. Different string representations
+  are preserved, but numbers with temporary strings which represent the same number
+  are here treated as numbers, not strings. Cpanel::JSON::XS is a bit slower, but
+  preserves numeric types better.
+
+- different handling of inf/nan. Default now to null, optionally with -DSTRINGIFY_INFNAN
+  to "inf"/"nan".
+
 - added C<binary> extension, non-JSON and non JSON parsable, allows
   C<\xNN> and C<\NNN> sequences.
 
@@ -129,7 +145,7 @@ B<Changes to JSON::XS>
 
 package Cpanel::JSON::XS;
 
-our $VERSION = '3.0104';
+our $VERSION = '3.0113';
 our @ISA = qw(Exporter);
 
 our @EXPORT = qw(encode_json decode_json to_json from_json);
@@ -187,8 +203,8 @@ Except being faster.
 
 =item $is_boolean = Cpanel::JSON::XS::is_bool $scalar
 
-Returns true if the passed scalar represents either Cpanel::JSON::XS::true or
-Cpanel::JSON::XS::false, two constants that act like C<1> and C<0>, respectively
+Returns true if the passed scalar represents either C<JSON::XS::true> or
+C<JSON::XS::false>, two constants that act like C<1> and C<0>, respectively
 and are used to represent JSON C<true> and C<false> values in Perl.
 
 See MAPPING, below, for more information on how JSON values are mapped to
@@ -202,7 +218,7 @@ Perl.
 
 =item from_json
 
-from_json has been renamed to encode_json
+from_json has been renamed to decode_json
 
 =item to_json
 
@@ -272,7 +288,7 @@ be chained:
 If C<$enable> is true (or missing), then the C<encode> method will not
 generate characters outside the code range C<0..127> (which is ASCII). Any
 Unicode characters outside that range will be escaped using either a
-single \uXXXX (BMP characters) or a double \uHHHH\uLLLLL escape sequence,
+single C<\uXXXX> (BMP characters) or a double C<\uHHHH\uLLLLL> escape sequence,
 as per RFC4627. The resulting encoded JSON text can be treated as a native
 Unicode string, an ascii-encoded, latin1-encoded or UTF-8 encoded string,
 or any other superset of ASCII.
@@ -510,6 +526,17 @@ character, after which more white-space and comments are allowed.
         # neither this one...
   ]
 
+=item * literal ASCII TAB characters in strings
+
+Literal ASCII TAB characters are now allowed in strings (and treated as
+C<\t>) in relaxed mode. Despite JSON mandates, that TAB character is
+substituted for "\t" sequence.
+
+  [
+     "Hello\tWorld",
+     "Hello<TAB>World", # literal <TAB> would not normally be allowed
+  ]
+
 =back
 
 =item $json = $json->canonical ([$enable])
@@ -521,7 +548,8 @@ by sorting their keys. This is adding a comparatively high overhead.
 
 If C<$enable> is false, then the C<encode> method will output key-value
 pairs in the order Perl stores them (which will likely change between runs
-of the same script).
+of the same script, and can change even within the same run from 5.18
+onwards).
 
 This option is useful if you want the same data structure to be encoded as
 the same JSON text (given the same overall settings). If it is disabled,
@@ -582,6 +610,8 @@ encoded. Has no effect on C<decode>.
 If C<$enable> is false (the default), then C<encode> will throw an
 exception when it encounters a blessed object.
 
+This setting has no effect on C<decode>.
+
 =item $json = $json->convert_blessed ([$enable])
 
 =item $enabled = $json->get_convert_blessed
@@ -601,12 +631,10 @@ methods called by the Perl core (== not by the user of the object) are
 usually in upper case letters and to avoid collisions with any C<to_json>
 function or method.
 
-This setting does not yet influence C<decode> in any way, but in the
-future, global hooks might get installed that influence C<decode> and are
-enabled by this setting.
+If C<$enable> is false (the default), then C<encode> will not consider
+this type of conversion.
 
-If C<$enable> is false, then the C<allow_blessed> setting will decide what
-to do when a blessed object is found.
+This setting has no effect on C<decode>.
 
 =item $json = $json->allow_tags ([$enable])
 
@@ -771,6 +799,19 @@ C<0> is specified).
 
 See SECURITY CONSIDERATIONS, below, for more info on why this is useful.
 
+=item $json->stringify_infnan ([$infnan_mode = 1])
+
+=item $infnan_mode = $json->get_stringify_infnan
+
+Get or set how Cpanel::JSON::XS encodes C<inf> or C<nan> for numeric
+values. 
+
+C<null>:     infnan_mode = 0. Similar to most JSON modules in other languages.
+
+stringified: infnan_mode = 1. As in Mojo::JSON.
+
+inf/nan:     infnan_mode = 2. As in JSON::XS, and older releases. Produces invalid JSON.
+
 =item $json_text = $json->encode ($perl_scalar)
 
 Converts the given Perl data structure (a simple scalar or a reference
@@ -797,8 +838,7 @@ silently stop parsing there and return the number of characters consumed
 so far.
 
 This is useful if your JSON texts are not delimited by an outer protocol
-(which is not the brightest thing to do in the first place) and you need
-to know where the JSON text ends.
+and you need to know where the JSON text ends.
 
    Cpanel::JSON::XS->new->decode_prefix ("[1] the tail")
    => ([], 3)
@@ -1113,12 +1153,12 @@ the JSON number will still be re-encoded as a JSON number).
 
 Note that precision is not accuracy - binary floating point values
 cannot represent most decimal fractions exactly, and when converting
-from and to floating point, Cpanel::JSON::XS only guarantees precision
+from and to floating point, C<Cpanel::JSON::XS> only guarantees precision
 up to but not including the least significant bit.
 
 =item true, false
 
-These JSON atoms become C<JSON::XS::true> and C<JSON::XS::false>,
+These JSON atoms become C<Cpanel::JSON::XS::true> and C<Cpanel::JSON::XS::false>,
 respectively. They are overloaded to act almost exactly like the numbers
 C<1> and C<0>. You can check whether a scalar is a JSON boolean by using
 the C<Cpanel::JSON::XS::is_bool> function.
@@ -1174,7 +1214,8 @@ Perl array references become JSON arrays.
 Other unblessed references are generally not allowed and will cause an
 exception to be thrown, except for references to the integers C<0> and
 C<1>, which get turned into C<false> and C<true> atoms in JSON. You can
-also use C<JSON::XS::false> and C<JSON::XS::true> to improve readability.
+also use C<Cpanel::JSON::XS::false> and C<Cpanel::JSON::XS::true> to improve
+readability.
 
    encode_json [\0, Cpanel::JSON::XS::true]      # yields [false,true]
 
@@ -1197,8 +1238,8 @@ your own serialiser method.
 =item simple scalars
 
 Simple Perl scalars (any scalar that is not a reference) are the most
-difficult objects to encode: Cpanel::JSON::XS will encode undefined scalars as
-JSON C<null> values, scalars that have last been used in a string context
+difficult objects to encode: Cpanel::JSON::XS will encode undefined scalars or inf/nan
+as JSON C<null> values, scalars that have last been used in a string context
 before encoding as JSON strings, and anything else as number value:
 
    # dump as number
@@ -1206,12 +1247,21 @@ before encoding as JSON strings, and anything else as number value:
    encode_json [-3.0e17]                # yields [-3e+17]
    my $value = 5; encode_json [$value]  # yields [5]
 
-   # used as string, so dump as string
+   # used as string, but the two representations are for the same number
    print $value;
-   encode_json [$value]                 # yields ["5"]
+   encode_json [$value]                 # yields [5]
+
+   # used as different string (non-matching dual-var)
+   my $str = '0 but true';
+   my $num = 1 + $str;
+   encode_json [$num, $str]           # yields [1,"0 but true"]
 
    # undef becomes null
    encode_json [undef]                  # yields [null]
+
+   # inf or nan becomes null, unless you answered
+   # "Do you want to handle inf/nan as strings" with yes
+   encode_json [9**9**9]                # yields [null]
 
 You can force the type to be a JSON string by stringifying it:
 
@@ -1226,16 +1276,13 @@ You can force the type to be a JSON number by numifying it:
    $x += 0;     # numify it, ensuring it will be dumped as a number
    $x *= 1;     # same thing, the choice is yours.
 
-You can not currently force the type in other, less obscure, ways. Tell me
-if you need this capability (but don't forget to explain why it's needed
-:).
-
 Note that numerical precision has the same meaning as under Perl (so
 binary to decimal conversion follows the same rules as in Perl, which
 can differ to other languages). Also, your perl interpreter might expose
 extensions to the floating point numbers of your platform, such as
-infinities or NaN's - these cannot be represented in JSON, and it is an
-error to pass those in.
+infinities or NaN's - these cannot be represented in JSON, and thus
+null is returned instead. Optionally you can configure it to stringify
+inf and nan values.
 
 =back
 
@@ -1248,7 +1295,7 @@ tagged values.
 
 =head3 SERIALISATION
 
-What happens when C<JSON::XS> encounters a Perl object depends on the
+What happens when C<Cpanel::JSON::XS> encounters a Perl object depends on the
 C<allow_blessed>, C<convert_blessed> and C<allow_tags> settings, which are
 used in this order:
 
@@ -1256,7 +1303,7 @@ used in this order:
 
 =item 1. C<allow_tags> is enabled and the object has a C<FREEZE> method.
 
-In this case, C<JSON::XS> uses the L<Types::Serialiser> object
+In this case, C<Cpanel::JSON::XS> uses the L<Types::Serialiser> object
 serialisation protocol to create a tagged JSON value, using a nonstandard
 extension to the JSON syntax.
 
@@ -1307,7 +1354,7 @@ The object will be serialised as a JSON null value.
 =item 4. none of the above
 
 If none of the settings are enabled or the respective methods are missing,
-C<JSON::XS> throws an exception.
+C<Cpanel::JSON::XS> throws an exception.
 
 =back
 
@@ -1324,7 +1371,7 @@ This section only considers the tagged value case: I a tagged JSON object
 is encountered during decoding and C<allow_tags> is disabled, a parse
 error will result (as if tagged values were not part of the grammar).
 
-If C<allow_tags> is enabled, C<JSON::XS> will look up the C<THAW> method
+If C<allow_tags> is enabled, C<Cpanel::JSON::XS> will look up the C<THAW> method
 of the package/classname used during serialisation (it will not attempt
 to load the package as a Perl module). If there is no such method, the
 decoding will fail with an error.
@@ -1517,62 +1564,17 @@ If you know of other incompatibilities, please let me know.
 
 =head2 JSON and YAML
 
-You often hear that JSON is a subset of YAML. This is, however, a mass
-hysteria(*) and very far from the truth (as of the time of this writing),
-so let me state it clearly: I<in general, there is no way to configure
-JSON::XS to output a data structure as valid YAML> that works in all
-cases.
-
-If you really must use Cpanel::JSON::XS to generate YAML, you should use this
-algorithm (subject to change in future versions):
+You often hear that JSON is a subset of YAML.  I<in general, there is
+no way to configure JSON::XS to output a data structure as valid YAML>
+that works in all cases.  If you really must use Cpanel::JSON::XS to
+generate YAML, you should use this algorithm (subject to change in
+future versions):
 
    my $to_yaml = Cpanel::JSON::XS->new->utf8->space_after (1);
    my $yaml = $to_yaml->encode ($ref) . "\n";
 
 This will I<usually> generate JSON texts that also parse as valid
-YAML. Please note that YAML has hardcoded limits on (simple) object key
-lengths that JSON doesn't have and also has different and incompatible
-unicode character escape syntax, so you should make sure that your hash
-keys are noticeably shorter than the 1024 "stream characters" YAML allows
-and that you do not have characters with codepoint values outside the
-Unicode BMP (basic multilingual page). YAML also does not allow C<\/>
-sequences in strings (which Cpanel::JSON::XS does not I<currently> generate, but
-other JSON generators might).
-
-There might be other incompatibilities that I am not aware of (or the YAML
-specification has been changed yet again - it does so quite often). In
-general you should not try to generate YAML with a JSON generator or vice
-versa, or try to parse JSON with a YAML parser or vice versa: chances are
-high that you will run into severe interoperability problems when you
-least expect it.
-
-=over 4
-
-=item (*)
-
-I have been pressured multiple times by Brian Ingerson (one of the
-authors of the YAML specification) to remove this paragraph, despite him
-acknowledging that the actual incompatibilities exist. As I was personally
-bitten by this "JSON is YAML" lie, I refused and said I will continue to
-educate people about these issues, so others do not run into the same
-problem again and again. After this, Brian called me a (quote)I<complete
-and worthless idiot>(unquote).
-
-In my opinion, instead of pressuring and insulting people who actually
-clarify issues with YAML and the wrong statements of some of its
-proponents, I would kindly suggest reading the JSON spec (which is not
-that difficult or long) and finally make YAML compatible to it, and
-educating users about the changes, instead of spreading lies about the
-real compatibility for many I<years> and trying to silence people who
-point out that it isn't true.
-
-Addendum/2009: the YAML 1.2 spec is still incompatible with JSON, even
-though the incompatibilities have been documented (and are known to Brian)
-for many years and the spec makes explicit claims that YAML is a superset
-of JSON. It would be so easy to fix, but apparently, bullying people and
-corrupting userdata is so much easier.
-
-=back
+YAML.
 
 
 =head2 SPEED
@@ -1582,11 +1584,11 @@ tables. They have been generated with the help of the C<eg/bench> program
 in the JSON::XS distribution, to make it easy to compare on your own
 system.
 
-JSON::XS is with L<Data::MessagePack> one of the fastest serializers,
-because JSON and JSON::XS do not support backrefs (no graph structures),
-only trees. Storable supports backrefs, i.e. graphs. Data::MessagePack
-encodes its data binary (as Storable) and supports only very simple
-subset of JSON.
+JSON::XS is with L<Data::MessagePack> and L<Sereal> one of the fastest
+serializers, because JSON and JSON::XS do not support backrefs (no
+graph structures), only trees. Storable supports backrefs,
+i.e. graphs. Data::MessagePack encodes its data binary (as Storable)
+and supports only very simple subset of JSON.
 
 First comes a comparison between various modules using
 a very short single-line JSON string (also available at
@@ -1643,6 +1645,9 @@ will be broken due to missing (or wrong) Unicode handling. Others refuse
 to decode or encode properly, so it was impossible to prepare a fair
 comparison table for that case.
 
+For updated graphs see L<https://github.com/Sereal/Sereal/wiki/Sereal-Comparison-Graphs>
+
+
 =head1 INTEROP with JSON and JSON::XS
 
 JSON-XS-3.01 broke interoperability with JSON-2.90 with booleans. See L<JSON>.
@@ -1664,8 +1669,7 @@ When you are using JSON in a protocol, talking to untrusted potentially
 hostile creatures requires relatively few measures.
 
 First of all, your JSON decoder should be secure, that is, should not have
-any buffer overflows. Obviously, this module should ensure that and I am
-trying hard on making that true, but you never know.
+any buffer overflows. Obviously, this module should ensure that.
 
 Second, you need to avoid resource-starving attacks. That means you should
 limit the size of JSON texts you accept, or make sure then when your
@@ -1676,7 +1680,7 @@ it into a Perl structure. While JSON::XS can check the size of the JSON
 text, it might be too late when you already have it in memory, so you
 might want to check the size before you accept the string.
 
-Third, JSON::XS recurses using the C stack when decoding objects and
+Third, Cpanel::JSON::XS recurses using the C stack when decoding objects and
 arrays. The C stack is a limited resource: for instance, on my amd64
 machine with 8MB of stack size I can decode around 180k nested arrays but
 only 14k nested JSON objects (due to perl itself recursing deeply on croak
@@ -1685,31 +1689,28 @@ conservative, the default nesting limit is set to 512. If your process
 has a smaller stack, you should adjust this setting accordingly with the
 C<max_depth> method.
 
-Something else could bomb you, too, that I forgot to think of. In that
-case, you get to keep the pieces. I am always open for hints, though...
-
-Also keep in mind that JSON::XS might leak contents of your Perl data
+Also keep in mind that Cpanel::JSON::XS might leak contents of your Perl data
 structures in its error messages, so when you serialise sensitive
 information you might want to make sure that exceptions thrown by JSON::XS
 will not end up in front of untrusted eyes.
 
-If you are using JSON::XS to return packets to consumption
+If you are using Cpanel::JSON::XS to return packets to consumption
 by JavaScript scripts in a browser you should have a look at
 L<http://blog.archive.jpsykes.com/47/practical-csrf-and-json-security/> to
 see whether you are vulnerable to some common attack vectors (which really
 are browser design bugs, but it is still you who will have to deal with
 it, as major browser developers care only for features, not about getting
-security right).
-
+security right). You might also want to also look at L<Mojo::JSON>
+special escape rules to prevent from XSS attacks.
 
 =head1 THREADS
 
-Cpanel::JSON::XS has experimental ithreads support, unlike JSON::XS. If you
-encouter any bugs with thread support please report them.
+Cpanel::JSON::XS has proper ithreads support, unlike JSON::XS. If you
+encounter any bugs with thread support please report them.
 
 =head1 BUGS
 
-While the goal of the JSON::XS module is to be correct, that
+While the goal of the Cpanel::JSON::XS module is to be correct, that
 unfortunately does not mean it's bug-free, only that the author thinks
 its design is bug-free. If you keep reporting bugs they will be fixed
 swiftly, though.
@@ -1720,7 +1721,7 @@ to report any issues twice. Once in private to MLEHMANN to be fixed in
 JSON::XS for the masses and one to our the public tracker. Issues
 fixed by JSON::XS with a new release will also be backported to
 Cpanel::JSON::XS and 5.6.2, as long as Cpanel relies on 5.6.2 and
-JSON::XS as our serializer of choice.
+Cpanel::JSON::XS as our serializer of choice.
 
 L<https://rt.cpan.org/Public/Dist/Display.html?Queue=Cpanel-JSON-XS>
 
@@ -1757,16 +1758,16 @@ use overload
    "0+"     => sub { ${$_[0]} },
    "++"     => sub { $_[0] = ${$_[0]} + 1 },
    "--"     => sub { $_[0] = ${$_[0]} - 1 },
-  '""'      => sub { ${$_[0]} == 1 ? 'true' : 'false' },
-  'eq'      => sub {
-    my ($obj, $op) = ref ($_[0]) ? ($_[0], $_[1]) : ($_[1], $_[0]);
-    if ($op eq 'true' or $op eq 'false') {
-      return "$obj" eq 'true' ? 'true' eq $op : 'false' eq $op;
-    }
-    else {
-      return $obj ? 1 == $op : 0 == $op;
-    }
-   },
+  # '""'    => sub { ${$_[0]} == 1 ? 'true' : 'false' },
+  #'eq'      => sub {
+  #  my ($obj, $op) = ref ($_[0]) ? ($_[0], $_[1]) : ($_[1], $_[0]);
+  #  if ($op eq 'true' or $op eq 'false') {
+  #    return "$obj" eq 'true' ? 'true' eq $op : 'false' eq $op;
+  #  }
+  #  else {
+  #    return $obj ? 1 == $op : 0 == $op;
+  #  }
+  # },
    fallback => 1;
 
 1;
@@ -1775,10 +1776,12 @@ use overload
 
 The F<cpanel_json_xs> command line utility for quick experiments.
 
+L<JSON>, L<JSON::XS>, L<JSON::MaybeXS>, L<Mojo::JSON>, L<Mojo::JSON::MaybeXS>,
+L<JSON::SL>, L<JSON::DWIW>, L<JSON::YAJL>, L<https://metacpan.org/search?q=JSON>
+
 =head1 AUTHOR
 
-  Marc Lehmann <schmorp@schmorp.de>
-  http://home.schmorp.de/
+  Marc Lehmann <schmorp@schmorp.de>, http://home.schmorp.de/
 
   cPanel Inc. <cpan@cpanel.net>
 
