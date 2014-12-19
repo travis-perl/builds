@@ -1,14 +1,35 @@
 package Pod::Weaver::Section::Legal;
-{
-  $Pod::Weaver::Section::Legal::VERSION = '4.006';
-}
+# ABSTRACT: a section for the copyright and license
+$Pod::Weaver::Section::Legal::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Section';
-# ABSTRACT: a section for the copyright and license
 
 use Moose::Autobox;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This section plugin will produce a hunk of Pod giving the copyright and license
+#pod information for the document, like this:
+#pod
+#pod   =head1 COPYRIGHT AND LICENSE
+#pod
+#pod   This document is copyright (C) 1991, Ricardo Signes.
+#pod
+#pod   This document is available under the blah blah blah.
+#pod
+#pod This plugin will do nothing if no C<license> input parameter is available.  The
+#pod C<license> is expected to be a L<Software::License> object.
+#pod
+#pod =cut
 
+#pod =attr license_file
+#pod
+#pod Specify the name of the license file and an extra line of text will be added
+#pod telling users to check the file for the full text of the license.
+#pod
+#pod Defaults to none.
+#pod
+#pod =cut
 
 has license_file => (
   is => 'ro',
@@ -40,7 +61,7 @@ sub weave_section {
   );
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -55,7 +76,7 @@ Pod::Weaver::Section::Legal - a section for the copyright and license
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

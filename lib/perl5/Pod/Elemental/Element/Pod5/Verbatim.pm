@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Pod5::Verbatim;
 # ABSTRACT: a Pod verbatim paragraph
-$Pod::Elemental::Element::Pod5::Verbatim::VERSION = '0.103001';
+$Pod::Elemental::Element::Pod5::Verbatim::VERSION = '0.103002';
 use Moose;
 extends 'Pod::Elemental::Element::Generic::Text';
 with    'Pod::Elemental::Autoblank';
@@ -26,6 +26,8 @@ has '+content' => (coerce => 1, isa => ChompedString);
 
 use namespace::autoclean;
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -40,7 +42,7 @@ Pod::Elemental::Element::Pod5::Verbatim - a Pod verbatim paragraph
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

@@ -35,7 +35,7 @@ use PPI::Token ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	@ISA     = 'PPI::Token';
 }
 
@@ -65,13 +65,13 @@ sub identifier {
 
 =head2 parameters
 
-The C<parameters> method returns the parameter strong for the attribute.
+The C<parameters> method returns the parameter string for the attribute.
 
 That is, for the attribute C<foo(bar)>, the C<parameters> method would
 return C<"bar">.
 
 Returns the parameters as a string (including the null string C<''> for
-the case of an attribute such as C<foo()>.
+the case of an attribute such as C<foo()>.)
 
 Returns C<undef> if the attribute does not have parameters.
 

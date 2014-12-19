@@ -1,12 +1,12 @@
 package Dist::Zilla::PluginBundle::Filter;
 # ABSTRACT: use another bundle, with some plugins removed
-$Dist::Zilla::PluginBundle::Filter::VERSION = '5.020';
+$Dist::Zilla::PluginBundle::Filter::VERSION = '5.029';
 use Moose;
-use Moose::Autobox;
 with 'Dist::Zilla::Role::PluginBundle';
 
 use namespace::autoclean;
 
+use List::Util 1.33 qw(any);
 use Class::Load qw(try_load_class);
 use Dist::Zilla::Util;
 
@@ -28,6 +28,9 @@ use Dist::Zilla::Util;
 #pod
 #pod Options not prefixed with C<-> will be passed to the bundle to be filtered.
 #pod
+#pod B<NOTE:> When you filter a bundle you B<SHOULD NOT> include it directly in
+#pod your C<dist.ini> file. This plugin will take care of including it for you.
+#pod
 #pod =head1 SEE ALSO
 #pod
 #pod Core Dist::Zilla plugins: L<@Basic|Dist::Zilla::PluginBundle::Basic>.
@@ -44,8 +47,8 @@ sub bundle_config {
 
   my $config = {};
 
-  my $has_filter_args = $section->{payload}->keys->grep(sub { /^-/ })->length;
-  for my $key ($section->{payload}->keys->flatten) {
+  my $has_filter_args = any { /^-/ } keys %{ $section->{payload} };
+  for my $key (keys %{ $section->{payload} }) {
     my $val = $section->{payload}->{$key};
     my $target = $has_filter_args && ($key !~ /^-/)
       ? 'bundle'
@@ -102,7 +105,7 @@ Dist::Zilla::PluginBundle::Filter - use another bundle, with some plugins remove
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 
@@ -121,6 +124,9 @@ includes all the configuration for the bundle named in the C<-bundle> attribute,
 but removes all the entries whose package is given in the C<-remove> attributes.
 
 Options not prefixed with C<-> will be passed to the bundle to be filtered.
+
+B<NOTE:> When you filter a bundle you B<SHOULD NOT> include it directly in
+your C<dist.ini> file. This plugin will take care of including it for you.
 
 =head1 SEE ALSO
 

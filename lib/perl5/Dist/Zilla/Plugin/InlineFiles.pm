@@ -1,8 +1,7 @@
 package Dist::Zilla::Plugin::InlineFiles;
 # ABSTRACT: files in a data section
-$Dist::Zilla::Plugin::InlineFiles::VERSION = '5.020';
+$Dist::Zilla::Plugin::InlineFiles::VERSION = '5.029';
 use Moose;
-use Moose::Autobox;
 with 'Dist::Zilla::Role::FileGatherer';
 
 use namespace::autoclean;
@@ -63,7 +62,7 @@ Dist::Zilla::Plugin::InlineFiles - files in a data section
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 

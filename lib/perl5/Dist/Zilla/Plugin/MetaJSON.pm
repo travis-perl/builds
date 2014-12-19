@@ -1,8 +1,7 @@
 package Dist::Zilla::Plugin::MetaJSON;
 # ABSTRACT: produce a META.json
-$Dist::Zilla::Plugin::MetaJSON::VERSION = '5.020';
+$Dist::Zilla::Plugin::MetaJSON::VERSION = '5.029';
 use Moose;
-use Moose::Autobox;
 with 'Dist::Zilla::Role::FileGatherer';
 
 use namespace::autoclean;
@@ -50,8 +49,7 @@ sub gather_files {
 
   my $zilla = $self->zilla;
 
-  require JSON;
-  JSON->VERSION(2);
+  require JSON::MaybeXS;
   require CPAN::Meta::Converter;
   CPAN::Meta::Converter->VERSION(2.101550); # improved downconversion
   require CPAN::Meta::Validator;
@@ -74,7 +72,10 @@ sub gather_files {
       my $converter = CPAN::Meta::Converter->new($distmeta);
       my $output    = $converter->convert(version => $self->version);
 
-      JSON->new->canonical(1)->pretty->encode($output)
+      # note utf8 => 1 is *not* used - so unicode characters remain as-is in
+      # the resulting json string, and therefore an encoding must be used when
+      # the file is written to disk.
+      JSON::MaybeXS->new(canonical => 1, pretty => 1)->encode($output)
       . "\n";
     },
   });
@@ -97,7 +98,7 @@ __PACKAGE__->meta->make_immutable;
 #pod
 #pod Other modules:
 #pod L<CPAN::Meta>,
-#pod L<CPAN::Meta::Spec>, L<JSON>.
+#pod L<CPAN::Meta::Spec>, L<JSON::MaybeXS>.
 #pod
 #pod =cut
 
@@ -113,7 +114,7 @@ Dist::Zilla::Plugin::MetaJSON - produce a META.json
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 DESCRIPTION
 
@@ -148,7 +149,7 @@ L<FileGatherer|Dist::Zilla::Role::FileGatherer>.
 
 Other modules:
 L<CPAN::Meta>,
-L<CPAN::Meta::Spec>, L<JSON>.
+L<CPAN::Meta::Spec>, L<JSON::MaybeXS>.
 
 =head1 AUTHOR
 

@@ -1,5 +1,5 @@
 package Log::Dispatch::File::Locked;
-$Log::Dispatch::File::Locked::VERSION = '2.42';
+$Log::Dispatch::File::Locked::VERSION = '2.44';
 use strict;
 use warnings;
 
@@ -38,7 +38,7 @@ Log::Dispatch::File::Locked - Subclass of Log::Dispatch::File to facilitate lock
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

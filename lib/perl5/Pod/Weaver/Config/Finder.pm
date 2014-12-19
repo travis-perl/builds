@@ -1,17 +1,16 @@
 package Pod::Weaver::Config::Finder;
-{
-  $Pod::Weaver::Config::Finder::VERSION = '4.006';
-}
+# ABSTRACT: the reader for weaver.ini files
+$Pod::Weaver::Config::Finder::VERSION = '4.009';
 use Moose;
 extends 'Config::MVP::Reader::Finder';
 with 'Pod::Weaver::Config';
-# ABSTRACT: the reader for weaver.ini files
+
+use namespace::autoclean;
 
 sub default_search_path {
   return qw(Pod::Weaver::Config Config::MVP::Reader);
 }
 
-no Moose;
 __PACKAGE__->meta->make_immutable;
 1;
 
@@ -27,7 +26,7 @@ Pod::Weaver::Config::Finder - the reader for weaver.ini files
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 AUTHOR
 

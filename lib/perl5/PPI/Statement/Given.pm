@@ -4,7 +4,7 @@ package PPI::Statement::Given;
 
 =head1 NAME
 
-PPI::Statement::Given - Describes all compound statements
+PPI::Statement::Given - A given-when statement
 
 =head1 SYNOPSIS
 
@@ -36,7 +36,7 @@ use PPI::Statement ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.218';
+	$VERSION = '1.220';
 	@ISA     = 'PPI::Statement';
 }
 

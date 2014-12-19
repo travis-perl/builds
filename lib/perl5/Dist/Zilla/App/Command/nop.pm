@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::nop;
 # ABSTRACT: initialize dzil, then exit
-$Dist::Zilla::App::Command::nop::VERSION = '5.020';
+$Dist::Zilla::App::Command::nop::VERSION = '5.029';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -18,6 +18,11 @@ use Dist::Zilla::App -command;
 #pod =cut
 
 sub abstract { 'do nothing: initialize dzil, then exit' }
+
+sub description {
+  "This command does nothing but initialize Dist::Zilla and exit.\n" .
+  "It is sometimes useful for diagnostic purposes."
+}
 
 sub execute {
   my ($self, $opt, $arg) = @_;
@@ -39,7 +44,7 @@ Dist::Zilla::App::Command::nop - initialize dzil, then exit
 
 =head1 VERSION
 
-version 5.020
+version 5.029
 
 =head1 SYNOPSIS
 

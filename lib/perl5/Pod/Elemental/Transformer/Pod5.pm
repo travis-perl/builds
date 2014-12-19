@@ -1,6 +1,6 @@
 package Pod::Elemental::Transformer::Pod5;
 # ABSTRACT: the default, minimal semantics of Perl5's pod element hierarchy
-$Pod::Elemental::Transformer::Pod5::VERSION = '0.103001';
+$Pod::Elemental::Transformer::Pod5::VERSION = '0.103002';
 use Moose;
 with 'Pod::Elemental::Transformer';
 
@@ -287,6 +287,8 @@ sub transform_node {
   return $node;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -301,7 +303,7 @@ Pod::Elemental::Transformer::Pod5 - the default, minimal semantics of Perl5's po
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 SYNOPSIS
 
