@@ -1,8 +1,5 @@
 #!/home/travis/perl5/perlbrew/perls/5.10.0-thr/bin/perl -w
 
-eval 'exec /home/travis/perl5/perlbrew/perls/5.10.0-thr/bin/perl -w -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
 use strict;
 use Getopt::Long;
 use Pod::Usage;
