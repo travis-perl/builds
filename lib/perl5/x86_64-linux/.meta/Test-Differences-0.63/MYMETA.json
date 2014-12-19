@@ -1,10 +1,10 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "Test strings and data structures and show differences if not ok",
    "author" : [
-      "unknown"
+      "David Cantrell <david@cantrell.org.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "unknown"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Algorithm-Diff",
+   "name" : "Test-Differences",
    "no_index" : {
       "directory" : [
          "t",
@@ -20,20 +20,21 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
-      },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
-         "requires" : {}
+         "requires" : {
+            "Capture::Tiny" : "0.24",
+            "Data::Dumper" : "2.126",
+            "Test::More" : "0",
+            "Text::Diff" : "0.35"
+         }
       }
    },
    "release_status" : "stable",
-   "version" : "1.1902"
+   "resources" : {},
+   "version" : "0.63"
 }
