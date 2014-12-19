@@ -25,10 +25,15 @@
             "ExtUtils::MakeMaker" : "0"
          }
       },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
       "runtime" : {
          "requires" : {
             "DBIx::Class" : "0",
-            "ExtUtils::MakeMaker" : "6.66",
+            "ExtUtils::MakeMaker" : "7.04",
             "Test::More" : "0"
          }
       }

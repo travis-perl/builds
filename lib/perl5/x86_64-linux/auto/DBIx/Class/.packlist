@@ -1,5 +1,6 @@
 /home/travis/.perlbrew/libs/5.18.1@dbic/bin/dbicadmin
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class.pm
+/home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class.pod
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/AccessorGroup.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/Admin.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/Admin/Descriptive.pm
@@ -107,12 +108,14 @@
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLAHacks/OracleJoins.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLAHacks/SQLite.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker.pm
+/home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker.pod
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/ACCESS.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/LimitDialects.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/MSSQL.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/MySQL.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/Oracle.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/OracleJoins.pm
+/home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/OracleJoins.pod
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/SQLMaker/SQLite.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/Schema.pm
 /home/travis/.perlbrew/libs/5.18.1@dbic/lib/perl5/DBIx/Class/Schema/Versioned.pm
