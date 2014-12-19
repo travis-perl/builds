@@ -30,8 +30,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::Depends" : "0.302",
-            "ExtUtils::MakeMaker" : "6.42"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {

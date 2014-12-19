@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Pod5::Nonpod;
 # ABSTRACT: a non-pod element in a Pod document
-$Pod::Elemental::Element::Pod5::Nonpod::VERSION = '0.103001';
+$Pod::Elemental::Element::Pod5::Nonpod::VERSION = '0.103002';
 use Moose;
 with 'Pod::Elemental::Flat';
 with 'Pod::Elemental::Autoblank';
@@ -29,6 +29,8 @@ sub as_pod_string {
   return sprintf "=cut\n%s=pod\n", $self->content;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -43,7 +45,7 @@ Pod::Elemental::Element::Pod5::Nonpod - a non-pod element in a Pod document
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

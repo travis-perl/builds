@@ -1,6 +1,6 @@
 package Pod::Elemental::Objectifier;
 # ABSTRACT: it turns a Pod::Eventual event stream into objects
-$Pod::Elemental::Objectifier::VERSION = '0.103001';
+$Pod::Elemental::Objectifier::VERSION = '0.103002';
 use Moose;
 use Moose::Autobox;
 
@@ -75,6 +75,8 @@ sub element_class_for_event {
   return $class_for->{ $t };
 }
 
+__PACKAGE__->meta->make_immutable;
+
 1;
 
 __END__
@@ -89,7 +91,7 @@ Pod::Elemental::Objectifier - it turns a Pod::Eventual event stream into objects
 
 =head1 VERSION
 
-version 0.103001
+version 0.103002
 
 =head1 OVERVIEW
 

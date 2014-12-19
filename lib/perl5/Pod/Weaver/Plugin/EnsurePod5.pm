@@ -1,16 +1,21 @@
 package Pod::Weaver::Plugin::EnsurePod5;
-{
-  $Pod::Weaver::Plugin::EnsurePod5::VERSION = '4.006';
-}
+# ABSTRACT: ensure that the Pod5 translator has been run on this document
+$Pod::Weaver::Plugin::EnsurePod5::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Preparer';
-# ABSTRACT: ensure that the Pod5 translator has been run on this document
 
 use namespace::autoclean;
 use Moose::Autobox;
 
 use Pod::Elemental::Transformer::Pod5;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This plugin is very, very simple:  it runs the Pod5 transformer on the input
+#pod document and removes any leftover whitespace-only Nonpod elements.  If
+#pod non-whitespace-only Nonpod elements are found, an exception is raised.
+#pod
+#pod =cut
 
 sub _strip_nonpod {
   my ($self, $node) = @_;
@@ -42,7 +47,7 @@ sub prepare_input {
   return;
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -57,7 +62,7 @@ Pod::Weaver::Plugin::EnsurePod5 - ensure that the Pod5 translator has been run o
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 

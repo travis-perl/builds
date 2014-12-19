@@ -1,1 +1,1 @@
-{"dist":"autobox-2.82","target":"autobox","provides":{"autobox":{"version":"2.82","file":"lib/autobox.pm"}},"name":"autobox","version":"2.82","pathname":"C/CH/CHOCOLATE/autobox-2.82.tar.gz"}
+{"provides":{"autobox":{"version":"2.82","file":"lib/autobox.pm"}},"target":"autobox","pathname":"C/CH/CHOCOLATE/autobox-2.82.tar.gz","name":"autobox","dist":"autobox-2.82","version":"2.82"}

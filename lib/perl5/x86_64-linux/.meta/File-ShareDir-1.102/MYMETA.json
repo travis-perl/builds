@@ -31,8 +31,7 @@
             "File::ShareDir::Install" : "0.08"
          },
          "requires" : {
-            "ExtUtils::MakeMaker" : "0",
-            "File::ShareDir::Install" : "0.03"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "develop" : {

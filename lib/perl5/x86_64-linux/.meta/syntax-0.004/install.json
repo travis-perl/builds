@@ -1,1 +1,1 @@
-{"target":"syntax","provides":{"syntax":{"version":"0.004","file":"lib/syntax.pm"}},"dist":"syntax-0.004","pathname":"P/PH/PHAYLON/syntax-0.004.tar.gz","version":"0.004","name":"syntax"}
+{"dist":"syntax-0.004","version":"0.004","name":"syntax","pathname":"P/PH/PHAYLON/syntax-0.004.tar.gz","target":"syntax","provides":{"syntax":{"file":"lib/syntax.pm","version":"0.004"}}}

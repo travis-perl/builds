@@ -1,6 +1,6 @@
 package Log::Dispatch;
-# git description: v2.41-14-g89b3152
-$Log::Dispatch::VERSION = '2.42';
+# git description: v2.43-2-gb373346
+$Log::Dispatch::VERSION = '2.44';
 
 use 5.006;
 
@@ -301,7 +301,7 @@ Log::Dispatch - Dispatches messages to one or more outputs
 
 =head1 VERSION
 
-version 2.42
+version 2.44
 
 =head1 SYNOPSIS
 

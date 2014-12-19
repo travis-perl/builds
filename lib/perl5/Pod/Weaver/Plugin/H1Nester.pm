@@ -1,10 +1,8 @@
 package Pod::Weaver::Plugin::H1Nester;
-{
-  $Pod::Weaver::Plugin::H1Nester::VERSION = '4.006';
-}
+# ABSTRACT: structure the input pod document into head1-grouped sections
+$Pod::Weaver::Plugin::H1Nester::VERSION = '4.009';
 use Moose;
 with 'Pod::Weaver::Role::Transformer';
-# ABSTRACT: structure the input pod document into head1-grouped sections
 
 use namespace::autoclean;
 use Moose::Autobox;
@@ -12,6 +10,13 @@ use Moose::Autobox;
 use Pod::Elemental::Selectors -all;
 use Pod::Elemental::Transformer::Nester;
 
+#pod =head1 OVERVIEW
+#pod
+#pod This plugin is very, very simple:  it uses the
+#pod L<Pod::Elemental::Transformer::Nester> to restructure the document under its
+#pod C<=head1> elements.
+#pod
+#pod =cut
 
 sub transform_document {
   my ($self, $document) = @_;
@@ -29,7 +34,7 @@ sub transform_document {
   return;
 }
 
-no Moose;
+__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
@@ -44,7 +49,7 @@ Pod::Weaver::Plugin::H1Nester - structure the input pod document into head1-grou
 
 =head1 VERSION
 
-version 4.006
+version 4.009
 
 =head1 OVERVIEW
 
