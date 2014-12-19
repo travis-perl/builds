@@ -1,5 +1,6 @@
 package Class::MOP::Mixin::HasAttributes;
-$Class::MOP::Mixin::HasAttributes::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use strict;
 use warnings;
 
@@ -106,7 +107,7 @@ Class::MOP::Mixin::HasAttributes - Methods for metaclasses which have attributes
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 DESCRIPTION
 

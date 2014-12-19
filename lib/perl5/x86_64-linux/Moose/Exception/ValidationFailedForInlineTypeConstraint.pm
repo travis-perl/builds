@@ -1,5 +1,6 @@
 package Moose::Exception::ValidationFailedForInlineTypeConstraint;
-$Moose::Exception::ValidationFailedForInlineTypeConstraint::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Class';
