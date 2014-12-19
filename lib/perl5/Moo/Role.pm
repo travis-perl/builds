@@ -3,10 +3,10 @@ package Moo::Role;
 use strictures 1;
 use Moo::_Utils;
 use Role::Tiny ();
-use base qw(Role::Tiny);
+our @ISA = qw(Role::Tiny);
 use Import::Into;
 
-our $VERSION = '1.006000';
+our $VERSION = '1.006001';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -323,7 +323,7 @@ sub apply_roles_to_object {
 
       my $specs = $con_gen->all_attribute_specs;
 
-      my $assign = '';
+      my $assign = "{no warnings 'void';\n";
       my %captures;
       foreach my $name ( keys %attrs ) {
         my $spec = $specs->{$name};
@@ -333,11 +333,12 @@ sub apply_roles_to_object {
           my ($code, $pop_cap)
             = $m->generate_use_default('$_[0]', $name, $spec, $has);
 
-          $assign .= $code;
+          $assign .= $code . ";\n";
           @captures{keys %$has_cap, keys %$pop_cap}
             = (values %$has_cap, values %$pop_cap);
         }
       }
+      $assign .= "}";
       Sub::Quote::quote_sub($assign, \%captures);
     }
     else {
@@ -359,6 +360,28 @@ sub _composable_package_for {
 sub _install_single_modifier {
   my ($me, @args) = @_;
   _install_modifier(@args);
+}
+
+sub _install_does {
+    my ($me, $to) = @_;
+
+    # If Role::Tiny actually installed the DOES, give it a name
+    my $new = $me->SUPER::_install_does($to) or return;
+    return _name_coderef("${to}::DOES", $new);
+}
+
+sub does_role {
+  my ($proto, $role) = @_;
+  return 1
+    if Role::Tiny::does_role($proto, $role);
+  my $meta;
+  if ($INC{'Moose.pm'}
+      and $meta = Class::MOP::class_of($proto)
+      and ref $meta ne 'Moo::HandleMoose::FakeMetaClass'
+  ) {
+    return $meta->does_role($role);
+  }
+  return 0;
 }
 
 sub _handle_constructor {

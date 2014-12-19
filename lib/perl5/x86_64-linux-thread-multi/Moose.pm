@@ -1,15 +1,15 @@
 use strict;
 use warnings;
 package Moose;
-$Moose::VERSION = '2.1212';
-$Moose::AUTHORITY = 'cpan:STEVAN';
+our $VERSION = '2.1403';
+our $AUTHORITY = 'cpan:STEVAN';
 
 use 5.008003;
 
-use Scalar::Util 'blessed';
-use Carp         'carp', 'confess';
+use Scalar::Util ();
+use Carp         'carp';
 use Module::Runtime 'module_notional_filename';
-use Class::Load  'is_class_loaded', 'load_class';
+use Class::Load  'is_class_loaded';
 
 use Moose::Deprecated;
 use Moose::Exporter;
@@ -135,8 +135,8 @@ Moose::Exporter->setup_import_methods(
     ],
     as_is => [
         qw( super inner ),
-        \&Carp::confess,
-        \&Scalar::Util::blessed,
+        'Carp::confess',
+        'Scalar::Util::blessed',
     ],
 );
 
@@ -300,7 +300,7 @@ Moose - A postmodern object system for Perl 5
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 
@@ -395,15 +395,27 @@ or coercion.
 =head1 PROVIDED METHODS
 
 Moose provides a number of methods to all your classes, mostly through the
-inheritance of L<Moose::Object>. There is however, one exception.
+inheritance of L<Moose::Object>. There is however, one exception. By default,
+Moose will install a method named C<meta> in any class which uses
+C<Moose>. This method returns the current class's metaclass.
 
-=over 4
+If you'd like to rename this method, you can do so by passing the
+C<-meta_name> option when using Moose:
 
-=item B<meta>
+    use Moose -meta_name => 'my_meta';
 
-This is a method which provides access to the current class's metaclass.
+However, the L<Moose::Object> class I<also> provides a method named C<meta>
+which does the same thing. If your class inherits from L<Moose::Object> (which
+is the default), then you will still have a C<meta> method. However, if your
+class inherits from a parent which provides a C<meta> method of its own, your
+class will inherit that instead.
 
-=back
+If you'd like for Moose to not install a meta method at all, you can pass
+C<undef> as the C<-meta_name> option:
+
+    use Moose -meta_name => undef;
+
+Again, you will still inherit C<meta> from L<Moose::Object> in this case.
 
 =head1 EXPORTED FUNCTIONS
 

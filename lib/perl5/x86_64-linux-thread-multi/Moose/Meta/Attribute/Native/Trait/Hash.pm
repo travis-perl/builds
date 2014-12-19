@@ -1,5 +1,6 @@
 package Moose::Meta::Attribute::Native::Trait::Hash;
-$Moose::Meta::Attribute::Native::Trait::Hash::VERSION = '2.1212';
+our $VERSION = '2.1403';
+
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
 
@@ -23,7 +24,7 @@ Moose::Meta::Attribute::Native::Trait::Hash - Helper trait for HashRef attribute
 
 =head1 VERSION
 
-version 2.1212
+version 2.1403
 
 =head1 SYNOPSIS
 
