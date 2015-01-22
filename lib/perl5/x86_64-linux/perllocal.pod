@@ -1,4 +1,114 @@
-=head2 Fri Dec 19 22:43:34 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Thu Jan 22 07:14:48 2015: C<Module> L<Test::Simple|Test::Simple>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.001014>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:14:49 2015: C<Module> L<CPAN::Meta::YAML|CPAN::Meta::YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.012>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:14:50 2015: C<Module> L<Parse::CPAN::Meta|Parse::CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.4414>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:14:51 2015: C<Module> L<CPAN::Meta::Requirements|CPAN::Meta::Requirements>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.131>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:14:51 2015: C<Module> L<CPAN::Meta|CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.143240>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:14:54 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -20,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:37 2014: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Thu Jan 22 07:14:57 2015: C<Module> L<Devel::StackTrace|Devel::StackTrace>
 
 =over 4
 
@@ -42,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:38 2014: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+=head2 Thu Jan 22 07:14:58 2015: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
 
 =over 4
 
@@ -64,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:38 2014: C<Module> L<Exception::Class|Exception::Class>
+=head2 Thu Jan 22 07:14:59 2015: C<Module> L<Exception::Class|Exception::Class>
 
 =over 4
 
@@ -86,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:41 2014: C<Module> L<Algorithm::Diff|Algorithm::Diff>
+=head2 Thu Jan 22 07:15:01 2015: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -108,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:41 2014: C<Module> L<Text::Diff|Text::Diff>
+=head2 Thu Jan 22 07:15:01 2015: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -130,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:42 2014: C<Module> L<Capture::Tiny|Capture::Tiny>
+=head2 Thu Jan 22 07:15:02 2015: C<Module> L<Capture::Tiny|Capture::Tiny>
 
 =over 4
 
@@ -152,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:44 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Thu Jan 22 07:15:04 2015: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -174,29 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:45 2014: C<Module> L<Test::Tester|Test::Tester>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.16.3@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.109>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Dec 19 22:43:46 2014: C<Module> L<Test::NoWarnings|Test::NoWarnings>
+=head2 Thu Jan 22 07:15:06 2015: C<Module> L<Test::NoWarnings|Test::NoWarnings>
 
 =over 4
 
@@ -218,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:47 2014: C<Module> L<Test::Deep|Test::Deep>
+=head2 Thu Jan 22 07:15:06 2015: C<Module> L<Test::Deep|Test::Deep>
 
 =over 4
 
@@ -232,7 +320,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.114>
+C<VERSION: 0.115>
 
 =item *
 
@@ -240,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:43:47 2014: C<Module> L<Test::Most|Test::Most>
+=head2 Thu Jan 22 07:15:07 2015: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
