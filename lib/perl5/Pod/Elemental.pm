@@ -1,6 +1,6 @@
 package Pod::Elemental;
 # ABSTRACT: work with nestable Pod elements
-$Pod::Elemental::VERSION = '0.103002';
+$Pod::Elemental::VERSION = '0.103004';
 use Moose;
 
 use namespace::autoclean;
@@ -10,7 +10,6 @@ use Mixin::Linewise::Readers
   { installer => Sub::Exporter::ForMethods::method_installer },
   -readers;
 
-use Moose::Autobox 0.10; # each_ iterators
 use MooseX::Types;
 
 use Pod::Eventual::Simple 0.004; # nonpod events
@@ -129,7 +128,7 @@ Pod::Elemental - work with nestable Pod elements
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 SYNOPSIS
 

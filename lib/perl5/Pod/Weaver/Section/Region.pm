@@ -1,10 +1,8 @@
 package Pod::Weaver::Section::Region;
 # ABSTRACT: find a region and put its contents in place where desired
-$Pod::Weaver::Section::Region::VERSION = '4.009';
+$Pod::Weaver::Section::Region::VERSION = '4.010';
 use Moose;
 with 'Pod::Weaver::Role::Section';
-
-use Moose::Autobox;
 
 #pod =head1 OVERVIEW
 #pod
@@ -121,14 +119,14 @@ sub weave_section {
   my @to_insert;
 
   my $idc = $input->{pod_document}->children;
-  IDX: for (my $i = 0; $i < $idc->length; $i++) {
+  IDX: for (my $i = 0; $i < @$idc; $i++) {
     next unless my $para = $idc->[ $i ];
     next unless $para->isa('Pod::Elemental::Element::Pod5::Region')
          and    $para->format_name eq $self->region_name;
     next if     !$self->allow_nonpod and !$para->is_pod;
 
     if ( $self->flatten ) {
-      push @to_insert, $para->children->flatten;
+      push @to_insert, @{ $para->children };
     } else {
       push @to_insert, $para;
     }
@@ -141,7 +139,7 @@ sub weave_section {
   confess "Couldn't find required Region for " . $self->region_name . " in file "
     . (defined $input->{filename} ? $input->{filename} : '') if $self->required and not @to_insert;
 
-  $document->children->push(@to_insert);
+  push @{ $document->children }, @to_insert;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -159,7 +157,7 @@ Pod::Weaver::Section::Region - find a region and put its contents in place where
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 OVERVIEW
 

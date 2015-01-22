@@ -1,13 +1,11 @@
 package Pod::Weaver::Section::Leftovers;
 # ABSTRACT: a place to put everything that nothing else used
-$Pod::Weaver::Section::Leftovers::VERSION = '4.009';
+$Pod::Weaver::Section::Leftovers::VERSION = '4.010';
 use Moose;
 with(
   'Pod::Weaver::Role::Section',
   'Pod::Weaver::Role::Finalizer',
 );
-
-use Moose::Autobox;
 
 #pod =head1 OVERVIEW
 #pod
@@ -46,7 +44,7 @@ sub weave_section {
     content     => '',
   });
 
-  $document->children->push($placeholder);
+  push @{ $document->children }, $placeholder;
 }
 
 sub finalize_document {
@@ -55,7 +53,7 @@ sub finalize_document {
   my $children = $input->{pod_document}->children;
   $input->{pod_document}->children([]);
 
-  INDEX: for my $i (0 .. $document->children->length - 1) {
+  INDEX: for my $i (0 .. @{ $document->children } - 1) {
     my $para = $document->children->[$i];
     next unless $para->isa('Pod::Elemental::Element::Pod5::Region')
          and    $para->format_name eq $self->_marker;
@@ -80,7 +78,7 @@ Pod::Weaver::Section::Leftovers - a place to put everything that nothing else us
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 OVERVIEW
 
