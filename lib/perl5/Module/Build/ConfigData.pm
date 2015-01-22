@@ -176,6 +176,7 @@ do{ my $x = [
          'inc_bundling_support' => {
                                      'requires' => {
                                                      'ExtUtils::Installed' => '1.999',
+                                                     'inc::latest' => '0.5',
                                                      'ExtUtils::Install' => '1.54'
                                                    },
                                      'description' => 'Bundle Module::Build in inc/'
