@@ -167,38 +167,39 @@ do{ my $x = [
        {},
        {},
        {
-         'HTML_support' => {
-                             'requires' => {
-                                             'Pod::Html' => 0
-                                           },
-                             'description' => 'Create HTML documentation'
-                           },
-         'PPM_support' => {
-                            'description' => 'Generate PPM files for distributions'
-                          },
-         'dist_authoring' => {
-                               'description' => 'Create new distributions',
-                               'recommends' => {
-                                                 'Module::Signature' => '0.21',
-                                                 'Pod::Readme' => '0.04'
-                                               },
-                               'requires' => {
-                                               'Archive::Tar' => '1.09'
-                                             }
-                             },
+         'inc_bundling_support' => {
+                                     'requires' => {
+                                                     'inc::latest' => '0.5',
+                                                     'ExtUtils::Installed' => '1.999',
+                                                     'ExtUtils::Install' => '1.54'
+                                                   },
+                                     'description' => 'Bundle Module::Build in inc/'
+                                   },
          'license_creation' => {
                                  'requires' => {
                                                  'Software::License' => '0.103009'
                                                },
                                  'description' => 'Create licenses automatically in distributions'
                                },
-         'inc_bundling_support' => {
-                                     'requires' => {
-                                                     'ExtUtils::Install' => '1.54',
-                                                     'ExtUtils::Installed' => '1.999'
-                                                   },
-                                     'description' => 'Bundle Module::Build in inc/'
-                                   },
+         'PPM_support' => {
+                            'description' => 'Generate PPM files for distributions'
+                          },
+         'HTML_support' => {
+                             'description' => 'Create HTML documentation',
+                             'requires' => {
+                                             'Pod::Html' => 0
+                                           }
+                           },
+         'dist_authoring' => {
+                               'recommends' => {
+                                                 'Pod::Readme' => '0.04',
+                                                 'Module::Signature' => '0.21'
+                                               },
+                               'requires' => {
+                                               'Archive::Tar' => '1.09'
+                                             },
+                               'description' => 'Create new distributions'
+                             },
          'manpage_support' => {
                                 'requires' => {
                                                 'Pod::Man' => 0
