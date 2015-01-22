@@ -1,18 +1,18 @@
 {
-   "abstract" : "Determine the locale encoding",
+   "abstract" : "Mozilla's CA cert bundle in PEM format",
    "author" : [
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.57_05, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "ExtUtils::MakeMaker version 7.02, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120630",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Encode-Locale",
+   "name" : "Mozilla-CA",
    "no_index" : {
       "directory" : [
          "t",
@@ -31,22 +31,16 @@
          }
       },
       "runtime" : {
-         "recommends" : {
-            "I18N::Langinfo" : "0",
-            "Win32::Console" : "0"
-         },
          "requires" : {
-            "Encode" : "2",
-            "Encode::Alias" : "0",
-            "perl" : "5.008"
+            "perl" : "5.006"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "http://github.com/gisle/encode-locale"
+         "url" : "http://github.com/gisle/mozilla-ca"
       }
    },
-   "version" : "1.03"
+   "version" : "20141217"
 }
