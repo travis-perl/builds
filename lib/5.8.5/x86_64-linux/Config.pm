@@ -42,9 +42,9 @@ $^V eq v5.8.5
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Thu Jan 22 04:13:28 UTC 2015
+## Configuration time: Thu Jan 22 05:37:08 UTC 2015
 ## Configured by     : travis
-## Target system     : linux testing-worker-linux-de84ae74-2-8732-linux-14-47875561 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-worker-linux-9-1-24821-linux-10-47879087 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
 #
 ## Configure command line arguments.
 #PERL_PATCHLEVEL=
@@ -168,8 +168,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-worker-linux-de84ae74-2-8732-linux-14-47875561.c45665.blueboxgrid.com'
-cf_time='Thu Jan 22 04:13:28 UTC 2015'
+cf_email='travis@testing-worker-linux-9-1-24821-linux-10-47879087.c45665.blueboxgrid.com'
+cf_time='Thu Jan 22 05:37:08 UTC 2015'
 charsize='1'
 chgrp=''
 chmod='chmod'
@@ -867,8 +867,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.c45665.blueboxgrid.com'
-myhostname='testing-worker-linux-de84ae74-2-8732-linux-14-47875561'
-myuname='linux testing-worker-linux-de84ae74-2-8732-linux-14-47875561 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-worker-linux-9-1-24821-linux-10-47879087'
+myuname='linux testing-worker-linux-9-1-24821-linux-10-47879087 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -903,7 +903,7 @@ path_sep=':'
 perl5='/usr/bin/perl'
 perl=''
 perl_patchlevel=''
-perladmin='travis@testing-worker-linux-de84ae74-2-8732-linux-14-47875561.c45665.blueboxgrid.com'
+perladmin='travis@testing-worker-linux-9-1-24821-linux-10-47879087.c45665.blueboxgrid.com'
 perllibs='-lnsl -ldl -lm -lcrypt -lutil -lc -lgdbm_compat'
 perlpath='/home/travis/perl5/perlbrew/perls/5.8.5/bin/perl'
 pg='pg'
