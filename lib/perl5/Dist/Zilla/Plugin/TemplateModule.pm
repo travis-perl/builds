@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::TemplateModule;
 # ABSTRACT: a simple module-from-template plugin
-$Dist::Zilla::Plugin::TemplateModule::VERSION = '5.029';
+$Dist::Zilla::Plugin::TemplateModule::VERSION = '5.031';
 use Moose;
 with qw(Dist::Zilla::Role::ModuleMaker Dist::Zilla::Role::TextTemplate);
 
@@ -107,7 +107,7 @@ Dist::Zilla::Plugin::TemplateModule - a simple module-from-template plugin
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 DESCRIPTION
 
@@ -158,7 +158,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
