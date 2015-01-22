@@ -6,7 +6,22 @@ DBI::Changes - List of significant changes to the DBI
 
 =cut
 
-=head2 Changes in DBI 1.632
+=head2 Changes in DBI 1.633 - 11th Jan 2015
+
+    Fixed selectrow_*ref to return undef on error in list context
+        instead if an empty list.
+    Changed t/42prof_data.t more informative
+    Changed $sth->{TYPE} to be NUMERIC in DBD::File drivers as per the
+        DBI docs. Note TYPE_NAME is now also available. [H.Merijn Brand]
+    Fixed compilation error on bleadperl due DEFSV no longer being an lvalue
+        [Dagfinn Ilmari Mannsåker]
+
+    Added docs for escaping placeholders using a backslash.
+    Added docs for get_info(9000) indicating ability to escape placeholders.
+    Added multi_ prefix for DBD::Multi (Dan Wright) and ad2_ prefix for
+        DBD::AnyData2
+
+=head2 Changes in DBI 1.632 - 9th Nov 2014
 
     Fixed risk of memory corruption with many arguments to methods
         originally reported by OSCHWALD for Callbacks but may apply

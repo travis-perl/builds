@@ -5,7 +5,7 @@
       "The Perl 5 Porters"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
