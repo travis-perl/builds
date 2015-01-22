@@ -4,7 +4,7 @@
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 7.02, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "unknown"
    ],
@@ -42,5 +42,5 @@
          "url" : "http://github.com/gisle/mozilla-ca"
       }
    },
-   "version" : "20130114"
+   "version" : "20141217"
 }
