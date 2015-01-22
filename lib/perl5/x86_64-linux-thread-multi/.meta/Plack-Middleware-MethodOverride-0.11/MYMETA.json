@@ -1,0 +1,57 @@
+{
+   "abstract" : "Override REST methods to Plack apps via POST",
+   "author" : [
+      "David E. Wheeler <david@kineticode.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4211",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Plack-Middleware-MethodOverride",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build" : "0.30",
+            "Test::More" : "0.70"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Plack" : "0.9929",
+            "Test::Builder" : "0.70",
+            "URI" : "0",
+            "perl" : "5.008001"
+         }
+      }
+   },
+   "provides" : {
+      "Plack::Middleware::MethodOverride" : {
+         "file" : "lib/Plack/Middleware/MethodOverride.pm",
+         "version" : "0.11"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://github.com/theory/plack-middleware-methodoverride/issues/"
+      },
+      "homepage" : "http://search.cpan.org/dist/Plack-Middleware-MethodOverride/",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "url" : "http://github.com/theory/plack-middleware-methodoverride"
+      }
+   },
+   "version" : "0.11"
+}

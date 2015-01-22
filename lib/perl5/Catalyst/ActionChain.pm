@@ -37,7 +37,7 @@ sub dispatch {
 
         # break the chain if exception occurs in the middle of chain.  We
         # check the global config flag 'abort_chain_on_error_fix', but this
-        # is now considered true by default, so unless someone explictly sets
+        # is now considered true by default, so unless someone explicitly sets
         # it to false we default it to true (if its not defined).
         my $abort = defined($c->config->{abort_chain_on_error_fix}) ?
           $c->config->{abort_chain_on_error_fix} : 1;
@@ -59,6 +59,22 @@ sub number_of_captures {
 
     $captures += $_->number_of_captures for @$chain;
     return $captures;
+}
+
+# the scheme defined at the end of the chain is the one we use
+# but warn if too many.
+
+sub scheme {
+  my $self = shift;
+  my @chain = @{ $self->chain };
+  my ($scheme, @more) = map {
+    exists $_->attributes->{Scheme} ? $_->attributes->{Scheme}[0] : ();
+  } reverse @chain;
+
+  warn "$self is a chain with two many Scheme attributes (only one is allowed)"
+    if @more;
+
+  return $scheme;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -86,6 +102,10 @@ Catalyst::ActionChain object representing a chain of these actions
 =head2 number_of_captures
 
 Returns the total number of captures for the entire chain of actions.
+
+=head2 scheme
+
+Any defined scheme for the actionchain
 
 =head2 meta
 
