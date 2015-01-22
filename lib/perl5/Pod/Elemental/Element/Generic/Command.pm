@@ -1,11 +1,9 @@
 package Pod::Elemental::Element::Generic::Command;
 # ABSTRACT: a Pod =command element
-$Pod::Elemental::Element::Generic::Command::VERSION = '0.103002';
+$Pod::Elemental::Element::Generic::Command::VERSION = '0.103004';
 use Moose;
 
 use namespace::autoclean;
-
-use Moose::Autobox;
 
 #pod =head1 OVERVIEW
 #pod
@@ -43,7 +41,7 @@ Pod::Elemental::Element::Generic::Command - a Pod =command element
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 

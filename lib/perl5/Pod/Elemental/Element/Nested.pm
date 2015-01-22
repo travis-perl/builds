@@ -1,14 +1,12 @@
 package Pod::Elemental::Element::Nested;
 # ABSTRACT: an element that is a command and a node
-$Pod::Elemental::Element::Nested::VERSION = '0.103002';
+$Pod::Elemental::Element::Nested::VERSION = '0.103004';
 use Moose;
 extends 'Pod::Elemental::Element::Generic::Command';
 with 'Pod::Elemental::Node';
 with 'Pod::Elemental::Autochomp';
 
 use namespace::autoclean;
-
-use Moose::Autobox 0.10;
 
 # BEGIN Autochomp Replacement
 use Pod::Elemental::Types qw(ChompedString);
@@ -37,7 +35,7 @@ override as_pod_string => sub {
 
   $string = join q{},
     "$string\n\n",
-    $self->children->map(sub { $_->as_pod_string })->flatten;
+    map { $_->as_pod_string } @{ $self->children };
 
   $string =~ s/\n{3,}\z/\n\n/g;
 
@@ -60,7 +58,7 @@ Pod::Elemental::Element::Nested - an element that is a command and a node
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 

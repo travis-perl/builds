@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Pod5::Region;
 # ABSTRACT: a region of Pod (this role likely to be removed)
-$Pod::Elemental::Element::Pod5::Region::VERSION = '0.103002';
+$Pod::Elemental::Element::Pod5::Region::VERSION = '0.103004';
 use Moose;
 with qw(
   Pod::Elemental::Paragraph
@@ -24,8 +24,6 @@ with qw(
 #pod or a C<=for> command, based on whichever is permissible.
 #pod
 #pod =cut
-
-use Moose::Autobox;
 
 use Pod::Elemental::Types qw(FormatName);
 use MooseX::Types::Moose qw(Bool);
@@ -69,7 +67,7 @@ sub _display_as_for {
 
   # We can't have more than one paragraph, because there'd be a blank, so we
   # couldn't round trip. -- rjbs, 2009-11-24
-  return if $self->children->length != 1;
+  return if @{ $self->children } != 1;
 
   my $child = $self->children->[0];
 
@@ -109,10 +107,10 @@ sub __as_pod_string_begin {
     $colon . $self->format_name,
     ($content =~ /\S/ ? " $content\n" : "\n");
 
-  $string .= $self->children->map(sub { $_->as_pod_string })->join(q{});
+  $string .= join(q{}, map { $_->as_pod_string } @{ $self->children });
 
   $string .= "\n\n"
-    if  $self->children->length
+    if  @{ $self->children }
     and $self->children->[-1]->isa( 'Pod::Elemental::Element::Pod5::Data');
     # Pod5::$self->is_pod; # XXX: HACK!! -- rjbs, 2009-10-21
 
@@ -172,7 +170,7 @@ Pod::Elemental::Element::Pod5::Region - a region of Pod (this role likely to be 
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 
