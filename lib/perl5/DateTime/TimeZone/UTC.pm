@@ -1,5 +1,5 @@
 package DateTime::TimeZone::UTC;
-$DateTime::TimeZone::UTC::VERSION = '1.81';
+$DateTime::TimeZone::UTC::VERSION = '1.84';
 use strict;
 use warnings;
 
@@ -40,7 +40,7 @@ DateTime::TimeZone::UTC - The UTC time zone
 
 =head1 VERSION
 
-version 1.81
+version 1.84
 
 =head1 SYNOPSIS
 
@@ -65,7 +65,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Dave Rolsky.
+This software is copyright (c) 2015 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
