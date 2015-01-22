@@ -1,5 +1,5 @@
 package Params::Validate::XS;
-$Params::Validate::XS::VERSION = '1.13';
+$Params::Validate::XS::VERSION = '1.17';
 use strict;
 use warnings;
 

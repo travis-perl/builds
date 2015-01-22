@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgVersion;
 # ABSTRACT: add a $VERSION to your packages
-$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.029';
+$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.031';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -59,10 +59,11 @@ use namespace::autoclean;
 #pod
 #pod =attr use_our
 #pod
-#pod If true, the inserted line looks like C<< { our $VERSION = '0.001'; } >>;
-#pod otherwise, it is C<< $Module::Name::VERSION = '0.001'; >>.  This attribute
-#pod defaults to false for now, but will change to true in the future without
-#pod warning.
+#pod The idea here was to insert C<< { our $VERSION = '0.001'; } >> instead of C<<
+#pod $Module::Name::VERSION = '0.001'; >>.  It turns out that this causes problems
+#pod with some analyzers.  Use of this feature is deprecated.
+#pod
+#pod Something else will replace it in the future.
 #pod
 #pod =attr finder
 #pod
@@ -79,6 +80,12 @@ use namespace::autoclean;
 #pod L<[FileFinder::Filter]|Dist::Zilla::Plugin::FileFinder::Filter> plugins.
 #pod
 #pod =cut
+
+sub BUILD {
+  my ($self) = @_;
+  $self->log("use_our option to PkgVersion is deprecated and will be removed")
+    if $self->use_our;
+}
 
 sub munge_files {
   my ($self) = @_;
@@ -216,8 +223,9 @@ sub munge_perl {
     } else {
       my $method = $self->die_on_line_insertion ? 'log_fatal' : 'log';
       $self->$method([
-        'no blank line for $VERSION after package %s statement on line %s',
+        'no blank line for $VERSION after package %s statement in %s line %s',
         $stmt->namespace,
+        $file->name,
         $stmt->line_number,
       ]);
 
@@ -228,7 +236,8 @@ sub munge_perl {
     $munged = 1;
   }
 
-  $self->save_ppi_document_to_file($document, $file) if $munged;
+  # the document is no longer correct; it must be reparsed before it can be used again
+  $file->encoded_content($document->serialize) if $munged;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -259,7 +268,7 @@ Dist::Zilla::Plugin::PkgVersion - add a $VERSION to your packages
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 SYNOPSIS
 
@@ -310,10 +319,11 @@ than insert a new line.
 
 =head2 use_our
 
-If true, the inserted line looks like C<< { our $VERSION = '0.001'; } >>;
-otherwise, it is C<< $Module::Name::VERSION = '0.001'; >>.  This attribute
-defaults to false for now, but will change to true in the future without
-warning.
+The idea here was to insert C<< { our $VERSION = '0.001'; } >> instead of C<<
+$Module::Name::VERSION = '0.001'; >>.  It turns out that this causes problems
+with some analyzers.  Use of this feature is deprecated.
+
+Something else will replace it in the future.
 
 =head2 finder
 
@@ -346,7 +356,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
