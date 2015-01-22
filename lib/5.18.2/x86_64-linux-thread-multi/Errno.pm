@@ -9,8 +9,8 @@ use Config;
 use strict;
 
 "$Config{'archname'}-$Config{'osvers'}" eq
-"x86_64-linux-thread-multi-2.6.32-042stab090.5" or
-	die "Errno architecture (x86_64-linux-thread-multi-2.6.32-042stab090.5) does not match executable architecture ($Config{'archname'}-$Config{'osvers'})";
+"x86_64-linux-thread-multi-2.6.32-042stab094.7" or
+	die "Errno architecture (x86_64-linux-thread-multi-2.6.32-042stab094.7) does not match executable architecture ($Config{'archname'}-$Config{'osvers'})";
 
 our $VERSION = "1.18";
 $VERSION = eval $VERSION;
@@ -30,8 +30,8 @@ BEGIN {
 	ENOEXEC => 8,
 	EBADF => 9,
 	ECHILD => 10,
-	EAGAIN => 11,
 	EWOULDBLOCK => 11,
+	EAGAIN => 11,
 	ENOMEM => 12,
 	EACCES => 13,
 	EFAULT => 14,
@@ -55,8 +55,8 @@ BEGIN {
 	EPIPE => 32,
 	EDOM => 33,
 	ERANGE => 34,
-	EDEADLOCK => 35,
 	EDEADLK => 35,
+	EDEADLOCK => 35,
 	ENAMETOOLONG => 36,
 	ENOLCK => 37,
 	ENOSYS => 38,
@@ -114,8 +114,8 @@ BEGIN {
 	ENOPROTOOPT => 92,
 	EPROTONOSUPPORT => 93,
 	ESOCKTNOSUPPORT => 94,
-	ENOTSUP => 95,
 	EOPNOTSUPP => 95,
+	ENOTSUP => 95,
 	EPFNOSUPPORT => 96,
 	EAFNOSUPPORT => 97,
 	EADDRINUSE => 98,
