@@ -5,7 +5,7 @@
       "Christian Hansen <chansen@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "perl_5"
    ],
@@ -17,19 +17,8 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Carp" : "0",
-            "Exporter" : "0",
             "ExtUtils::CBuilder" : "0",
-            "File::Spec" : "0",
-            "File::Spec::Functions" : "0",
-            "IO::File" : "0",
-            "IO::Handle" : "0",
-            "IPC::Open3" : "0",
-            "Module::Build" : "0.28",
-            "Test::Exception" : "0",
-            "Test::More" : "0.88",
-            "perl" : "5.008",
-            "utf8" : "0"
+            "Module::Build" : "0.28"
          }
       },
       "configure" : {
@@ -44,6 +33,21 @@
             "strict" : "0",
             "warnings" : "0"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Carp" : "0",
+            "Exporter" : "0",
+            "File::Spec" : "0",
+            "File::Spec::Functions" : "0",
+            "IO::File" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0.88",
+            "perl" : "5.008",
+            "utf8" : "0"
+         }
       }
    },
    "provides" : {
@@ -55,11 +59,13 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
+         "mailto" : "bug-perlio-utf8_strict at rt.cpan.org",
          "web" : "http://rt.cpan.org/Public/Dist/Display.html?Name=PerlIO-utf8_strict"
       },
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/Leont/perlio-utf8_strict.git"
+         "url" : "git://github.com/Leont/perlio-utf8_strict.git",
+         "web" : "https://github.com/Leont/perlio-utf8_strict"
       }
    },
    "version" : "0.005"

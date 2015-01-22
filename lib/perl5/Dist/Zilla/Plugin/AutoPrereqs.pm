@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::AutoPrereqs;
 # ABSTRACT: automatically extract prereqs from your modules
-$Dist::Zilla::Plugin::AutoPrereqs::VERSION = '5.029';
+$Dist::Zilla::Plugin::AutoPrereqs::VERSION = '5.031';
 use Moose;
 with(
   'Dist::Zilla::Role::PrereqSource',
@@ -149,6 +149,8 @@ sub register_prereqs {
 
       # store module name, to trim it from require list later on
       my @this_thing = $file->name;
+
+      # t/lib/Foo.pm is treated as providing t::lib::Foo, lib::Foo, and Foo
       if ($this_thing[0] =~ /^t/) {
         push @this_thing, ($this_thing[0]) x 2;
         $this_thing[1] =~ s{^t/}{};
@@ -156,10 +158,11 @@ sub register_prereqs {
       } else {
         $this_thing[0] =~ s{^lib/}{};
       }
-      @this_thing = List::MoreUtils::uniq @this_thing;
       s{\.pm$}{} for @this_thing;
       s{/}{::}g for @this_thing;
-      push @modules, @this_thing;
+
+      push @this_thing, $file->content =~ /package\s+([^\s;]+)/g;
+      push @modules, List::MoreUtils::uniq @this_thing;
 
       # parse a file, and merge with existing prereqs
       my $file_req = $scanner->scan_ppi_document(
@@ -212,7 +215,7 @@ Dist::Zilla::Plugin::AutoPrereqs - automatically extract prereqs from your modul
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 SYNOPSIS
 
@@ -284,7 +287,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

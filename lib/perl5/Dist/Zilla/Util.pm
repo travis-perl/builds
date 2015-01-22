@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::Util;
 # ABSTRACT: random snippets of code that Dist::Zilla wants
-$Dist::Zilla::Util::VERSION = '5.029';
+$Dist::Zilla::Util::VERSION = '5.031';
 use Carp ();
 use Encode ();
 use String::RewritePrefix 0.002; # better string context behavior
@@ -74,7 +74,7 @@ sub abstract_from_file {
 
 #pod =method expand_config_package_name
 #pod
-#pod   my $pkg_name = Util->expand_config_package_name($string);
+#pod   my $pkg_name = Dist::Zilla::Util->expand_config_package_name($string);
 #pod
 #pod This method, I<which is likely to change or go away>, rewrites the given string
 #pod into a package name.
@@ -149,7 +149,7 @@ Dist::Zilla::Util - random snippets of code that Dist::Zilla wants
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 METHODS
 
@@ -161,7 +161,7 @@ C<=head1> section called "NAME" or a comment beginning with C<ABSTRACT:>.
 
 =head2 expand_config_package_name
 
-  my $pkg_name = Util->expand_config_package_name($string);
+  my $pkg_name = Dist::Zilla::Util->expand_config_package_name($string);
 
 This method, I<which is likely to change or go away>, rewrites the given string
 into a package name.
@@ -194,7 +194,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
