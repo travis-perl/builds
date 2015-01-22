@@ -33,7 +33,8 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.17"
+            "ExtUtils::MakeMaker" : "6.17",
+            "perl" : "5.006"
          }
       },
       "develop" : {
