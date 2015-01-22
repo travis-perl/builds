@@ -1,10 +1,8 @@
 package Pod::Weaver::Section::Legal;
 # ABSTRACT: a section for the copyright and license
-$Pod::Weaver::Section::Legal::VERSION = '4.009';
+$Pod::Weaver::Section::Legal::VERSION = '4.010';
 use Moose;
 with 'Pod::Weaver::Role::Section';
-
-use Moose::Autobox;
 
 #pod =head1 OVERVIEW
 #pod
@@ -50,15 +48,14 @@ sub weave_section {
     $notice .= $self->license_file . "> file included with this distribution.";
   }
 
-  $document->children->push(
+  push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
       content  => 'COPYRIGHT AND LICENSE',
       children => [
         Pod::Elemental::Element::Pod5::Ordinary->new({ content => $notice }),
       ],
-    }),
-  );
+    });
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -76,7 +73,7 @@ Pod::Weaver::Section::Legal - a section for the copyright and license
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 OVERVIEW
 

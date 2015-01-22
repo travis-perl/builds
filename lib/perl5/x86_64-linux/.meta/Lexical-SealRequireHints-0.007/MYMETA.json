@@ -4,7 +4,7 @@
       "Andrew Main (Zefram) <zefram@fysh.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.421",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
@@ -33,7 +33,7 @@
       },
       "runtime" : {
          "conflicts" : {
-            "B::Hooks::OP::Check" : "< 0.19"
+            "B::Hooks::OP::Check" : 0
          },
          "recommends" : {
             "XSLoader" : "0"
