@@ -12,10 +12,9 @@ use warnings;
 
 package Dist::Zilla::Role::Git::DirtyFiles;
 # ABSTRACT: provide the allow_dirty & changelog attributes
-$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.028';
+$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.029';
 
 use Moose::Role;
-use Moose::Autobox;
 use MooseX::Types::Moose qw{ Any ArrayRef Str RegexpRef };
 use MooseX::Types::Path::Tiny 0.010 qw{ Paths to_Paths };
 use Moose::Util::TypeConstraints;
@@ -92,7 +91,7 @@ sub list_dirty_files
   my ($self, $git, $listAllowed) = @_;
 
   my $git_root  = $self->repo_root;
-  my @filenames = $self->allow_dirty->flatten;
+  my @filenames = @{ $self->allow_dirty };
 
   if ($git_root ne '.') {
     # Interpret allow_dirty relative to the dzil root
@@ -115,7 +114,7 @@ sub list_dirty_files
     }
   } # end if git root ne dzil root
 
-  my $allowed = join '|', $self->allow_dirty_match->flatten, map { qr{^\Q$_\E$} } @filenames;
+  my $allowed = join '|', @{ $self->allow_dirty_match }, map { qr{^\Q$_\E$} } @filenames;
 
   $allowed = qr/(?!X)X/ if $allowed eq ''; # this cannot match anything
 
@@ -138,7 +137,7 @@ Dist::Zilla::Role::Git::DirtyFiles - provide the allow_dirty & changelog attribu
 
 =head1 VERSION
 
-version 2.028
+version 2.029
 
 =head1 DESCRIPTION
 
