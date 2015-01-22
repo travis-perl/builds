@@ -4,7 +4,7 @@
       "David Cantrell <david@cantrell.org.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "unknown"
    ],
@@ -20,11 +20,6 @@
       ]
    },
    "prereqs" : {
-      "configure" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
-      },
       "runtime" : {
          "requires" : {
             "Capture::Tiny" : "0.24",
