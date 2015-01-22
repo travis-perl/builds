@@ -1,7 +1,7 @@
 package DateTime;
-# git description: v1.11-4-g98156fc
-$DateTime::VERSION = '1.12';
+# git description: v1.17-2-ge20e079
 
+$DateTime::VERSION = '1.18';
 use 5.008001;
 
 use strict;
@@ -2171,15 +2171,13 @@ __END__
 
 =pod
 
-=encoding UTF-8
-
 =head1 NAME
 
 DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.12
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -2277,6 +2275,8 @@ from how dates are often written using "BCE/CE" or "BC/AD".
 For infinite datetimes, please see the
 L<DateTime::Infinite|DateTime::Infinite> module.
 
+=encoding UTF-8
+
 =head1 USAGE
 
 =head2 0-based Versus 1-based Numbers
@@ -2310,11 +2310,9 @@ or C<epoch()>, will never die.
 
 =head2 Locales
 
-All the object methods which return names or abbreviations return data
-based on a locale. This is done by setting the locale when
-constructing a DateTime object. There is also a C<DefaultLocale()>
-class method which may be used to set the default locale for all
-DateTime objects created. If this is not set, then "en_US" is used.
+All the object methods which return names or abbreviations return data based
+on a locale. This is done by setting the locale when constructing a DateTime
+object. If this is not set, then "en_US" is used.
 
 =head2 Floating DateTimes
 
@@ -2337,8 +2335,8 @@ datetimes.
 
 =head2 Math
 
-If you are going to be using doing date math, please read the section L<How
-DateTime Math Works>.
+If you are going to be doing date math, please read the section L<How DateTime
+Math Works>.
 
 =head2 Determining the Local Time Zone Can Be Slow
 
@@ -2363,6 +2361,16 @@ very far in the future (thousands of years). The current
 implementation of C<DateTime::TimeZone> will use a huge amount of
 memory calculating all the DST changes from now until the future
 date. Use UTC or the floating time zone and you will be safe.
+
+=head2 Upper and Lower Bounds
+
+Internally, dates are represented the number of days before or after
+0001-01-01. This is stored as an integer, meaning that the upper and lower
+bounds are based on your Perl's integer size (C<$Config{ivsize}>).
+
+The limit on 32-bit systems is around 2^29 days, which gets you to year
+(+/-)1,469,903. On a 64-bit system you get 2^62 days,
+(+/-)12,626,367,463,883,278 (12.626 quadrillion).
 
 =head1 METHODS
 
@@ -2925,7 +2933,7 @@ and the result may end up rounded to an arbitrary degree depending on your
 platform.
 
     my $dt = DateTime->new( year => 2012, nanosecond => 4 );
-    say $dt->hires_repoch();
+    say $dt->hires_epoch();
 
 On my system, this simply prints C<1325376000> because adding C<0.000000004>
 to C<1325376000> returns C<1325376000>.
@@ -3166,6 +3174,9 @@ the difference between the two dates in seconds and nanoseconds. This
 is the only way to accurately measure the absolute amount of time
 between two datetimes, since units larger than a second do not
 represent a fixed number of seconds.
+
+Note that because of leap seconds, this may not return the same result as
+doing this math based on the value returned by C<< $dt->epoch() >>.
 
 =head2 Class Methods
 
@@ -4308,17 +4319,73 @@ L<http://www.urth.org/~autarch/fs-donation.html>
 
 =head1 SEE ALSO
 
-datetime@perl.org mailing list
+L<A Date with
+Perl|http://www.houseabsolute.com/presentations/a-date-with-perl/> - a talk
+I've given at a few YAPCs.
 
-http://datetime.perl.org/
+L<datetime@perl.org mailing list|http://lists.perl.org/list/datetime.html>
+
+L<http://datetime.perl.org/>
 
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Iain Truskett Joshua Hoblitt Ricardo Signes Richard Bowen Ron Hill
+
+=over 4
+
+=item *
+
+Ben Bennett <fiji@limey.net>
+
+=item *
+
+Christian Hansen <chansen@cpan.org>
+
+=item *
+
+Daisuke Maki <dmaki@cpan.org>
+
+=item *
+
+David E. Wheeler <david@justatheory.com>
+
+=item *
+
+Doug Bell <madcityzen@gmail.com>
+
+=item *
+
+Flávio Soibelmann Glock <fglock@gmail.com>
+
+=item *
+
+Iain Truskett <deceased>
+
+=item *
+
+Joshua Hoblitt <jhoblitt@cpan.org>
+
+=item *
+
+Ricardo Signes <rjbs@cpan.org>
+
+=item *
+
+Richard Bowen <bowen@cpan.org>
+
+=item *
+
+Ron Hill <rkhill@cpan.org>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by Dave Rolsky.
+This software is Copyright (c) 2015 by Dave Rolsky.
 
 This is free software, licensed under:
 
