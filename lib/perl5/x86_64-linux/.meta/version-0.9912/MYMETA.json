@@ -1,10 +1,10 @@
 {
-   "abstract" : "Nearly transparent SSL encapsulation for IO::Socket::INET.",
+   "abstract" : "Structured version objects",
    "author" : [
-      "Steffen Ullrich <sullr@cpan.org>, Peter Behroozi, Marko Asplund"
+      "John Peacock <jpeacock@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.120630, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "IO-Socket-SSL",
+   "name" : "version",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,23 +32,24 @@
       },
       "runtime" : {
          "requires" : {
-            "Net::SSLeay" : "1.46",
-            "Scalar::Util" : "0"
+            "ExtUtils::MakeMaker" : "6.17",
+            "File::Temp" : "0.13",
+            "Test::More" : "0.45",
+            "parent" : "0.221",
+            "perl" : "5.006002"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://rt.cpan.org/Dist/Display.html?Queue=IO-Socket-SSL"
+         "mailto" : "bug-version@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=version"
       },
-      "homepage" : "https://github.com/noxxi/p5-io-socket-ssl",
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ],
       "repository" : {
-         "url" : "https://github.com/noxxi/p5-io-socket-ssl"
+         "type" : "hg",
+         "url" : "https://bitbucket.org/jpeacock/version"
       }
    },
-   "version" : "2.008"
+   "version" : "0.9912"
 }
