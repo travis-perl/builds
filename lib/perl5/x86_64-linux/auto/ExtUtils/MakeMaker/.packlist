@@ -36,3 +36,4 @@
 /home/travis/.perlbrew/libs/5.18.0@dzil/lib/perl5/ExtUtils/testlib.pm
 /home/travis/.perlbrew/libs/5.18.0@dzil/lib/perl5/JSON/PP.pm
 /home/travis/.perlbrew/libs/5.18.0@dzil/lib/perl5/JSON/PP/Boolean.pm
+/home/travis/.perlbrew/libs/5.18.0@dzil/lib/perl5/Parse/CPAN/Meta.pm

@@ -31,7 +31,6 @@
       },
       "configure" : {
          "requires" : {
-            "Config" : "0",
             "ExtUtils::MakeMaker" : "0"
          }
       },

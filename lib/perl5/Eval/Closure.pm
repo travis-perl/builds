@@ -2,9 +2,7 @@ package Eval::Closure;
 BEGIN {
   $Eval::Closure::AUTHORITY = 'cpan:DOY';
 }
-{
-  $Eval::Closure::VERSION = '0.11';
-}
+$Eval::Closure::VERSION = '0.12';
 use strict;
 use warnings;
 # ABSTRACT: safely and cleanly create closures via string eval
@@ -205,13 +203,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Eval::Closure - safely and cleanly create closures via string eval
 
 =head1 VERSION
 
-version 0.11
+version 0.12
 
 =head1 SYNOPSIS
 
@@ -363,7 +363,7 @@ Jesse Luehrs <doy@tozt.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Jesse Luehrs.
+This software is copyright (c) 2015 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
