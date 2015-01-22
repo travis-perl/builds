@@ -1,4 +1,4 @@
-=head2 Fri Dec 19 21:29:57 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
+=head2 Thu Jan 22 04:38:18 2015: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Fri Dec 19 21:30:00 2014: C<Module> L<indirect|indirect>
+=head2 Thu Jan 22 04:38:21 2015: C<Module> L<indirect|indirect>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:02 2014: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
+=head2 Thu Jan 22 04:38:23 2015: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
 
 =over 4
 
@@ -56,7 +56,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.402>
+C<VERSION: 0.403>
 
 =item *
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:03 2014: C<Module> L<parent|parent>
+=head2 Thu Jan 22 04:38:24 2015: C<Module> L<parent|parent>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:04 2014: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
+=head2 Thu Jan 22 04:38:25 2015: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:06 2014: C<Module> L<Test::Simple|Test::Simple>
+=head2 Thu Jan 22 04:38:26 2015: C<Module> L<Test::Simple|Test::Simple>
 
 =over 4
 
@@ -122,7 +122,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.001009>
+C<VERSION: 1.001014>
 
 =item *
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:07 2014: C<Module> L<multidimensional|multidimensional>
+=head2 Thu Jan 22 04:38:29 2015: C<Module> L<multidimensional|multidimensional>
 
 =over 4
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:08 2014: C<Module> L<bareword::filehandles|bareword::filehandles>
+=head2 Thu Jan 22 04:38:30 2015: C<Module> L<bareword::filehandles|bareword::filehandles>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:08 2014: C<Module> L<strictures|strictures>
+=head2 Thu Jan 22 04:38:30 2015: C<Module> L<strictures|strictures>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:09 2014: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Thu Jan 22 04:38:32 2015: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:11 2014: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Thu Jan 22 04:38:33 2015: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -240,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:13 2014: C<Module> L<Perl::OSType|Perl::OSType>
+=head2 Thu Jan 22 04:38:35 2015: C<Module> L<Perl::OSType|Perl::OSType>
 
 =over 4
 
@@ -262,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:13 2014: C<Module> L<ExtUtils::CBuilder|ExtUtils::CBuilder>
+=head2 Thu Jan 22 04:38:36 2015: C<Module> L<ExtUtils::CBuilder|ExtUtils::CBuilder>
 
 =over 4
 
@@ -284,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:15 2014: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Thu Jan 22 04:38:37 2015: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -306,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:16 2014: C<Module> L<Devel::GlobalDestruction::XS|Devel::GlobalDestruction::XS>
+=head2 Thu Jan 22 04:38:38 2015: C<Module> L<Devel::GlobalDestruction::XS|Devel::GlobalDestruction::XS>
 
 =over 4
 
@@ -328,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:16 2014: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Thu Jan 22 04:38:38 2015: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -350,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:17 2014: C<Module> L<Import::Into|Import::Into>
+=head2 Thu Jan 22 04:38:39 2015: C<Module> L<Import::Into|Import::Into>
 
 =over 4
 
@@ -372,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:17 2014: C<Module> L<Moo|Moo>
+=head2 Thu Jan 22 04:38:40 2015: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -386,7 +386,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.006001>
+C<VERSION: 1.007000>
 
 =item *
 
@@ -394,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:20 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Thu Jan 22 04:38:42 2015: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -416,7 +416,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 21:30:20 2014: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Thu Jan 22 04:38:43 2015: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
