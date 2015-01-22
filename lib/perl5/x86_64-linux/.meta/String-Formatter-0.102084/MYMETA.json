@@ -5,7 +5,7 @@
       "Darren Chamberlain <darren@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.006, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Dist::Zilla version 5.006, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "gpl_2"
    ],
