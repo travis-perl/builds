@@ -5,7 +5,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
