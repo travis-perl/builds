@@ -4,7 +4,7 @@
       "Dave Rolsky <autarch@urth.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "artistic_2"
    ],
@@ -16,16 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Data::Dumper" : "0",
-            "Exporter" : "0",
-            "File::Path" : "0",
-            "File::Temp" : "0",
-            "FindBin" : "0",
-            "Module::Build" : "0.3601",
-            "Test::Exception" : "0",
-            "Test::More" : "0",
-            "base" : "0",
-            "lib" : "0"
+            "Module::Build" : "0.3601"
          }
       },
       "configure" : {
@@ -50,16 +41,31 @@
             "strict" : "0",
             "warnings" : "0"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Data::Dumper" : "0",
+            "Exporter" : "0",
+            "File::Path" : "0",
+            "File::Temp" : "0",
+            "FindBin" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0",
+            "base" : "0",
+            "lib" : "0"
+         }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
+         "mailto" : "bug-file-changenotify@rt.cpan.org",
          "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-ChangeNotify"
       },
       "repository" : {
          "type" : "git",
-         "url" : "git://git.urth.org/File-ChangeNotify.git"
+         "url" : "git://git.urth.org/File-ChangeNotify.git",
+         "web" : "http://git.urth.org/File-ChangeNotify.git"
       }
    },
    "version" : "0.24"

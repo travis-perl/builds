@@ -4,7 +4,7 @@ use strict;
 use 5.8.1;
 use parent qw(Plack::Middleware);
 use URI;
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 my %ALLOWED = map { $_ => undef } qw(GET HEAD PUT DELETE OPTIONS TRACE CONNECT);
 
@@ -157,7 +157,7 @@ repository|http://github.com/theory/plack-middleware-methodoverride/tree/>. Feel
 free to fork and contribute!
 
 Please file bug reports via L<GitHub
-Issues|http://github.com/theory/plack-middleware-browserrest/issues/> or by
+Issues|http://github.com/theory/plack-middleware-methodoverride/issues/> or by
 sending mail to
 L<bug-Plack-Middleware-MethodOverride@rt.cpan.org|mailto:bug-Plack-Middleware-MethodOverride@rt.cpan.org>.
 
@@ -178,7 +178,7 @@ David E. Wheeler <david@kineticode.com>
 
 =head1 Copyright and License
 
-Copyright (c) 2010 David E. Wheeler. Some Rights Reserved.
+Copyright (c) 2010-2015 David E. Wheeler. Some Rights Reserved.
 
 This module is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
