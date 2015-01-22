@@ -4,7 +4,7 @@
       "Based on code originally by Leo Lapworth, with many changes added by\nby Leon Brocard <acme@astray.com>."
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "perl_5"
    ],
@@ -14,11 +14,6 @@
    },
    "name" : "Data-Page",
    "prereqs" : {
-      "configure" : {
-         "requires" : {
-            "Module::Build" : "0.35"
-         }
-      },
       "runtime" : {
          "requires" : {
             "Class::Accessor::Chained::Fast" : "0",
