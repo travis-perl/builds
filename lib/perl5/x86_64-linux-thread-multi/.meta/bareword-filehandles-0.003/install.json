@@ -1,1 +1,1 @@
-{"pathname":"I/IL/ILMARI/bareword-filehandles-0.003.tar.gz","version":"0.003","provides":{"bareword::filehandles":{"version":"0.003","file":"lib/bareword/filehandles.pm"}},"dist":"bareword-filehandles-0.003","target":"bareword::filehandles","name":"bareword::filehandles"}
+{"dist":"bareword-filehandles-0.003","target":"bareword::filehandles","provides":{"bareword::filehandles":{"version":"0.003","file":"lib/bareword/filehandles.pm"}},"name":"bareword::filehandles","pathname":"I/IL/ILMARI/bareword-filehandles-0.003.tar.gz","version":"0.003"}

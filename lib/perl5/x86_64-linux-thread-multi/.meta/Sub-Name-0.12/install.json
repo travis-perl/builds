@@ -1,1 +1,1 @@
-{"name":"Sub::Name","dist":"Sub-Name-0.12","target":"Sub::Name","provides":{"Sub::Name":{"version":"0.12","file":"lib/Sub/Name.pm"}},"pathname":"E/ET/ETHER/Sub-Name-0.12.tar.gz","version":"0.12"}
+{"version":"0.12","pathname":"E/ET/ETHER/Sub-Name-0.12.tar.gz","name":"Sub::Name","provides":{"Sub::Name":{"version":"0.12","file":"lib/Sub/Name.pm"}},"dist":"Sub-Name-0.12","target":"Sub::Name"}
