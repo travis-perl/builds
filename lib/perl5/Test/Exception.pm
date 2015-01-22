@@ -6,7 +6,7 @@ use Test::Builder;
 use Sub::Uplevel qw( uplevel );
 use base qw( Exporter );
 
-our $VERSION = '0.35';
+our $VERSION = '0.36';
 our @EXPORT = qw(dies_ok lives_ok throws_ok lives_and);
 
 my $Tester = Test::Builder->new;
@@ -332,7 +332,7 @@ The test description is optional, but recommended.
 
 =cut
 
-my $is_stream = eval { require Test::Stream; require Test::Stream::Event::Ok; 1 };
+my $is_stream = $INC{'Test/Stream.pm'};
 our $LIVES_AND_NAME;
 if ($is_stream) {
     Test::Stream->shared->munge(sub {

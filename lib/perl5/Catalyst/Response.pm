@@ -4,8 +4,19 @@ use Moose;
 use HTTP::Headers;
 use Moose::Util::TypeConstraints;
 use namespace::autoclean;
+use Scalar::Util 'blessed';
+use Catalyst::Response::Writer;
+use Catalyst::Utils ();
 
 with 'MooseX::Emulate::Class::Accessor::Fast';
+
+our $DEFAULT_ENCODE_CONTENT_TYPE_MATCH = qr{text|xml$|javascript$};
+
+has encodable_content_type => (
+    is => 'rw',
+    required => 1,
+    default => sub { $DEFAULT_ENCODE_CONTENT_TYPE_MATCH }
+);
 
 has _response_cb => (
     is      => 'ro',
@@ -51,7 +62,17 @@ has write_fh => (
   builder=>'_build_write_fh',
 );
 
-sub _build_write_fh { shift ->_writer }
+sub _build_write_fh {
+  my $writer = $_[0]->_writer; # We need to get the finalize headers side effect...
+  my $requires_encoding = $_[0]->encodable_response;
+  my %fields = (
+    _writer => $writer,
+    _context => $_[0]->_context,
+    _requires_encoding => $requires_encoding,
+  );
+
+  return bless \%fields, 'Catalyst::Response::Writer';
+}
 
 sub DEMOLISH {
   my $self = shift;
@@ -71,7 +92,7 @@ has finalized_headers => (is => 'rw', default => 0);
 has headers   => (
   is      => 'rw',
   isa => 'HTTP::Headers',
-  handles => [qw(content_encoding content_length content_type header)],
+  handles => [qw(content_encoding content_length content_type content_type_charset header)],
   default => sub { HTTP::Headers->new() },
   required => 1,
   lazy => 1,
@@ -86,9 +107,9 @@ before [qw(status headers content_encoding content_length content_type header)] 
   my $self = shift;
 
   $self->_context->log->warn( 
-    "Useless setting a header value after finalize_headers called." .
+    "Useless setting a header value after finalize_headers and the response callback has been called." .
     " Not what you want." )
-      if ( $self->finalized_headers && @_ );
+      if ( $self->finalized_headers && !$self->_has_response_cb && @_ );
 };
 
 sub output { shift->body(@_) }
@@ -103,6 +124,10 @@ sub write {
 
     $buffer = q[] unless defined $buffer;
 
+    if($self->encodable_response) {
+      $buffer = $self->_context->encoding->encode( $buffer, $self->_context->_encode_check )
+    }
+
     my $len = length($buffer);
     $self->_writer->write($buffer);
 
@@ -116,11 +141,17 @@ sub finalize_headers {
 
 sub from_psgi_response {
     my ($self, $psgi_res) = @_;
+    if(blessed($psgi_res) && $psgi_res->can('as_psgi')) {
+      $psgi_res = $psgi_res->as_psgi;
+    }
     if(ref $psgi_res eq 'ARRAY') {
         my ($status, $headers, $body) = @$psgi_res;
         $self->status($status);
         $self->headers(HTTP::Headers->new(@$headers));
-        $self->body($body);
+        # Can be arrayref or filehandle...
+        if(defined $body) { # probably paranoia
+          ref $body eq 'ARRAY' ? $self->body(join('', @$body)) : $self->body($body);
+        }
     } elsif(ref $psgi_res eq 'CODE') {
         $psgi_res->(sub {
             my $response = shift;
@@ -128,13 +159,23 @@ sub from_psgi_response {
             $self->status($status);
             $self->headers(HTTP::Headers->new(@$headers));
             if(defined $maybe_body) {
-                $self->body($maybe_body);
+                # Can be arrayref or filehandle...
+                ref $maybe_body eq 'ARRAY' ? $self->body(join('', @$maybe_body)) : $self->body($maybe_body);
             } else {
                 return $self->write_fh;
             }
         });  
      } else {
         die "You can't set a Catalyst response from that, expect a valid PSGI response";
+    }
+
+    # Encoding compatibilty.   If the response set a charset, well... we need
+    # to assume its properly encoded and NOT encode for this response.  Otherwise
+    # We risk double encoding.
+    if($self->content_type_charset) {
+      # We have to do this since for backcompat reasons having a charset doesn't always
+      # mean that the body is already encoded :(
+      $self->_context->clear_encoding;
     }
 }
 
@@ -171,9 +212,26 @@ will turn the Catalyst::Response into a HTTP Response and return it to the clien
     $c->response->body('Catalyst rocks!');
 
 Sets or returns the output (text or binary data). If you are returning a large body,
-you might want to use a L<IO::Handle> type of object (Something that implements the read method
-in the same fashion), or a filehandle GLOB. Catalyst
-will write it piece by piece into the response.
+you might want to use a L<IO::Handle> type of object (Something that implements the getline method 
+in the same fashion), or a filehandle GLOB. These will be passed down to the PSGI
+handler you are using and might be optimized using server specific abilities (for
+example L<Twiggy> will attempt to server a real local file in a non blocking manner).
+
+If you are using a filehandle as the body response you are responsible for
+making sure it conforms to the L<PSGI> specification with regards to content
+encoding.  Unlike with scalar body values or when using the streaming interfaces
+we currently do not attempt to normalize and encode your filehandle.  In general
+this means you should be sure to be sending bytes not UTF8 decoded multibyte
+characters.
+
+Most of the time when you do:
+
+    open(my $fh, '<:raw', $path);
+
+You should be fine.  If you open a filehandle with a L<PerlIO> layer you probably
+are not fine.  You can usually fix this by explicitly using binmode to set
+the IOLayer to :raw.  Its possible future versions of L<Catalyst> will try to
+'do the right thing'.
 
 When using a L<IO::Handle> type of object and no content length has been
 already set in the response headers Catalyst will make a reasonable attempt
@@ -184,7 +242,11 @@ it is recommended that you set the content length in the response headers
 yourself, which will be respected and sent by Catalyst in the response.
 
 Please note that the object needs to implement C<getline>, not just
-C<read>.
+C<read>.  Older versions of L<Catalyst> expected your filehandle like objects
+to do read.  If you have code written for this expectation and you cannot
+change the code to meet the L<PSGI> specification, you can try the following
+middleware L<Plack::Middleware::AdaptFilehandleRead> which will attempt to
+wrap your object in an interface that so conforms.
 
 Starting from version 5.90060, when using an L<IO::Handle> object, you
 may want to use L<Plack::Middleware::XSendfile>, to delegate the
@@ -286,6 +348,10 @@ This value is typically set by your view or plugin. For example,
 L<Catalyst::Plugin::Static::Simple> will guess the mime type based on the file
 it found, while L<Catalyst::View::TT> defaults to C<text/html>.
 
+=head2 $res->content_type_charset
+
+Shortcut for $res->headers->content_type_charset;
+
 =head2 $res->cookies
 
 Returns a reference to a hash containing cookies to be set. The keys of the
@@ -347,6 +413,12 @@ qualified (= C<http://...>, etc.) or that starts with a slash
 thing and is not a standard behaviour. You may opt to use uri_for() or
 uri_for_action() instead.
 
+B<Note:> If $url is an object that does ->as_string (such as L<URI>, which is
+what you get from ->uri_for) we automatically call that to stringify.  This
+should ease the common case usage
+
+    return $c->res->redirect( $c->uri_for(...));
+
 =cut
 
 sub redirect {
@@ -355,6 +427,10 @@ sub redirect {
     if (@_) {
         my $location = shift;
         my $status   = shift || 302;
+
+        if(blessed($location) && $location->can('as_string')) {
+            $location = $location->as_string;
+        }
 
         $self->location($location);
         $self->status($status);
@@ -377,13 +453,39 @@ $res->code is an alias for this, to match HTTP::Response->code.
 
 =head2 $res->write( $data )
 
-Writes $data to the output stream.
+Writes $data to the output stream.  Calling this method will finalize your
+headers and send the headers and status code response to the client (so changing
+them afterwards is a waste... be sure to set your headers correctly first).
+
+You may call this as often as you want throughout your response cycle.  You may
+even set a 'body' afterward.  So for example you might write your HTTP headers
+and the HEAD section of your document and then set the body from a template
+driven from a database.  In some cases this can seem to the client as if you had
+a faster overall response (but note that unless your server support chunked
+body your content is likely to get queued anyway (L<Starman> and most other 
+http 1.1 webservers support this).
+
+If there is an encoding set, we encode each line of the response (the default
+encoding is UTF-8).
 
 =head2 $res->write_fh
 
-Returns a PSGI $writer object that has two methods, write and close.  You can
-close over this object for asynchronous and nonblocking applications.  For
-example (assuming you are using a supporting server, like L<Twiggy>
+Returns an instance of L<Catalyst::Response::Writer>, which is a lightweight
+decorator over the PSGI C<$writer> object (see L<PSGI.pod\Delayed-Response-and-Streaming-Body>).
+
+In addition to proxying the C<write> and C<close> method from the underlying PSGI
+writer, this proxy object knows any application wide encoding, and provides a method
+C<write_encoded> that will properly encode your written lines based upon your
+encoding settings.  By default in L<Catalyst> responses are UTF-8 encoded and this
+is the encoding used if you respond via C<write_encoded>.  If you want to handle
+encoding yourself, you can use the C<write> method directly.
+
+Encoding only applies to content types for which it matters.  Currently the following
+content types are assumed to need encoding: text (including HTML), xml and javascript.
+
+We provide access to this object so that you can properly close over it for use in
+asynchronous and nonblocking applications.  For example (assuming you are using a supporting
+server, like L<Twiggy>:
 
     package AsyncExample::Controller::Root;
 
@@ -413,6 +515,10 @@ example (assuming you are using a supporting server, like L<Twiggy>
         });
     }
 
+Like the 'write' method, calling this will finalize headers. Unlike 'write' when you
+can this it is assumed you are taking control of the response so the body is never
+finalized (there isn't one anyway) and you need to call the close method.
+
 =head2 $res->print( @data )
 
 Prints @data to the output stream, separated by $,.  This lets you pass
@@ -429,6 +535,8 @@ a $responder) set the response from it.
 
 Properly supports streaming and delayed response and / or async IO if running
 under an expected event loop.
+
+If passed an object, will expect that object to do a method C<as_psgi>.
 
 Example:
 
@@ -447,7 +555,86 @@ Example:
     }
 
 Please note this does not attempt to map or nest your PSGI application under
-the Controller and Action namespace or path.  
+the Controller and Action namespace or path. You may wish to review 'PSGI Helpers'
+under L<Catalyst::Utils> for help in properly nesting applications.
+
+B<NOTE> If your external PSGI application returns a response that has a character
+set associated with the content type (such as "text/html; charset=UTF-8") we set
+$c->clear_encoding to remove any additional content type encoding processing later
+in the application (this is done to avoid double encoding issues).
+
+=head2 encodable_content_type
+
+This is a regular expression used to determine of the current content type
+should be considered encodable.  Currently we apply default encoding (usually
+UTF8) to text type contents.  Here's the default regular expression:
+
+This would match content types like:
+
+    text/plain
+    text/html
+    text/xml
+    application/javascript
+    application/xml
+    application/vnd.user+xml
+
+B<NOTE>: We don't encode JSON content type responses by default since most
+of the JSON serializers that are commonly used for this task will do so
+automatically and we don't want to double encode.  If you are not using a
+tool like L<JSON> to produce JSON type content, (for example you are using
+a template system, or creating the strings manually) you will need to either
+encoding the body yourself:
+
+    $c->response->body( $c->encoding->encode( $body, $c->_encode_check ) );
+
+Or you can alter the regular expression using this attribute.
+
+=head2 encodable_response
+
+Given a L<Catalyst::Response> return true if its one that can be encoded.  
+
+     make sure there is an encoding set on the response
+     make sure the content type is encodable
+     make sure no content type charset has been already set to something different from the global encoding
+     make sure no content encoding is present.
+
+Note this does not inspect a body since we do allow automatic encoding on streaming
+type responses.
+
+=cut
+
+sub encodable_response {
+  my ($self) = @_;
+  return 0 unless $self->_context; # Cases like returning a HTTP Exception response you don't have a context here...
+  return 0 unless $self->_context->encoding;
+
+  # The response is considered to have a 'manual charset' when a charset is already set on
+  # the content type of the response AND it is not the same as the one we set in encoding.
+  # If there is no charset OR we are asking for the one which is the same as the current
+  # required encoding, that is a flag that we want Catalyst to encode the response automatically.
+  my $has_manual_charset = 0;
+  if(my $charset = $self->content_type_charset) {
+    $has_manual_charset = (uc($charset) ne uc($self->_context->encoding->mime_name)) ? 1:0;
+  }
+
+  # Content type is encodable if it matches the regular expression stored in this attribute
+  my $encodable_content_type = $self->content_type =~ m/${\$self->encodable_content_type}/ ? 1:0;
+
+  # The content encoding is allowed (for charset encoding) only if its empty or is set to identity
+  my $allowed_content_encoding = (!$self->content_encoding || $self->content_encoding eq 'identity') ? 1:0;
+
+  # The content type must be an encodable type, and there must be NO manual charset and also
+  # the content encoding must be the allowed values;
+  if(
+      $encodable_content_type and
+      !$has_manual_charset and
+      $allowed_content_encoding
+  ) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 =head2 DEMOLISH
 

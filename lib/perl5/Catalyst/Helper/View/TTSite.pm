@@ -118,7 +118,7 @@ the following templates are processed in order:
 
 =back
 
-Finally, the rendered content is returned to the bowser.
+Finally, the rendered content is returned to the browser.
 
 =head1 METHODS
 

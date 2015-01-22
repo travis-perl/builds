@@ -21,7 +21,7 @@ unless (defined $Test::Deep::NoTest::NoTest)
 
 our ($Stack, %Compared, $CompareCache, %WrapCache, $Shallow);
 
-our $VERSION = '0.114';
+our $VERSION = '0.115';
 $VERSION = eval $VERSION;
 
 require Exporter;
@@ -169,7 +169,7 @@ sub import {
     require Test::Deep::String;
   }
 
-  goto &Exporter::import;
+  $_[0]->export_to_level(1, @_);
 }
 
 # this is ugly, I should never have exported a sub called isa now I
