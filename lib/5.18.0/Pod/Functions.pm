@@ -148,14 +148,14 @@ connect	Socket	connect to a remote socket
 continue	Flow	optional trailing block in a while or foreach
 cos	Math	cosine function
 crypt	String	one-way passwd-style encryption
-dbmclose	Objects	I/O	breaks binding on a tied dbm file
-dbmopen	Objects	I/O	create binding on a tied dbm file
+dbmclose	I/O	Objects	breaks binding on a tied dbm file
+dbmopen	I/O	Objects	create binding on a tied dbm file
 defined	Misc	test whether a value, variable, or function is defined
 delete	HASH	deletes a value from a hash
-die	I/O	Flow	raise an exception or bail out
-do	Modules	Flow	turn a BLOCK into a TERM
+die	Flow	I/O	raise an exception or bail out
+do	Flow	Modules	turn a BLOCK into a TERM
 dump	Flow	create an immediate core dump
-each	HASH	ARRAY	retrieve the next key/value pair from a hash
+each	ARRAY	HASH	retrieve the next key/value pair from a hash
 endgrent	User	be done using group file
 endhostent	User	be done using hosts file
 endnetent	User	be done using networks file
@@ -207,13 +207,13 @@ glob	File	expand filenames using wildcards
 gmtime	Time	convert UNIX time into record or string using Greenwich time
 goto	Flow	create spaghetti code
 grep	LIST	locate elements in a list test true against a given criterion
-hex	Math	String	convert a string to a hexadecimal number
+hex	String	Math	convert a string to a hexadecimal number
 import	Namespace	Modules	patch a module's namespace into your own
 index	String	find a substring within a string
 int	Math	get the integer portion of a number
 ioctl	File	system-dependent device control system call
 join	LIST	join a list into a string using a separator
-keys	HASH	ARRAY	retrieve list of indices from a hash
+keys	ARRAY	HASH	retrieve list of indices from a hash
 kill	Process	send a signal to a process or process group
 last	Flow	exit a block prematurely
 lc	String	return lower-case version of a string
@@ -237,13 +237,13 @@ msgsnd	SysV	send a SysV IPC message to a message queue
 my	Namespace	declare and assign a local variable (lexical scoping)
 next	Flow	iterate a block prematurely
 no	Modules	unimport some module symbols or semantics at compile time
-oct	Math	String	convert a string to an octal number
+oct	String	Math	convert a string to an octal number
 open	File	open a file, pipe, or descriptor
 opendir	File	open a directory
 ord	String	find a character's numeric representation
 our	Namespace	declare and assign a package variable (lexical scoping)
-pack	String	Binary	convert a list into a binary representation
-package	Objects	Namespace	Modules	declare a separate global namespace
+pack	Binary	String	convert a list into a binary representation
+package	Namespace	Modules	Objects	declare a separate global namespace
 __PACKAGE__	Flow	the current package
 pipe	Process	open a pair of connected filehandles
 pop	ARRAY	remove the last element from an array and return it
@@ -259,7 +259,7 @@ quotemeta	Regexp	quote regular expression magic characters
 qw/STRING/	LIST	quote a list of words
 qx/STRING/	Process	backquote quote a string
 rand	Math	retrieve the next pseudorandom number
-read	I/O	Binary	fixed-length buffered input from a filehandle
+read	Binary	I/O	fixed-length buffered input from a filehandle
 readdir	I/O	get a directory from a directory handle
 readline	I/O	fetch a record from a file
 readlink	File	determine where a symbolic link is pointing
@@ -317,18 +317,18 @@ sub	Flow	declare a subroutine, possibly anonymously
 __SUB__	Flow	the current subroutine, or C<undef> if not in a subroutine
 substr	String	get or alter a portion of a string
 symlink	File	create a symbolic link to a file
-syscall	I/O	Binary	execute an arbitrary system call
+syscall	Binary	I/O	execute an arbitrary system call
 sysopen	File	open a file, pipe, or descriptor
-sysread	I/O	Binary	fixed-length unbuffered input from a filehandle
-sysseek	I/O	Binary	position I/O pointer on handle used with sysread and syswrite
+sysread	Binary	I/O	fixed-length unbuffered input from a filehandle
+sysseek	Binary	I/O	position I/O pointer on handle used with sysread and syswrite
 system	Process	run a separate program
-syswrite	I/O	Binary	fixed-length unbuffered output to a filehandle
+syswrite	Binary	I/O	fixed-length unbuffered output to a filehandle
 tell	I/O	get current seekpointer on a filehandle
 telldir	I/O	get current seekpointer on a directory handle
 tie	Objects	bind a variable to an object class
 tied	Objects	get a reference to the object underlying a tied variable
 time	Time	return number of seconds since 1970
-times	Process	Time	return elapsed time for self and child processes
+times	Time	Process	return elapsed time for self and child processes
 tr///	String	transliterate a string
 truncate	I/O	shorten a file
 uc	String	return upper-case version of a string
@@ -336,12 +336,12 @@ ucfirst	String	return a string with just the next letter in upper case
 umask	File	set file creation mode mask
 undef	Misc	remove a variable or function definition
 unlink	File	remove one link to a file
-unpack	LIST	Binary	convert binary structure into normal perl variables
+unpack	Binary	LIST	convert binary structure into normal perl variables
 unshift	ARRAY	prepend more elements to the beginning of a list
 untie	Objects	break a tie binding to a variable
-use	Objects	Namespace	Modules	load in a module at compile time and import its namespace
+use	Namespace	Modules	Objects	load in a module at compile time and import its namespace
 utime	File	set a file's last access and modify times
-values	HASH	ARRAY	return a list of the values in a hash
+values	ARRAY	HASH	return a list of the values in a hash
 vec	Binary	test or set particular bits in a string
 wait	Process	wait for any child process to die
 waitpid	Process	wait for a particular child process to die
