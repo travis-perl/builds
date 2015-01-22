@@ -4,7 +4,7 @@
       "Benjamin Franz <snowhare@nihongo.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.3901, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "perl_5"
    ],
