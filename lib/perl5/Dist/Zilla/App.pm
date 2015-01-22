@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App;
 # ABSTRACT: Dist::Zilla's App::Cmd
-$Dist::Zilla::App::VERSION = '5.029';
+$Dist::Zilla::App::VERSION = '5.031';
 use App::Cmd::Setup 0.309 -app; # better compilation error detection
 
 use Carp ();
@@ -155,7 +155,7 @@ Dist::Zilla::App - Dist::Zilla's App::Cmd
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 METHODS
 
@@ -170,7 +170,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

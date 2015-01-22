@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Version;
 # ABSTRACT: add a VERSION pod section
-$Pod::Weaver::Section::Version::VERSION = '4.009';
+$Pod::Weaver::Section::Version::VERSION = '4.010';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
@@ -22,7 +22,6 @@ use namespace::autoclean;
 #pod =cut
 
 use DateTime;
-use Moose::Autobox;
 use Moose::Util::TypeConstraints;
 
 my $MARKER;
@@ -220,13 +219,12 @@ sub weave_section {
 
   my @content = $self->build_content($input);
 
-  $document->children->push(
+  push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
       content  => 'VERSION',
       children => \@content,
-    }),
-  );
+    });
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -244,7 +242,7 @@ Pod::Weaver::Section::Version - add a VERSION pod section
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 OVERVIEW
 

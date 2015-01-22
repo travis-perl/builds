@@ -1,12 +1,11 @@
 package Pod::Elemental::Transformer::Gatherer;
 # ABSTRACT: gather related paragraphs under a shared header
-$Pod::Elemental::Transformer::Gatherer::VERSION = '0.103002';
+$Pod::Elemental::Transformer::Gatherer::VERSION = '0.103004';
 use Moose;
 with 'Pod::Elemental::Transformer';
 
 use namespace::autoclean;
 
-use Moose::Autobox 0.10;
 use MooseX::Types::Moose qw(CodeRef);
 use Pod::Elemental::Node;
 
@@ -93,7 +92,7 @@ sub transform_node {
   my ($self, $node) = @_;
 
   my @indexes;
-  for my $i (0 .. $node->children->length - 1) {
+  for my $i (0 .. @{ $node->children } - 1) {
     push @indexes, $i if $self->gather_selector->($node->children->[ $i ]);
   }
 
@@ -125,7 +124,7 @@ Pod::Elemental::Transformer::Gatherer - gather related paragraphs under a shared
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 

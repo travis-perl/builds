@@ -1,6 +1,6 @@
 package Pod::Elemental::Command;
 # ABSTRACT: a =command paragraph
-$Pod::Elemental::Command::VERSION = '0.103002';
+$Pod::Elemental::Command::VERSION = '0.103004';
 use Moose::Role 0.90;
 with 'Pod::Elemental::Paragraph' => { -excludes => [ 'as_pod_string' ] };
 
@@ -14,8 +14,6 @@ with 'Pod::Elemental::Paragraph' => { -excludes => [ 'as_pod_string' ] };
 #pod an attribute, but this is not necessary.
 #pod
 #pod =cut
-
-use Moose::Autobox;
 
 requires 'command';
 
@@ -47,7 +45,7 @@ Pod::Elemental::Command - a =command paragraph
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 
