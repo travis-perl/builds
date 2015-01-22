@@ -8,7 +8,7 @@ use Time::Local qw//;
 use POSIX qw//;
 use base qw/Exporter/;
 
-our $VERSION = "0.40";
+our $VERSION = "0.41";
 our @EXPORT_OK = qw/strftime/;
 
 use constant {
@@ -391,6 +391,7 @@ POSIX::strftime::Compiler - GNU C library compatible strftime for loggers and se
 
     say strftime('%a, %d %b %Y %T %z',localtime):
     
+    my $fmt = '%a, %d %b %Y %T %z';
     my $psc = POSIX::strftime::Compiler->new($fmt);
     say $psc->to_string(localtime);
 
