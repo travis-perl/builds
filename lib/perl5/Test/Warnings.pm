@@ -1,12 +1,10 @@
 use strict;
 use warnings;
-package Test::Warnings;
-# git description: v0.018-3-g0fac7a0
-{ our $VERSION = '0.019'; }
+package Test::Warnings; # git description: v0.019-2-g3cde069
 # ABSTRACT: Test for warnings and the lack of them
 # KEYWORDS: testing tests warnings
 # vim: set ts=8 sw=4 tw=78 et :
-
+$Test::Warnings::VERSION = '0.020';
 use parent 'Exporter';
 use Test::Builder;
 
@@ -57,7 +55,7 @@ $SIG{__WARN__} = sub {
             warn $msg;
         } else {
             require Carp;
-            Carp::carp($msg)
+            Carp::carp($msg);
         }
 
         $forbidden_warnings_found++;
@@ -148,7 +146,7 @@ Test::Warnings - Test for warnings and the lack of them
 
 =head1 VERSION
 
-version 0.019
+version 0.020
 
 =head1 SYNOPSIS
 

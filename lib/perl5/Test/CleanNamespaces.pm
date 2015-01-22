@@ -1,12 +1,10 @@
 use strict;
 use warnings;
 
-package Test::CleanNamespaces;
-# git description: v0.15-3-g28c4554
-$Test::CleanNamespaces::VERSION = '0.16';
+package Test::CleanNamespaces; # git description: v0.17-1-gc38f0ce
 # ABSTRACT: Check for uncleaned imports
 # KEYWORDS: testing namespaces clean dirty imports exports subroutines methods
-
+$Test::CleanNamespaces::VERSION = '0.18';
 use Module::Runtime qw(require_module module_notional_filename);
 use Sub::Identify qw(sub_fullname stash_name);
 use Package::Stash 0.14;
@@ -135,7 +133,7 @@ sub _remaining_imports {
         @imports = keys %subs;
     }
     elsif ($INC{ module_notional_filename('Mouse::Util') }
-        and $meta = Mouse::Util::class_of($ns))
+        and Mouse::Util->can('class_of') and $meta = Mouse::Util::class_of($ns))
     {
         warn 'Mouse class detected - chance of false negatives is high!';
 
@@ -161,7 +159,7 @@ sub _remaining_imports {
     # is important
     delete @imports{qw(import unimport)};
 
-    my @overloads = grep { $imports{$_} eq 'overload::nil' } keys %imports;
+    my @overloads = grep { $imports{$_} eq 'overload::nil' || $imports{$_} eq 'overload::_nil' } keys %imports;
     delete @imports{@overloads} if @overloads;
 
     if ($] < 5.010)
@@ -221,7 +219,7 @@ Test::CleanNamespaces - Check for uncleaned imports
 
 =head1 VERSION
 
-version 0.16
+version 0.18
 
 =head1 SYNOPSIS
 
