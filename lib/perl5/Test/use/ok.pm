@@ -1,6 +1,6 @@
 package Test::use::ok;
 use 5.005;
-$Test::use::ok::VERSION = '0.11';
+$Test::use::ok::VERSION = '0.16';
 
 __END__
 
@@ -39,6 +39,16 @@ makes it clear that this is a single compile-time action.
 =head1 SEE ALSO
 
 L<Test::More>
+
+=head1 MAINTAINER
+
+=over 4
+
+=item Chad Granum E<lt>exodist@cpan.orgE<gt>
+
+=back
+
+=encoding utf8
 
 =head1 CC0 1.0 Universal
 
