@@ -1,1 +1,1 @@
-{"target":"File::Remove","pathname":"A/AD/ADAMK/File-Remove-1.52.tar.gz","provides":{"File::Remove":{"version":"1.52","file":"lib/File/Remove.pm"}},"name":"File::Remove","dist":"File-Remove-1.52","version":"1.52"}
+{"target":"File::Remove","version":"1.52","name":"File::Remove","provides":{"File::Remove":{"version":"1.52","file":"lib/File/Remove.pm"}},"pathname":"A/AD/ADAMK/File-Remove-1.52.tar.gz","dist":"File-Remove-1.52"}
