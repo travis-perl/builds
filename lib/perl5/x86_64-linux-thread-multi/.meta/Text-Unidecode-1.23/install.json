@@ -1,1 +1,1 @@
-{"name":"Text::Unidecode","version":"1.23","provides":{"Text::Unidecode":{"file":"lib/Text/Unidecode.pm","version":"1.23"}},"pathname":"S/SB/SBURKE/Text-Unidecode-1.23.tar.gz","dist":"Text-Unidecode-1.23","target":"Text::Unidecode"}
+{"target":"Text::Unidecode","pathname":"S/SB/SBURKE/Text-Unidecode-1.23.tar.gz","dist":"Text-Unidecode-1.23","provides":{"Text::Unidecode":{"file":"lib/Text/Unidecode.pm","version":"1.23"}},"version":"1.23","name":"Text::Unidecode"}

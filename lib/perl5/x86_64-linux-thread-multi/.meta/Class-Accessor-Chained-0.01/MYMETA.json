@@ -4,7 +4,7 @@
       "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "perl_5"
    ],
@@ -31,8 +31,7 @@
          "version" : "0.01"
       },
       "Class::Accessor::Chained::Fast" : {
-         "file" : "lib/Class/Accessor/Chained/Fast.pm",
-         "version" : "0"
+         "file" : "lib/Class/Accessor/Chained/Fast.pm"
       }
    },
    "release_status" : "stable",
