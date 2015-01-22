@@ -83,7 +83,7 @@ tie %Config, 'Config', {
     ldlibpthname => 'LD_LIBRARY_PATH',
     libpth => '/usr/local/lib /lib/x86_64-linux-gnu /lib/../lib /usr/lib/x86_64-linux-gnu /usr/lib/../lib /lib /usr/lib',
     osname => 'linux',
-    osvers => '2.6.32-042stab090.5',
+    osvers => '2.6.32-042stab094.7',
     path_sep => ':',
     privlibexp => '/home/travis/perl5/perlbrew/perls/5.8.8-thr/lib/5.8.8',
     scriptdir => '/home/travis/perl5/perlbrew/perls/5.8.8-thr/bin',
