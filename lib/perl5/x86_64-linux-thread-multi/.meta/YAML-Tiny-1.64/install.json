@@ -1,1 +1,1 @@
-{"name":"YAML::Tiny","provides":{"YAML::Tiny":{"file":"lib/YAML/Tiny.pm","version":"1.64"}},"version":"1.64","target":"YAML::Tiny","dist":"YAML-Tiny-1.64","pathname":"E/ET/ETHER/YAML-Tiny-1.64.tar.gz"}
+{"dist":"YAML-Tiny-1.64","target":"YAML::Tiny","version":"1.64","pathname":"E/ET/ETHER/YAML-Tiny-1.64.tar.gz","provides":{"YAML::Tiny":{"version":"1.64","file":"lib/YAML/Tiny.pm"}},"name":"YAML::Tiny"}

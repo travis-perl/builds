@@ -1,1 +1,1 @@
-{"pathname":"D/DA/DAGOLDEN/Version-Next-0.004.tar.gz","target":"Version::Next","provides":{"Version::Next":{"version":"0.004","file":"lib/Version/Next.pm"}},"name":"Version::Next","version":"0.004","dist":"Version-Next-0.004"}
+{"version":"0.004","target":"Version::Next","pathname":"D/DA/DAGOLDEN/Version-Next-0.004.tar.gz","provides":{"Version::Next":{"file":"lib/Version/Next.pm","version":"0.004"}},"name":"Version::Next","dist":"Version-Next-0.004"}

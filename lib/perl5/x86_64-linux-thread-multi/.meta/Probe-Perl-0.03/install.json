@@ -1,1 +1,1 @@
-{"provides":{"Probe::Perl":{"file":"lib/Probe/Perl.pm","version":"0.03"}},"version":"0.03","name":"Probe::Perl","pathname":"K/KW/KWILLIAMS/Probe-Perl-0.03.tar.gz","dist":"Probe-Perl-0.03","target":"Probe::Perl"}
+{"version":"0.03","dist":"Probe-Perl-0.03","target":"Probe::Perl","name":"Probe::Perl","provides":{"Probe::Perl":{"version":"0.03","file":"lib/Probe/Perl.pm"}},"pathname":"K/KW/KWILLIAMS/Probe-Perl-0.03.tar.gz"}

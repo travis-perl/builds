@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Pod::Elemental::Selectors;
 # ABSTRACT: predicates for selecting elements
-$Pod::Elemental::Selectors::VERSION = '0.103002';
+$Pod::Elemental::Selectors::VERSION = '0.103004';
 #pod =head1 OVERVIEW
 #pod
 #pod Pod::Elemental::Selectors provides a number of routines to check for
@@ -34,7 +34,7 @@ $Pod::Elemental::Selectors::VERSION = '0.103002';
 #pod
 #pod =cut
 
-use Moose::Autobox 0.10;
+use List::Util 1.33 'any';
 
 use Sub::Exporter -setup => {
   exports => [ qw(s_blank s_flat s_node s_command) ],
@@ -53,7 +53,7 @@ use Sub::Exporter -setup => {
 sub s_blank {
   my $code = sub {
     my $para = shift;
-    return $para->isa('Pod::Elemental::Element::Generic::Blank');
+    return $para && $para->isa('Pod::Elemental::Element::Generic::Blank');
   };
 
   return @_ ? $code->(@_) : $code;
@@ -73,7 +73,7 @@ sub s_blank {
 sub s_flat {
   my $code = sub {
     my $para = shift;
-    return $para->does('Pod::Elemental::Flat');
+    return $para && $para->does('Pod::Elemental::Flat');
   };
 
   return @_ ? $code->(@_) : $code;
@@ -93,7 +93,7 @@ sub s_flat {
 sub s_node {
   my $code = sub {
     my $para = shift;
-    return $para->does('Pod::Elemental::Node');
+    return $para && $para->does('Pod::Elemental::Node');
   };
 
   return @_ ? $code->(@_) : $code;
@@ -121,11 +121,11 @@ sub s_command {
 
   my $code = sub {
     my $para = shift;
-    return unless $para->does('Pod::Elemental::Command');
+    return unless $para && $para->does('Pod::Elemental::Command');
     return 1 unless defined $command;
 
     my $alts = ref $command ? $command : [ $command ];
-    return $para->command eq $alts->any;
+    return any { $para->command eq $_ } @$alts;
   };
 
   return @_ ? $code->(@_) : $code;
@@ -145,7 +145,7 @@ Pod::Elemental::Selectors - predicates for selecting elements
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 
@@ -176,6 +176,7 @@ The selectors can be imported individually or as the C<-all> group, and can be
 renamed with L<Sub::Exporter> features.  (Selectors cannot I<yet> be curried by
 Sub::Exporter.)
 
+
 =head2 s_blank
 
   my $callback = s_blank;
@@ -183,6 +184,7 @@ Sub::Exporter.)
   if( s_blank($para) ) { ... }
 
 C<s_blank> tests whether a paragraph is a Generic::Blank element.
+
 
 =head2 s_flat
 
@@ -193,6 +195,7 @@ C<s_blank> tests whether a paragraph is a Generic::Blank element.
 C<s_flat> tests whether a paragraph does Pod::Elemental::Flat -- in other
 words, is content-only.
 
+
 =head2 s_node
 
   my $callback = s_node;
@@ -201,6 +204,7 @@ words, is content-only.
 
 C<s_node> tests whether a paragraph does Pod::Elemental::Node -- in other
 words, whether it may have children.
+
 
 =head2 s_command
 
