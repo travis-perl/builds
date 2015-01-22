@@ -153,7 +153,7 @@ dbmopen	I/O	Objects	create binding on a tied dbm file
 defined	Misc	test whether a value, variable, or function is defined
 delete	HASH	deletes a value from a hash
 die	I/O	Flow	raise an exception or bail out
-do	Flow	Modules	turn a BLOCK into a TERM
+do	Modules	Flow	turn a BLOCK into a TERM
 dump	Flow	create an immediate core dump
 each	HASH	ARRAY	retrieve the next key/value pair from a hash
 endgrent	User	be done using group file
@@ -243,7 +243,7 @@ opendir	File	open a directory
 ord	String	find a character's numeric representation
 our	Namespace	declare and assign a package variable (lexical scoping)
 pack	String	Binary	convert a list into a binary representation
-package	Modules	Objects	Namespace	declare a separate global namespace
+package	Modules	Namespace	Objects	declare a separate global namespace
 __PACKAGE__	Flow	the current package
 pipe	Process	open a pair of connected filehandles
 pop	ARRAY	remove the last element from an array and return it
@@ -336,10 +336,10 @@ ucfirst	String	return a string with just the next letter in upper case
 umask	File	set file creation mode mask
 undef	Misc	remove a variable or function definition
 unlink	File	remove one link to a file
-unpack	LIST	Binary	convert binary structure into normal perl variables
+unpack	Binary	LIST	convert binary structure into normal perl variables
 unshift	ARRAY	prepend more elements to the beginning of a list
 untie	Objects	break a tie binding to a variable
-use	Modules	Objects	Namespace	load in a module at compile time and import its namespace
+use	Modules	Namespace	Objects	load in a module at compile time and import its namespace
 utime	File	set a file's last access and modify times
 values	HASH	ARRAY	return a list of the values in a hash
 vec	Binary	test or set particular bits in a string
