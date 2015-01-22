@@ -29,8 +29,10 @@
       },
       "configure" : {
          "recommends" : {
-            "Config::AutoConf" : "0.306",
-            "Test::WriteVariants" : "0.005"
+            "Config::AutoConf" : "0.308",
+            "JSON::PP" : "0",
+            "Test::WriteVariants" : "0.010",
+            "inc::latest" : "0.500"
          },
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
@@ -38,6 +40,8 @@
       },
       "develop" : {
          "requires" : {
+            "Config::AutoConf" : "0.308",
+            "JSON::PP" : "0",
             "Module::CPANTS::Analyse" : "0.96",
             "Test::CPAN::Changes" : "0",
             "Test::CheckManifest" : "0",
@@ -46,6 +50,7 @@
             "Test::Pod::Coverage" : "0",
             "Test::Pod::Spelling::CommonMistakes" : "0",
             "Test::Spelling" : "0",
+            "Test::WriteVariants" : "0.010",
             "inc::latest" : "0.500"
          }
       },
@@ -82,5 +87,5 @@
          "web" : "https://github.com/perl5-utils/List-MoreUtils"
       }
    },
-   "version" : "0.401"
+   "version" : "0.402"
 }
