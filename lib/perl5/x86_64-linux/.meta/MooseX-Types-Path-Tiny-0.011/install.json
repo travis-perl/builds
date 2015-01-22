@@ -1,1 +1,1 @@
-{"name":"MooseX::Types::Path::Tiny","target":"MooseX::Types::Path::Tiny","dist":"MooseX-Types-Path-Tiny-0.011","provides":{"MooseX::Types::Path::Tiny":{"file":"lib/MooseX/Types/Path/Tiny.pm","version":"0.011"}},"pathname":"E/ET/ETHER/MooseX-Types-Path-Tiny-0.011.tar.gz","version":"0.011"}
+{"provides":{"MooseX::Types::Path::Tiny":{"version":"0.011","file":"lib/MooseX/Types/Path/Tiny.pm"}},"version":"0.011","dist":"MooseX-Types-Path-Tiny-0.011","pathname":"E/ET/ETHER/MooseX-Types-Path-Tiny-0.011.tar.gz","target":"MooseX::Types::Path::Tiny","name":"MooseX::Types::Path::Tiny"}

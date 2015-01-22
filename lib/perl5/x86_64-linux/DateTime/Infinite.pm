@@ -1,5 +1,5 @@
 package DateTime::Infinite;
-$DateTime::Infinite::VERSION = '1.12';
+$DateTime::Infinite::VERSION = '1.18';
 use strict;
 use warnings;
 
@@ -34,7 +34,7 @@ sub STORABLE_freeze {return}
 sub STORABLE_thaw   {return}
 
 package DateTime::Infinite::Future;
-$DateTime::Infinite::Future::VERSION = '1.12';
+$DateTime::Infinite::Future::VERSION = '1.18';
 use strict;
 use warnings;
 
@@ -59,7 +59,7 @@ use base qw(DateTime::Infinite);
  }
 
 package DateTime::Infinite::Past;
-$DateTime::Infinite::Past::VERSION = '1.12';
+$DateTime::Infinite::Past::VERSION = '1.18';
 use strict;
 use warnings;
 
@@ -163,15 +163,13 @@ __END__
 
 =pod
 
-=encoding UTF-8
-
 =head1 NAME
 
 DateTime::Infinite - Infinite past and future DateTime objects
 
 =head1 VERSION
 
-version 1.12
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -223,7 +221,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by Dave Rolsky.
+This software is Copyright (c) 2015 by Dave Rolsky.
 
 This is free software, licensed under:
 
