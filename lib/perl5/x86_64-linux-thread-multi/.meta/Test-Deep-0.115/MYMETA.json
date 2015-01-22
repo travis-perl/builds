@@ -1,18 +1,18 @@
 {
-   "abstract" : "Make sure you didn't emit any warnings while testing",
+   "abstract" : "unknown",
    "author" : [
       "Fergal Daly <fergal@esatclear.ie>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.62, CPAN::Meta::Converter version 2.112621, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.143240",
    "license" : [
-      "open_source"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Test-NoWarnings",
+   "name" : "Test-Deep",
    "no_index" : {
       "directory" : [
          "t",
@@ -22,8 +22,9 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::More" : "0.47",
-            "Test::Tester" : "0.107"
+            "Test::More" : "0",
+            "Test::NoWarnings" : "0.02",
+            "Test::Tester" : "0.04"
          }
       },
       "configure" : {
@@ -33,16 +34,19 @@
       },
       "runtime" : {
          "requires" : {
-            "Test::Builder" : "0.86",
-            "perl" : "5.006"
+            "List::Util" : "1.09",
+            "Scalar::Util" : "1.09",
+            "Test::Builder" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "repository" : {
-         "url" : "http://svn.ali.as/cpan/trunk/Test-NoWarnings"
-      }
+      "homepage" : "http://github.com/rjbs/Test-Deep/",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "x_MailingList" : "http://lists.perl.org/list/perl-qa.html"
    },
-   "version" : "1.04"
+   "version" : "0.115"
 }
