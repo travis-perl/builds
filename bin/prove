@@ -1,5 +1,8 @@
 #!/home/travis/perl5/perlbrew/perls/5.18.0-thr/bin/perl -w
 
+eval 'exec /home/travis/perl5/perlbrew/perls/5.18.0-thr/bin/perl -w -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
 use strict;
 use warnings;
 use App::Prove;
@@ -52,6 +55,7 @@ Boolean options:
  -w                     Enable warnings.
  -h,  --help            Display this help
  -?,                    Display this help
+ -V,  --version         Display the version
  -H,  --man             Longer manpage for prove
       --norc            Don't process default .proverc
 
