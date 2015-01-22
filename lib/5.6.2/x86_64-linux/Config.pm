@@ -34,9 +34,9 @@ $^V eq v5.6.2
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Fri Dec 19 21:03:21 UTC 2014
+## Configuration time: Thu Jan 22 04:13:19 UTC 2015
 ## Configured by     : travis
-## Target system     : linux testing-worker-linux-12-2-29839-linux-10-44618235 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-worker-linux-491e7078-1-8753-linux-15-47875558 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
 #
 ## Configure command line arguments.
 ## Variables propagated from previous config.sh file.
@@ -120,8 +120,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-worker-linux-12-2-29839-linux-10-44618235.c45665.blueboxgrid.com'
-cf_time='Fri Dec 19 21:03:21 UTC 2014'
+cf_email='travis@testing-worker-linux-491e7078-1-8753-linux-15-47875558.c45665.blueboxgrid.com'
+cf_time='Thu Jan 22 04:13:19 UTC 2015'
 charsize='1'
 chgrp=''
 chmod=''
@@ -664,8 +664,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.c45665.blueboxgrid.com'
-myhostname='testing-worker-linux-12-2-29839-linux-10-44618235'
-myuname='linux testing-worker-linux-12-2-29839-linux-10-44618235 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-worker-linux-491e7078-1-8753-linux-15-47875558'
+myuname='linux testing-worker-linux-491e7078-1-8753-linux-15-47875558 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 netdb_hlen_type='size_t'
 netdb_host_type='char *'
@@ -697,7 +697,7 @@ patchlevel='6'
 path_sep=':'
 perl5='/usr/bin/perl'
 perl=''
-perladmin='travis@testing-worker-linux-12-2-29839-linux-10-44618235.c45665.blueboxgrid.com'
+perladmin='travis@testing-worker-linux-491e7078-1-8753-linux-15-47875558.c45665.blueboxgrid.com'
 perllibs='-lnsl -ldl -lm -lc -lcrypt -lutil -lgdbm_compat'
 perlpath='/home/travis/perl5/perlbrew/perls/5.6.2/bin/perl'
 pg='pg'
