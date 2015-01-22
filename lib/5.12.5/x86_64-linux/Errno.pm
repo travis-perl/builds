@@ -9,8 +9,8 @@ use Config;
 use strict;
 
 "$Config{'archname'}-$Config{'osvers'}" eq
-"x86_64-linux-2.6.32-042stab090.5" or
-	die "Errno architecture (x86_64-linux-2.6.32-042stab090.5) does not match executable architecture ($Config{'archname'}-$Config{'osvers'})";
+"x86_64-linux-2.6.32-042stab094.7" or
+	die "Errno architecture (x86_64-linux-2.6.32-042stab094.7) does not match executable architecture ($Config{'archname'}-$Config{'osvers'})";
 
 $VERSION = "1.11";
 $VERSION = eval $VERSION;
