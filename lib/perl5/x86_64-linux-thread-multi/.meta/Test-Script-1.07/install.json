@@ -1,1 +1,1 @@
-{"dist":"Test-Script-1.07","version":"1.07","name":"Test::Script","provides":{"Test::Script":{"file":"lib/Test/Script.pm","version":"1.07"}},"pathname":"A/AD/ADAMK/Test-Script-1.07.tar.gz","target":"Test::Script"}
+{"pathname":"A/AD/ADAMK/Test-Script-1.07.tar.gz","dist":"Test-Script-1.07","provides":{"Test::Script":{"file":"lib/Test/Script.pm","version":"1.07"}},"name":"Test::Script","target":"Test::Script","version":"1.07"}

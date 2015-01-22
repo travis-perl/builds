@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git;
 # ABSTRACT: update your git repository after release
-$Dist::Zilla::Plugin::Git::VERSION = '2.028';
+$Dist::Zilla::Plugin::Git::VERSION = '2.029';
 
 use Dist::Zilla 2.100880;    # Need mvp_multivalue_args in Plugin role
 1;
@@ -29,7 +29,7 @@ Dist::Zilla::Plugin::Git - update your git repository after release
 
 =head1 VERSION
 
-version 2.028
+version 2.029
 
 =head1 DESCRIPTION
 

@@ -1,6 +1,6 @@
 package Pod::Weaver::Role::Transformer;
 # ABSTRACT: something that restructures a Pod5 document
-$Pod::Weaver::Role::Transformer::VERSION = '4.009';
+$Pod::Weaver::Role::Transformer::VERSION = '4.010';
 use Moose::Role;
 with 'Pod::Weaver::Role::Plugin';
 
@@ -31,7 +31,7 @@ Pod::Weaver::Role::Transformer - something that restructures a Pod5 document
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 IMPLEMENTING
 
