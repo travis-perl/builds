@@ -1,18 +1,18 @@
 {
-   "abstract" : "Structured version objects",
+   "abstract" : "Mozilla's CA cert bundle in PEM format",
    "author" : [
-      "John Peacock <jpeacock@cpan.org>"
+      "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "ExtUtils::MakeMaker version 7.02, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "version",
+   "name" : "Mozilla-CA",
    "no_index" : {
       "directory" : [
          "t",
@@ -22,7 +22,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Test" : "0"
          }
       },
       "configure" : {
@@ -32,14 +32,15 @@
       },
       "runtime" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.17",
-            "File::Temp" : "0.13",
-            "Test::More" : "0.45",
-            "parent" : "0.221",
-            "perl" : "5.006002"
+            "perl" : "5.006"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.9909"
+   "resources" : {
+      "repository" : {
+         "url" : "http://github.com/gisle/mozilla-ca"
+      }
+   },
+   "version" : "20141217"
 }
