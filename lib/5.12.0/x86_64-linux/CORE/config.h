@@ -13,9 +13,9 @@
 /*
  * Package name      : perl5
  * Source directory  : .
- * Configuration time: Thu Jan 22 04:44:15 UTC 2015
+ * Configuration time: Thu Jan 22 06:06:40 UTC 2015
  * Configured by     : travis
- * Target system     : linux testing-worker-linux-491e7078-1-8753-linux-14-47875573 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux testing-worker-linux-8-2-9779-linux-8-47879099 2.6.32-042stab094.7 #1 smp wed oct 22 12:43:21 msk 2014 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
@@ -935,7 +935,7 @@
  *	feature tests from Configure are generally more reliable.
  */
 #define OSNAME "linux"		/**/
-#define OSVERS "2.6.32-042stab090.5"		/**/
+#define OSVERS "2.6.32-042stab094.7"		/**/
 
 /* ARCHLIB:
  *	This variable, if defined, holds the name of the directory in
