@@ -1,70 +1,4 @@
-=head2 Fri Dec 19 23:11:30 2014: C<Module> L<HTML::Tagset|HTML::Tagset>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.20.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.20>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Dec 19 23:11:32 2014: C<Module> L<HTML::Parser|HTML::Parser>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.20.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.71>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Dec 19 23:11:33 2014: C<Module> L<CGI|CGI>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.20.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 4.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Dec 19 23:11:34 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Thu Jan 22 07:46:18 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -86,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 23:11:35 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Thu Jan 22 07:46:18 2015: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -108,7 +42,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 23:11:37 2014: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Thu Jan 22 07:46:21 2015: C<Module> L<HTML::Tagset|HTML::Tagset>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.20>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:46:24 2015: C<Module> L<HTML::Parser|HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.71>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:46:25 2015: C<Module> L<CGI|CGI>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 4.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:46:27 2015: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Fri Dec 19 23:11:40 2014: C<Module> L<CPAN::Meta|CPAN::Meta>
+=head2 Thu Jan 22 07:46:31 2015: C<Module> L<CPAN::Meta|CPAN::Meta>
 
 =over 4
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 23:11:43 2014: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Thu Jan 22 07:46:51 2015: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -166,7 +166,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 20130114>
+C<VERSION: 1.67>
 
 =item *
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 23:11:44 2014: C<Module> L<YAML|YAML>
+=head2 Thu Jan 22 07:46:53 2015: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -188,7 +188,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.13>
+C<VERSION: 1.14>
 
 =item *
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 23:11:59 2014: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Thu Jan 22 07:46:55 2015: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -210,7 +210,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.66>
+C<VERSION: 2.010>
 
 =item *
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 23:12:00 2014: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Thu Jan 22 07:46:57 2015: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -232,7 +232,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.008>
+C<VERSION: 20141217>
 
 =item *
 
