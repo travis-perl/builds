@@ -1,1 +1,1 @@
-{"version":"0.13","pathname":"F/FL/FLORA/Class-C3-Adopt-NEXT-0.13.tar.gz","name":"Class::C3::Adopt::NEXT","provides":{"Class::C3::Adopt::NEXT":{"version":"0.13","file":"lib/Class/C3/Adopt/NEXT.pm"}},"target":"Class::C3::Adopt::NEXT","dist":"Class-C3-Adopt-NEXT-0.13"}
+{"name":"Class::C3::Adopt::NEXT","version":"0.13","target":"Class::C3::Adopt::NEXT","provides":{"Class::C3::Adopt::NEXT":{"file":"lib/Class/C3/Adopt/NEXT.pm","version":"0.13"}},"pathname":"F/FL/FLORA/Class-C3-Adopt-NEXT-0.13.tar.gz","dist":"Class-C3-Adopt-NEXT-0.13"}

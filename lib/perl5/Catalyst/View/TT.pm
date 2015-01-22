@@ -10,7 +10,7 @@ use Template::Timer;
 use MRO::Compat;
 use Scalar::Util qw/blessed weaken/;
 
-our $VERSION = '0.41';
+our $VERSION = '0.42';
 $VERSION = eval $VERSION;
 
 __PACKAGE__->mk_accessors('template');
@@ -30,7 +30,7 @@ Catalyst::View::TT - Template View Class
 
     myapp_create.pl view Web TT
 
-# add custom configration in View/Web.pm
+# add custom configuration in View/Web.pm
 
     __PACKAGE__->config(
         # any TT configuration items go here
@@ -147,7 +147,7 @@ sub new {
     # as INCLUDE_PATH config item, which then gets ->paths() called to get list
     # of include paths to search for templates.
 
-    # Use a weakend copy of self so we dont have loops preventing GC from working
+    # Use a weakened copy of self so we don't have loops preventing GC from working
     my $copy = $self;
     Scalar::Util::weaken($copy);
     $config->{INCLUDE_PATH} = [ sub { $copy->paths } ];
@@ -230,7 +230,7 @@ sub process {
     }
 
     unless ( $c->response->content_type ) {
-        my $default = $self->content_type || 'text/html; charset=utf-8';
+        my $default = $self->content_type || 'text/html; charset=UTF-8';
         $c->response->content_type($default);
     }
 
@@ -450,14 +450,45 @@ checking and the chance of a memory leak:
     @{ $c->view('Web')->include_path } = qw/path another_path/;
 
 If you are calling C<render> directly then you can specify dynamic paths by
-having a C<additional_template_paths> key with a value of additonal directories
+having a C<additional_template_paths> key with a value of additional directories
 to search. See L<CAPTURING TEMPLATE OUTPUT> for an example showing this.
 
-=head2 Unicode
+=head2 Unicode (pre Catalyst v5.90080)
+
+B<NOTE> Starting with L<Catalyst> v5.90080 unicode and encoding has been
+baked into core, and the default encoding is UTF-8.  The following advice
+is for older versions of L<Catalyst>.
 
 Be sure to set C<< ENCODING => 'utf-8' >> and use
 L<Catalyst::Plugin::Unicode::Encoding> if you want to use non-ascii
-characters (encoded as utf-8) in your templates.
+characters (encoded as utf-8) in your templates.  This is only needed if
+you actually have UTF8 literals in your templates and the BOM is not
+properly set.  Setting encoding here does not magically encode your
+template output.  If you are using this version of L<Catalyst> you need
+to all the Unicode plugin, or upgrade (preferred)
+
+=head2 Unicode (Catalyst v5.90080+)
+
+This version of L<Catalyst> will automatically encode your body output
+to UTF8. This means if your variables contain multibyte characters you don't
+need top do anything else to get UTF8 output.  B<However> if your templates
+contain UTF8 literals (like, multibyte characters actually in the template
+text), then you do need to either set the BOM mark on the template file or
+instruct TT to decode the templates at load time via the ENCODING configuration
+setting.  Most of the time you can just do:
+
+    MyApp::View::HTML->config(
+        ENCODING => 'UTF-8');
+
+and that will just take care of everything.  This configuration setting will
+force L<Template> to decode all files correctly, so that when you hit
+the finalize_encoding step we can properly encode the body as UTF8.  If you
+fail to do this you will get double encoding issues in your output (but again,
+only for the UTF8 literals in your actual template text.)
+
+Again, this ENCODING configuration setting only instructs template toolkit
+how (and if) to decode the contents of your template files when reading them from
+disk.  It has no other effect.
 
 =head2 RENDERING VIEWS
 
@@ -669,7 +700,7 @@ output from your templates, such as:
 
 =head2 C<TEMPLATE_EXTENSION>
 
-a sufix to add when looking for templates bases on the C<match> method in L<Catalyst::Request>.
+a suffix to add when looking for templates bases on the C<match> method in L<Catalyst::Request>.
 
 For example:
 
