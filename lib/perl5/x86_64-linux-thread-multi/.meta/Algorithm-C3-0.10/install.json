@@ -1,1 +1,1 @@
-{"name":"Algorithm::C3","version":"0.10","provides":{"Algorithm::C3":{"version":"0.10","file":"lib/Algorithm/C3.pm"}},"dist":"Algorithm-C3-0.10","pathname":"H/HA/HAARG/Algorithm-C3-0.10.tar.gz","target":"Algorithm::C3"}
+{"pathname":"H/HA/HAARG/Algorithm-C3-0.10.tar.gz","provides":{"Algorithm::C3":{"version":"0.10","file":"lib/Algorithm/C3.pm"}},"dist":"Algorithm-C3-0.10","version":"0.10","name":"Algorithm::C3","target":"Algorithm::C3"}
