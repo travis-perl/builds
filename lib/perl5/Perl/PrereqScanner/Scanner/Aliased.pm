@@ -3,7 +3,7 @@ use warnings;
 
 package Perl::PrereqScanner::Scanner::Aliased;
 # ABSTRACT: scan for OO module aliases via aliased.pm
-$Perl::PrereqScanner::Scanner::Aliased::VERSION = '1.021';
+$Perl::PrereqScanner::Scanner::Aliased::VERSION = '1.022';
 use Moose;
 with 'Perl::PrereqScanner::Scanner';
 
@@ -32,6 +32,7 @@ sub scan_for_prereqs {
         || $_->isa('PPI::Token::Quote')
         } $node->arguments;
 
+      next unless @args;
       my ($module) = $self->_q_contents($args[0]);
       $req->add_minimum($module => 0);
     }
@@ -52,7 +53,7 @@ Perl::PrereqScanner::Scanner::Aliased - scan for OO module aliases via aliased.p
 
 =head1 VERSION
 
-version 1.021
+version 1.022
 
 =head1 DESCRIPTION
 

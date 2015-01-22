@@ -13,7 +13,7 @@
       "Matt S Trout <mst@shadowcat.co.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.120351",
    "license" : [
       "perl_5"
    ],
