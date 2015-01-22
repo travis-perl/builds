@@ -2,7 +2,7 @@
     eval 'exec /home/travis/perl5/perlbrew/perls/5.18.1/bin/perl -S $0 ${1+"$@"}'
 	if $running_under_some_shell;
 
-my $config_tag1 = '5.18.1 - Fri Dec 19 22:46:23 UTC 2014';
+my $config_tag1 = '5.18.1 - Thu Jan 22 07:11:34 UTC 2015';
 
 my $patchlevel_date = 1376275585;
 my $patch_tags = '';

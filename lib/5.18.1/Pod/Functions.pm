@@ -134,7 +134,7 @@ bind	Socket	binds an address to a socket
 binmode	I/O	prepare binary files for I/O
 bless	Objects	create an object
 break	Flow	break out of a C<given> block
-caller	Namespace	Flow	get context of the current subroutine call
+caller	Flow	Namespace	get context of the current subroutine call
 chdir	File	change your current working directory
 chmod	File	changes the permissions on a list of files
 chomp	String	remove a trailing record separator from a string
@@ -148,14 +148,14 @@ connect	Socket	connect to a remote socket
 continue	Flow	optional trailing block in a while or foreach
 cos	Math	cosine function
 crypt	String	one-way passwd-style encryption
-dbmclose	I/O	Objects	breaks binding on a tied dbm file
-dbmopen	I/O	Objects	create binding on a tied dbm file
+dbmclose	Objects	I/O	breaks binding on a tied dbm file
+dbmopen	Objects	I/O	create binding on a tied dbm file
 defined	Misc	test whether a value, variable, or function is defined
 delete	HASH	deletes a value from a hash
-die	I/O	Flow	raise an exception or bail out
-do	Modules	Flow	turn a BLOCK into a TERM
+die	Flow	I/O	raise an exception or bail out
+do	Flow	Modules	turn a BLOCK into a TERM
 dump	Flow	create an immediate core dump
-each	ARRAY	HASH	retrieve the next key/value pair from a hash
+each	HASH	ARRAY	retrieve the next key/value pair from a hash
 endgrent	User	be done using group file
 endhostent	User	be done using hosts file
 endnetent	User	be done using networks file
@@ -208,12 +208,12 @@ gmtime	Time	convert UNIX time into record or string using Greenwich time
 goto	Flow	create spaghetti code
 grep	LIST	locate elements in a list test true against a given criterion
 hex	String	Math	convert a string to a hexadecimal number
-import	Modules	Namespace	patch a module's namespace into your own
+import	Namespace	Modules	patch a module's namespace into your own
 index	String	find a substring within a string
 int	Math	get the integer portion of a number
 ioctl	File	system-dependent device control system call
 join	LIST	join a list into a string using a separator
-keys	ARRAY	HASH	retrieve list of indices from a hash
+keys	HASH	ARRAY	retrieve list of indices from a hash
 kill	Process	send a signal to a process or process group
 last	Flow	exit a block prematurely
 lc	String	return lower-case version of a string
@@ -242,8 +242,8 @@ open	File	open a file, pipe, or descriptor
 opendir	File	open a directory
 ord	String	find a character's numeric representation
 our	Namespace	declare and assign a package variable (lexical scoping)
-pack	String	Binary	convert a list into a binary representation
-package	Modules	Objects	Namespace	declare a separate global namespace
+pack	Binary	String	convert a list into a binary representation
+package	Objects	Namespace	Modules	declare a separate global namespace
 __PACKAGE__	Flow	the current package
 pipe	Process	open a pair of connected filehandles
 pop	ARRAY	remove the last element from an array and return it
@@ -339,9 +339,9 @@ unlink	File	remove one link to a file
 unpack	Binary	LIST	convert binary structure into normal perl variables
 unshift	ARRAY	prepend more elements to the beginning of a list
 untie	Objects	break a tie binding to a variable
-use	Modules	Objects	Namespace	load in a module at compile time and import its namespace
+use	Objects	Namespace	Modules	load in a module at compile time and import its namespace
 utime	File	set a file's last access and modify times
-values	ARRAY	HASH	return a list of the values in a hash
+values	HASH	ARRAY	return a list of the values in a hash
 vec	Binary	test or set particular bits in a string
 wait	Process	wait for any child process to die
 waitpid	Process	wait for a particular child process to die
