@@ -5,7 +5,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -46,7 +46,7 @@
       },
       "runtime" : {
          "conflicts" : {
-            "local::lib" : 0
+            "local::lib" : "< 1.006008"
          },
          "requires" : {
             "CPAN::Meta" : "0",
