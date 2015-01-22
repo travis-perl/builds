@@ -1,11 +1,10 @@
 package Pod::Elemental::Document;
 # ABSTRACT: a pod document
-$Pod::Elemental::Document::VERSION = '0.103002';
+$Pod::Elemental::Document::VERSION = '0.103004';
 use Moose;
 with 'Pod::Elemental::Node';
 
 use Class::Load ();
-use Moose::Autobox;
 use namespace::autoclean;
 
 use Pod::Elemental::Element::Generic::Blank;
@@ -36,7 +35,7 @@ sub _expand_name {
 sub as_pod_string {
   my ($self) = @_;
 
-  my $str = join q{}, $self->children->map(sub { $_->as_pod_string })->flatten;
+  my $str = join q{}, map { $_->as_pod_string } @{ $self->children };
 
   $str = "=pod\n\n$str" unless $str =~ /\A=pod\n/;
   $str .= "=cut\n" unless $str =~ /=cut\n+\z/;
@@ -127,7 +126,7 @@ Pod::Elemental::Document - a pod document
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 

@@ -1,8 +1,5 @@
 #!/home/travis/perl5/perlbrew/perls/5.18.3-thr/bin/perl
 
-eval 'exec /home/travis/perl5/perlbrew/perls/5.18.3-thr/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
-
 =head1 NAME
 
 cpanel_json_xs - Cpanel::JSON::XS commandline utility

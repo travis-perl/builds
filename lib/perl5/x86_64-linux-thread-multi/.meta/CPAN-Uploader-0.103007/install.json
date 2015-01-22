@@ -1,1 +1,1 @@
-{"name":"CPAN::Uploader","provides":{"CPAN::Uploader":{"file":"lib/CPAN/Uploader.pm","version":"0.103007"}},"pathname":"R/RJ/RJBS/CPAN-Uploader-0.103007.tar.gz","target":"CPAN::Uploader","dist":"CPAN-Uploader-0.103007","version":"0.103007"}
+{"dist":"CPAN-Uploader-0.103007","version":"0.103007","name":"CPAN::Uploader","pathname":"R/RJ/RJBS/CPAN-Uploader-0.103007.tar.gz","provides":{"CPAN::Uploader":{"version":"0.103007","file":"lib/CPAN/Uploader.pm"}},"target":"CPAN::Uploader"}

@@ -1,7 +1,5 @@
 package DateTime::TimeZone;
-# git description: v1.80-2-g83a230f
-
-$DateTime::TimeZone::VERSION = '1.81';
+$DateTime::TimeZone::VERSION = '1.84';
 use 5.006;
 
 use strict;
@@ -11,6 +9,7 @@ use DateTime::TimeZone::Catalog;
 use DateTime::TimeZone::Floating;
 use DateTime::TimeZone::Local;
 use DateTime::TimeZone::OffsetOnly;
+use DateTime::TimeZone::OlsonDB::Change;
 use DateTime::TimeZone::UTC;
 use Module::Runtime qw( require_module );
 use Params::Validate 0.72 qw( validate validate_pos SCALAR ARRAYREF BOOLEAN );
@@ -45,7 +44,7 @@ sub new {
         $p{name} = $DateTime::TimeZone::Catalog::LINKS{ uc $p{name} };
     }
 
-    unless ( $p{name} =~ m,/,
+    unless ( $p{name} =~ m{/}
         || $SpecialName{ $p{name} } ) {
         if ( $p{name} eq 'floating' ) {
             return DateTime::TimeZone::Floating->instance;
@@ -200,7 +199,7 @@ sub _span_for_datetime {
     unless ( defined $span ) {
         my $err = 'Invalid local time for date';
         $err .= ' ' . $dt->iso8601 if $type eq 'utc';
-        $err .= " in time zone: " . $self->name;
+        $err .= ' in time zone: ' . $self->name;
         $err .= "\n";
 
         die $err;
@@ -339,9 +338,8 @@ sub _generate_spans_until_match {
                     seconds => $self->{last_observance}->total_offset
                         + $rule->offset_from_std
                 ),
-                short_name => sprintf(
-                    $self->{last_observance}->format, $rule->letter
-                ),
+                short_name => $self->{last_observance}
+                    ->formatted_short_name( $rule->letter ),
                 observance => $self->{last_observance},
                 rule       => $rule,
                 );
@@ -566,7 +564,7 @@ DateTime::TimeZone - Time zone object base class and factory
 
 =head1 VERSION
 
-version 1.81
+version 1.84
 
 =head1 SYNOPSIS
 
@@ -584,10 +582,19 @@ This class is the base class for all time zone objects.  A time zone
 is represented internally as a set of observances, each of which
 describes the offset from GMT for a given time period.
 
-Note that without the C<DateTime.pm> module, this module does not do
-much.  It's primary interface is through a C<DateTime> object, and
+Note that without the L<DateTime> module, this module does not do
+much.  It's primary interface is through a L<DateTime> object, and
 most users will not need to directly use C<DateTime::TimeZone>
 methods.
+
+=head2 Special Case Platforms
+
+If you are on the Win32 platform, you will want to also install
+L<DateTime::TimeZone::Local::Win32>. This will enable you to specify a time
+zone of C<'local'> when creating a L<DateTime> object.
+
+If you are on HPUX, install L<DateTime::TimeZone::HPUX>. This provides support
+for HPUX style time zones like C<'MET-1METDST'>.
 
 =head1 USAGE
 
@@ -884,7 +891,7 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Dave Rolsky.
+This software is copyright (c) 2015 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
