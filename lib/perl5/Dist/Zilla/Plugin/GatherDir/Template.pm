@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GatherDir::Template;
 # ABSTRACT: gather all the files in a directory and use them as templates
-$Dist::Zilla::Plugin::GatherDir::Template::VERSION = '5.029';
+$Dist::Zilla::Plugin::GatherDir::Template::VERSION = '5.031';
 use Moose;
 extends 'Dist::Zilla::Plugin::GatherDir';
 with 'Dist::Zilla::Role::TextTemplate';
@@ -64,7 +64,7 @@ Dist::Zilla::Plugin::GatherDir::Template - gather all the files in a directory a
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 DESCRIPTION
 
@@ -85,7 +85,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,5 +1,5 @@
 package DateTime::Duration;
-$DateTime::Duration::VERSION = '1.12';
+$DateTime::Duration::VERSION = '1.18';
 use strict;
 use warnings;
 
@@ -309,15 +309,13 @@ __END__
 
 =pod
 
-=encoding UTF-8
-
 =head1 NAME
 
 DateTime::Duration - Duration objects for date math
 
 =head1 VERSION
 
-version 1.12
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -601,7 +599,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by Dave Rolsky.
+This software is Copyright (c) 2015 by Dave Rolsky.
 
 This is free software, licensed under:
 
