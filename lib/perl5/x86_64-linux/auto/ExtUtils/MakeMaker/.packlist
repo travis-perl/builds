@@ -3,7 +3,6 @@
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/Command/MM.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/Liblist.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/Liblist/Kid.pm
-/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MANIFEST.SKIP
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MM.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MM_AIX.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MM_Any.pm
@@ -30,7 +29,6 @@
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MakeMaker/version.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MakeMaker/version/regex.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/MakeMaker/version/vpp.pm
-/home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/Manifest.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/Mkbootstrap.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/Mksymlists.pm
 /home/travis/.perlbrew/libs/5.18.3@dzil/lib/perl5/ExtUtils/testlib.pm
