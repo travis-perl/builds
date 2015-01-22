@@ -818,6 +818,13 @@ If you really don't want to set a CA set SSL_ca_file or SSL_ca_path to
 C<\undef> or SSL_ca to an empty list. (unfortunatly C<''> is used by some
 modules using IO::Socket::SSL when CA is not exlicitly given).
 
+=item SSL_client_ca | SSL_client_ca_file
+
+If verify_mode is VERIFY_PEER on the server side these options can be used to
+set the list of acceptable CAs for the client. This way the client can select
+they required certificate from a list of certificates.
+The value for these options is similar to C<SSL_ca> and C<SSL_ca_file>.
+
 =item SSL_fingerprint
 
 Sometimes you have a self-signed certificate or a certificate issued by an
@@ -1015,6 +1022,9 @@ a string containing any errors encountered (0 if no errors).
 =item 5.
 a C-style memory address of the peer's own certificate (convertible to
 PEM form with Net::SSLeay::PEM_get_string_X509()).
+
+=item 6.
+The depth of the certificate in the chain. Depth 0 is the leaf certificate.
 
 =back
 
@@ -1249,11 +1259,28 @@ On the client side it specifies the protocols offered by the client for NPN
 as an array ref.
 See also method C<next_proto_negotiated>.
 
-Next Protocol Negotioation (NPN) is available with Net::SSLeay 1.46+ and
+Next Protocol Negotiation (NPN) is available with Net::SSLeay 1.46+ and
 openssl-1.0.1+.
 To check support you might call C<IO::Socket::SSL->can_npn()>.
 If you use this option with an unsupported Net::SSLeay/OpenSSL it will
 throw an error.
+
+=item SSL_alpn_protocols
+
+If used on the server side it specifies list of protocols supported by the SSL
+server as an array ref, e.g. ['http/2.0', 'spdy/3.1','http/1.1'].
+On the client side it specifies the protocols advertised by the client for ALPN
+as an array ref.
+See also method C<alpn_selected>.
+
+Application-Layer Protocol Negotiation (ALPN) is available with Net::SSLeay
+1.56+ and openssl-1.0.2+. More details about the extension are in RFC7301.  To
+check support you might call C< IO::Socket::SSL->can_alpn() >.  If you use this
+option with an unsupported Net::SSLeay/OpenSSL it will throw an error.
+
+Note that some client implementations may encounter problems if both NPN and
+ALPN are specified. Since ALPN is intended as a replacement for NPN, try
+providing ALPN protocols then fall back to NPN if that fails.
 
 =back
 
@@ -1556,6 +1583,14 @@ for both client and server side of SSL connection.
 
 NPN support is available with Net::SSLeay 1.46+ and openssl-1.0.1+.
 To check support you might call C<IO::Socket::SSL->can_npn()>.
+
+=item B<alpn_selected()>
+
+Returns the protocol negotiated via ALPN as a string, e.g. 'http/1.1',
+'http/2.0' or 'spdy/3.1'.
+
+ALPN support is available with Net::SSLeay 1.56+ and openssl-1.0.2+.
+To check support, use C<IO::Socket::SSL->can_alpn()>.
 
 =item B<errstr()>
 
