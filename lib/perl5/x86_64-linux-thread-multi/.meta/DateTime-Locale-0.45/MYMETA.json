@@ -4,7 +4,7 @@
       "Dave Rolsky <autarch@urth.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Module::Build version 0.4211",
    "license" : [
       "perl_5"
    ],
@@ -17,11 +17,6 @@
       "build" : {
          "requires" : {
             "Module::Build" : "0"
-         }
-      },
-      "configure" : {
-         "requires" : {
-            "Module::Build" : "0.36"
          }
       },
       "runtime" : {

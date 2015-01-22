@@ -1,1 +1,1 @@
-{"pathname":"B/BD/BDFOY/Perl-Version-1.013.tar.gz","provides":{"Perl::Version":{"version":"1.013","file":"lib/Perl/Version.pm"}},"name":"Perl::Version","dist":"Perl-Version-1.013","version":"1.013","target":"Perl::Version"}
+{"version":"1.013","provides":{"Perl::Version":{"version":"1.013","file":"lib/Perl/Version.pm"}},"name":"Perl::Version","target":"Perl::Version","dist":"Perl-Version-1.013","pathname":"B/BD/BDFOY/Perl-Version-1.013.tar.gz"}

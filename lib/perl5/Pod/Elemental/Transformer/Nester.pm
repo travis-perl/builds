@@ -1,6 +1,6 @@
 package Pod::Elemental::Transformer::Nester;
 # ABSTRACT: group the document into sections
-$Pod::Elemental::Transformer::Nester::VERSION = '0.103002';
+$Pod::Elemental::Transformer::Nester::VERSION = '0.103004';
 use Moose;
 with 'Pod::Elemental::Transformer';
 
@@ -51,7 +51,6 @@ with 'Pod::Elemental::Transformer';
 #pod
 #pod =cut
 
-use Moose::Autobox 0.10;
 use MooseX::Types::Moose qw(ArrayRef CodeRef);
 
 use Pod::Elemental::Element::Nested;
@@ -90,7 +89,7 @@ has content_selectors => (
 sub _is_containable {
   my ($self, $para) = @_;
 
-  for my $sel ($self->content_selectors->flatten) {
+  for my $sel (@{ $self->content_selectors }) {
     return 1 if $sel->($para);
   }
 
@@ -109,8 +108,8 @@ sub transform_node {
   # sequence wouldn't be upgraded to a Nested element, so later munging could
   # barf.  In fact, that's what happened in [rt.cpan.org #69189]
   # -- rjbs, 2012-05-04
-  PASS: for my $i (0 .. $node->children->length - 1) {
-    last PASS if $i >= $node->children->length;
+  PASS: for my $i (0 .. @{ $node->children }- 1) {
+    last PASS if $i >= @{ $node->children };
 
     my $para = $node->children->[ $i ];
     next unless $self->top_selector->($para);
@@ -122,12 +121,12 @@ sub transform_node {
       });
     }
 
-    if (! s_node($para) or $para->children->length) {
+    if (! s_node($para) or @{ $para->children }) {
       confess "can't use $para as the top of a nesting";
     }
 
     my @to_nest;
-    NEST: for my $j ($i+1 .. $node->children->length - 1) {
+    NEST: for my $j ($i+1 .. @{ $node->children } - 1) {
       last unless $self->_is_containable($node->children->[ $j ]);
       push @to_nest, $j;
     }
@@ -136,7 +135,7 @@ sub transform_node {
       my @to_nest_elem =
         splice @{ $node->children }, $to_nest[0], scalar(@to_nest);
 
-      $para->children->push(@to_nest_elem);
+      push @{ $para->children }, @to_nest_elem;
       next PASS;
     }
   }
@@ -160,7 +159,7 @@ Pod::Elemental::Transformer::Nester - group the document into sections
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 

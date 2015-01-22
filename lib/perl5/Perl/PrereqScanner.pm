@@ -4,7 +4,7 @@ use warnings;
 
 package Perl::PrereqScanner;
 # ABSTRACT: a tool to scan your Perl code for its prerequisites
-$Perl::PrereqScanner::VERSION = '1.021';
+$Perl::PrereqScanner::VERSION = '1.022';
 use Moose;
 
 use List::Util qw(max);
@@ -150,7 +150,7 @@ Perl::PrereqScanner - a tool to scan your Perl code for its prerequisites
 
 =head1 VERSION
 
-version 1.021
+version 1.022
 
 =head1 SYNOPSIS
 

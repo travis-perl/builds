@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "apache_2_0"
    ],
@@ -33,7 +33,8 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.17"
+            "ExtUtils::MakeMaker" : "6.17",
+            "perl" : "5.008001"
          }
       },
       "develop" : {

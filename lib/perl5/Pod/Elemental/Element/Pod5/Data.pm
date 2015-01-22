@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Pod5::Data;
 # ABSTRACT: a Pod data paragraph
-$Pod::Elemental::Element::Pod5::Data::VERSION = '0.103002';
+$Pod::Elemental::Element::Pod5::Data::VERSION = '0.103004';
 use Moose;
 extends 'Pod::Elemental::Element::Generic::Text';
 
@@ -31,7 +31,7 @@ Pod::Elemental::Element::Pod5::Data - a Pod data paragraph
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 
