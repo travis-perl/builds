@@ -62,7 +62,7 @@
 .\" ========================================================================
 .\"
 .IX Title "AppConfig::State 3"
-.TH AppConfig::State 3 "2007-05-30" "perl v5.14.0" "User Contributed Perl Documentation"
+.TH AppConfig::State 3 "2015-01-18" "perl v5.14.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -82,7 +82,7 @@ AppConfig::State \- application configuration state
 \&
 \&    $state\->set("foo", 123);          # trivial set/get examples
 \&    $state\->get("foo");      
-\&    
+\&
 \&    $state\->foo();                    # shortcut variable access 
 \&    $state\->foo(456);                 # shortcut variable update
 .Ve
@@ -166,7 +166,7 @@ In a config file:
 .Vb 2
 \&    [define]
 \&    name = fred           # define_name gets created automatically
-\&    
+\&
 \&    [other]
 \&    name = john           # other_name doesn\*(Aqt \- warning raised
 .Ve
@@ -283,12 +283,12 @@ a string of names separated by vertical bars, '|'.  e.g.:
 \&    $state\->define("name", {
 \&            ALIAS => [ \*(Aqperson\*(Aq, \*(Aquser\*(Aq, \*(Aquid\*(Aq ],
 \&        });
-\&    
+\&
 \&    # or
 \&    $state\->define("name", {
 \&            ALIAS => \*(Aqperson|user|uid\*(Aq,
 \&        });
-\&    
+\&
 \&    $state\->user(\*(Aqabw\*(Aq);     # equivalent to $state\->name(\*(Aqabw\*(Aq);
 .Ve
 .IP "\s-1ARGCOUNT\s0" 4
@@ -464,7 +464,6 @@ Example:
 Be aware that calling \f(CW\*(C`$state\->set()\*(C'\fR to update the same variable
 from within the \s-1ACTION\s0 function will cause a recursive loop as the
 \&\s-1ACTION\s0 function is repeatedly called.
-.IP "" 4
 .SS "\s-1DEFINING\s0 \s-1VARIABLES\s0 \s-1USING\s0 \s-1THE\s0 \s-1COMPACT\s0 \s-1FORMAT\s0"
 .IX Subsection "DEFINING VARIABLES USING THE COMPACT FORMAT"
 Variables may be defined in a compact format which allows any \s-1ALIAS\s0 and
