@@ -1,4 +1,4 @@
-=head2 Fri Dec 19 22:35:58 2014: C<Module> L<Scope::Guard|Scope::Guard>
+=head2 Thu Jan 22 07:08:47 2015: C<Module> L<Scope::Guard|Scope::Guard>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:07 2014: C<Module> L<DBI|DBI>
+=head2 Thu Jan 22 07:08:57 2015: C<Module> L<DBI|DBI>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.632>
+C<VERSION: 1.633>
 
 =item *
 
@@ -42,7 +42,7 @@ C<EXE_FILES: dbiproxy dbiprof dbilogstrip>
 
 =back
 
-=head2 Fri Dec 19 22:36:34 2014: C<Module> L<DBD::SQLite|DBD::SQLite>
+=head2 Thu Jan 22 07:09:29 2015: C<Module> L<DBD::SQLite|DBD::SQLite>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:35 2014: C<Module> L<Data::Dumper::Concise|Data::Dumper::Concise>
+=head2 Thu Jan 22 07:09:30 2015: C<Module> L<Data::Dumper::Concise|Data::Dumper::Concise>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:36 2014: C<Module> L<Config::Any|Config::Any>
+=head2 Thu Jan 22 07:09:32 2015: C<Module> L<Config::Any|Config::Any>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:37 2014: C<Module> L<MRO::Compat|MRO::Compat>
+=head2 Thu Jan 22 07:09:33 2015: C<Module> L<MRO::Compat|MRO::Compat>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:39 2014: C<Module> L<Test::Tester|Test::Tester>
+=head2 Thu Jan 22 07:09:35 2015: C<Module> L<Test::Simple|Test::Simple>
 
 =over 4
 
@@ -144,7 +144,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.109>
+C<VERSION: 1.001014>
 
 =item *
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:40 2014: C<Module> L<Test::NoWarnings|Test::NoWarnings>
+=head2 Thu Jan 22 07:09:36 2015: C<Module> L<Test::NoWarnings|Test::NoWarnings>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:40 2014: C<Module> L<Test::Deep|Test::Deep>
+=head2 Thu Jan 22 07:09:37 2015: C<Module> L<Test::Deep|Test::Deep>
 
 =over 4
 
@@ -188,7 +188,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.114>
+C<VERSION: 0.115>
 
 =item *
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:42 2014: C<Module> L<Test::use::ok|Test::use::ok>
+=head2 Thu Jan 22 07:09:41 2015: C<Module> L<CPAN::Meta::YAML|CPAN::Meta::YAML>
 
 =over 4
 
@@ -210,7 +210,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.11>
+C<VERSION: 0.012>
 
 =item *
 
@@ -218,7 +218,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:44 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Thu Jan 22 07:09:42 2015: C<Module> L<Parse::CPAN::Meta|Parse::CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3-thr@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.4414>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:09:43 2015: C<Module> L<CPAN::Meta::Requirements|CPAN::Meta::Requirements>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3-thr@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.131>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:09:44 2015: C<Module> L<CPAN::Meta|CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.16.3-thr@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.143240>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 07:09:47 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -240,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:45 2014: C<Module> L<Context::Preserve|Context::Preserve>
+=head2 Thu Jan 22 07:09:49 2015: C<Module> L<Context::Preserve|Context::Preserve>
 
 =over 4
 
@@ -262,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:49 2014: C<Module> L<Sub::Name|Sub::Name>
+=head2 Thu Jan 22 07:09:54 2015: C<Module> L<Sub::Name|Sub::Name>
 
 =over 4
 
@@ -284,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:53 2014: C<Module> L<Class::XSAccessor|Class::XSAccessor>
+=head2 Thu Jan 22 07:09:58 2015: C<Module> L<Class::XSAccessor|Class::XSAccessor>
 
 =over 4
 
@@ -306,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:53 2014: C<Module> L<Class::Accessor::Grouped|Class::Accessor::Grouped>
+=head2 Thu Jan 22 07:09:59 2015: C<Module> L<Class::Accessor::Grouped|Class::Accessor::Grouped>
 
 =over 4
 
@@ -328,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:56 2014: C<Module> L<Clone|Clone>
+=head2 Thu Jan 22 07:10:03 2015: C<Module> L<Clone|Clone>
 
 =over 4
 
@@ -342,7 +408,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.37>
+C<VERSION: 0.38>
 
 =item *
 
@@ -350,7 +416,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:56 2014: C<Module> L<Hash::Merge|Hash::Merge>
+=head2 Thu Jan 22 07:10:03 2015: C<Module> L<Hash::Merge|Hash::Merge>
 
 =over 4
 
@@ -372,7 +438,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:36:59 2014: C<Module> L<indirect|indirect>
+=head2 Thu Jan 22 07:10:07 2015: C<Module> L<indirect|indirect>
 
 =over 4
 
@@ -394,7 +460,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:01 2014: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
+=head2 Thu Jan 22 07:10:09 2015: C<Module> L<ExtUtils::Depends|ExtUtils::Depends>
 
 =over 4
 
@@ -408,7 +474,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.402>
+C<VERSION: 0.403>
 
 =item *
 
@@ -416,7 +482,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:02 2014: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
+=head2 Thu Jan 22 07:10:10 2015: C<Module> L<B::Hooks::OP::Check|B::Hooks::OP::Check>
 
 =over 4
 
@@ -438,7 +504,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:05 2014: C<Module> L<multidimensional|multidimensional>
+=head2 Thu Jan 22 07:10:14 2015: C<Module> L<multidimensional|multidimensional>
 
 =over 4
 
@@ -460,7 +526,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:06 2014: C<Module> L<bareword::filehandles|bareword::filehandles>
+=head2 Thu Jan 22 07:10:17 2015: C<Module> L<bareword::filehandles|bareword::filehandles>
 
 =over 4
 
@@ -482,7 +548,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:07 2014: C<Module> L<strictures|strictures>
+=head2 Thu Jan 22 07:10:17 2015: C<Module> L<strictures|strictures>
 
 =over 4
 
@@ -504,7 +570,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:10 2014: C<Module> L<Try::Tiny|Try::Tiny>
+=head2 Thu Jan 22 07:10:21 2015: C<Module> L<Try::Tiny|Try::Tiny>
 
 =over 4
 
@@ -526,7 +592,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:10 2014: C<Module> L<Test::Fatal|Test::Fatal>
+=head2 Thu Jan 22 07:10:22 2015: C<Module> L<Test::Fatal|Test::Fatal>
 
 =over 4
 
@@ -548,7 +614,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:11 2014: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Thu Jan 22 07:10:23 2015: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -570,7 +636,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:14 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
+=head2 Thu Jan 22 07:10:28 2015: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -592,7 +658,7 @@ C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Fri Dec 19 22:37:15 2014: C<Module> L<Test::Requires|Test::Requires>
+=head2 Thu Jan 22 07:10:29 2015: C<Module> L<Test::Requires|Test::Requires>
 
 =over 4
 
@@ -614,7 +680,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:15 2014: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Thu Jan 22 07:10:29 2015: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -636,7 +702,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:17 2014: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Thu Jan 22 07:10:31 2015: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -658,7 +724,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:17 2014: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Thu Jan 22 07:10:32 2015: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -680,7 +746,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:18 2014: C<Module> L<Import::Into|Import::Into>
+=head2 Thu Jan 22 07:10:33 2015: C<Module> L<Import::Into|Import::Into>
 
 =over 4
 
@@ -702,7 +768,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:19 2014: C<Module> L<Moo|Moo>
+=head2 Thu Jan 22 07:10:34 2015: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -716,7 +782,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.006001>
+C<VERSION: 1.007000>
 
 =item *
 
@@ -724,7 +790,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:20 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Thu Jan 22 07:10:35 2015: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -746,7 +812,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:21 2014: C<Module> L<SQL::Abstract|SQL::Abstract>
+=head2 Thu Jan 22 07:10:36 2015: C<Module> L<SQL::Abstract|SQL::Abstract>
 
 =over 4
 
@@ -768,7 +834,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:22 2014: C<Module> L<Dist::CheckConflicts|Dist::CheckConflicts>
+=head2 Thu Jan 22 07:10:38 2015: C<Module> L<Dist::CheckConflicts|Dist::CheckConflicts>
 
 =over 4
 
@@ -790,7 +856,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:25 2014: C<Module> L<Package::Stash::XS|Package::Stash::XS>
+=head2 Thu Jan 22 07:10:41 2015: C<Module> L<Package::Stash::XS|Package::Stash::XS>
 
 =over 4
 
@@ -812,7 +878,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:27 2014: C<Module> L<Module::Implementation|Module::Implementation>
+=head2 Thu Jan 22 07:10:43 2015: C<Module> L<Module::Implementation|Module::Implementation>
 
 =over 4
 
@@ -834,7 +900,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:27 2014: C<Module> L<Package::Stash|Package::Stash>
+=head2 Thu Jan 22 07:10:44 2015: C<Module> L<Package::Stash|Package::Stash>
 
 =over 4
 
@@ -856,7 +922,7 @@ C<EXE_FILES: bin/package-stash-conflicts>
 
 =back
 
-=head2 Fri Dec 19 22:37:29 2014: C<Module> L<Class::Accessor|Class::Accessor>
+=head2 Thu Jan 22 07:10:46 2015: C<Module> L<Class::Accessor|Class::Accessor>
 
 =over 4
 
@@ -878,7 +944,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:34 2014: C<Module> L<Variable::Magic|Variable::Magic>
+=head2 Thu Jan 22 07:10:51 2015: C<Module> L<Variable::Magic|Variable::Magic>
 
 =over 4
 
@@ -900,7 +966,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:34 2014: C<Module> L<B::Hooks::EndOfScope|B::Hooks::EndOfScope>
+=head2 Thu Jan 22 07:10:52 2015: C<Module> L<B::Hooks::EndOfScope|B::Hooks::EndOfScope>
 
 =over 4
 
@@ -922,7 +988,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:35 2014: C<Module> L<namespace::clean|namespace::clean>
+=head2 Thu Jan 22 07:10:52 2015: C<Module> L<namespace::clean|namespace::clean>
 
 =over 4
 
@@ -944,7 +1010,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:37 2014: C<Module> L<Class::Inspector|Class::Inspector>
+=head2 Thu Jan 22 07:10:55 2015: C<Module> L<Class::Inspector|Class::Inspector>
 
 =over 4
 
@@ -966,7 +1032,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:38 2014: C<Module> L<Algorithm::C3|Algorithm::C3>
+=head2 Thu Jan 22 07:10:57 2015: C<Module> L<Algorithm::C3|Algorithm::C3>
 
 =over 4
 
@@ -988,7 +1054,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:39 2014: C<Module> L<Class::C3|Class::C3>
+=head2 Thu Jan 22 07:10:57 2015: C<Module> L<Class::C3|Class::C3>
 
 =over 4
 
@@ -1010,7 +1076,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:39 2014: C<Module> L<Class::C3::Componentised|Class::C3::Componentised>
+=head2 Thu Jan 22 07:10:58 2015: C<Module> L<Class::C3::Componentised|Class::C3::Componentised>
 
 =over 4
 
@@ -1032,7 +1098,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:40 2014: C<Module> L<Module::Find|Module::Find>
+=head2 Thu Jan 22 07:10:59 2015: C<Module> L<Module::Find|Module::Find>
 
 =over 4
 
@@ -1054,7 +1120,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:43 2014: C<Module> L<DBIx::Class|DBIx::Class>
+=head2 Thu Jan 22 07:11:02 2015: C<Module> L<DBIx::Class|DBIx::Class>
 
 =over 4
 
@@ -1076,7 +1142,7 @@ C<EXE_FILES: script/dbicadmin>
 
 =back
 
-=head2 Fri Dec 19 22:37:45 2014: C<Module> L<Class::Unload|Class::Unload>
+=head2 Thu Jan 22 07:11:05 2015: C<Module> L<Class::Unload|Class::Unload>
 
 =over 4
 
@@ -1098,7 +1164,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:46 2014: C<Module> L<Data::Dump|Data::Dump>
+=head2 Thu Jan 22 07:11:06 2015: C<Module> L<Data::Dump|Data::Dump>
 
 =over 4
 
@@ -1120,7 +1186,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:48 2014: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Thu Jan 22 07:11:08 2015: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -1142,7 +1208,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:52 2014: C<Module> L<List::MoreUtils|List::MoreUtils>
+=head2 Thu Jan 22 07:11:12 2015: C<Module> L<List::MoreUtils|List::MoreUtils>
 
 =over 4
 
@@ -1156,7 +1222,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.401>
+C<VERSION: 0.402>
 
 =item *
 
@@ -1164,7 +1230,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:56 2014: C<Module> L<Lingua::PT::Stemmer|Lingua::PT::Stemmer>
+=head2 Thu Jan 22 07:11:16 2015: C<Module> L<Lingua::PT::Stemmer|Lingua::PT::Stemmer>
 
 =over 4
 
@@ -1186,7 +1252,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:57 2014: C<Module> L<Lingua::Stem::It|Lingua::Stem::It>
+=head2 Thu Jan 22 07:11:17 2015: C<Module> L<Lingua::Stem::It|Lingua::Stem::It>
 
 =over 4
 
@@ -1208,7 +1274,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:37:59 2014: C<Module> L<Text::German|Text::German>
+=head2 Thu Jan 22 07:11:19 2015: C<Module> L<Text::German|Text::German>
 
 =over 4
 
@@ -1230,7 +1296,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:01 2014: C<Module> L<Lingua::Stem::Fr|Lingua::Stem::Fr>
+=head2 Thu Jan 22 07:11:22 2015: C<Module> L<Lingua::Stem::Fr|Lingua::Stem::Fr>
 
 =over 4
 
@@ -1252,7 +1318,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:02 2014: C<Module> L<Lingua::Stem::Snowball::Da|Lingua::Stem::Snowball::Da>
+=head2 Thu Jan 22 07:11:23 2015: C<Module> L<Lingua::Stem::Snowball::Da|Lingua::Stem::Snowball::Da>
 
 =over 4
 
@@ -1274,7 +1340,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:04 2014: C<Module> L<Lingua::Stem::Ru|Lingua::Stem::Ru>
+=head2 Thu Jan 22 07:11:25 2015: C<Module> L<Lingua::Stem::Ru|Lingua::Stem::Ru>
 
 =over 4
 
@@ -1296,7 +1362,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:06 2014: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Thu Jan 22 07:11:27 2015: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -1318,7 +1384,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:08 2014: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Thu Jan 22 07:11:29 2015: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -1340,7 +1406,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:09 2014: C<Module> L<Memoize::ExpireLRU|Memoize::ExpireLRU>
+=head2 Thu Jan 22 07:11:30 2015: C<Module> L<Memoize::ExpireLRU|Memoize::ExpireLRU>
 
 =over 4
 
@@ -1362,7 +1428,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:09 2014: C<Module> L<Lingua::EN::Tagger|Lingua::EN::Tagger>
+=head2 Thu Jan 22 07:11:31 2015: C<Module> L<Lingua::EN::Tagger|Lingua::EN::Tagger>
 
 =over 4
 
@@ -1384,7 +1450,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:11 2014: C<Module> L<Lingua::EN::Inflect::Number|Lingua::EN::Inflect::Number>
+=head2 Thu Jan 22 07:11:34 2015: C<Module> L<Lingua::EN::Inflect::Number|Lingua::EN::Inflect::Number>
 
 =over 4
 
@@ -1406,7 +1472,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:13 2014: C<Module> L<Lingua::EN::Words2Nums|Lingua::EN::Words2Nums>
+=head2 Thu Jan 22 07:11:36 2015: C<Module> L<Lingua::EN::Words2Nums|Lingua::EN::Words2Nums>
 
 =over 4
 
@@ -1428,7 +1494,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:14 2014: C<Module> L<Lingua::EN::FindNumber|Lingua::EN::FindNumber>
+=head2 Thu Jan 22 07:11:36 2015: C<Module> L<Lingua::EN::FindNumber|Lingua::EN::FindNumber>
 
 =over 4
 
@@ -1450,7 +1516,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:14 2014: C<Module> L<Lingua::EN::Number::IsOrdinal|Lingua::EN::Number::IsOrdinal>
+=head2 Thu Jan 22 07:11:37 2015: C<Module> L<Lingua::EN::Number::IsOrdinal|Lingua::EN::Number::IsOrdinal>
 
 =over 4
 
@@ -1472,7 +1538,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:15 2014: C<Module> L<Lingua::EN::Inflect::Phrase|Lingua::EN::Inflect::Phrase>
+=head2 Thu Jan 22 07:11:37 2015: C<Module> L<Lingua::EN::Inflect::Phrase|Lingua::EN::Inflect::Phrase>
 
 =over 4
 
@@ -1494,7 +1560,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:17 2014: C<Module> L<Algorithm::Diff|Algorithm::Diff>
+=head2 Thu Jan 22 07:11:40 2015: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -1516,7 +1582,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:17 2014: C<Module> L<Text::Diff|Text::Diff>
+=head2 Thu Jan 22 07:11:40 2015: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -1538,7 +1604,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:18 2014: C<Module> L<Capture::Tiny|Capture::Tiny>
+=head2 Thu Jan 22 07:11:41 2015: C<Module> L<Capture::Tiny|Capture::Tiny>
 
 =over 4
 
@@ -1560,7 +1626,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:20 2014: C<Module> L<DBIx::Class::IntrospectableM2M|DBIx::Class::IntrospectableM2M>
+=head2 Thu Jan 22 07:11:43 2015: C<Module> L<DBIx::Class::IntrospectableM2M|DBIx::Class::IntrospectableM2M>
 
 =over 4
 
@@ -1582,7 +1648,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:21 2014: C<Module> L<String::CamelCase|String::CamelCase>
+=head2 Thu Jan 22 07:11:44 2015: C<Module> L<String::CamelCase|String::CamelCase>
 
 =over 4
 
@@ -1604,7 +1670,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:24 2014: C<Module> L<Text::Unidecode|Text::Unidecode>
+=head2 Thu Jan 22 07:11:48 2015: C<Module> L<Text::Unidecode|Text::Unidecode>
 
 =over 4
 
@@ -1626,7 +1692,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:25 2014: C<Module> L<String::ToIdentifier::EN|String::ToIdentifier::EN>
+=head2 Thu Jan 22 07:11:48 2015: C<Module> L<String::ToIdentifier::EN|String::ToIdentifier::EN>
 
 =over 4
 
@@ -1648,7 +1714,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:26 2014: C<Module> L<Carp::Clan|Carp::Clan>
+=head2 Thu Jan 22 07:11:49 2015: C<Module> L<Carp::Clan|Carp::Clan>
 
 =over 4
 
@@ -1670,7 +1736,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:38:27 2014: C<Module> L<DBIx::Class::Schema::Loader|DBIx::Class::Schema::Loader>
+=head2 Thu Jan 22 07:11:50 2015: C<Module> L<DBIx::Class::Schema::Loader|DBIx::Class::Schema::Loader>
 
 =over 4
 

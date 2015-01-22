@@ -1,0 +1,84 @@
+{
+   "abstract" : "Read and write a subset of YAML for CPAN Meta files",
+   "author" : [
+      "Adam Kennedy <adamk@cpan.org>",
+      "David Golden <dagolden@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.013, CPAN::Meta::Converter version 2.133380, CPAN::Meta::Converter version 2.120630",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "CPAN-Meta-YAML",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "examples",
+         "corpus"
+      ],
+      "package" : [
+         "DB"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.17"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "B" : "0",
+            "Carp" : "0",
+            "Exporter" : "0",
+            "ExtUtils::MakeMaker" : "0",
+            "Fcntl" : "0",
+            "File::Basename" : "0",
+            "File::Find" : "0",
+            "File::Spec" : "0",
+            "File::Spec::Functions" : "0",
+            "File::Temp" : "0",
+            "Getopt::Long" : "0",
+            "IO::Dir" : "0",
+            "JSON::PP" : "0",
+            "List::Util" : "0",
+            "Scalar::Util" : "0",
+            "Test::More" : "0.99",
+            "lib" : "0",
+            "strict" : "0",
+            "utf8" : "0",
+            "vars" : "0",
+            "version" : "0",
+            "warnings" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "CPAN::Meta::YAML" : {
+         "file" : "lib/CPAN/Meta/YAML.pm",
+         "version" : "0.012"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/dagolden/CPAN-Meta-YAML/issues"
+      },
+      "homepage" : "https://github.com/dagolden/CPAN-Meta-YAML",
+      "repository" : {
+         "url" : "https://github.com/dagolden/CPAN-Meta-YAML.git"
+      }
+   },
+   "version" : "0.012",
+   "x_authority" : "cpan:DAGOLDEN"
+}
