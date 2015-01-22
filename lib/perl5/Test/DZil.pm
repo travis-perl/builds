@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Test::DZil;
 # ABSTRACT: tools for testing Dist::Zilla plugins
-$Test::DZil::VERSION = '5.029';
+$Test::DZil::VERSION = '5.031';
 use Dist::Zilla::Tester;
 use Params::Util qw(_HASH0);
 use JSON::MaybeXS;
@@ -52,15 +52,15 @@ use Sub::Exporter -setup => {
 sub is_filelist {
   my ($have, $want, $comment) = @_;
 
-  my @want = sort @$want;
-  my @have = sort map { my $str = (blessed $_ and
-                                   $_->DOES('Dist::Zilla::Role::File'))
-                            ? $_->name
-                            : $_;
-                        $str =~ s{\\}{/}g; $str } @$have;
+  my @want = @$want;
+  my @have = map { my $str = (blessed $_ and
+                              $_->DOES('Dist::Zilla::Role::File'))
+                       ? $_->name
+                       : $_;
+                   $str =~ s{\\}{/}g; $str } @$have;
 
   local $Test::Builder::Level = $Test::Builder::Level + 1;
-  Test::More::is_deeply(\@have, \@want, $comment);
+  Test::Deep::cmp_bag(\@have, \@want, $comment);
 }
 
 #pod =func is_yaml
@@ -240,7 +240,7 @@ Test::DZil - tools for testing Dist::Zilla plugins
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 DESCRIPTION
 
@@ -343,7 +343,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
