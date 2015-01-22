@@ -1,11 +1,9 @@
 package Pod::Weaver::Section::Bugs;
 # ABSTRACT: a section for bugtracker info
-$Pod::Weaver::Section::Bugs::VERSION = '4.009';
+$Pod::Weaver::Section::Bugs::VERSION = '4.010';
 use Moose;
 use Text::Wrap ();
 with 'Pod::Weaver::Role::Section';
-
-use Moose::Autobox;
 
 #pod =head1 OVERVIEW
 #pod
@@ -75,15 +73,14 @@ patch to an existing test-file that illustrates the bug or desired
 feature.
 HERE
 
-  $document->children->push(
+  push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
       content  => 'BUGS',
       children => [
         Pod::Elemental::Element::Pod5::Ordinary->new({ content => $text }),
       ],
-    }),
-  );
+    });
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -101,7 +98,7 @@ Pod::Weaver::Section::Bugs - a section for bugtracker info
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 OVERVIEW
 

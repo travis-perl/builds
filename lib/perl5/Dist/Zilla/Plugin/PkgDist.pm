@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgDist;
 # ABSTRACT: add a $DIST to your packages
-$Dist::Zilla::Plugin::PkgDist::VERSION = '5.029';
+$Dist::Zilla::Plugin::PkgDist::VERSION = '5.031';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -96,7 +96,8 @@ sub munge_perl {
       and    $stmt->insert_after( PPI::Token::Whitespace->new("\n") );
   }
 
-  $self->save_ppi_document_to_file($document, $file);
+  # the document is no longer correct; it must be reparsed before it can be used again
+  $file->encoded_content($document->serialize);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -114,7 +115,7 @@ Dist::Zilla::Plugin::PkgDist - add a $DIST to your packages
 
 =head1 VERSION
 
-version 5.029
+version 5.031
 
 =head1 DESCRIPTION
 
@@ -138,7 +139,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
