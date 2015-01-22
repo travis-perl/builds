@@ -1,5 +1,5 @@
 package Attribute::Params::Validate;
-$Attribute::Params::Validate::VERSION = '1.13';
+$Attribute::Params::Validate::VERSION = '1.17';
 use strict;
 use warnings;
 
@@ -98,7 +98,7 @@ Attribute::Params::Validate - Define validation through subroutine attributes
 
 =head1 VERSION
 
-version 1.13
+version 1.17
 
 =head1 SYNOPSIS
 
@@ -108,26 +108,26 @@ version 1.13
   # foo is mandatory, bar is optional
   sub foo : Validate( foo => 1, bar => 0 )
   {
-      ...
+      # insert code here
   }
 
   # takes positional params
   # first two are mandatory, third is optional
   sub bar : ValidatePos( 1, 1, 0 )
   {
-      ...
+      # insert code here
   }
 
   # for some reason Perl insists that the entire attribute be on one line
   sub foo2 : Validate( foo => { type => ARRAYREF }, bar => { can => [ 'print', 'flush', 'frobnicate' ] }, baz => { type => SCALAR, callbacks => { 'numbers only' => sub { shift() =~ /^\d+$/ }, 'less than 90' => sub { shift() < 90 } } } )
   {
-      ...
+      # insert code here
   }
 
   # note that this is marked as a method.  This is very important!
   sub baz : Validate( foo => { type => ARRAYREF }, bar => { isa => 'Frobnicator' } ) method
   {
-      ...
+      # insert code here
   }
 
 =head1 DESCRIPTION
@@ -197,7 +197,7 @@ Ilya Martynov <ilya@martynov.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by Dave Rolsky and Ilya Martynov.
+This software is Copyright (c) 2001 - 2015 by Dave Rolsky and Ilya Martynov.
 
 This is free software, licensed under:
 

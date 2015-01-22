@@ -1,8 +1,7 @@
 package Pod::Elemental::Transformer;
 # ABSTRACT: something that transforms a node tree into a new tree
-$Pod::Elemental::Transformer::VERSION = '0.103002';
+$Pod::Elemental::Transformer::VERSION = '0.103004';
 use Moose::Role;
-use Moose::Autobox;
 
 use namespace::autoclean;
 
@@ -40,7 +39,7 @@ Pod::Elemental::Transformer - something that transforms a node tree into a new t
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 
