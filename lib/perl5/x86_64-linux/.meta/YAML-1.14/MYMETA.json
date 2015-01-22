@@ -1,10 +1,10 @@
 {
-   "abstract" : "YAML Ain't Markup Language",
+   "abstract" : "YAML Ain't Markup Language™",
    "author" : [
       "Ingy döt Net <ingy@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.132830, CPAN::Meta::Converter version 2.120630",
+   "generated_by" : "Dist::Zilla version 5.029, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "perl_5"
    ],
@@ -29,12 +29,14 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.30"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
          "requires" : {
-            "Test::YAML" : "1.05"
+            "ExtUtils::MakeMaker" : "0",
+            "Test::YAML" : "1.05",
+            "perl" : "5.008001"
          }
       }
    },
@@ -48,5 +50,5 @@
          "url" : "https://github.com/ingydotnet/yaml-pm.git"
       }
    },
-   "version" : "1.13"
+   "version" : "1.14"
 }
