@@ -4,7 +4,7 @@
       "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.101670, CPAN::Meta::Converter version 2.120351",
+   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.101670, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
