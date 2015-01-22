@@ -1,4 +1,4 @@
-=head2 Fri Dec 19 22:27:06 2014: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
+=head2 Thu Jan 22 06:51:46 2015: C<Module> L<ExtUtils::MakeMaker|ExtUtils::MakeMaker>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: bin/instmodsh>
 
 =back
 
-=head2 Fri Dec 19 22:27:10 2014: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Thu Jan 22 06:51:49 2015: C<Module> L<Devel::StackTrace|Devel::StackTrace>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:11 2014: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+=head2 Thu Jan 22 06:51:50 2015: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:12 2014: C<Module> L<Exception::Class|Exception::Class>
+=head2 Thu Jan 22 06:51:51 2015: C<Module> L<Exception::Class|Exception::Class>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:14 2014: C<Module> L<Algorithm::Diff|Algorithm::Diff>
+=head2 Thu Jan 22 06:51:53 2015: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:15 2014: C<Module> L<Text::Diff|Text::Diff>
+=head2 Thu Jan 22 06:51:54 2015: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:16 2014: C<Module> L<Capture::Tiny|Capture::Tiny>
+=head2 Thu Jan 22 06:51:55 2015: C<Module> L<Capture::Tiny|Capture::Tiny>
 
 =over 4
 
@@ -152,7 +152,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:18 2014: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Thu Jan 22 06:52:00 2015: C<Module> L<CPAN::Meta::YAML|CPAN::Meta::YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.14.0-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.012>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 06:52:00 2015: C<Module> L<Parse::CPAN::Meta|Parse::CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.14.0-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.4414>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 06:52:01 2015: C<Module> L<CPAN::Meta|CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.14.0-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.143240>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jan 22 06:52:04 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -174,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:20 2014: C<Module> L<Carp|Carp>
+=head2 Thu Jan 22 06:52:06 2015: C<Module> L<Carp|Carp>
 
 =over 4
 
@@ -196,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:21 2014: C<Module> L<Test::Warn|Test::Warn>
+=head2 Thu Jan 22 06:52:06 2015: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -218,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:22 2014: C<Module> L<Test::Deep|Test::Deep>
+=head2 Thu Jan 22 06:52:08 2015: C<Module> L<Test::Deep|Test::Deep>
 
 =over 4
 
@@ -232,7 +298,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.114>
+C<VERSION: 0.115>
 
 =item *
 
@@ -240,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 19 22:27:23 2014: C<Module> L<Test::Most|Test::Most>
+=head2 Thu Jan 22 06:52:08 2015: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
