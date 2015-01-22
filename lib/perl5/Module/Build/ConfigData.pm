@@ -167,6 +167,33 @@ do{ my $x = [
        {},
        {},
        {
+         'manpage_support' => {
+                                'requires' => {
+                                                'Pod::Man' => 0
+                                              },
+                                'description' => 'Create Unix man pages'
+                              },
+         'dist_authoring' => {
+                               'requires' => {
+                                               'Archive::Tar' => '1.09'
+                                             },
+                               'recommends' => {
+                                                 'Module::Signature' => '0.21',
+                                                 'Pod::Readme' => '0.04'
+                                               },
+                               'description' => 'Create new distributions'
+                             },
+         'PPM_support' => {
+                            'description' => 'Generate PPM files for distributions'
+                          },
+         'inc_bundling_support' => {
+                                     'requires' => {
+                                                     'ExtUtils::Installed' => '1.999',
+                                                     'inc::latest' => '0.5',
+                                                     'ExtUtils::Install' => '1.54'
+                                                   },
+                                     'description' => 'Bundle Module::Build in inc/'
+                                   },
          'HTML_support' => {
                              'description' => 'Create HTML documentation',
                              'requires' => {
@@ -178,33 +205,7 @@ do{ my $x = [
                                                  'Software::License' => '0.103009'
                                                },
                                  'description' => 'Create licenses automatically in distributions'
-                               },
-         'manpage_support' => {
-                                'description' => 'Create Unix man pages',
-                                'requires' => {
-                                                'Pod::Man' => 0
-                                              }
-                              },
-         'dist_authoring' => {
-                               'requires' => {
-                                               'Archive::Tar' => '1.09'
-                                             },
-                               'recommends' => {
-                                                 'Pod::Readme' => '0.04',
-                                                 'Module::Signature' => '0.21'
-                                               },
-                               'description' => 'Create new distributions'
-                             },
-         'inc_bundling_support' => {
-                                     'description' => 'Bundle Module::Build in inc/',
-                                     'requires' => {
-                                                     'ExtUtils::Installed' => '1.999',
-                                                     'ExtUtils::Install' => '1.54'
-                                                   }
-                                   },
-         'PPM_support' => {
-                            'description' => 'Generate PPM files for distributions'
-                          }
+                               }
        }
      ];
 $x; }
