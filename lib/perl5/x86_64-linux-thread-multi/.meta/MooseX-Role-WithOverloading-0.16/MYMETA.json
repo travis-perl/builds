@@ -5,7 +5,7 @@
       "Tomas Doran <bobtfish@bobtfish.net>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
    "keywords" : [
       "moose",
       "extension",
@@ -37,7 +37,8 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "ExtUtils::MakeMaker" : "0",
+            "perl" : "5.006"
          }
       },
       "develop" : {
