@@ -6,7 +6,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.4210';
+our $VERSION = '0.4211';
 $VERSION = eval $VERSION;
 
 use Carp;
@@ -4582,7 +4582,7 @@ sub normalize_version {
     # take as is without modification
   }
   elsif ( ref $version eq 'version') { # version objects
-    $version = $version->is_qv ? $version->normal : $version->stringify;
+    $version = $version->stringify;
   }
   elsif ( $version =~ /^[^v][^.]*\.[^.]+\./ ) { # no leading v, multiple dots
     # normalize string tuples without "v": "1.2.3" -> "v1.2.3"

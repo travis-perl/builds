@@ -1,12 +1,10 @@
 use strict;
 use warnings;
 
-package namespace::autoclean;
-# git description: 0.21-2-g546df0b
-$namespace::autoclean::VERSION = '0.22';
+package namespace::autoclean; # git description: 0.23-2-g474266b
 # ABSTRACT: Keep imports out of your namespace
 # KEYWORDS: namespaces clean dirty imports exports subroutines methods development
-
+$namespace::autoclean::VERSION = '0.24';
 use B::Hooks::EndOfScope 0.12;
 use List::Util qw( first );
 use namespace::clean 0.20;
@@ -221,7 +219,7 @@ namespace::autoclean - Keep imports out of your namespace
 
 =head1 VERSION
 
-version 0.22
+version 0.24
 
 =head1 SYNOPSIS
 

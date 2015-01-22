@@ -1,6 +1,6 @@
 package Pod::Elemental::Element::Generic::Blank;
 # ABSTRACT: a series of blank lines
-$Pod::Elemental::Element::Generic::Blank::VERSION = '0.103002';
+$Pod::Elemental::Element::Generic::Blank::VERSION = '0.103004';
 use Moose;
 with 'Pod::Elemental::Flat';
 
@@ -33,7 +33,7 @@ Pod::Elemental::Element::Generic::Blank - a series of blank lines
 
 =head1 VERSION
 
-version 0.103002
+version 0.103004
 
 =head1 OVERVIEW
 
