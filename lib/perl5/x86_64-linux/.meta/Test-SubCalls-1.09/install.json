@@ -1,1 +1,1 @@
-{"name":"Test::SubCalls","dist":"Test-SubCalls-1.09","version":"1.09","pathname":"A/AD/ADAMK/Test-SubCalls-1.09.tar.gz","target":"Test::SubCalls","provides":{"Test::SubCalls":{"file":"lib/Test/SubCalls.pm","version":"1.09"}}}
+{"pathname":"A/AD/ADAMK/Test-SubCalls-1.09.tar.gz","provides":{"Test::SubCalls":{"file":"lib/Test/SubCalls.pm","version":"1.09"}},"version":"1.09","target":"Test::SubCalls","name":"Test::SubCalls","dist":"Test-SubCalls-1.09"}

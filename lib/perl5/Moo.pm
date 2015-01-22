@@ -4,7 +4,7 @@ use strictures 1;
 use Moo::_Utils;
 use Import::Into;
 
-our $VERSION = '1.006001';
+our $VERSION = '1.007000';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -150,53 +150,49 @@ sub _constructor_maker_for {
   $MAKERS{$target}{constructor} ||= do {
     require Method::Generate::Constructor;
     require Sub::Defer;
-    my ($moo_constructor, $con);
 
-    my $t_new = $target->can('new');
-    if ($t_new) {
-      if ($t_new == Moo::Object->can('new')) {
-        $moo_constructor = 1;
+    my %construct_opts = (
+      package => $target,
+      accessor_generator => $class->_accessor_maker_for($target),
+      subconstructor_handler => (
+        '      if ($Moo::MAKERS{$class}) {'."\n"
+        .'        if ($Moo::MAKERS{$class}{constructor}) {'."\n"
+        .'          return $class->'.$target.'::SUPER::new(@_);'."\n"
+        .'        }'."\n"
+        .'        '.$class.'->_constructor_maker_for($class);'."\n"
+        .'        return $class->new(@_)'.";\n"
+        .'      } elsif ($INC{"Moose.pm"} and my $meta = Class::MOP::get_metaclass_by_name($class)) {'."\n"
+        .'        return $meta->new_object('."\n"
+        .'          $class->can("BUILDARGS") ? $class->BUILDARGS(@_)'."\n"
+        .'                      : $class->Moo::Object::BUILDARGS(@_)'."\n"
+        .'        );'."\n"
+        .'      }'."\n"
+      ),
+    );
+
+    my $con;
+    my @isa = @{mro::get_linear_isa($target)};
+    shift @isa;
+    if (my ($parent_new) = grep { *{_getglob($_.'::new')}{CODE} } @isa) {
+      if ($parent_new eq 'Moo::Object') {
+        # no special constructor needed
       }
-      elsif (my $defer_target = (Sub::Defer::defer_info($t_new)||[])->[0]) {
-        my ($pkg) = ($defer_target =~ /^(.*)::[^:]+$/);
-        if ($MAKERS{$pkg}) {
-          $moo_constructor = 1;
-          $con = $MAKERS{$pkg}{constructor};
-        }
+      elsif (my $makers = $MAKERS{$parent_new}) {
+        $con = $makers->{constructor};
+        $construct_opts{construction_string} = $con->construction_string
+          if $con;
       }
-    }
-    else {
-      $moo_constructor = 1; # no other constructor, make a Moo one
+      else {
+        $construct_opts{construction_builder} = sub {
+          '$class->next::method('
+            .($target->can('FOREIGNBUILDARGS') ?
+              '$class->FOREIGNBUILDARGS(@_)' : '@_')
+            .')'
+        };
+      }
     }
     ($con ? ref($con) : 'Method::Generate::Constructor')
-      ->new(
-        package => $target,
-        accessor_generator => $class->_accessor_maker_for($target),
-        $moo_constructor ? (
-          $con ? (construction_string => $con->construction_string) : ()
-        ) : (
-          construction_builder => sub {
-            '$class->next::method('
-              .($target->can('FOREIGNBUILDARGS') ?
-                '$class->FOREIGNBUILDARGS(@_)' : '@_')
-              .')'
-          },
-        ),
-        subconstructor_handler => (
-          '      if ($Moo::MAKERS{$class}) {'."\n"
-          .'        if ($Moo::MAKERS{$class}{constructor}) {'."\n"
-          .'          return $class->'.$target.'::SUPER::new(@_);'."\n"
-          .'        }'."\n"
-          .'        '.$class.'->_constructor_maker_for($class);'."\n"
-          .'        return $class->new(@_)'.";\n"
-          .'      } elsif ($INC{"Moose.pm"} and my $meta = Class::MOP::get_metaclass_by_name($class)) {'."\n"
-          .'        return $meta->new_object('."\n"
-          .'          $class->can("BUILDARGS") ? $class->BUILDARGS(@_)'."\n"
-          .'                      : $class->Moo::Object::BUILDARGS(@_)'."\n"
-          .'        );'."\n"
-          .'      }'."\n"
-        ),
-      )
+      ->new(%construct_opts)
       ->install_delayed
       ->register_attribute_specs(%{$con?$con->all_attribute_specs:{}})
   }
@@ -338,12 +334,6 @@ code - Moo and Moose code should simply interoperate without problem. To
 handle L<Mouse> code, you'll likely need an empty Moo role or class consuming
 or extending the L<Mouse> stuff since it doesn't register true L<Moose>
 metaclasses like L<Moo> does.
-
-If you want types to be upgraded to the L<Moose> types, use
-L<MooX::Types::MooseLike> and install the L<MooseX::Types> library to
-match the L<MooX::Types::MooseLike> library you're using - L<Moo> will
-load the L<MooseX::Types> library and use that type for the newly created
-metaclass.
 
 If you need to disable the metaclass creation, add:
 
@@ -542,8 +532,8 @@ and can, if desired, be omitted on non-debug builds (although if this results
 in an uncaught bug causing your program to break, the L<Moo> authors guarantee
 nothing except that you get to keep both halves).
 
-If you want L<MooseX::Types> style named types, look at
-L<MooX::Types::MooseLike>.
+If you want L<Moose> compatible or L<MooseX::Types> style named types, look at
+L<Type::Tiny>.
 
 To cause your C<isa> entries to be automatically mapped to named
 L<Moose::Meta::TypeConstraint> objects (rather than the default behaviour
@@ -665,6 +655,9 @@ If you set this to just C<1>, the clearer is automatically named
 C<clear_${attr_name}> if your attribute's name does not start with an
 underscore, or C<_clear_${attr_name_without_the_underscore}> if it does.
 This feature comes from L<MooseX::AttributeShortcuts>.
+
+B<NOTE:> If the attribute is C<lazy>, it will be regenerated from C<default> or
+C<builder> the next time it is accessed. If it is not lazy, it will be C<undef>.
 
 =item * C<lazy>
 
@@ -818,15 +811,13 @@ you are recommended to just use L<namespace::clean>.
 =head1 INCOMPATIBILITIES WITH MOOSE
 
 There is no built-in type system.  C<isa> is verified with a coderef; if you
-need complex types, just make a library of coderefs, or better yet, functions
-that return quoted subs. L<MooX::Types::MooseLike> provides a similar API
-to L<MooseX::Types::Moose> so that you can write
+need complex types, L<Type::Tiny> can provide types, type libraries, and
+will work seamlessly with both L<Moo> and L<Moose>.  L<Type::Tiny> can be
+considered the successor to L<MooseX::Types> and provides a similar API, so
+that you can write
 
+  use Types::Standard;
   has days_to_live => (is => 'ro', isa => Int);
-
-and have it work with both; it is hoped that providing only subrefs as an
-API will encourage the use of other type systems as well, since it's
-probably the weakest part of Moose design-wise.
 
 C<initializer> is not supported in core since the author considers it to be a
 bad idea and Moose best practices recommend avoiding it. Meanwhile C<trigger> or
@@ -933,12 +924,12 @@ to Moo by providing a more Moose-like interface.
 Users' IRC: #moose on irc.perl.org
 
 =for :html
-L<(click for instance chatroom login)|http://chat.mibbit.com/#moose@irc.perl.org>
+L<(click for instant chatroom login)|http://chat.mibbit.com/#moose@irc.perl.org>
 
 Development and contribution IRC: #web-simple on irc.perl.org
 
 =for :html
-L<(click for instance chatroom login)|http://chat.mibbit.com/#web-simple@irc.perl.org>
+L<(click for instant chatroom login)|http://chat.mibbit.com/#web-simple@irc.perl.org>
 
 Bugtracker: L<https://rt.cpan.org/Public/Dist/Display.html?Name=Moo>
 

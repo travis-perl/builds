@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Init;
 # ABSTRACT: initialize git repository on dzil new
-$Dist::Zilla::Plugin::Git::Init::VERSION = '2.028';
+$Dist::Zilla::Plugin::Git::Init::VERSION = '2.029';
 
 our %transform = (
   lc => sub { lc shift },
@@ -109,7 +109,7 @@ Dist::Zilla::Plugin::Git::Init - initialize git repository on dzil new
 
 =head1 VERSION
 
-version 2.028
+version 2.029
 
 =head1 SYNOPSIS
 

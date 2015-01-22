@@ -1,1 +1,1 @@
-{"target":"IO::String","provides":{"IO::String":{"file":"String.pm","version":"1.08"}},"pathname":"G/GA/GAAS/IO-String-1.08.tar.gz","dist":"IO-String-1.08","version":"1.08","name":"IO::String"}
+{"name":"IO::String","provides":{"IO::String":{"version":"1.08","file":"String.pm"}},"target":"IO::String","version":"1.08","dist":"IO-String-1.08","pathname":"G/GA/GAAS/IO-String-1.08.tar.gz"}

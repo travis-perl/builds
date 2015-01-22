@@ -1,1 +1,1 @@
-{"dist":"Sort-Versions-1.60","name":"Sort::Versions","provides":{"Sort::Versions":{"file":"lib/Sort/Versions.pm","version":"1.60"}},"pathname":"N/NE/NEILB/Sort-Versions-1.60.tar.gz","target":"Sort::Versions","version":"1.60"}
+{"pathname":"N/NE/NEILB/Sort-Versions-1.60.tar.gz","provides":{"Sort::Versions":{"file":"lib/Sort/Versions.pm","version":"1.60"}},"target":"Sort::Versions","version":"1.60","dist":"Sort-Versions-1.60","name":"Sort::Versions"}
