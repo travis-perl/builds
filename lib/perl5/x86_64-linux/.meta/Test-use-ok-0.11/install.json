@@ -1,1 +1,0 @@
-{"name":"Test::use::ok","pathname":"A/AU/AUDREYT/Test-use-ok-0.11.tar.gz","provides":{"ok":{"version":"0.11","file":"lib/ok.pm"},"Test::use::ok":{"version":"0.11","file":"lib/Test/use/ok.pm"}},"dist":"Test-use-ok-0.11","target":"ok","version":"0.11"}

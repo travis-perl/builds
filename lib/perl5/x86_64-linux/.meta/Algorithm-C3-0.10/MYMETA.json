@@ -5,7 +5,7 @@
       "Brandon L. Black <blblack@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.141520, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.141520, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
