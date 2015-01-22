@@ -9,9 +9,9 @@
 
 /* Package name      : perl5
  * Source directory  : .
- * Configuration time: Fri Dec 19 22:17:29 UTC 2014
+ * Configuration time: Thu Jan 22 06:48:39 UTC 2015
  * Configured by     : travis
- * Target system     : linux testing-worker-linux-10-2-12868-linux-7-44618257 2.6.32-042stab094.7 #1 smp wed oct 22 12:43:21 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux testing-worker-linux-10-2-12868-linux-16-47879106 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
@@ -2246,7 +2246,7 @@
  *	feature tests from Configure are generally more reliable.
  */
 #define OSNAME "linux"		/**/
-#define OSVERS "2.6.32-042stab094.7"		/**/
+#define OSVERS "2.6.32-042stab090.5"		/**/
 
 /* CAT2:
  *	This macro concatenates 2 tokens together.
