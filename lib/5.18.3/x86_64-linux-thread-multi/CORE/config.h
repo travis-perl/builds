@@ -9,9 +9,9 @@
 
 /* Package name      : perl5
  * Source directory  : .
- * Configuration time: Fri Dec 19 23:06:31 UTC 2014
+ * Configuration time: Thu Jan 22 07:28:56 UTC 2015
  * Configured by     : travis
- * Target system     : linux testing-worker-linux-5-2-1931-linux-15-44618275 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux testing-worker-linux-11-1-31038-linux-16-47879118 2.6.32-042stab094.7 #1 smp wed oct 22 12:43:21 msk 2014 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
@@ -890,7 +890,7 @@
  *	feature tests from Configure are generally more reliable.
  */
 #define OSNAME "linux"		/**/
-#define OSVERS "2.6.32-042stab090.5"		/**/
+#define OSVERS "2.6.32-042stab094.7"		/**/
 
 /* USE_CROSS_COMPILE:
  *	This symbol, if defined, indicates that Perl is being cross-compiled.
