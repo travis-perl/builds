@@ -4,7 +4,7 @@
       "Andy Lester <andy@petdance.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.42, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "ExtUtils::MakeMaker version 6.42, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "unknown"
    ],
@@ -19,10 +19,8 @@
             "ExtUtils::MakeMaker" : "0"
          }
       },
-      "configure" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
+      "runtime" : {
+         "requires" : {}
       }
    },
    "release_status" : "stable",
