@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Pod::Weaver::PluginBundle::Default;
 # ABSTRACT: a bundle for the most commonly-needed prep work for a pod document
-$Pod::Weaver::PluginBundle::Default::VERSION = '4.009';
+$Pod::Weaver::PluginBundle::Default::VERSION = '4.010';
 #pod =head1 OVERVIEW
 #pod
 #pod This is the bundle used by default (specifically by Pod::Weaver's
@@ -86,7 +86,7 @@ Pod::Weaver::PluginBundle::Default - a bundle for the most commonly-needed prep 
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 OVERVIEW
 

@@ -1,6 +1,6 @@
 package Pod::Weaver::Config;
 # ABSTRACT: stored configuration loader role
-$Pod::Weaver::Config::VERSION = '4.009';
+$Pod::Weaver::Config::VERSION = '4.010';
 use Moose::Role;
 
 use Config::MVP 2;
@@ -47,7 +47,7 @@ Pod::Weaver::Config - stored configuration loader role
 
 =head1 VERSION
 
-version 4.009
+version 4.010
 
 =head1 DESCRIPTION
 
