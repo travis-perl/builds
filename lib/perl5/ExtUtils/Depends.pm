@@ -12,7 +12,7 @@ use File::Find;
 use File::Spec;
 use Data::Dumper;
 
-our $VERSION = '0.403';
+our $VERSION = '0.404';
 
 sub import {
 	my $class = shift;
@@ -127,7 +127,7 @@ sub save_config {
 		inc => join (" ", @{ $self->{inc} }),
 		libs => $self->{libs},
 		typemaps => [ map { basename $_ } @{ $self->{typemaps} } ],
-		deps => [keys %{ $self->{deps} }],
+		deps => [sort keys %{ $self->{deps} }],
 	}], ['self']);
 	print $file <<'EOF';
 
@@ -178,7 +178,8 @@ sub load {
 	my $dep = shift;
 	my @pieces = split /::/, $dep;
 	my @suffix = qw/ Install Files /;
-	my $relpath = File::Spec->catfile (@pieces, @suffix) . '.pm';
+	# not File::Spec - see perldoc -f require
+	my $relpath = join('/', @pieces, @suffix) . '.pm';
 	my $depinstallfiles = join "::", @pieces, @suffix;
 	eval {
 		require $relpath 
@@ -271,7 +272,7 @@ sub get_makefile_vars {
 	my @incbits = map { split } @{ $self->{inc} };
 	my @libsbits = split /\s+/, $self->{libs};
 	my @typemaps = @{ $self->{typemaps} };
-	foreach my $d (keys %{ $self->{deps} }) {
+	foreach my $d (sort keys %{ $self->{deps} }) {
 		my $dep = $self->{deps}{$d};
 		#push @defbits, @{ $dep->{defines} };
 		push @incbits, @{ $dep->{defines} } if $dep->{defines};
