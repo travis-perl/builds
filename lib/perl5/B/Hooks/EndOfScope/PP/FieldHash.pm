@@ -1,4 +1,4 @@
-# Implementtion of a pure-perl on_scope_end for perls > 5.10
+# Implementation of a pure-perl on_scope_end for perls > 5.10
 # (relies on Hash::Util:FieldHash)
 
 package # hide from pause
@@ -7,8 +7,7 @@ package # hide from pause
 use strict;
 use warnings;
 
-use warnings;
-use strict;
+our $VERSION = '0.14';
 
 use Tie::Hash ();
 use Hash::Util::FieldHash 'fieldhash';
