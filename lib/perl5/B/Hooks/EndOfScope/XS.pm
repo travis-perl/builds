@@ -1,14 +1,10 @@
 package B::Hooks::EndOfScope::XS;
-{
-  $B::Hooks::EndOfScope::XS::VERSION = '0.13';
-}
-BEGIN {
-  $B::Hooks::EndOfScope::XS::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Execute code after a scope finished compilation - XS implementation
 
 use strict;
 use warnings;
+
+our $VERSION = '0.14';
 
 BEGIN {
   require Module::Runtime;
@@ -47,6 +43,24 @@ sub on_scope_end (&) {
 }
 
 
+#pod =head1 DESCRIPTION
+#pod
+#pod This is the implementation of L<B::Hooks::EndOfScope> based on
+#pod L<Variable::Magic>, which is an XS module dependent on a compiler. It will
+#pod always be automatically preferred if L<Variable::Magic> is available.
+#pod
+#pod =func on_scope_end
+#pod
+#pod     on_scope_end { ... };
+#pod
+#pod     on_scope_end $code;
+#pod
+#pod Registers C<$code> to be executed after the surrounding scope has been
+#pod compiled.
+#pod
+#pod This is exported by default. See L<Sub::Exporter> on how to customize it.
+#pod
+#pod =cut
 
 1;
 
@@ -56,15 +70,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Peter Rabbitson
-
 =head1 NAME
 
 B::Hooks::EndOfScope::XS - Execute code after a scope finished compilation - XS implementation
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 DESCRIPTION
 

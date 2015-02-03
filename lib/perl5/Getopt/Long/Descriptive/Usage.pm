@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Getopt::Long::Descriptive::Usage;
 # ABSTRACT: the usage description for GLD
-$Getopt::Long::Descriptive::Usage::VERSION = '0.098';
+$Getopt::Long::Descriptive::Usage::VERSION = '0.099';
 use List::Util qw(max);
 
 #pod =head1 SYNOPSIS
@@ -76,24 +76,23 @@ sub option_text {
 
   my @options  = @{ $self->{options} || [] };
   my $string   = q{};
-
-  # a spec can grow up to 4 characters in usage output:
-  # '-' on short option, ' ' between short and long, '--' on long
   my @specs = map { $_->{spec} } grep { $_->{desc} ne 'spacer' } @options;
-  my $length   = (max(map { length } @specs) || 0) + 4;
+  my $length   = (max(map { _option_length($_) } @specs) || 0);
   my $spec_fmt = "\t%-${length}s";
 
   while (@options) {
     my $opt  = shift @options;
     my $spec = $opt->{spec};
     my $desc = $opt->{desc};
+    my $assign;
     if ($desc eq 'spacer') {
       $string .= sprintf "$spec_fmt\n", $opt->{spec};
       next;
     }
 
-    $spec = Getopt::Long::Descriptive->_strip_assignment($spec);
-    $spec = join " ", reverse map { length > 1 ? "--$_" : "-$_" }
+    ($spec, $assign) = Getopt::Long::Descriptive->_strip_assignment($spec);
+    $assign = _parse_assignment($assign);
+    $spec = join " ", reverse map { length > 1 ? "--${_}$assign" : "-${_}$assign" }
                               split /\|/, $spec;
 
     my @desc = $self->_split_description($length, $desc);
@@ -118,6 +117,53 @@ sub option_text {
   return $string;
 }
 
+sub _option_length {
+    my ($fullspec) = @_;
+    my $number_opts = 1;
+    my $last_pos = 0;
+    my $number_shortopts = 0;
+    my ($spec, $argspec) = Getopt::Long::Descriptive->_strip_assignment($fullspec);
+    my $length = length $spec;
+    my $arglen = length(_parse_assignment($argspec));
+
+    # Spacing rules:
+    #
+    # For short options we want 1 space (for '-'), for long options 2
+    # spaces (for '--').  Then one space for separating the options,
+    # but we here abuse that $spec has a '|' char for that.
+    #
+    # For options that take arguments, we want 2 spaces for mandatory
+    # options ('=X') and 4 for optional arguments ('[=X]').  Note we
+    # consider {N,M} cases as "single argument" atm.
+
+    # Count the number of "variants" (e.g. "long|s" has two variants)
+    while ($spec =~ m{\|}g) {
+        $number_opts++;
+        if (pos($spec) - $last_pos == 2) {
+            $number_shortopts++;
+        }
+        $last_pos = pos($spec);
+    }
+
+    # Was the last option a "short" one?
+    if ($length - $last_pos == 2) {
+        $number_shortopts++;
+    }
+
+    # We got $number_opts options, each with an argument length of
+    # $arglen.  Plus each option (after the first) needs 3 a char
+    # spacing.  $length gives us the total length of all options and 1
+    # char spacing per option (after the first).  It does not account
+    # for argument length and we want (at least) one additional char
+    # for space before the description.  So the result should be:
+
+    my $number_longopts = $number_opts - $number_shortopts;
+    my $total_arglen = $number_opts * $arglen;
+    my $total_optsep = 2 * $number_longopts + $number_shortopts;
+    my $total = $length + $total_optsep + $total_arglen + 1;
+    return $total;
+}
+
 sub _split_description {
   my ($self, $length, $desc) = @_;
 
@@ -136,6 +182,38 @@ sub _split_description {
   push @lines, $desc;
 
   return @lines;
+}
+
+sub _parse_assignment {
+    my ($assign_spec) = @_;
+    my $argument;
+    my $result = 'STR';
+    my $desttype;
+    if (length($assign_spec) < 2) {
+        # empty, ! or +
+        return '';
+    }
+
+    $argument = substr $assign_spec, 1, 2;
+    if ($argument eq 'i' or $argument eq 'o') {
+        $result = 'INT';
+    } elsif ($argument eq 'f') {
+        $result = 'NUM';
+    }
+    if (length($assign_spec) > 2) {
+        $desttype = substr($assign_spec, 2, 1);
+        if ($desttype eq '@') {
+            # Imply it can be repeated
+            $result .= '...';
+        } elsif ($desttype eq '%') {
+            $result = "KEY=${result}...";
+        }
+    }
+    if (substr($assign_spec, 0, 1) eq ':') {
+        return "[=$result]";
+    }
+    # with leading space so it can just blindly be appended.
+    return " $result";
 }
 
 #pod =head2 warn
@@ -197,7 +275,7 @@ Getopt::Long::Descriptive::Usage - the usage description for GLD
 
 =head1 VERSION
 
-version 0.098
+version 0.099
 
 =head1 SYNOPSIS
 

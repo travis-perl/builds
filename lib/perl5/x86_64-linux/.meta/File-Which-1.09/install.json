@@ -1,1 +1,1 @@
-{"version":"1.09","pathname":"A/AD/ADAMK/File-Which-1.09.tar.gz","target":"File::Which","provides":{"File::Which":{"file":"lib/File/Which.pm","version":"1.09"}},"name":"File::Which","dist":"File-Which-1.09"}
+{"version":"1.09","pathname":"A/AD/ADAMK/File-Which-1.09.tar.gz","name":"File::Which","target":"File::Which","dist":"File-Which-1.09","provides":{"File::Which":{"version":"1.09","file":"lib/File/Which.pm"}}}
