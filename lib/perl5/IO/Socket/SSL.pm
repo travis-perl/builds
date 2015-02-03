@@ -13,7 +13,7 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '2.010';
+our $VERSION = '2.012';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
@@ -94,7 +94,7 @@ my %DEFAULT_SSL_ARGS = (
     SSL_alpn_protocols => undef,   # list of protocols we'll accept/send, for example ['http/1.1','spdy/3.1']
     SSL_cipher_list =>
 	'EECDH+AESGCM+ECDSA EECDH+AESGCM EECDH+ECDSA +AES256 EECDH EDH+AESGCM '.
-	'EDH ALL +SHA +3DES +RC4 !LOW !EXP !eNULL !aNULL !DES !MD5 !PSK !SRP',
+	'EDH ALL +SHA +3DES !RC4 !LOW !EXP !eNULL !aNULL !DES !MD5 !PSK !SRP',
 );
 
 my %DEFAULT_SSL_CLIENT_ARGS = (
@@ -660,8 +660,9 @@ sub connect_SSL {
     }
 
     my $start = defined($timeout) && time();
-    for my $dummy (1) {
+    {
 	#DEBUG( 'calling ssleay::connect' );
+	$SSL_ERROR = undef;
 	my $rv = Net::SSLeay::connect($ssl);
 	$DEBUG>=3 && DEBUG("Net::SSLeay::connect -> $rv" );
 	if ( $rv < 0 ) {
@@ -875,6 +876,7 @@ sub accept_SSL {
 
     my $start = defined($timeout) && time();
     {
+	$SSL_ERROR = undef;
 	my $rv = Net::SSLeay::accept($ssl);
 	$DEBUG>=3 && DEBUG( "Net::SSLeay::accept -> $rv" );
 	if ( $rv < 0 ) {
