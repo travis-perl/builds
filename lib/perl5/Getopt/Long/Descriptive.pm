@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Getopt::Long::Descriptive;
 # ABSTRACT: Getopt::Long, but simpler and more powerful
-$Getopt::Long::Descriptive::VERSION = '0.098';
+$Getopt::Long::Descriptive::VERSION = '0.099';
 use Carp qw(carp croak);
 use File::Basename ();
 use Getopt::Long 2.33;
@@ -310,6 +310,14 @@ sub _strip_assignment {
 
   (my $copy = $str) =~ s{$SPEC_RE}{};
 
+  if (wantarray) {
+      my $len = length $copy;
+      my $assignment = substr $str, $len;
+      if (!defined($assignment)) {
+          $assignment = '';
+      }
+      return ($copy, $assignment);
+  }
   return $copy;
 }
 
@@ -396,7 +404,7 @@ sub _build_describe_options {
       sort  { lc $a cmp lc $b or $a cmp $b }
       grep  { /^.$/ }
       map   { split /\|/ }
-      map   { __PACKAGE__->_strip_assignment($_) }
+      map   { scalar __PACKAGE__->_strip_assignment($_) }
       @specs;
 
     my $long = grep /\b[^|]{2,}/, @specs;
@@ -651,7 +659,7 @@ Getopt::Long::Descriptive - Getopt::Long, but simpler and more powerful
 
 =head1 VERSION
 
-version 0.098
+version 0.099
 
 =head1 SYNOPSIS
 

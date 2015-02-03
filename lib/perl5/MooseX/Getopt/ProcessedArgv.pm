@@ -1,9 +1,6 @@
 package MooseX::Getopt::ProcessedArgv;
-BEGIN {
-  $MooseX::Getopt::ProcessedArgv::AUTHORITY = 'cpan:STEVAN';
-}
 # ABSTRACT: MooseX::Getopt::ProcessedArgv - Class containing the results of process_argv
-$MooseX::Getopt::ProcessedArgv::VERSION = '0.65';
+$MooseX::Getopt::ProcessedArgv::VERSION = '0.66';
 use Moose;
 use namespace::autoclean;
 
@@ -29,7 +26,7 @@ MooseX::Getopt::ProcessedArgv - MooseX::Getopt::ProcessedArgv - Class containing
 
 =head1 VERSION
 
-version 0.65
+version 0.66
 
 =head1 SYNOPSIS
 

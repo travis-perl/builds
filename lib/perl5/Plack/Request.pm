@@ -2,7 +2,7 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = '1.0033';
+our $VERSION = '1.0034';
 
 use HTTP::Headers;
 use Carp ();
@@ -325,7 +325,7 @@ Plack::Request - Portable HTTP request object from PSGI env hash
       my $req = Plack::Request->new($env);
 
       my $path_info = $req->path_info;
-      my $query     = $req->param('query');
+      my $query     = $req->parameters->{query};
 
       my $res = $req->new_response(200); # new Plack::Response
       $res->finalize;
@@ -457,7 +457,7 @@ strings that are sent by clients and are URI decoded.
 If there are multiple cookies with the same name in the request, this
 method will ignore the duplicates and return only the first value. If
 that causes issues for you, you may have to use modules like
-CGI::Simple::Cookie to parse C<<$request->header('Cookies')>> by
+CGI::Simple::Cookie to parse C<< $request->header('Cookies') >> by
 yourself.
 
 =item query_parameters
@@ -538,8 +538,15 @@ Shortcut to $req->headers->user_agent.
 
 Returns GET and POST parameters with a CGI.pm-compatible param
 method. This is an alternative method for accessing parameters in
-$req->parameters. Unlike CGI.pm, it does I<not> allow
-setting or modifying query parameters.
+$req->parameters just in case you want the compatibility with
+CGI.pm objects.
+
+You are B<not recommended> to use this method since it is easy to
+misuse in a list context such as inside a hash constructor or method
+arguments. Use C<parameters> and Hash::MultiValue instead.
+
+Unlike CGI.pm, it does I<not> allow setting or modifying query
+parameters.
 
     $value  = $req->param( 'foo' );
     @values = $req->param( 'foo' );

@@ -1,1 +1,1 @@
-{"target":"Test::Exception","name":"Test::Exception","pathname":"E/EX/EXODIST/Test-Exception-0.36.tar.gz","provides":{"Test::Exception":{"version":"0.36","file":"lib/Test/Exception.pm"}},"dist":"Test-Exception-0.36","version":"0.36"}
+{"pathname":"E/EX/EXODIST/Test-Exception-0.36.tar.gz","name":"Test::Exception","target":"Test::Exception","provides":{"Test::Exception":{"version":"0.36","file":"lib/Test/Exception.pm"}},"version":"0.36","dist":"Test-Exception-0.36"}

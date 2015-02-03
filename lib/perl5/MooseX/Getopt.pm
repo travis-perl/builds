@@ -1,12 +1,7 @@
-package MooseX::Getopt;
-BEGIN {
-  $MooseX::Getopt::AUTHORITY = 'cpan:STEVAN';
-}
-# git description: v0.64-2-gc7ba3f9
-$MooseX::Getopt::VERSION = '0.65';
+package MooseX::Getopt; # git description: v0.65-1-g4973fbb
 # ABSTRACT: A Moose role for processing command line options
 # KEYWORDS: moose extension command line options attributes executable flags switches arguments
-
+$MooseX::Getopt::VERSION = '0.66';
 use Moose::Role 0.56;
 use namespace::autoclean;
 
@@ -26,7 +21,7 @@ MooseX::Getopt - A Moose role for processing command line options
 
 =head1 VERSION
 
-version 0.65
+version 0.66
 
 =head1 SYNOPSIS
 
@@ -310,65 +305,9 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
-=for stopwords Brandon L Black Chris Prather Dagfinn Ilmari Mannsåker Damien Krotkine Devin Austin Drew Taylor Florian Ragwitz Gordon Irving Hans Dieter Pearcey Hinrik Örn Sigurðsson Jesse Luehrs John Goulah Jonathan Swartz Justin Hunter Karen Etheridge Nelo Onyiah Olaf Alders Ricardo SIGNES Ryan D Johnson Shlomi Fish Stevan Little Todd Hepler Tomas Doran Yuval Kogman Ævar Arnfjörð Bjarmason
+=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Hans Dieter Pearcey Ryan D Johnson Nelo Onyiah Ricardo SIGNES Ævar Arnfjörð Bjarmason Damien Krotkine Hinrik Örn Sigurðsson Devin Austin Todd Hepler Chris Prather John Goulah Jesse Luehrs Justin Hunter Drew Taylor Dagfinn Ilmari Mannsåker Gordon Irving Jonathan Swartz Olaf Alders
 
 =over 4
-
-=item *
-
-Brandon L Black <blblack@gmail.com>
-
-=item *
-
-Chris Prather <chris@prather.org>
-
-=item *
-
-Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
-
-=item *
-
-Damien Krotkine <dkrotkine@weborama.com>
-
-=item *
-
-Devin Austin <devin@devin-laptop.(none)>
-
-=item *
-
-Drew Taylor <drew@drewtaylor.com>
-
-=item *
-
-Florian Ragwitz <rafl@debian.org>
-
-=item *
-
-Gordon Irving <goraxe@goraxe.me.uk>
-
-=item *
-
-Hans Dieter Pearcey <hdp@weftsoar.net>
-
-=item *
-
-Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
-
-=item *
-
-Jesse Luehrs <doy@tozt.net>
-
-=item *
-
-John Goulah <jgoulah@cpan.org>
-
-=item *
-
-Jonathan Swartz <swartz@pobox.com>
-
-=item *
-
-Justin Hunter <justin.d.hunter@gmail.com>
 
 =item *
 
@@ -376,23 +315,7 @@ Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Nelo Onyiah <nelo.onyiah@gmail.com>
-
-=item *
-
-Olaf Alders <olaf@wundersolutions.com>
-
-=item *
-
-Ricardo SIGNES <rjbs@cpan.org>
-
-=item *
-
-Ryan D Johnson <ryan@innerfence.com>
-
-=item *
-
-Shlomi Fish <shlomif@iglu.org.il>
+Tomas Doran <bobtfish@bobtfish.net>
 
 =item *
 
@@ -400,19 +323,91 @@ Stevan Little <stevan.little@iinteractive.com>
 
 =item *
 
-Todd Hepler <thepler@employees.org>
-
-=item *
-
-Tomas Doran <bobtfish@bobtfish.net>
-
-=item *
-
 Yuval Kogman <nothingmuch@woobling.org>
 
 =item *
 
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Brandon L Black <blblack@gmail.com>
+
+=item *
+
+Shlomi Fish <shlomif@iglu.org.il>
+
+=item *
+
+Hans Dieter Pearcey <hdp@weftsoar.net>
+
+=item *
+
+Ryan D Johnson <ryan@innerfence.com>
+
+=item *
+
+Nelo Onyiah <nelo.onyiah@gmail.com>
+
+=item *
+
+Ricardo SIGNES <rjbs@cpan.org>
+
+=item *
+
 Ævar Arnfjörð Bjarmason <avarab@gmail.com>
+
+=item *
+
+Damien Krotkine <dkrotkine@weborama.com>
+
+=item *
+
+Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
+
+=item *
+
+Devin Austin <devin@devin-laptop.(none)>
+
+=item *
+
+Todd Hepler <thepler@employees.org>
+
+=item *
+
+Chris Prather <chris@prather.org>
+
+=item *
+
+John Goulah <jgoulah@cpan.org>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Justin Hunter <justin.d.hunter@gmail.com>
+
+=item *
+
+Drew Taylor <drew@drewtaylor.com>
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+Gordon Irving <goraxe@goraxe.me.uk>
+
+=item *
+
+Jonathan Swartz <swartz@pobox.com>
+
+=item *
+
+Olaf Alders <olaf@wundersolutions.com>
 
 =back
 

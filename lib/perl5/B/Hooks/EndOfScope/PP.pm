@@ -1,14 +1,10 @@
 package B::Hooks::EndOfScope::PP;
-{
-  $B::Hooks::EndOfScope::PP::VERSION = '0.13';
-}
-BEGIN {
-  $B::Hooks::EndOfScope::PP::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Execute code after a scope finished compilation - PP implementation
 
 use warnings;
 use strict;
+
+our $VERSION = '0.14';
 
 use Module::Runtime 'require_module';
 use constant _PERL_VERSION => "$]";
@@ -49,6 +45,26 @@ sub __invoke_callback {
   };
 }
 
+#pod =head1 DESCRIPTION
+#pod
+#pod This is the pure-perl implementation of L<B::Hooks::EndOfScope> based only on
+#pod modules available as part of the perl core. Its leaner sibling
+#pod L<B::Hooks::EndOfScope::XS> will be automatically preferred if all
+#pod dependencies are available and C<$ENV{B_HOOKS_ENDOFSCOPE_IMPLEMENTATION}> is
+#pod not set to C<'PP'>.
+#pod
+#pod =func on_scope_end
+#pod
+#pod     on_scope_end { ... };
+#pod
+#pod     on_scope_end $code;
+#pod
+#pod Registers C<$code> to be executed after the surrounding scope has been
+#pod compiled.
+#pod
+#pod This is exported by default. See L<Sub::Exporter> on how to customize it.
+#pod
+#pod =cut
 
 1;
 
@@ -58,15 +74,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Peter Rabbitson Karen Etheridge Tomas Doran
-
 =head1 NAME
 
 B::Hooks::EndOfScope::PP - Execute code after a scope finished compilation - PP implementation
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 DESCRIPTION
 

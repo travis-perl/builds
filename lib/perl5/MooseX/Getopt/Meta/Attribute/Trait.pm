@@ -1,9 +1,6 @@
 package MooseX::Getopt::Meta::Attribute::Trait;
-BEGIN {
-  $MooseX::Getopt::Meta::Attribute::Trait::AUTHORITY = 'cpan:STEVAN';
-}
 # ABSTRACT: Optional meta attribute trait for custom option names
-$MooseX::Getopt::Meta::Attribute::Trait::VERSION = '0.65';
+$MooseX::Getopt::Meta::Attribute::Trait::VERSION = '0.66';
 use Moose::Role;
 use Moose::Util::TypeConstraints;
 use namespace::autoclean;
@@ -48,7 +45,7 @@ MooseX::Getopt::Meta::Attribute::Trait - Optional meta attribute trait for custo
 
 =head1 VERSION
 
-version 0.65
+version 0.66
 
 =head1 SYNOPSIS
 
