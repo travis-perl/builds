@@ -1,8 +1,5 @@
 package HTTP::Body;
-{
-  $HTTP::Body::VERSION = '1.19';
-}
-
+$HTTP::Body::VERSION = '1.22';
 use strict;
 
 use Carp       qw[ ];
@@ -117,6 +114,7 @@ sub new {
         param_order    => [],
         state          => 'buffering',
         upload         => {},
+        part_data      => {},
         tmpdir         => File::Spec->tmpdir(),
     };
 
@@ -385,6 +383,45 @@ sub upload {
     }
 
     return $self->{upload};
+}
+
+=item part_data
+
+Just like 'param' but gives you a hash of the full data associated with the
+part in a multipart type POST/PUT.  Example:
+
+    {
+      data => "test",
+      done => 1,
+      headers => {
+        "Content-Disposition" => "form-data; name=\"arg2\"",
+        "Content-Type" => "text/plain"
+      },
+      name => "arg2",
+      size => 4
+    }
+
+=cut
+
+sub part_data {
+    my $self = shift;
+
+    if ( @_ == 2 ) {
+
+        my ( $name, $data ) = @_;
+
+        if ( exists $self->{part_data}->{$name} ) {
+            for ( $self->{part_data}->{$name} ) {
+                $_ = [$_] unless ref($_) eq "ARRAY";
+                push( @$_, $data );
+            }
+        }
+        else {
+            $self->{part_data}->{$name} = $data;
+        }
+    }
+
+    return $self->{part_data};
 }
 
 =item tmpdir 

@@ -1,9 +1,6 @@
 package MooseX::Getopt::Meta::Attribute::NoGetopt;
-BEGIN {
-  $MooseX::Getopt::Meta::Attribute::NoGetopt::AUTHORITY = 'cpan:STEVAN';
-}
 # ABSTRACT: Optional meta attribute for ignoring parameters
-$MooseX::Getopt::Meta::Attribute::NoGetopt::VERSION = '0.65';
+$MooseX::Getopt::Meta::Attribute::NoGetopt::VERSION = '0.66';
 use Moose;
 
 extends 'Moose::Meta::Attribute'; # << Moose extending Moose :)
@@ -30,7 +27,7 @@ MooseX::Getopt::Meta::Attribute::NoGetopt - Optional meta attribute for ignoring
 
 =head1 VERSION
 
-version 0.65
+version 0.66
 
 =head1 SYNOPSIS
 

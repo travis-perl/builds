@@ -9,6 +9,13 @@ use CGI::Compile;
 use Carp;
 use POSIX ":sys_wait_h";
 
+sub slurp_fh {
+    my $fh = $_[0];
+    local $/;
+    my $v = <$fh>;
+    defined $v ? $v : '';
+}
+
 sub prepare_app {
     my $self = shift;
     my $script = $self->script
@@ -53,19 +60,15 @@ sub prepare_app {
             close $stdoutw;
             close $stdinr;
 
-            syswrite($stdinw, do {
-                local $/;
-                my $fh = $env->{'psgi.input'};
-                <$fh>;
-            });
+            syswrite($stdinw, slurp_fh($env->{'psgi.input'}));
             # close STDIN so child will stop waiting
             close $stdinw;
 
             my $res = '';
             while (waitpid($pid, WNOHANG) <= 0) {
-                $res .= do { local $/; <$stdoutr> } || '';
+                $res .= slurp_fh($stdoutr);
             }
-            $res .= do { local $/; <$stdoutr> } || '';
+            $res .= slurp_fh($stdoutr);
 
             if (POSIX::WIFEXITED($?)) {
                 return CGI::Parse::PSGI::parse_cgi_output(\$res);

@@ -1,1 +1,1 @@
-{"target":"namespace::autoclean","provides":{"namespace::autoclean":{"version":"0.24","file":"lib/namespace/autoclean.pm"}},"dist":"namespace-autoclean-0.24","name":"namespace::autoclean","pathname":"E/ET/ETHER/namespace-autoclean-0.24.tar.gz","version":"0.24"}
+{"dist":"namespace-autoclean-0.24","version":"0.24","target":"namespace::autoclean","provides":{"namespace::autoclean":{"version":"0.24","file":"lib/namespace/autoclean.pm"}},"name":"namespace::autoclean","pathname":"E/ET/ETHER/namespace-autoclean-0.24.tar.gz"}

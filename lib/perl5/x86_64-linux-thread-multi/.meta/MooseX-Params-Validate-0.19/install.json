@@ -1,1 +1,1 @@
-{"provides":{"MooseX::Params::Validate":{"file":"lib/MooseX/Params/Validate.pm","version":"0.19"}},"name":"MooseX::Params::Validate","target":"MooseX::Params::Validate","dist":"MooseX-Params-Validate-0.19","version":"0.19","pathname":"D/DR/DROLSKY/MooseX-Params-Validate-0.19.tar.gz"}
+{"name":"MooseX::Params::Validate","dist":"MooseX-Params-Validate-0.19","provides":{"MooseX::Params::Validate":{"file":"lib/MooseX/Params/Validate.pm","version":"0.19"}},"pathname":"D/DR/DROLSKY/MooseX-Params-Validate-0.19.tar.gz","target":"MooseX::Params::Validate","version":"0.19"}
