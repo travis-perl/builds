@@ -499,9 +499,10 @@ information from Net::SSLeay.
 
 =back
 
-Also, C<util/analyze-ssl.pl> in the distribution might be a helpful tool when
-debugging SSL problems, as do the C<openssl> command line tool and a check with
-a different SSL implementation (e.g. a web browser).
+Also, C<analyze-ssl.pl> from the ssl-tools repository at
+https://github.com/noxxi/p5-ssl-tools  might be a helpful tool when debugging
+SSL problems, as do the C<openssl> command line tool and a check with a
+different SSL implementation (e.g. a web browser).
 
 The following problems are not uncommon:
 
@@ -509,7 +510,7 @@ The following problems are not uncommon:
 
 =item *
 
-Bad server setup: missing imtermediate certificates.
+Bad server setup: missing intermediate certificates.
 
 It is a regular problem that administrators fail to include all necessary
 certificates into their server setup, e.g. everything needed to build the trust
@@ -549,6 +550,15 @@ Bad or old OpenSSL versions.
 IO::Socket::SSL uses OpenSSL with the help of the L<Net::SSLeay> library. It
 is recommend to have a recent version of this library, because it has more
 features and usually fewer known bugs.
+
+=item *
+
+Validation of client certificates fails.
+
+Make sure that the purpose of the certificate allows use as ssl client (check
+with C<< openssl x509 -purpose >>, that the necessary root certificate is in the
+path specified by C<SSL_ca*> (or the default path) and that any intermediate
+certificates needed to build the trust chain are sent by the client.
 
 =back
 
@@ -647,11 +657,11 @@ least not to different values).
 On unsupported OpenSSL versions it will silently not use SNI.
 The hostname can also be given explicitly given with C<SSL_hostname>, but in
 this case it will throw in error, if SNI is not supported.
-To check for support you might call C<IO::Socket::SSL->can_client_sni()>.
+To check for support you might call C<< IO::Socket::SSL->can_client_sni() >>.
 
 On the server side earlier versions of OpenSSL are supported, but only together
 with L<Net::SSLeay> version >= 1.50.
-To check for support you might call C<IO::Socket::SSL->can_server_sni()>.
+To check for support you might call C<< IO::Socket::SSL->can_server_sni() >>.
 If server side SNI is supported, you might specify different certificates per
 host with C<SSL_cert*> and C<SSL_key*>, and check the requested name using
 C<get_servername>.
@@ -986,7 +996,7 @@ This parameter defaults to 'prime256v1' (builtin of OpenSSL) to offer ECDH key
 exchange by default. If you don't want this explicitly set it to undef.
 
 You can check if ECDH support is available by calling
-C<IO::Socket::SSL->can_ecdh>.
+C<< IO::Socket::SSL->can_ecdh >>.
 
 =item SSL_verify_mode
 
@@ -1261,7 +1271,7 @@ See also method C<next_proto_negotiated>.
 
 Next Protocol Negotiation (NPN) is available with Net::SSLeay 1.46+ and
 openssl-1.0.1+.
-To check support you might call C<IO::Socket::SSL->can_npn()>.
+To check support you might call C<< IO::Socket::SSL->can_npn() >>.
 If you use this option with an unsupported Net::SSLeay/OpenSSL it will
 throw an error.
 
@@ -1582,7 +1592,7 @@ This method returns the name of negotiated protocol - e.g. 'http/1.1'. It works
 for both client and server side of SSL connection.
 
 NPN support is available with Net::SSLeay 1.46+ and openssl-1.0.1+.
-To check support you might call C<IO::Socket::SSL->can_npn()>.
+To check support you might call C<< IO::Socket::SSL->can_npn() >>.
 
 =item B<alpn_selected()>
 
@@ -1590,7 +1600,7 @@ Returns the protocol negotiated via ALPN as a string, e.g. 'http/1.1',
 'http/2.0' or 'spdy/3.1'.
 
 ALPN support is available with Net::SSLeay 1.56+ and openssl-1.0.2+.
-To check support, use C<IO::Socket::SSL->can_alpn()>.
+To check support, use C<< IO::Socket::SSL->can_alpn() >>.
 
 =item B<errstr()>
 

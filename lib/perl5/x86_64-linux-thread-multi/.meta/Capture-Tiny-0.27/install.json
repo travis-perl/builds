@@ -1,1 +1,1 @@
-{"target":"Capture::Tiny","name":"Capture::Tiny","version":"0.27","dist":"Capture-Tiny-0.27","provides":{"Capture::Tiny":{"version":"0.27","file":"lib/Capture/Tiny.pm"}},"pathname":"D/DA/DAGOLDEN/Capture-Tiny-0.27.tar.gz"}
+{"pathname":"D/DA/DAGOLDEN/Capture-Tiny-0.27.tar.gz","dist":"Capture-Tiny-0.27","target":"Capture::Tiny","version":"0.27","provides":{"Capture::Tiny":{"file":"lib/Capture/Tiny.pm","version":"0.27"}},"name":"Capture::Tiny"}

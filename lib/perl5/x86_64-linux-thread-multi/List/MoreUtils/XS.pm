@@ -8,7 +8,7 @@ use vars qw{$VERSION @ISA};
 
 BEGIN
 {
-    $VERSION  = '0.402';
+    $VERSION  = '0.404';
 
     # Load the XS at compile-time so that redefinition warnings will be
     # thrown correctly if the XS versions of part or indexes loaded
@@ -68,7 +68,8 @@ Tassilo von Parseval E<lt>tassilo.von.parseval@rwth-aachen.deE<gt>
 Some parts copyright 2011 Aaron Crane.
 
 Copyright 2004 - 2010 by Tassilo von Parseval
-Copyright 2013 by Jens Rehsack
+
+Copyright 2013 - 2015 by Jens Rehsack
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,
