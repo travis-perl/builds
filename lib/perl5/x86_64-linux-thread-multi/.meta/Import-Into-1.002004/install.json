@@ -1,1 +1,1 @@
-{"target":"Import::Into","pathname":"E/ET/ETHER/Import-Into-1.002004.tar.gz","version":"1.002004","dist":"Import-Into-1.002004","name":"Import::Into","provides":{"Import::Into":{"file":"lib/Import/Into.pm","version":"1.002004"}}}
+{"pathname":"E/ET/ETHER/Import-Into-1.002004.tar.gz","provides":{"Import::Into":{"version":"1.002004","file":"lib/Import/Into.pm"}},"target":"Import::Into","dist":"Import-Into-1.002004","version":"1.002004","name":"Import::Into"}
