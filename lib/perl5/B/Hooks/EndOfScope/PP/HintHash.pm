@@ -1,4 +1,4 @@
-# Implementtion of a pure-perl on_scope_end for perl 5.8.X
+# Implementation of a pure-perl on_scope_end for perl 5.8.X
 # (relies on lack of compile/runtime duality of %^H before 5.10
 # which makes guard object operation possible)
 
@@ -7,6 +7,9 @@ package # hide from the pauses
 
 use strict;
 use warnings;
+
+our $VERSION = '0.14';
+
 use Scalar::Util ();
 
 # This is the original implementation, which sadly is broken

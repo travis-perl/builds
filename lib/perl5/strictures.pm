@@ -7,7 +7,8 @@ BEGIN {
   *_PERL_LT_5_8_4 = ($] < 5.008004) ? sub(){1} : sub(){0};
 }
 
-our $VERSION = '1.005005';
+our $VERSION = '1.005006';
+$VERSION = eval $VERSION;
 
 sub VERSION {
   my ($class, $version) = @_;
@@ -24,9 +25,7 @@ sub VERSION {
 
 our $extra_load_states;
 
-our $Smells_Like_VCS = (-e '.git' || -e '.svn' || -e '.hg'
-  || (-e '../../dist.ini'
-      && (-e '../../.git' || -e '../../.svn' || -e '../../.hg' )));
+our $Smells_Like_VCS;
 
 sub import {
   strict->import;
@@ -40,8 +39,13 @@ sub import {
       }
       $ENV{PERL_STRICTURES_EXTRA};
     } elsif (! _PERL_LT_5_8_4) {
-      !!((caller)[1] =~ /^(?:t|xt|lib|blib)/
-         and $Smells_Like_VCS)
+      (caller)[1] =~ /^(?:t|xt|lib|blib)[\\\/]/
+        and defined $Smells_Like_VCS ? $Smells_Like_VCS
+          : ( $Smells_Like_VCS = !!(
+            -e '.git' || -e '.svn' || -e '.hg'
+            || (-e '../../dist.ini'
+              && (-e '../../.git' || -e '../../.svn' || -e '../../.hg' ))
+          ))
     }
   };
   if ($extra_tests) {
@@ -104,7 +108,7 @@ is equivalent to
 
 except when called from a file which matches:
 
-  (caller)[1] =~ /^(?:t|xt|lib|blib)/
+  (caller)[1] =~ /^(?:t|xt|lib|blib)[\\\/]/
 
 and when either C<.git>, C<.svn>, or C<.hg> is present in the current directory (with
 the intention of only forcing extra tests on the author side) -- or when C<.git>,
