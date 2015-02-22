@@ -1,0 +1,1 @@
+{"version":"0.25","pathname":"E/ET/ETHER/Hook-LexWrap-0.25.tar.gz","name":"Hook::LexWrap","provides":{"Hook::LexWrap":{"file":"lib/Hook/LexWrap.pm","version":"0.25"},"Hook::LexWrap::Cleanup":{"version":"0.25","file":"lib/Hook/LexWrap.pm"}},"target":"Hook::LexWrap","dist":"Hook-LexWrap-0.25"}
