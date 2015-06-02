@@ -1,10 +1,10 @@
 package Sub::Quote;
 
-use strictures 1;
-
 sub _clean_eval { eval $_[0] }
 
-use Sub::Defer;
+use Moo::_strictures;
+
+use Sub::Defer qw(defer_sub);
 use Scalar::Util qw(weaken);
 use Exporter qw(import);
 use B ();
@@ -12,7 +12,7 @@ BEGIN {
   *_HAVE_PERLSTRING = defined &B::perlstring ? sub(){1} : sub(){0};
 }
 
-our $VERSION = '1.007000';
+our $VERSION = '2.000001';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(quote_sub unquote_sub quoted_from_sub qsub);

@@ -4,9 +4,9 @@ sub _getglob { \*{$_[0]} }
 sub _getstash { \%{"$_[0]::"} }
 
 use strict;
-use warnings FATAL => 'all';
+use warnings;
 
-our $VERSION = '1.003004';
+our $VERSION = '2.000001';
 $VERSION = eval $VERSION;
 
 our %INFO;
@@ -44,7 +44,7 @@ sub import {
   my $target = caller;
   my $me = shift;
   strict->import;
-  warnings->import(FATAL => 'all');
+  warnings->import;
   return if $me->is_role($target); # already exported into this package
   $INFO{$target}{is_role} = 1;
   # get symbol table reference
@@ -117,8 +117,11 @@ sub _composite_name {
   );
 
   if (length($new_name) > 252) {
-    $new_name = $COMPOSED{abbrev}{$new_name}
-      ||= substr($new_name, 0, 250 - length $role_suffix).'__'.$role_suffix++;
+    $new_name = $COMPOSED{abbrev}{$new_name} ||= do {
+      my $abbrev = substr $new_name, 0, 250 - length $role_suffix;
+      $abbrev =~ s/(?<!:):$//;
+      $abbrev.'__'.$role_suffix++;
+    };
   }
   return wantarray ? ($new_name, $compose_name) : $new_name;
 }
@@ -427,7 +430,7 @@ sub _install_does {
     $proto->$does($role) or $proto->$existing($role);
   };
   no warnings 'redefine';
-  *{_getglob "${to}::DOES"} = $new_sub;
+  return *{_getglob "${to}::DOES"} = $new_sub;
 }
 
 sub does_role {
@@ -578,11 +581,7 @@ both L<Class::Method::Modifiers> and L<Role::Tiny>.
 =head2 Strict and Warnings
 
 In addition to importing subroutines, using C<Role::Tiny> applies L<strict> and
-L<fatal warnings|perllexwarn/Fatal Warnings> to the caller.  It's possible to
-disable these if desired:
-
- use Role::Tiny;
- use warnings NONFATAL => 'all';
+L<warnings> to the caller.
 
 =head1 SUBROUTINES
 
