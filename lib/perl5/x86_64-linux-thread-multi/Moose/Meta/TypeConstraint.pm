@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use strict;
 use warnings;
@@ -206,15 +206,15 @@ sub inline_environment {
 }
 
 sub assert_valid {
-    my ($self, $value) = @_;
+    my ( $self, $value ) = @_;
 
-    my $error = $self->validate($value);
-    return 1 if ! defined $error;
+    return 1 if $self->check($value);
 
-    throw_exception( ValidationFailedForTypeConstraint => type          => $self,
-                                                          error_message => $error,
-                                                          value         => $value
-                   );
+    throw_exception(
+        'ValidationFailedForTypeConstraint',
+        type  => $self,
+        value => $value
+    );
 }
 
 sub get_message {
@@ -375,7 +375,7 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 
 =head1 VERSION
 
-version 2.1403
+version 2.1404
 
 =head1 DESCRIPTION
 

@@ -1,11 +1,11 @@
 package Moose::Meta::Role::Application::ToClass;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use strict;
 use warnings;
 use metaclass;
 
-use List::MoreUtils 'firstval';
+use List::Util 'first';
 use Moose::Util 'throw_exception';
 use Scalar::Util 'weaken';
 
@@ -92,7 +92,7 @@ sub check_required_methods {
                        );
     }
     elsif (@missing) {
-        if (my $meth = firstval { $class->name->can($_) } @missing) {
+        if (my $meth = first { $class->name->can($_) } @missing) {
             throw_exception( RequiredMethodsImportedByClass => class_name      => $class->name,
                                                                role_name       => $role->name,
                                                                missing_methods => \@missing,
@@ -224,7 +224,7 @@ Moose::Meta::Role::Application::ToClass - Compose a role into a class
 
 =head1 VERSION
 
-version 2.1403
+version 2.1404
 
 =head1 DESCRIPTION
 
