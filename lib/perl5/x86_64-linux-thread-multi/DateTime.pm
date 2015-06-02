@@ -1,12 +1,12 @@
 package DateTime;
-# git description: v1.17-2-ge20e079
 
-$DateTime::VERSION = '1.18';
 use 5.008001;
 
 use strict;
 use warnings;
 use warnings::register;
+
+our $VERSION = '1.19';
 
 use Carp;
 use DateTime::Duration;
@@ -40,11 +40,11 @@ use Try::Tiny;
     }
 
     if ($loaded) {
-        require DateTimePPExtra
+        require DateTime::PPExtra
             unless defined &DateTime::_normalize_tai_seconds;
     }
     else {
-        require DateTimePP;
+        require DateTime::PP;
     }
 }
 
@@ -471,35 +471,6 @@ sub _calc_local_components {
         );
 }
 
-sub _calc_utc_components {
-    my $self = shift;
-
-    die "Cannot get UTC components before UTC RD has been calculated\n"
-        unless defined $self->{utc_rd_days};
-
-    @{ $self->{utc_c} }{qw( year month day )}
-        = $self->_rd2ymd( $self->{utc_rd_days} );
-
-    @{ $self->{utc_c} }{qw( hour minute second )}
-        = $self->_seconds_as_components( $self->{utc_rd_secs} );
-}
-
-sub _utc_ymd {
-    my $self = shift;
-
-    $self->_calc_utc_components unless exists $self->{utc_c}{year};
-
-    return @{ $self->{utc_c} }{qw( year month day )};
-}
-
-sub _utc_hms {
-    my $self = shift;
-
-    $self->_calc_utc_components unless exists $self->{utc_c}{hour};
-
-    return @{ $self->{utc_c} }{qw( hour minute second )};
-}
-
 {
     my $spec = {
         epoch     => { regex => qr/^-?(?:\d+(?:\.\d*)?|\.\d+)$/ },
@@ -814,7 +785,7 @@ sub ymd {
     $sep = '-' unless defined $sep;
 
     return sprintf(
-        "%0.4d%s%0.2d%s%0.2d",
+        '%0.4d%s%0.2d%s%0.2d',
         $self->year,             $sep,
         $self->{local_c}{month}, $sep,
         $self->{local_c}{day}
@@ -827,7 +798,7 @@ sub mdy {
     $sep = '-' unless defined $sep;
 
     return sprintf(
-        "%0.2d%s%0.2d%s%0.4d",
+        '%0.2d%s%0.2d%s%0.4d',
         $self->{local_c}{month}, $sep,
         $self->{local_c}{day},   $sep,
         $self->year
@@ -839,7 +810,7 @@ sub dmy {
     $sep = '-' unless defined $sep;
 
     return sprintf(
-        "%0.2d%s%0.2d%s%0.4d",
+        '%0.2d%s%0.2d%s%0.4d',
         $self->{local_c}{day},   $sep,
         $self->{local_c}{month}, $sep,
         $self->year
@@ -898,7 +869,7 @@ sub hms {
     $sep = ':' unless defined $sep;
 
     return sprintf(
-        "%0.2d%s%0.2d%s%0.2d",
+        '%0.2d%s%0.2d%s%0.2d',
         $self->{local_c}{hour},   $sep,
         $self->{local_c}{minute}, $sep,
         $self->{local_c}{second}
@@ -1047,7 +1018,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
         'l' => sub { sprintf( '%2d', $_[0]->hour_12 ) },
         'm' => sub { sprintf( '%02d', $_[0]->month ) },
         'M' => sub { sprintf( '%02d', $_[0]->minute ) },
-        'n' => sub { "\n" },                   # should this be OS-sensitive?
+        'n' => sub {"\n"},                     # should this be OS-sensitive?
         'N' => \&_format_nanosecs,
         'p' => sub { $_[0]->am_or_pm() },
         'P' => sub { lc $_[0]->am_or_pm() },
@@ -1055,7 +1026,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
         'R' => sub { $_[0]->strftime('%H:%M') },
         's' => sub { $_[0]->epoch },
         'S' => sub { sprintf( '%02d', $_[0]->second ) },
-        't' => sub { "\t" },
+        't' => sub {"\t"},
         'T' => sub { $_[0]->strftime('%H:%M:%S') },
         'u' => sub { $_[0]->day_of_week },
         'U' => sub {
@@ -1081,7 +1052,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
         'Y' => sub { return $_[0]->year },
         'z' => sub { DateTime::TimeZone->offset_as_string( $_[0]->offset ) },
         'Z' => sub { $_[0]->{tz}->short_name_for_datetime( $_[0] ) },
-        '%' => sub { '%' },
+        '%' => sub {'%'},
     );
 
     $strftime_patterns{h} = $strftime_patterns{b};
@@ -1269,7 +1240,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
             substr(
                 my $z
                     = DateTime::TimeZone->offset_as_string( $_[0]->offset() ),
-                -2, 0, ":"
+                -2, 0, ':'
             );
             $z;
         },
@@ -1344,7 +1315,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
         my $self    = shift;
         my $pattern = shift;
 
-        for ( my $i = 0 ; $i < @patterns ; $i += 2 ) {
+        for ( my $i = 0; $i < @patterns; $i += 2 ) {
             if ( $pattern =~ /$patterns[$i]/ ) {
                 my $sub = $patterns[ $i + 1 ];
 
@@ -1391,8 +1362,8 @@ sub hires_epoch {
     return $epoch + $nano;
 }
 
-sub is_finite   { 1 }
-sub is_infinite { 0 }
+sub is_finite   {1}
+sub is_infinite {0}
 
 # added for benefit of DateTime::TimeZone
 sub utc_year { $_[0]->{utc_year} }
@@ -1650,7 +1621,7 @@ sub _add_overload {
         my $dt_string = overload::StrVal($dt);
 
         Carp::croak( "Cannot add $dur to a $class object ($dt_string).\n"
-                . " Only a DateTime::Duration object can "
+                . ' Only a DateTime::Duration object can '
                 . " be added to a $class object." );
     }
 
@@ -1678,7 +1649,7 @@ sub _subtract_overload {
 
         Carp::croak(
             "Cannot subtract $date2 from a $class object ($dt_string).\n"
-                . " Only a DateTime::Duration or DateTime object can "
+                . ' Only a DateTime::Duration or DateTime object can '
                 . " be subtracted from a $class object." );
     }
 }
@@ -1830,6 +1801,9 @@ sub _compare_overload {
 
     # note: $_[1]->compare( $_[0] ) is an error when $_[1] is not a
     # DateTime (such as the INFINITY value)
+
+    return undef unless defined $_[1];
+
     return $_[2] ? -$_[0]->compare( $_[1] ) : $_[0]->compare( $_[1] );
 }
 
@@ -1869,7 +1843,7 @@ sub _compare {
         my $dt1_string = overload::StrVal($dt1);
         my $dt2_string = overload::StrVal($dt2);
 
-        Carp::croak( "A DateTime object can only be compared to"
+        Carp::croak( 'A DateTime object can only be compared to'
                 . " another DateTime object ($dt1_string, $dt2_string)." );
     }
 
@@ -2177,7 +2151,7 @@ DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 
@@ -2806,7 +2780,8 @@ This method is equivalent to:
 
   $dt->ymd('-') . 'T' . $dt->hms(':')
 
-Also available as C<< $dt->iso8601() >>.
+This method is also available as C<< $dt->iso8601() >>, but it's not really a
+very good ISO8601 format, as it lacks a time zone.
 
 =head3 $dt->is_leap_year()
 
@@ -3807,7 +3782,7 @@ This is a special case. It always produces a two-digit year, so "1976" becomes
 
 =item * Y{1,}
 
-The week of the year, from C<< $dt->week_year() >>.
+The year in "week of the year" calendars, from C<< $dt->week_year() >>.
 
 =item * u{1,}
 
@@ -4333,7 +4308,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Iain Truskett Joshua Hoblitt Ricardo Signes Richard Bowen Ron Hill
+=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Ricardo Signes Richard Bowen Ron Hill
 
 =over 4
 
@@ -4363,7 +4338,15 @@ Flávio Soibelmann Glock <fglock@gmail.com>
 
 =item *
 
+Gregory Oschwald <oschwald@gmail.com>
+
+=item *
+
 Iain Truskett <deceased>
+
+=item *
+
+Jason McIntosh <jmac@jmac.org>
 
 =item *
 

@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Check;
 # ABSTRACT: check your git repository before releasing
-$Dist::Zilla::Plugin::Git::Check::VERSION = '2.029';
+$Dist::Zilla::Plugin::Git::Check::VERSION = '2.034';
 
 use Moose;
 use namespace::autoclean 0.09;
@@ -137,7 +137,7 @@ Dist::Zilla::Plugin::Git::Check - check your git repository before releasing
 
 =head1 VERSION
 
-version 2.029
+version 2.034
 
 =head1 SYNOPSIS
 
@@ -152,8 +152,8 @@ In your F<dist.ini>:
 
 =head1 DESCRIPTION
 
-This plugin checks that git is in a clean state before releasing. The
-following checks are performed before releasing:
+This plugin checks that your Git repo is in a clean state before releasing.
+The following checks are performed before releasing:
 
 =over 4
 

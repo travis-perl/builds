@@ -1,7 +1,9 @@
 package DateTime::LeapSecond;
-$DateTime::LeapSecond::VERSION = '1.18';
+
 use strict;
 use warnings;
+
+our $VERSION = '1.19';
 
 use vars qw( @RD @LEAP_SECONDS %RD_LENGTH );
 
@@ -116,6 +118,7 @@ sub _initialize {
 __PACKAGE__->_initialize();
 
 1;
+
 # ABSTRACT: leap seconds table and utilities
 
 __END__
@@ -128,7 +131,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 

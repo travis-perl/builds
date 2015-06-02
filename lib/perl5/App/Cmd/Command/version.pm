@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::version;
-$App::Cmd::Command::version::VERSION = '0.326';
+$App::Cmd::Command::version::VERSION = '0.327';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
@@ -48,7 +48,7 @@ App::Cmd::Command::version - display an app's version
 
 =head1 VERSION
 
-version 0.326
+version 0.327
 
 =head1 DESCRIPTION
 
@@ -62,7 +62,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

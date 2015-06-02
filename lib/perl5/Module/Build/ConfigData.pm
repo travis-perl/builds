@@ -183,29 +183,29 @@ do{ my $x = [
                                                  'Module::Signature' => '0.21'
                                                }
                              },
-         'manpage_support' => {
-                                'description' => 'Create Unix man pages',
-                                'requires' => {
-                                                'Pod::Man' => 0
-                                              }
-                              },
-         'PPM_support' => {
-                            'description' => 'Generate PPM files for distributions'
-                          },
-         'inc_bundling_support' => {
-                                     'requires' => {
-                                                     'inc::latest' => '0.5',
-                                                     'ExtUtils::Install' => '1.54',
-                                                     'ExtUtils::Installed' => '1.999'
-                                                   },
-                                     'description' => 'Bundle Module::Build in inc/'
-                                   },
          'HTML_support' => {
                              'description' => 'Create HTML documentation',
                              'requires' => {
                                              'Pod::Html' => 0
                                            }
-                           }
+                           },
+         'manpage_support' => {
+                                'requires' => {
+                                                'Pod::Man' => 0
+                                              },
+                                'description' => 'Create Unix man pages'
+                              },
+         'inc_bundling_support' => {
+                                     'requires' => {
+                                                     'ExtUtils::Install' => '1.54',
+                                                     'inc::latest' => '0.5',
+                                                     'ExtUtils::Installed' => '1.999'
+                                                   },
+                                     'description' => 'Bundle Module::Build in inc/'
+                                   },
+         'PPM_support' => {
+                            'description' => 'Generate PPM files for distributions'
+                          }
        }
      ];
 $x; }

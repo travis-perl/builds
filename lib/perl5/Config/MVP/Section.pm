@@ -1,6 +1,6 @@
 package Config::MVP::Section;
 # ABSTRACT: one section of an MVP configuration sequence
-$Config::MVP::Section::VERSION = '2.200008';
+$Config::MVP::Section::VERSION = '2.200010';
 use Moose 0.91;
 
 use Class::Load 0.17 ();
@@ -216,7 +216,7 @@ sub add_value {
 
 #pod =method load_package
 #pod
-#pod   $section->load_package($package, $plugin);
+#pod   $section->load_package($package, $section_name);
 #pod
 #pod This method is used to ensure that the given C<$package> is loaded, and is
 #pod called whenever a section with a package is created.  By default, it delegates
@@ -226,15 +226,15 @@ sub add_value {
 #pod =cut
 
 sub load_package {
-  my ($self, $package, $plugin) = @_;
+  my ($self, $package, $section_name) = @_;
 
   Class::Load::load_optional_class($package)
-    or $self->missing_package($package, $plugin);
+    or $self->missing_package($package, $section_name);
 }
 
 #pod =method missing_package
 #pod
-#pod   $section->missing_package($package, $plugin);
+#pod   $section->missing_package($package, $section_name);
 #pod
 #pod This method is called when C<load_package> encounters a package that is not
 #pod installed.  By default, it throws an exception.
@@ -242,7 +242,7 @@ sub load_package {
 #pod =cut
 
 sub missing_package {
-  my ($self, $package, $plugin) = @_ ;
+  my ($self, $package, $section_name) = @_ ;
 
   my $class = Moose::Meta::Class->create_anon_class(
     superclasses => [ 'Config::MVP::Error' ],
@@ -252,13 +252,18 @@ sub missing_package {
         is       => 'ro',
         required => 1,
       )),
+      Moose::Meta::Attribute->new(section_name => (
+        is       => 'ro',
+        required => 1,
+      )),
     ],
   );
 
   $class->name->throw({
     ident   => 'package not installed',
-    message => "$package (for plugin $plugin) does not appear to be installed",
+    message => "$package (for section $section_name) does not appear to be installed",
     package => $package,
+    section_name => $section_name,
   });
 }
 
@@ -297,7 +302,7 @@ Config::MVP::Section - one section of an MVP configuration sequence
 
 =head1 VERSION
 
-version 2.200008
+version 2.200010
 
 =head1 DESCRIPTION
 
@@ -379,7 +384,7 @@ added will result in an exception.
 
 =head2 load_package
 
-  $section->load_package($package, $plugin);
+  $section->load_package($package, $section_name);
 
 This method is used to ensure that the given C<$package> is loaded, and is
 called whenever a section with a package is created.  By default, it delegates
@@ -388,7 +393,7 @@ L<missing_package> method.  Errors in compilation are not suppressed.
 
 =head2 missing_package
 
-  $section->missing_package($package, $plugin);
+  $section->missing_package($package, $section_name);
 
 This method is called when C<load_package> encounters a package that is not
 installed.  By default, it throws an exception.
@@ -399,7 +404,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

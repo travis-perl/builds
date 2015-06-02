@@ -12,11 +12,10 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Commit;
 # ABSTRACT: commit dirty files
-$Dist::Zilla::Plugin::Git::Commit::VERSION = '2.029';
+$Dist::Zilla::Plugin::Git::Commit::VERSION = '2.034';
 
 use namespace::autoclean;
 use File::Temp           qw{ tempfile };
-use List::Util           qw{ first };
 use Moose;
 use MooseX::Has::Sugar;
 use MooseX::Types::Moose qw{ Str };
@@ -120,7 +119,7 @@ Dist::Zilla::Plugin::Git::Commit - commit dirty files
 
 =head1 VERSION
 
-version 2.029
+version 2.034
 
 =head1 SYNOPSIS
 

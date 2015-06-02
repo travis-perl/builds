@@ -1,6 +1,6 @@
 package Config::MVP::Reader::Hash;
 # ABSTRACT: a reader that tries to cope with a plain old hashref
-$Config::MVP::Reader::Hash::VERSION = '2.200008';
+$Config::MVP::Reader::Hash::VERSION = '2.200010';
 use Moose;
 extends 'Config::MVP::Reader';
 
@@ -58,7 +58,7 @@ Config::MVP::Reader::Hash - a reader that tries to cope with a plain old hashref
 
 =head1 VERSION
 
-version 2.200008
+version 2.200010
 
 =head1 SYNOPSIS
 
@@ -79,7 +79,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

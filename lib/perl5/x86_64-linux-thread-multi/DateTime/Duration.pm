@@ -1,7 +1,9 @@
 package DateTime::Duration;
-$DateTime::Duration::VERSION = '1.18';
+
 use strict;
 use warnings;
+
+our $VERSION = '1.19';
 
 use Carp ();
 use DateTime;
@@ -65,7 +67,7 @@ sub new {
     $self->{end_of_month} = (
           defined $p{end_of_month} ? $p{end_of_month}
         : $self->{months} < 0      ? 'preserve'
-        : 'wrap'
+        :                            'wrap'
     );
 
     return $self;
@@ -257,8 +259,10 @@ sub compare {
 
     $dt ||= DateTime->now;
 
-    return DateTime->compare( $dt->clone->add_duration($dur1),
-        $dt->clone->add_duration($dur2) );
+    return DateTime->compare(
+        $dt->clone->add_duration($dur1),
+        $dt->clone->add_duration($dur2)
+    );
 }
 
 sub _add_overload {
@@ -315,7 +319,7 @@ DateTime::Duration - Duration objects for date math
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 

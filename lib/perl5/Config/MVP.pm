@@ -1,6 +1,6 @@
 package Config::MVP;
 # ABSTRACT: multivalue-property package-oriented configuration
-$Config::MVP::VERSION = '2.200008';
+$Config::MVP::VERSION = '2.200010';
 use strict;
 use warnings;
 
@@ -219,7 +219,7 @@ Config::MVP - multivalue-property package-oriented configuration
 
 =head1 VERSION
 
-version 2.200008
+version 2.200010
 
 =head1 SYNOPSIS
 
@@ -424,9 +424,37 @@ or L<App::Addex|App::Addex>.
 
 Ricardo Signes <rjbs@cpan.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Alexandr Ciornii George Hartzell Karen Etheridge Kent Fredric Philippe Bruhat (BooK)
+
+=over 4
+
+=item *
+
+Alexandr Ciornii <alexchorny@gmail.com>
+
+=item *
+
+George Hartzell <hartzell@alerce.com>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Philippe Bruhat (BooK) <book@cpan.org>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

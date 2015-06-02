@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.061';
+our $VERSION = '0.068';
 
 # Dependencies
 use Config;
@@ -235,7 +235,8 @@ sub path {
 
     # do any tilde expansions
     if ( $path =~ m{^(~[^/]*).*} ) {
-        my ($homedir) = glob($1); # glob without list context == heisenbug!
+        require File::Glob;
+        my ($homedir) = File::Glob::bsd_glob($1);
         $path =~ s{^(~[^/]*)}{$homedir};
     }
 
@@ -322,6 +323,12 @@ sub rootdir { path( File::Spec->rootdir ) }
 #pod Both C<tempfile> and C<tempdir> may be exported on request and used as
 #pod functions instead of as methods.
 #pod
+#pod B<Note>: for tempfiles, the filehandles from File::Temp are closed and not
+#pod reused.  This is not as secure than using File::Temp handles directly, but is
+#pod less prone to deadlocks or access problems on some platforms.  Think of what
+#pod C<Path::Tiny> gives you to be just a temporary file B<name> that gets cleaned
+#pod up.
+#pod
 #pod Current API available since 0.018.
 #pod
 #pod =cut
@@ -349,6 +356,10 @@ sub tempdir {
     my $temp = File::Temp->newdir( @$maybe_template, TMPDIR => 1, %$args );
     my $self = path($temp)->absolute;
     $self->[TEMP] = $temp;                # keep object alive while we are
+    # Some ActiveState Perls for Windows break Cwd in ways that lead
+    # File::Temp to get confused about what path to remove; this
+    # monkey-patches the object with our own view of the absolute path
+    $temp->{REALNAME} = $self->[CANON] if IS_WIN32;
     return $self;
 }
 
@@ -485,6 +496,35 @@ sub append_utf8 {
         $args->{binmode} = ":unix:encoding(UTF-8)";
         append( $self, $args, @data );
     }
+}
+
+#pod =method assert
+#pod
+#pod     $path = path("foo.txt")->assert( sub { $_->exists } );
+#pod
+#pod Returns the invocant after asserting that a code reference argument returns
+#pod true.  When the assertion code reference runs, it will have the invocant
+#pod object in the C<$_> variable.  If it returns false, an exception will be
+#pod thrown.  The assertion code reference may also throw its own exception.
+#pod
+#pod If no assertion is provided, the invocant is returned without error.
+#pod
+#pod Current API available since 0.062.
+#pod
+#pod =cut
+
+sub assert {
+    my ( $self, $assertion ) = @_;
+    return $self unless $assertion;
+    if ( ref $assertion eq 'CODE' ) {
+        local $_ = $self;
+        $assertion->()
+          or Path::Tiny::Error->throw( "assert", $self->[PATH], "failed assertion" );
+    }
+    else {
+        Carp::croak("argument to assert must be a code reference argument");
+    }
+    return $self;
 }
 
 #pod =method basename
@@ -732,20 +772,26 @@ sub is_dir { -d $_[0]->[PATH] }
 #pod
 #pod     $fh = path("/tmp/foo.txt")->filehandle($mode, $binmode);
 #pod     $fh = path("/tmp/foo.txt")->filehandle({ locked => 1 }, $mode, $binmode);
+#pod     $fh = path("/tmp/foo.txt")->filehandle({ exclusive => 1  }, $mode, $binmode);
 #pod
 #pod Returns an open file handle.  The C<$mode> argument must be a Perl-style
 #pod read/write mode string ("<" ,">", "<<", etc.).  If a C<$binmode>
 #pod is given, it is set during the C<open> call.
 #pod
-#pod An optional hash reference may be used to pass options.  The only option is
-#pod C<locked>.  If true, handles opened for writing, appending or read-write are
-#pod locked with C<LOCK_EX>; otherwise, they are locked with C<LOCK_SH>.  When using
-#pod C<locked>, ">" or "+>" modes will delay truncation until after the lock is
-#pod acquired.
+#pod An optional hash reference may be used to pass options.
+#pod
+#pod The C<locked> option governs file locking; if true, handles opened for writing,
+#pod appending or read-write are locked with C<LOCK_EX>; otherwise, they are
+#pod locked with C<LOCK_SH>.  When using C<locked>, ">" or "+>" modes will delay
+#pod truncation until after the lock is acquired.
+#pod
+#pod The C<exclusive> option causes the open() call to fail if the file already
+#pod exists.  This corresponds to the O_EXCL flag to sysopen / open(2).
+#pod C<exclusive> implies C<locked> and will set it for you if you forget it.
 #pod
 #pod See C<openr>, C<openw>, C<openrw>, and C<opena> for sugar.
 #pod
-#pod Current API available since 0.039.
+#pod Current API available since 0.066.
 #pod
 #pod =cut
 
@@ -755,7 +801,8 @@ sub is_dir { -d $_[0]->[PATH] }
 sub filehandle {
     my ( $self, @args ) = @_;
     my $args = ( @args && ref $args[0] eq 'HASH' ) ? shift @args : {};
-    $args = _get_args( $args, qw/locked/ );
+    $args = _get_args( $args, qw/locked exclusive/ );
+    $args->{locked} = 1 if $args->{exclusive};
     my ( $opentype, $binmode ) = @args;
 
     $opentype = "<" unless defined $opentype;
@@ -774,6 +821,7 @@ sub filehandle {
             # sysopen in write mode without truncation
             my $flags = $opentype eq ">" ? Fcntl::O_WRONLY() : Fcntl::O_RDWR();
             $flags |= Fcntl::O_CREAT();
+            $flags |= Fcntl::O_EXCL() if $args->{exclusive};
             sysopen( $fh, $self->[PATH], $flags ) or $self->_throw("sysopen");
 
             # fix up the binmode since sysopen() can't specify layers like
@@ -893,6 +941,8 @@ sub is_rootdir {
 #pod For a more powerful, recursive iterator with built-in loop avoidance, see
 #pod L<Path::Iterator::Rule>.
 #pod
+#pod See also L</visit>.
+#pod
 #pod Current API available since 0.016.
 #pod
 #pod =cut
@@ -951,11 +1001,17 @@ sub iterator {
 #pod     @contents = path("/tmp/foo.txt")->lines( { chomp => 1, count => 4 } );
 #pod
 #pod Returns a list of lines from a file.  Optionally takes a hash-reference of
-#pod options.  Valid options are C<binmode>, C<count> and C<chomp>.  If C<binmode>
-#pod is provided, it will be set on the handle prior to reading.  If C<count> is
-#pod provided, up to that many lines will be returned. If C<chomp> is set, any
-#pod end-of-line character sequences (C<CR>, C<CRLF>, or C<LF>) will be removed
-#pod from the lines returned.
+#pod options.  Valid options are C<binmode>, C<count> and C<chomp>.
+#pod
+#pod If C<binmode> is provided, it will be set on the handle prior to reading.
+#pod
+#pod If a positive C<count> is provided, that many lines will be returned from the
+#pod start of the file.  If a negative C<count> is provided, the entire file will be
+#pod read, but only C<abs(count)> will be kept and returned.  If C<abs(count)>
+#pod exceeds the number of lines in the file, all lines will be returned.
+#pod
+#pod If C<chomp> is set, any end-of-line character sequences (C<CR>, C<CRLF>, or
+#pod C<LF>) will be removed from the lines returned.
 #pod
 #pod Because the return is a list, C<lines> in scalar context will return the number
 #pod of lines (and throw away the data).
@@ -972,7 +1028,7 @@ sub iterator {
 #pod intensive.  If memory use is a concern, consider C<openr_utf8> and
 #pod iterating directly on the handle.
 #pod
-#pod Current API available since 0.048.
+#pod Current API available since 0.065.
 #pod
 #pod =cut
 
@@ -985,12 +1041,18 @@ sub lines {
     my $chomp = $args->{chomp};
     # XXX more efficient to read @lines then chomp(@lines) vs map?
     if ( $args->{count} ) {
-        my ( @result, $counter );
+        my ( $counter, $mod, @result ) = ( 0, abs( $args->{count} ) );
         while ( my $line = <$fh> ) {
             $line =~ s/(?:\x{0d}?\x{0a}|\x{0d})$// if $chomp;
-            push @result, $line;
-            last if ++$counter == $args->{count};
+            $result[ $counter++ ] = $line;
+            # for positive count, terminate after right number of lines
+            last if $counter == $args->{count};
+            # for negative count, eventually wrap around in the result array
+            $counter %= $mod;
         }
+        # reorder results if full and wrapped somewhere in the middle
+        splice( @result, 0, 0, splice( @result, $counter ) )
+          if @result == $mod && $counter % $mod;
         return @result;
     }
     elsif ($chomp) {
@@ -1070,7 +1132,7 @@ sub move {
     my ( $self, $dst ) = @_;
 
     return rename( $self->[PATH], $dst )
-      || $self->_throw( 'rename', $self->[PATH] . "' -> '$dst'" );
+      || $self->_throw( 'rename', $self->[PATH] . "' -> '$dst" );
 }
 
 #pod =method openr, openw, openrw, opena
@@ -1204,24 +1266,42 @@ sub _non_empty {
 #pod parts resolved using L<Cwd>'s C<realpath>.  Compared to C<absolute>, this is
 #pod more expensive as it must actually consult the filesystem.
 #pod
-#pod If the path can't be resolved (e.g. if it includes directories that don't exist),
-#pod an exception will be thrown:
+#pod If the parent path can't be resolved (e.g. if it includes directories that
+#pod don't exist), an exception will be thrown:
 #pod
 #pod     $real = path("doesnt_exist/foo")->realpath; # dies
+#pod
+#pod However, if the parent path exists and only the last component (e.g. filename)
+#pod doesn't exist, the realpath will be the realpath of the parent plus the
+#pod non-existent last component:
+#pod
+#pod     $real = path("./aasdlfasdlf")->realpath; # works
+#pod
+#pod The underlying L<Cwd> module usually worked this way on Unix, but died on
+#pod Windows (and some Unixes) if the full path didn't exist.  As of version 0.064,
+#pod it's safe to use anywhere.
 #pod
 #pod Current API available since 0.001.
 #pod
 #pod =cut
 
+# Win32 and some Unixes need parent path resolved separately so realpath
+# doesn't throw an error resolving non-existent basename
 sub realpath {
     my $self = shift;
     require Cwd;
+    $self->_splitpath if !defined $self->[FILE];
+    my $check_parent =
+      length $self->[FILE] && $self->[FILE] ne '.' && $self->[FILE] ne '..';
     my $realpath = eval {
-        local $SIG{__WARN__} = sub { }; # (sigh) pure-perl CWD can carp
-        Cwd::realpath( $self->[PATH] );
+        # pure-perl Cwd can carp
+        local $SIG{__WARN__} = sub { };
+        Cwd::realpath( $check_parent ? $self->parent->[PATH] : $self->[PATH] );
     };
-    $self->_throw("resolving realpath") unless defined $realpath and length $realpath;
-    return path($realpath);
+    # parent realpath must exist; not all Cwd::realpath will error if it doesn't
+    $self->_throw("resolving realpath")
+      unless defined $realpath && length $realpath && -e $realpath;
+    return ( $check_parent ? path( $realpath, $self->[FILE] ) : path($realpath) );
 }
 
 #pod =method relative
@@ -1335,6 +1415,13 @@ sub sibling {
 #pod This is just as strict and is roughly an order of magnitude faster than
 #pod using C<:encoding(UTF-8)>.
 #pod
+#pod B<Note>: C<slurp> and friends lock the filehandle before slurping.  If
+#pod you plan to slurp from a file created with L<File::Temp>, be sure to
+#pod close other handles or open without locking to avoid a deadlock:
+#pod
+#pod     my $tempfile = File::Temp->new(EXLOCK => 0);
+#pod     my $guts = path($tempfile)->slurp;
+#pod
 #pod Current API available since 0.004.
 #pod
 #pod =cut
@@ -1409,7 +1496,7 @@ sub spew {
     # get default binmode from caller's lexical scope (see "perldoc open")
     $binmode = ( ( caller(0) )[10] || {} )->{'open>'} unless defined $binmode;
     my $temp = path( $self->[PATH] . $$ . int( rand( 2**31 ) ) );
-    my $fh = $temp->filehandle( { locked => 1 }, ">", $binmode );
+    my $fh = $temp->filehandle( { exclusive => 1, locked => 1 }, ">", $binmode );
     print {$fh} map { ref eq 'ARRAY' ? @$_ : $_ } @data;
     close $fh or $self->_throw( 'close', $temp->[PATH] );
 
@@ -1539,9 +1626,10 @@ sub subsumes {
 #pod changes the modification and access times to the current time.  If the first
 #pod argument is the epoch seconds then it will be used.
 #pod
-#pod Returns the path object so it can be easily chained with spew:
+#pod Returns the path object so it can be easily chained with other methods:
 #pod
-#pod     path("foo.txt")->touch->spew( $content );
+#pod     # won't die if foo.txt doesn't exist
+#pod     $content = path("foo.txt")->touch->slurp;
 #pod
 #pod Current API available since 0.015.
 #pod
@@ -1575,6 +1663,72 @@ sub touchpath {
     my $parent = $self->parent;
     $parent->mkpath unless $parent->exists;
     $self->touch;
+}
+
+#pod =method visit
+#pod
+#pod     path("/tmp")->visit( \&callback, \%options );
+#pod
+#pod Wraps the L</iterator> method to execute a callback for each directory entry.
+#pod It returns a hash reference with any state accumulated during
+#pod iteration.
+#pod
+#pod The options are the same as for L</iterator>: C<recurse> and
+#pod C<follow_symlinks>.  Both default to false.
+#pod
+#pod The callback function will receive a C<Path::Tiny> object as the first argument
+#pod and a hash reference to accumulate state as the second argument.  For example:
+#pod
+#pod     # collect files sizes
+#pod     my $sizes = path("/tmp")->visit(
+#pod         sub {
+#pod             my ($path, $state) = @_;
+#pod             return if $path->is_dir;
+#pod             $state{$path} = -s $path;
+#pod         },
+#pod         { recurse => 1 }
+#pod     );
+#pod
+#pod For convenience, the C<Path::Tiny> object will also be locally aliased as the
+#pod C<$_> global variable:
+#pod
+#pod     # print paths matching /foo/
+#pod     path("/tmp")->visit( sub { say if /foo/ }, { recurse => 1} );
+#pod
+#pod If the callback returns a B<reference> to a false scalar value, iteration will
+#pod terminate.  This is not the same as "pruning" a directory search; this just
+#pod stops all iteration and returns the state hash reference.
+#pod
+#pod     # find up to 10 files larger than 100K
+#pod     my $files = path("/tmp")->visit(
+#pod         sub {
+#pod             my ($path, $state) = @_;
+#pod             $state{$path}++ if -s $path > 102400
+#pod             return \0 if keys %$state == 10;
+#pod         },
+#pod         { recurse => 1 }
+#pod     );
+#pod
+#pod If you want more flexible iteration, use a module like L<Path::Iterator::Rule>.
+#pod
+#pod Current API available since 0.062.
+#pod
+#pod =cut
+
+sub visit {
+    my $self = shift;
+    my $cb   = shift;
+    my $args = _get_args( shift, qw/recurse follow_symlinks/ );
+    Carp::croak("Callback for visit() must be a code reference")
+      unless defined($cb) && ref($cb) eq 'CODE';
+    my $next  = $self->iterator($args);
+    my $state = {};
+    while ( my $file = $next->() ) {
+        local $_ = $file;
+        my $r = $cb->( $file, $state );
+        last if ref($r) && !$$r;
+    }
+    return $state;
 }
 
 #pod =method volume
@@ -1627,7 +1781,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.061
+version 0.068
 
 =head1 SYNOPSIS
 
@@ -1654,7 +1808,8 @@ version 0.061
   @lines = $file->lines;
   @lines = $file->lines_utf8;
 
-  $head = $file->lines( {count => 1} );
+  ($head) = $file->lines( {count => 1} );
+  ($tail) = $file->lines( {count => -1} );
 
   # writing files
 
@@ -1800,6 +1955,12 @@ C<< File::Temp->newdir >> instead.
 Both C<tempfile> and C<tempdir> may be exported on request and used as
 functions instead of as methods.
 
+B<Note>: for tempfiles, the filehandles from File::Temp are closed and not
+reused.  This is not as secure than using File::Temp handles directly, but is
+less prone to deadlocks or access problems on some platforms.  Think of what
+C<Path::Tiny> gives you to be just a temporary file B<name> that gets cleaned
+up.
+
 Current API available since 0.018.
 
 =head1 METHODS
@@ -1858,6 +2019,19 @@ C<:unix:encoding(UTF-8)>.  If L<Unicode::UTF8> 0.58+ is installed, a raw
 append will be done instead on the data encoded with C<Unicode::UTF8>.
 
 Current API available since 0.060.
+
+=head2 assert
+
+    $path = path("foo.txt")->assert( sub { $_->exists } );
+
+Returns the invocant after asserting that a code reference argument returns
+true.  When the assertion code reference runs, it will have the invocant
+object in the C<$_> variable.  If it returns false, an exception will be
+thrown.  The assertion code reference may also throw its own exception.
+
+If no assertion is provided, the invocant is returned without error.
+
+Current API available since 0.062.
 
 =head2 basename
 
@@ -1991,20 +2165,26 @@ Current API available since 0.053.
 
     $fh = path("/tmp/foo.txt")->filehandle($mode, $binmode);
     $fh = path("/tmp/foo.txt")->filehandle({ locked => 1 }, $mode, $binmode);
+    $fh = path("/tmp/foo.txt")->filehandle({ exclusive => 1  }, $mode, $binmode);
 
 Returns an open file handle.  The C<$mode> argument must be a Perl-style
 read/write mode string ("<" ,">", "<<", etc.).  If a C<$binmode>
 is given, it is set during the C<open> call.
 
-An optional hash reference may be used to pass options.  The only option is
-C<locked>.  If true, handles opened for writing, appending or read-write are
-locked with C<LOCK_EX>; otherwise, they are locked with C<LOCK_SH>.  When using
-C<locked>, ">" or "+>" modes will delay truncation until after the lock is
-acquired.
+An optional hash reference may be used to pass options.
+
+The C<locked> option governs file locking; if true, handles opened for writing,
+appending or read-write are locked with C<LOCK_EX>; otherwise, they are
+locked with C<LOCK_SH>.  When using C<locked>, ">" or "+>" modes will delay
+truncation until after the lock is acquired.
+
+The C<exclusive> option causes the open() call to fail if the file already
+exists.  This corresponds to the O_EXCL flag to sysopen / open(2).
+C<exclusive> implies C<locked> and will set it for you if you forget it.
 
 See C<openr>, C<openw>, C<openrw>, and C<opena> for sugar.
 
-Current API available since 0.039.
+Current API available since 0.066.
 
 =head2 is_absolute, is_relative
 
@@ -2063,6 +2243,8 @@ The default is the same as:
 For a more powerful, recursive iterator with built-in loop avoidance, see
 L<Path::Iterator::Rule>.
 
+See also L</visit>.
+
 Current API available since 0.016.
 
 =head2 lines, lines_raw, lines_utf8
@@ -2075,11 +2257,17 @@ Current API available since 0.016.
     @contents = path("/tmp/foo.txt")->lines( { chomp => 1, count => 4 } );
 
 Returns a list of lines from a file.  Optionally takes a hash-reference of
-options.  Valid options are C<binmode>, C<count> and C<chomp>.  If C<binmode>
-is provided, it will be set on the handle prior to reading.  If C<count> is
-provided, up to that many lines will be returned. If C<chomp> is set, any
-end-of-line character sequences (C<CR>, C<CRLF>, or C<LF>) will be removed
-from the lines returned.
+options.  Valid options are C<binmode>, C<count> and C<chomp>.
+
+If C<binmode> is provided, it will be set on the handle prior to reading.
+
+If a positive C<count> is provided, that many lines will be returned from the
+start of the file.  If a negative C<count> is provided, the entire file will be
+read, but only C<abs(count)> will be kept and returned.  If C<abs(count)>
+exceeds the number of lines in the file, all lines will be returned.
+
+If C<chomp> is set, any end-of-line character sequences (C<CR>, C<CRLF>, or
+C<LF>) will be removed from the lines returned.
 
 Because the return is a list, C<lines> in scalar context will return the number
 of lines (and throw away the data).
@@ -2096,7 +2284,7 @@ actually faster than relying on C<:encoding(UTF-8)>, though a bit memory
 intensive.  If memory use is a concern, consider C<openr_utf8> and
 iterating directly on the handle.
 
-Current API available since 0.048.
+Current API available since 0.065.
 
 =head2 mkpath
 
@@ -2174,10 +2362,20 @@ Returns a new C<Path::Tiny> object with all symbolic links and upward directory
 parts resolved using L<Cwd>'s C<realpath>.  Compared to C<absolute>, this is
 more expensive as it must actually consult the filesystem.
 
-If the path can't be resolved (e.g. if it includes directories that don't exist),
-an exception will be thrown:
+If the parent path can't be resolved (e.g. if it includes directories that
+don't exist), an exception will be thrown:
 
     $real = path("doesnt_exist/foo")->realpath; # dies
+
+However, if the parent path exists and only the last component (e.g. filename)
+doesn't exist, the realpath will be the realpath of the parent plus the
+non-existent last component:
+
+    $real = path("./aasdlfasdlf")->realpath; # works
+
+The underlying L<Cwd> module usually worked this way on Unix, but died on
+Windows (and some Unixes) if the full path didn't exist.  As of version 0.064,
+it's safe to use anywhere.
 
 Current API available since 0.001.
 
@@ -2250,6 +2448,13 @@ C<:unix:encoding(UTF-8)>.  If L<Unicode::UTF8> 0.58+ is installed, a raw
 slurp will be done instead and the result decoded with C<Unicode::UTF8>.
 This is just as strict and is roughly an order of magnitude faster than
 using C<:encoding(UTF-8)>.
+
+B<Note>: C<slurp> and friends lock the filehandle before slurping.  If
+you plan to slurp from a file created with L<File::Temp>, be sure to
+close other handles or open without locking to avoid a deadlock:
+
+    my $tempfile = File::Temp->new(EXLOCK => 0);
+    my $guts = path($tempfile)->slurp;
 
 Current API available since 0.004.
 
@@ -2330,9 +2535,10 @@ Like the Unix C<touch> utility.  Creates the file if it doesn't exist, or else
 changes the modification and access times to the current time.  If the first
 argument is the epoch seconds then it will be used.
 
-Returns the path object so it can be easily chained with spew:
+Returns the path object so it can be easily chained with other methods:
 
-    path("foo.txt")->touch->spew( $content );
+    # won't die if foo.txt doesn't exist
+    $content = path("foo.txt")->touch->slurp;
 
 Current API available since 0.015.
 
@@ -2344,6 +2550,54 @@ Combines C<mkpath> and C<touch>.  Creates the parent directory if it doesn't exi
 before touching the file.  Returns the path object like C<touch> does.
 
 Current API available since 0.022.
+
+=head2 visit
+
+    path("/tmp")->visit( \&callback, \%options );
+
+Wraps the L</iterator> method to execute a callback for each directory entry.
+It returns a hash reference with any state accumulated during
+iteration.
+
+The options are the same as for L</iterator>: C<recurse> and
+C<follow_symlinks>.  Both default to false.
+
+The callback function will receive a C<Path::Tiny> object as the first argument
+and a hash reference to accumulate state as the second argument.  For example:
+
+    # collect files sizes
+    my $sizes = path("/tmp")->visit(
+        sub {
+            my ($path, $state) = @_;
+            return if $path->is_dir;
+            $state{$path} = -s $path;
+        },
+        { recurse => 1 }
+    );
+
+For convenience, the C<Path::Tiny> object will also be locally aliased as the
+C<$_> global variable:
+
+    # print paths matching /foo/
+    path("/tmp")->visit( sub { say if /foo/ }, { recurse => 1} );
+
+If the callback returns a B<reference> to a false scalar value, iteration will
+terminate.  This is not the same as "pruning" a directory search; this just
+stops all iteration and returns the state hash reference.
+
+    # find up to 10 files larger than 100K
+    my $files = path("/tmp")->visit(
+        sub {
+            my ($path, $state) = @_;
+            $state{$path}++ if -s $path > 102400
+            return \0 if keys %$state == 10;
+        },
+        { recurse => 1 }
+    );
+
+If you want more flexible iteration, use a module like L<Path::Iterator::Rule>.
+
+Current API available since 0.062.
 
 =head2 volume
 
@@ -2364,7 +2618,7 @@ IS_BSD IS_WIN32 FREEZE THAW TO_JSON
 =head1 EXCEPTION HANDLING
 
 Simple usage errors will generally croak.  Failures of underlying Perl
-unctions will be thrown as exceptions in the class
+functions will be thrown as exceptions in the class
 C<Path::Tiny::Error>.
 
 A C<Path::Tiny::Error> object will be a hash reference with the following fields:
@@ -2528,9 +2782,13 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop Karen Etheridge Martin Kjeldsen Michael G. Schwern Smylers Toby Inkster 김도형 - Keedi Kim
+=for stopwords Alex Efros Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt Karen Etheridge Martin Kjeldsen Michael G. Schwern regina-verbae Smylers Toby Inkster 김도형 - Keedi Kim
 
 =over 4
+
+=item *
+
+Alex Efros <powerman@powerman.name>
 
 =item *
 
@@ -2570,6 +2828,10 @@ Graham Knop <haarg@haarg.org>
 
 =item *
 
+James Hunt <james@niftylogic.com>
+
+=item *
+
 Karen Etheridge <ether@cpan.org>
 
 =item *
@@ -2579,6 +2841,10 @@ Martin Kjeldsen <mk@bluepipe.dk>
 =item *
 
 Michael G. Schwern <mschwern@cpan.org>
+
+=item *
+
+regina-verbae <regina-verbae@users.noreply.github.com>
 
 =item *
 

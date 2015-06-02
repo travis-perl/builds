@@ -1,6 +1,6 @@
 package Dist::Zilla::Chrome::Term;
 # ABSTRACT: chrome used for terminal-based interaction
-$Dist::Zilla::Chrome::Term::VERSION = '5.032';
+$Dist::Zilla::Chrome::Term::VERSION = '5.036';
 use Moose;
 
 #pod =head1 OVERVIEW
@@ -149,7 +149,7 @@ Dist::Zilla::Chrome::Term - chrome used for terminal-based interaction
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 OVERVIEW
 

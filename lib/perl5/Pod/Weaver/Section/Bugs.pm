@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Bugs;
 # ABSTRACT: a section for bugtracker info
-$Pod::Weaver::Section::Bugs::VERSION = '4.010';
+$Pod::Weaver::Section::Bugs::VERSION = '4.012';
 use Moose;
 use Text::Wrap ();
 with 'Pod::Weaver::Role::Section';
@@ -43,7 +43,18 @@ with 'Pod::Weaver::Role::Section';
 #pod
 #pod   [PodWeaver]
 #pod
+#pod =attr header
+#pod
+#pod The title of the header to be added.
+#pod (default: "BUGS")
+#pod
 #pod =cut
+
+has header => (
+  is      => 'ro',
+  isa     => 'Str',
+  default => 'BUGS',
+);
 
 sub weave_section {
   my ($self, $document, $input) = @_;
@@ -64,6 +75,7 @@ sub weave_section {
     $text .= "by email to $mailto\.\n";
   }
 
+  local $Text::Wrap::huge = 'overflow';
   $text = Text::Wrap::wrap(q{}, q{}, $text);
 
   $text .= <<'HERE';
@@ -76,7 +88,7 @@ HERE
   push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
-      content  => 'BUGS',
+      content  => $self->header,
       children => [
         Pod::Elemental::Element::Pod5::Ordinary->new({ content => $text }),
       ],
@@ -98,7 +110,7 @@ Pod::Weaver::Section::Bugs - a section for bugtracker info
 
 =head1 VERSION
 
-version 4.010
+version 4.012
 
 =head1 OVERVIEW
 
@@ -138,13 +150,20 @@ can add something like the following to C<dist.ini>:
 
   [PodWeaver]
 
+=head1 ATTRIBUTES
+
+=head2 header
+
+The title of the header to be added.
+(default: "BUGS")
+
 =head1 AUTHOR
 
 Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

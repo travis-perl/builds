@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::help;
-$App::Cmd::Command::help::VERSION = '0.326';
+$App::Cmd::Command::help::VERSION = '0.327';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
@@ -86,21 +86,9 @@ sub execute {
   my ($self, $opts, $args) = @_;
 
   if (!@$args) {
-    my $usage = $self->app->usage->text;
-    my $command = $0;
+    print $self->app->usage->text . "\n";
 
-    # chars normally used to describe options
-    my $opt_descriptor_chars = qr/[\[\]<>\(\)]/;
-
-    if ($usage =~ /^(.+?) \s* (?: $opt_descriptor_chars | $ )/x) {
-      # try to match subdispatchers too
-      $command = $1;
-    }
-
-    # evil hack ;-)
-    bless
-      $self->app->{usage} = sub { return "$command help <command>\n" }
-      => "Getopt::Long::Descriptive::Usage";
+    print "Available commands:\n\n";
 
     $self->app->execute_command( $self->app->_prepare_command("commands") );
   } else {
@@ -133,7 +121,7 @@ App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
-version 0.326
+version 0.327
 
 =head1 DESCRIPTION
 
@@ -214,7 +202,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command;
 # ABSTRACT: base class for dzil commands
-$Dist::Zilla::App::Command::VERSION = '5.032';
+$Dist::Zilla::App::Command::VERSION = '5.036';
 use App::Cmd::Setup -command;
 
 #pod =method zilla
@@ -42,7 +42,7 @@ Dist::Zilla::App::Command - base class for dzil commands
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 METHODS
 

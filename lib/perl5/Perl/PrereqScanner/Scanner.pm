@@ -3,7 +3,7 @@ use warnings;
 
 package Perl::PrereqScanner::Scanner;
 # ABSTRACT: something that scans for prereqs in a Perl document
-$Perl::PrereqScanner::Scanner::VERSION = '1.022';
+$Perl::PrereqScanner::Scanner::VERSION = '1.023';
 use Moose::Role;
 
 #pod =head1 DESCRIPTION
@@ -52,7 +52,7 @@ Perl::PrereqScanner::Scanner - something that scans for prereqs in a Perl docume
 
 =head1 VERSION
 
-version 1.022
+version 1.023
 
 =head1 DESCRIPTION
 

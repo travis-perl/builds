@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Legal;
 # ABSTRACT: a section for the copyright and license
-$Pod::Weaver::Section::Legal::VERSION = '4.010';
+$Pod::Weaver::Section::Legal::VERSION = '4.012';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 
@@ -27,7 +27,18 @@ with 'Pod::Weaver::Role::Section';
 #pod
 #pod Defaults to none.
 #pod
+#pod =attr header
+#pod
+#pod The title of the header to be added.
+#pod (default: "COPYRIGHT AND LICENSE")
+#pod
 #pod =cut
+
+has header => (
+  is      => 'ro',
+  isa     => 'Str',
+  default => 'COPYRIGHT AND LICENSE',
+);
 
 has license_file => (
   is => 'ro',
@@ -51,7 +62,7 @@ sub weave_section {
   push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
-      content  => 'COPYRIGHT AND LICENSE',
+      content  => $self->header,
       children => [
         Pod::Elemental::Element::Pod5::Ordinary->new({ content => $notice }),
       ],
@@ -73,7 +84,7 @@ Pod::Weaver::Section::Legal - a section for the copyright and license
 
 =head1 VERSION
 
-version 4.010
+version 4.012
 
 =head1 OVERVIEW
 
@@ -98,13 +109,18 @@ telling users to check the file for the full text of the license.
 
 Defaults to none.
 
+=head2 header
+
+The title of the header to be added.
+(default: "COPYRIGHT AND LICENSE")
+
 =head1 AUTHOR
 
 Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

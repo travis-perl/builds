@@ -1,6 +1,6 @@
 package Module::Path;
 # ABSTRACT: get the full path to a locally installed module
-$Module::Path::VERSION = '0.18';
+$Module::Path::VERSION = '0.19';
 use 5.006;
 use strict;
 use warnings;
@@ -41,7 +41,7 @@ sub module_path
         # a reference in @INC
         next DIRECTORY if ref($dir);
 
-        next unless -d $dir && -r $dir && -x $dir;
+        next unless -d $dir && -x $dir;
 
         # The directory path might have a symlink somewhere in it,
         # so we get an absolute path (ie resolve any symlinks).

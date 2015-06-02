@@ -1,19 +1,24 @@
 use strict;
 use warnings;
-package Module::Runtime::Conflicts;
-# git description: dba08ce
-$Module::Runtime::Conflicts::VERSION = '0.001';
+package Module::Runtime::Conflicts; # git description: v0.001-10-gca2cd12
 # ABSTRACT: Provide information on conflicts for Module::Runtime
 # KEYWORDS: conflicts breaks modules prerequisites upgrade
-# vim: set ts=8 sw=4 tw=78 et :
+# vim: set ts=8 sts=4 sw=4 tw=78 et :
 
-package Module::Runtime::Conflicts;
+our $VERSION = '0.002';
 
 use Module::Runtime ();
 use Dist::CheckConflicts
     -dist      => 'Module::Runtime',
     -conflicts => {
-        eval { Module::Runtime->VERSION('0.14'); 1 } ? ( 'Moose' => '2.1202' ) : (),
+        # listed modules are the highest *non-working* version when used in
+        # combination with the indicated version of Module::Runtime
+
+        eval { Module::Runtime->VERSION('0.014'); 1 } ? (
+            'Moose' => '2.1202',
+            'MooseX::NonMoose' => '0.24',
+            'Elasticsearch' => '1.00',
+        ) : (),
     },
     -also => [
         'Package::Stash::Conflicts',
@@ -34,7 +39,7 @@ Module::Runtime::Conflicts - Provide information on conflicts for Module::Runtim
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 

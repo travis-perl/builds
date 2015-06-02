@@ -4,7 +4,7 @@ use warnings;
 
 package Perl::PrereqScanner;
 # ABSTRACT: a tool to scan your Perl code for its prerequisites
-$Perl::PrereqScanner::VERSION = '1.022';
+$Perl::PrereqScanner::VERSION = '1.023';
 use Moose;
 
 use List::Util qw(max);
@@ -150,7 +150,7 @@ Perl::PrereqScanner - a tool to scan your Perl code for its prerequisites
 
 =head1 VERSION
 
-version 1.022
+version 1.023
 
 =head1 SYNOPSIS
 
@@ -262,6 +262,82 @@ Jerome Quelin
 =item *
 
 Ricardo Signes <rjbs@cpan.org>
+
+=back
+
+=head1 CONTRIBUTORS
+
+=for stopwords bowtie celogeek Christopher J. Madsen David Golden Steinbrunner Ed J Florian Ragwitz Jakob Voss Jerome Quelin Jérôme John SJ Anderson Karen Etheridge Mark Gardner Neil Bowers Randy Stauner Tina Mueller Vyacheslav Matjukhin
+
+=over 4
+
+=item *
+
+bowtie <bowtie@cpan.org>
+
+=item *
+
+celogeek <me@celogeek.com>
+
+=item *
+
+Christopher J. Madsen <perl@cjmweb.net>
+
+=item *
+
+David Golden <dagolden@cpan.org>
+
+=item *
+
+David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+Ed J <mohawk2@users.noreply.github.com>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Jakob Voss <voss@gbv.de>
+
+=item *
+
+Jerome Quelin <jquelin@gmail.com>
+
+=item *
+
+Jérôme Quelin <jquelin@gmail.com>
+
+=item *
+
+John SJ Anderson <genehack@genehack.org>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Mark Gardner <gardnerm@gsicommerce.com>
+
+=item *
+
+Neil Bowers <neil@bowers.com>
+
+=item *
+
+Randy Stauner <rwstauner@cpan.org>
+
+=item *
+
+Tina Mueller <tinita@cpan.org>
+
+=item *
+
+Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
 
 =back
 

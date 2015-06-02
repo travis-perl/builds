@@ -1,6 +1,6 @@
 package Pod::Weaver;
 # ABSTRACT: weave together a Pod document from an outline
-$Pod::Weaver::VERSION = '4.010';
+$Pod::Weaver::VERSION = '4.012';
 use Moose;
 use namespace::autoclean;
 
@@ -232,7 +232,7 @@ Pod::Weaver - weave together a Pod document from an outline
 
 =head1 VERSION
 
-version 4.010
+version 4.012
 
 =head1 SYNOPSIS
 
@@ -308,9 +308,93 @@ L<Pod::Weaver::PluginBundle::Default>.
 
 Ricardo SIGNES <rjbs@cpan.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Alex Peters Apocalypse Blabos de Blebe Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Dave Rolsky David E. Wheeler Golden Florian Ragwitz Jonathan "Duke" Leto Joshua Keroes Karen Etheridge Kent Fredric Marcel Gruenauer Randy Stauner Sam Graham Shlomi Fish
+
+=over 4
+
+=item *
+
+Alex Peters <lxp@cpan.org>
+
+=item *
+
+Apocalypse <perl@0ne.us>
+
+=item *
+
+Blabos de Blebe <blabos@cpan.org>
+
+=item *
+
+Caleb Cushing <xenoterracide@gmail.com>
+
+=item *
+
+Christian Walde <walde.christian@googlemail.com>
+
+=item *
+
+Christopher J. Madsen <perl@cjmweb.net>
+
+=item *
+
+Chris Weyl <cweyl@alumni.drew.edu>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+David E. Wheeler <david@justatheory.com>
+
+=item *
+
+David Golden <dagolden@cpan.org>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Jonathan "Duke" Leto <jonathan@leto.net>
+
+=item *
+
+Joshua Keroes <joshua.keroes@integratelecom.com>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Marcel Gruenauer <hanekomu@gmail.com>
+
+=item *
+
+Randy Stauner <randy@magnificent-tears.com>
+
+=item *
+
+Sam Graham <git@illusori.co.uk>
+
+=item *
+
+Shlomi Fish <shlomif@shlomifish.org>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package CPAN::Uploader;
 # ABSTRACT: upload things to the CPAN
-$CPAN::Uploader::VERSION = '0.103008';
+$CPAN::Uploader::VERSION = '0.103009';
 #pod =head1 ORIGIN
 #pod
 #pod This code is mostly derived from C<cpan-upload-http> by Brad Fitzpatrick, which
@@ -229,6 +229,12 @@ sub read_config_file {
     }
   }
 
+  # minimum validation of arguments
+  Carp::croak "Configured user has trailing whitespace"
+    if defined $conf{user} && $conf{user} =~ /\s$/;
+  Carp::croak "Configured user contains whitespace"
+    if defined $conf{user} && $conf{user} =~ /\s/;
+
   return \%conf;
 }
 
@@ -274,7 +280,7 @@ CPAN::Uploader - upload things to the CPAN
 
 =head1 VERSION
 
-version 0.103008
+version 0.103009
 
 =head1 METHODS
 
@@ -340,6 +346,62 @@ into this module.
 =head1 AUTHOR
 
 Ricardo SIGNES <rjbs@cpan.org>
+
+=head1 CONTRIBUTORS
+
+=for stopwords Barbie Christian Walde David Caldwell fREW Schmidt Gabor Szabo Graham Knop Kent Fredric Mark Fowler Mike Doherty Steven Haryanto (on Asus Zenbook) sungo Torsten Raudssus
+
+=over 4
+
+=item *
+
+Barbie <barbie@missbarbell.co.uk>
+
+=item *
+
+Christian Walde <walde.christian@googlemail.com>
+
+=item *
+
+David Caldwell <david@porkrind.org>
+
+=item *
+
+fREW Schmidt <frioux@gmail.com>
+
+=item *
+
+Gabor Szabo <szabgab@gmail.com>
+
+=item *
+
+Graham Knop <haarg@haarg.org>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Mark Fowler <mark@twoshortplanks.com>
+
+=item *
+
+Mike Doherty <doherty@cs.dal.ca>
+
+=item *
+
+Steven Haryanto (on Asus Zenbook) <stevenharyanto@gmail.com>
+
+=item *
+
+sungo <sungo@sungo.us>
+
+=item *
+
+Torsten Raudssus <github@raudssus.de>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

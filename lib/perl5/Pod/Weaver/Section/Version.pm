@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Version;
 # ABSTRACT: add a VERSION pod section
-$Pod::Weaver::Section::Version::VERSION = '4.010';
+$Pod::Weaver::Section::Version::VERSION = '4.012';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
@@ -19,7 +19,18 @@ use namespace::autoclean;
 #pod
 #pod It will do nothing if there is no C<version> entry in the input.
 #pod
+#pod =attr header
+#pod
+#pod The title of the header to be added.
+#pod (default: "VERSION")
+#pod
 #pod =cut
+
+has header => (
+  is      => 'ro',
+  isa     => 'Str',
+  default => 'VERSION',
+);
 
 use DateTime;
 use Moose::Util::TypeConstraints;
@@ -222,7 +233,7 @@ sub weave_section {
   push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
-      content  => 'VERSION',
+      content  => $self->header,
       children => \@content,
     });
 }
@@ -242,7 +253,7 @@ Pod::Weaver::Section::Version - add a VERSION pod section
 
 =head1 VERSION
 
-version 4.010
+version 4.012
 
 =head1 OVERVIEW
 
@@ -256,6 +267,11 @@ the document being viewed, like this:
 It will do nothing if there is no C<version> entry in the input.
 
 =head1 ATTRIBUTES
+
+=head2 header
+
+The title of the header to be added.
+(default: "VERSION")
 
 =head2 format
 
@@ -349,7 +365,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
