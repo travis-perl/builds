@@ -1,11 +1,11 @@
-package B::Hooks::EndOfScope; # git description: 0.13-15-gab81327
+package B::Hooks::EndOfScope; # git description: 0.14-19-g9296689
 # ABSTRACT: Execute code after a scope finished compilation
 # KEYWORDS: code hooks execution scope
 
 use strict;
 use warnings;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 # note - a %^H tie() fallback will probably work on 5.6 as well,
 # if you need to go that low - sane patches passing *all* tests
@@ -13,14 +13,14 @@ our $VERSION = '0.14';
 use 5.008001;
 
 BEGIN {
-  require Module::Implementation;
+  use Module::Implementation 0.05;
   Module::Implementation::build_loader_sub(
     implementations => [ 'XS', 'PP' ],
     symbols => [ 'on_scope_end' ],
   )->();
 }
 
-use Sub::Exporter::Progressive -setup => {
+use Sub::Exporter::Progressive 0.001006 -setup => {
   exports => [ 'on_scope_end' ],
   groups  => { default => ['on_scope_end'] },
 };
@@ -86,7 +86,7 @@ B::Hooks::EndOfScope - Execute code after a scope finished compilation
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -158,7 +158,7 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Simon Wilper Tomas Doran
+=for stopwords Karen Etheridge Simon Wilper Tatsuhiko Miyagawa Tomas Doran
 
 =over 4
 
@@ -169,6 +169,10 @@ Karen Etheridge <ether@cpan.org>
 =item *
 
 Simon Wilper <sxw@chronowerks.de>
+
+=item *
+
+Tatsuhiko Miyagawa <miyagawa@bulknews.net>
 
 =item *
 

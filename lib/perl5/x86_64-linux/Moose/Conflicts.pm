@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.16
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.17
 
 use Dist::CheckConflicts
     -dist      => 'Moose',
@@ -96,6 +96,7 @@ use Dist::CheckConflicts
         Params::Util
         Scalar::Util
         Sub::Exporter
+        Sub::Identify
         Sub::Name
         Task::Weaken
         Try::Tiny

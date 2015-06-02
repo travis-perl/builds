@@ -6,30 +6,33 @@ use warnings;
 
 BEGIN
 {
-    our $VERSION = '0.405';
+    our $VERSION = '0.412';
 }
 
 use Exporter::Tiny qw();
 use List::MoreUtils::XS qw();    # try loading XS
 
 my @junctions = qw(any all none notall);
-my @v0_22 = qw(
-      true false
-      firstidx lastidx
-      insert_after insert_after_string
-      apply indexes
-      after after_incl before before_incl
-      firstval lastval
-      each_array each_arrayref
-      pairwise natatime
-      mesh uniq
-      minmax part
+my @v0_22     = qw(
+  true false
+  firstidx lastidx
+  insert_after insert_after_string
+  apply indexes
+  after after_incl before before_incl
+  firstval lastval
+  each_array each_arrayref
+  pairwise natatime
+  mesh uniq
+  minmax part
 );
 my @v0_24  = qw(bsearch);
 my @v0_33  = qw(sort_by nsort_by);
-my @v0_400 = qw(any_u all_u none_u notall_u);
+my @v0_400 = qw(one any_u all_u none_u notall_u one_u
+  firstres onlyidx onlyval onlyres lastres
+  singleton bsearchidx
+);
 
-my @all_functions = (@junctions, @v0_22, @v0_24, @v0_33, @v0_400);
+my @all_functions = ( @junctions, @v0_22, @v0_24, @v0_33, @v0_400 );
 
 my %alias_list = (
     v0_22 => {
@@ -40,21 +43,29 @@ my %alias_list = (
         zip         => "mesh",
     },
     v0_33 => {
-        distinct    => "uniq",
+        distinct => "uniq",
+    },
+    v0_400 => {
+        first_result  => "firstres",
+        only_index    => "onlyidx",
+        only_value    => "onlyval",
+        only_result   => "onlyres",
+        last_result   => "lastres",
+        bsearch_index => "bsearchidx",
     },
 );
 
-our @ISA = qw(Exporter::Tiny);
-our @EXPORT_OK = ( @all_functions, map { keys %$_ } values %alias_list );
+our @ISA         = qw(Exporter::Tiny);
+our @EXPORT_OK   = ( @all_functions, map { keys %$_ } values %alias_list );
 our %EXPORT_TAGS = (
-    all       => \@EXPORT_OK,
+    all         => \@EXPORT_OK,
     'like_0.22' => [
         any_u    => { -as => 'any' },
         all_u    => { -as => 'all' },
         none_u   => { -as => 'none' },
         notall_u => { -as => 'notall' },
         @v0_22,
-        keys %{$alias_list{v0_22}},
+        keys %{ $alias_list{v0_22} },
     ],
     'like_0.24' => [
         any_u    => { -as => 'any' },
@@ -63,22 +74,24 @@ our %EXPORT_TAGS = (
         'none',
         @v0_22,
         @v0_24,
-        keys %{$alias_list{v0_22}},
+        keys %{ $alias_list{v0_22} },
     ],
     'like_0.33' => [
         @junctions,
         @v0_22,
         # v0_24 functions were omitted
         @v0_33,
-        keys %{$alias_list{v0_22}},
-        keys %{$alias_list{v0_33}},
+        keys %{ $alias_list{v0_22} },
+        keys %{ $alias_list{v0_33} },
     ],
 );
 
-for my $set ( values %alias_list ) {
-    for my $alias (keys %$set) {
+for my $set ( values %alias_list )
+{
+    for my $alias ( keys %$set )
+    {
         no strict qw(refs);
-        *$alias = __PACKAGE__->can($set->{$alias});
+        *$alias = __PACKAGE__->can( $set->{$alias} );
     }
 }
 
@@ -276,6 +289,24 @@ For an empty LIST, C<notall> returns false and C<notall_u> returns C<undef>.
 
 Thus, C<< notall_u(@list) >> is equivalent to C<< @list ? notall(@list) : undef >>.
 
+=head3 one BLOCK LIST
+
+=head3 one_u BLOCK LIST
+
+Returns a true value if precisely one item in LIST meets the criterion
+given through BLOCK. Sets C<$_> for each item in LIST in turn:
+
+    print "Precisely one value defined"
+        if one { defined($_) } @list;
+
+Returns false otherwise.
+
+For an empty LIST, C<one> returns false and C<one_u> returns C<undef>.
+
+The expression C<one BLOCK LIST> is almost equivalent to
+C<1 == true BLOCK LIST>, except for short-cutting.
+Evaluation of BLOCK will immediately stop at the second true value.
+
 =head2 Transformation
 
 =head3 apply BLOCK LIST
@@ -358,14 +389,32 @@ C<zip> is an alias for C<mesh>.
 
 =head3 distinct LIST
 
-Returns a new list by stripping duplicate values in LIST. The order of
-elements in the returned list is the same as in LIST. In scalar context,
-returns the number of unique elements in LIST.
+Returns a new list by stripping duplicate values in LIST by comparing
+the values as hash keys, except that undef is considered separate from ''.
+The order of elements in the returned list is the same as in LIST. In
+scalar context, returns the number of unique elements in LIST.
 
-    my @x = uniq 1, 1, 2, 2, 3, 5, 3, 4; # returns 1 2 3 5 4
-    my $x = uniq 1, 1, 2, 2, 3, 5, 3, 4; # returns 5
+  my @x = uniq 1, 1, 2, 2, 3, 5, 3, 4; # returns 1 2 3 5 4
+  my $x = uniq 1, 1, 2, 2, 3, 5, 3, 4; # returns 5
+  # returns "Mike", "Michael", "Richard", "Rick"
+  my @n = distinct "Mike", "Michael", "Richard", "Rick", "Michael", "Rick"
+  # returns '', 'S1', A5' and complains about "Use of uninitialized value"
+  my @s = distinct '', undef, 'S1', 'A5'
+  # returns undef, 'S1', A5' and complains about "Use of uninitialized value"
+  my @w = uniq undef, '', 'S1', 'A5'
 
 C<distinct> is an alias for C<uniq>.
+
+B<RT#49800> can be used to give feedback about this behavior.
+
+=head3 singleton
+
+Returns a new list by stripping values in LIST occurring more than once by
+comparing the values as hash keys, except that undef is considered separate
+from ''.  The order of elements in the returned list is the same as in LIST.
+In scalar context, returns the number of elements occurring only once in LIST.
+
+  my @x = singleton 1,1,2,2,3,4,5 # returns 3 4 5
 
 =head2 Partitioning
 
@@ -473,6 +522,18 @@ a positive value if it is bigger and zero if it matches.
 Returns a boolean value in scalar context. In list context, it returns the element
 if it was found, otherwise the empty list.
 
+=head3 bsearchidx BLOCK LIST
+
+=head3 bsearch_index BLOCK LIST
+
+Performs a binary search on LIST which must be a sorted list of values. BLOCK
+must return a negative value if the current element (stored in C<$_>) is smaller,
+a positive value if it is bigger and zero if it matches.
+
+Returns the index of found element, otherwise C<-1>.
+
+C<bsearch_index> is an alias for C<bsearchidx>.
+
 =head3 firstval BLOCK LIST
 
 =head3 first_value BLOCK LIST
@@ -483,6 +544,16 @@ has been found.
 
 C<first_value> is an alias for C<firstval>.
 
+=head3 onlyval BLOCK LIST
+
+=head3 only_value BLOCK LIST
+
+Returns the only element in LIST for which BLOCK evaluates to true. Sets
+C<$_> for each item in LIST in turn. Returns C<undef> if no such element
+has been found.
+
+C<only_value> is an alias for C<onlyval>.
+
 =head3 lastval BLOCK LIST
 
 =head3 last_value BLOCK LIST
@@ -492,6 +563,36 @@ of LIST is set to C<$_> in turn. Returns C<undef> if no such element has been
 found.
 
 C<last_value> is an alias for C<lastval>.
+
+=head3 firstres BLOCK LIST
+
+=head3 first_result BLOCK LIST
+
+Returns the result of BLOCK for the first element in LIST for which BLOCK
+evaluates to true. Each element of LIST is set to C<$_> in turn. Returns
+C<undef> if no such element has been found.
+
+C<first_result> is an alias for C<firstres>.
+
+=head3 onlyres BLOCK LIST
+
+=head3 only_result BLOCK LIST
+
+Returns the result of BLOCK for the first element in LIST for which BLOCK
+evaluates to true. Sets C<$_> for each item in LIST in turn. Returns
+C<undef> if no such element has been found.
+
+C<only_result> is an alias for C<onlyres>.
+
+=head3 lastres BLOCK LIST
+
+=head3 last_result BLOCK LIST
+
+Returns the result of BLOCK for the last element in LIST for which BLOCK
+evaluates to true. Each element of LIST is set to C<$_> in turn. Returns
+C<undef> if no such element has been found.
+
+C<last_result> is an alias for C<lastres>.
 
 =head3 indexes BLOCK LIST
 
@@ -512,10 +613,27 @@ is true. Sets C<$_> for each item in LIST in turn:
   printf "item with index %i in list is 4", firstidx { $_ == 4 } @list;
   __END__
   item with index 1 in list is 4
-    
+
 Returns C<-1> if no such item could be found.
 
 C<first_index> is an alias for C<firstidx>.
+
+=head3 onlyidx BLOCK LIST
+
+=head3 only_index BLOCK LIST
+
+Returns the index of the only element in LIST for which the criterion
+in BLOCK is true. Sets C<$_> for each item in LIST in turn:
+
+    my @list = (1, 3, 4, 3, 2, 4);
+    printf "uniqe index of item 2 in list is %i", onlyidx { $_ == 2 } @list;
+    __END__
+    unique index of item 2 in list is 4
+
+Returns C<-1> if either no such item or more than one of these
+has been found.
+
+C<only_index> is an alias for C<onlyidx>.
 
 =head3 lastidx BLOCK LIST
 
@@ -616,6 +734,14 @@ This module attempts to use few non-core dependencies. Non-core
 configuration and testing modules will be bundled when reasonable;
 run-time dependencies will be added only if they deliver substantial
 benefit.
+
+=head1 CONTRIBUTING
+
+While contributions are appreciated, a contribution should not cause more
+effort for the maintainer than the contribution itself saves (see
+L<Open Source Contribution Etiquette|http://tirania.org/blog/archive/2010/Dec-31.html>).
+
+To get more familiar where help could be needed - see L<List::MoreUtils::Contributing>.
 
 =head1 BUGS
 
