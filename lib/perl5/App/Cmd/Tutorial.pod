@@ -188,7 +188,7 @@
 #pod
 #pod =item *
 #pod
-#pod Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
+#pod Delay using large modules using L<Class::Load>, L<Module::Runtime> or C<require> in
 #pod your commands to save memory and make startup faster. Since only one of these
 #pod commands will be run anyway, there's no need to preload the requirements for
 #pod all of them.
@@ -338,7 +338,7 @@ App::Cmd::Tutorial - getting started with App::Cmd
 
 =head1 VERSION
 
-version 0.326
+version 0.327
 
 =head1 DESCRIPTION
 
@@ -529,7 +529,7 @@ way of specifying global options.
 
 =item *
 
-Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
+Delay using large modules using L<Class::Load>, L<Module::Runtime> or C<require> in
 your commands to save memory and make startup faster. Since only one of these
 commands will be run anyway, there's no need to preload the requirements for
 all of them.
@@ -667,7 +667,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

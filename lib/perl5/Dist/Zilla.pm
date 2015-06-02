@@ -1,6 +1,6 @@
 package Dist::Zilla;
 # ABSTRACT: distribution builder; installer not included!
-$Dist::Zilla::VERSION = '5.032';
+$Dist::Zilla::VERSION = '5.036';
 use Moose 0.92; # role composition fixes
 with 'Dist::Zilla::Role::ConfigDumper';
 
@@ -11,7 +11,7 @@ use MooseX::Types::Perl qw(DistName LaxVersionStr);
 use MooseX::Types::Path::Class qw(Dir File);
 use Moose::Util::TypeConstraints;
 
-use Dist::Zilla::Types qw(License);
+use Dist::Zilla::Types qw(License ReleaseStatus);
 
 use Log::Dispatchouli 1.100712; # proxy_loggers, quiet_fatal
 use Path::Class;
@@ -119,6 +119,80 @@ sub _build_version {
   $self->log_fatal('no version was ever set') unless defined $version;
 
   $version;
+}
+
+#pod =attr release_status
+#pod
+#pod This attribute sets the release status to one of the
+#pod L<CPAN::META::Spec/https://metacpan.org/pod/CPAN::Meta::Spec#release_status>
+#pod values: 'stable', 'testing' or 'unstable'.
+#pod
+#pod If the C<$ENV{RELEASE_STATUS}> environment variable exists, its value will
+#pod be used as the release status.
+#pod
+#pod For backwards compatibility, if C<$ENV{RELEASE_STATUS}> does not exist and
+#pod the C<$ENV{TRIAL}> variable is true, the release status will be 'testing'.
+#pod
+#pod Otherwise, the release status will be set from a
+#pod L<ReleaseStatusProvider|Dist::Zilla::Role::ReleaseStatusProvider>, if one
+#pod has been configured.
+#pod
+#pod For backwards compatibility, setting C<is_trial> true in F<dist.ini> is
+#pod equivalent to using a C<ReleaseStatusProvider>.  If C<is_trial> is false,
+#pod it has no effect.
+#pod
+#pod Only B<one> C<ReleaseStatusProvider> may be used.
+#pod
+#pod If no providers are used, the release status defaults to 'stable' unless there
+#pod is an "_" character in the version, in which case, it defaults to 'testing'.
+#pod
+#pod =cut
+
+# release status must be lazy, after files are gathered
+has release_status => (
+  is => 'ro',
+  isa => ReleaseStatus,
+  lazy => 1,
+  builder => '_build_release_status',
+);
+
+sub _build_release_status {
+  my ($self) = @_;
+
+  # environment variables override completely
+  return $self->_release_status_from_env if $self->_release_status_from_env;
+
+  # other ways of setting status must not conflict
+  my $status;
+
+  # dist.ini is equivalent to a release provider if is_trial is true.
+  # If false, though, we want other providers to run or fall back to
+  # the version
+  $status = 'testing' if $self->_override_is_trial;
+
+  for my $plugin (@{ $self->plugins_with(-ReleaseStatusProvider) }) {
+    next unless defined(my $this_status = $plugin->provide_release_status);
+
+    $self->log_fatal('attempted to set release status twice')
+      if defined $status;
+
+    $status = $this_status;
+  }
+
+  return $status || ( $self->version =~ /_/ ? 'testing' : 'stable' );
+}
+
+# captures environment variables early during Zilla object construction
+has _release_status_from_env => (
+  is => 'ro',
+  isa => Str,
+  builder => '_build_release_status_from_env',
+);
+
+sub _build_release_status_from_env {
+  my ($self) = @_;
+  return $ENV{RELEASE_STATUS} if $ENV{RELEASE_STATUS};
+  return $ENV{TRIAL} ? 'testing' : '';
 }
 
 #pod =attr abstract
@@ -448,15 +522,33 @@ has root => (
 
 #pod =attr is_trial
 #pod
-#pod This attribute tells us whether or not the dist will be a trial release.
+#pod This attribute tells us whether or not the dist will be a trial release,
+#pod i.e. whether it has C<release_status> 'testing' or 'unstable' and will
+#pod have '-TRIAL' in the tarball name.
+#pod
+#pod Do not set this directly, it will be derived from C<release_status>.
 #pod
 #pod =cut
 
 has is_trial => (
-  is => 'rw', # XXX: make SetOnce -- rjbs, 2010-03-23
+  is => 'ro',
   isa => Bool,
-  default => sub { $ENV{TRIAL} ? 1 : 0 }
+  init_arg => undef,
+  lazy => 1,
+  builder => '_build_is_trial',
 );
+
+has _override_is_trial => (
+  is => 'ro',
+  isa => Bool,
+  init_arg => 'is_trial',
+  default => 0,
+);
+
+sub _build_is_trial {
+    my ($self) = @_;
+    return $self->release_status =~ /\A(?:testing|unstable)\z/ ? 1 : 0;
+}
 
 #pod =attr plugins
 #pod
@@ -507,10 +599,7 @@ sub _build_distmeta {
     author   => $self->authors,
     license  => [ $self->license->meta2_name ],
 
-    # XXX: what about unstable?
-    release_status => ($self->is_trial or $self->version =~ /_/)
-                    ? 'testing'
-                    : 'stable',
+    release_status => $self->release_status,
 
     dynamic_config => 0, # problematic, I bet -- rjbs, 2010-06-04
     generated_by   => $self->_metadata_generator_id
@@ -780,7 +869,7 @@ Dist::Zilla - distribution builder; installer not included!
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 DESCRIPTION
 
@@ -807,6 +896,31 @@ double colons (C<::>) replaced with dashes.  For example: C<Dist-Zilla>.
 =head2 version
 
 This is the version of the distribution to be created.
+
+=head2 release_status
+
+This attribute sets the release status to one of the
+L<CPAN::META::Spec/https://metacpan.org/pod/CPAN::Meta::Spec#release_status>
+values: 'stable', 'testing' or 'unstable'.
+
+If the C<$ENV{RELEASE_STATUS}> environment variable exists, its value will
+be used as the release status.
+
+For backwards compatibility, if C<$ENV{RELEASE_STATUS}> does not exist and
+the C<$ENV{TRIAL}> variable is true, the release status will be 'testing'.
+
+Otherwise, the release status will be set from a
+L<ReleaseStatusProvider|Dist::Zilla::Role::ReleaseStatusProvider>, if one
+has been configured.
+
+For backwards compatibility, setting C<is_trial> true in F<dist.ini> is
+equivalent to using a C<ReleaseStatusProvider>.  If C<is_trial> is false,
+it has no effect.
+
+Only B<one> C<ReleaseStatusProvider> may be used.
+
+If no providers are used, the release status defaults to 'stable' unless there
+is an "_" character in the version, in which case, it defaults to 'testing'.
 
 =head2 abstract
 
@@ -865,7 +979,11 @@ nearly always be the current working directory in which C<dzil> was run.
 
 =head2 is_trial
 
-This attribute tells us whether or not the dist will be a trial release.
+This attribute tells us whether or not the dist will be a trial release,
+i.e. whether it has C<release_status> 'testing' or 'unstable' and will
+have '-TRIAL' in the tarball name.
+
+Do not set this directly, it will be derived from C<release_status>.
 
 =head2 plugins
 
@@ -1002,6 +1120,310 @@ Search for plugin bundles: L<https://metacpan.org/search?q=Dist::Zilla::PluginBu
 =head1 AUTHOR
 
 Ricardo SIGNES <rjbs@cpan.org>
+
+=head1 CONTRIBUTORS
+
+=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Cory G Watson csjewell Curtis Brandt Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David Golden Steinbrunner Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Mike Doherty Moritz Onken Neil Bowers Nickolay Platonov nperez Olivier Mengué Pedro Melo Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
+
+=over 4
+
+=item *
+
+Ævar Arnfjörð Bjarmason <avarab@gmail.com>
+
+=item *
+
+Alexei Znamensky <russoz@cpan.org>
+
+=item *
+
+Alex Vandiver <alexmv@mit.edu>
+
+=item *
+
+ambs <ambs@cpan.org>
+
+=item *
+
+Andrew Rodland <andrew@hbslabs.com>
+
+=item *
+
+Andy Jack <andyjack@cpan.org>
+
+=item *
+
+Apocalypse <APOCAL@cpan.org>
+
+=item *
+
+ben hengst <ben.hengst@gmail.com>
+
+=item *
+
+Bernardo Rechea <brbpub@gmail.com>
+
+=item *
+
+Brian Fraser <fraserbn@gmail.com>
+
+=item *
+
+Caleb Cushing <xenoterracide@gmail.com>
+
+=item *
+
+Christian Walde <walde.christian@googlemail.com>
+
+=item *
+
+Christopher J. Madsen <cjm@cjmweb.net>
+
+=item *
+
+Cory G Watson <gphat@onemogin.com>
+
+=item *
+
+csjewell <perl@csjewell.fastmail.us>
+
+=item *
+
+Curtis Brandt <curtisjbrandt@gmail.com>
+
+=item *
+
+Damien KRotkine <dkrotkine@booking.com>
+
+=item *
+
+Danijel Tasov <dt@korn.shell.la>
+
+=item *
+
+Dave O'Neill <dmo@dmo.ca>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+David Golden <dagolden@cpan.org>
+
+=item *
+
+David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+Davor Cubranic <cubranic@stat.ubc.ca>
+
+=item *
+
+Dimitar Petrov <mitakaa@gmail.com>
+
+=item *
+
+Doug Bell <madcityzen@gmail.com>
+
+=item *
+
+Fayland Lam <fayland@gmail.com>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Fred Moyer <fred@redhotpenguin.com>
+
+=item *
+
+fREW Schmidt <frioux@gmail.com>
+
+=item *
+
+gardnerm <gardnerm@gsicommerce.com>
+
+=item *
+
+Gianni Ceccarelli <gianni.ceccarelli@net-a-porter.com>
+
+=item *
+
+Graham Barr <gbarr@pobox.com>
+
+=item *
+
+Graham Knop <haarg@haarg.org>
+
+=item *
+
+Grzegorz Rożniecki <xaerxess@gmail.com>
+
+=item *
+
+Hans Dieter Pearcey <hdp@weftsoar.net>
+
+=item *
+
+Ivan Bessarabov <ivan@bessarabov.ru>
+
+=item *
+
+Jakob Voss <jakob@nichtich.de>
+
+=item *
+
+jantore <jantore@32k.org>
+
+=item *
+
+Jérôme Quelin <jquelin@gmail.com>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Jesse Vincent <jesse@bestpractical.com>
+
+=item *
+
+John Napiorkowski <jjnapiork@cpan.org>
+
+=item *
+
+Jonathan C. Otsuka <djgoku@gmail.com>
+
+=item *
+
+Jonathan Rockway <jrockway@cpan.org>
+
+=item *
+
+Jonathan Scott Duff <duff@pobox.com>
+
+=item *
+
+Jonathan Yu <jawnsy@cpan.org>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Leon Timmermans <fawaka@gmail.com>
+
+=item *
+
+Lucas Theisen <lucastheisen@pastdev.com>
+
+=item *
+
+Luc St-Louis <lucs@pobox.com>
+
+=item *
+
+Marcel Gruenauer <hanekomu@gmail.com>
+
+=item *
+
+Martin McGrath <mcgrath.martin@gmail.com>
+
+=item *
+
+Mateu X Hunter <hunter@missoula.org>
+
+=item *
+
+Mike Doherty <mike@mikedoherty.ca>
+
+=item *
+
+Moritz Onken <onken@netcubed.de>
+
+=item *
+
+Neil Bowers <neil@bowers.com>
+
+=item *
+
+Nickolay Platonov <nickolay@desktop.(none)>
+
+=item *
+
+nperez <nperez@cpan.org>
+
+=item *
+
+Olivier Mengué <dolmen@cpan.org>
+
+=item *
+
+Pedro Melo <melo@simplicidade.org>
+
+=item *
+
+Randy Stauner <rwstauner@cpan.org>
+
+=item *
+
+robertkrimen <robertkrimen@gmail.com>
+
+=item *
+
+Rob Hoelz <rob@hoelz.ro>
+
+=item *
+
+Robin Smidsrød <robin@smidsrod.no>
+
+=item *
+
+Shawn M Moore <sartak@gmail.com>
+
+=item *
+
+Smylers <Smylers@stripey.com>
+
+=item *
+
+Steffen Schwigon <ss5@renormalist.net>
+
+=item *
+
+Steven Haryanto <stevenharyanto@gmail.com>
+
+=item *
+
+Tatsuhiko Miyagawa <miyagawa@bulknews.net>
+
+=item *
+
+Upasana Shukla <me@upasana.me>
+
+=item *
+
+Vyacheslav Matjukhin <mmcleric@yandex-team.ru>
+
+=item *
+
+Yanick Champoux <yanick@babyl.dyndns.org>
+
+=item *
+
+Yuval Kogman <nothingmuch@woobling.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

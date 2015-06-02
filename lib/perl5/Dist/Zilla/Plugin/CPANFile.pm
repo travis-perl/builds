@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::CPANFile;
 # ABSTRACT: produce a cpanfile prereqs file
-$Dist::Zilla::Plugin::CPANFile::VERSION = '5.032';
+$Dist::Zilla::Plugin::CPANFile::VERSION = '5.036';
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
@@ -88,7 +88,7 @@ Dist::Zilla::Plugin::CPANFile - produce a cpanfile prereqs file
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 DESCRIPTION
 

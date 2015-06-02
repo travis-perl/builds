@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Name;
 # ABSTRACT: add a NAME section with abstract (for your Perl module)
-$Pod::Weaver::Section::Name::VERSION = '4.010';
+$Pod::Weaver::Section::Name::VERSION = '4.012';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
@@ -26,7 +26,18 @@ use Encode;
 #pod If no C<PODNAME> comment is present, but a package declaration can be found,
 #pod the package name will be used as the document name.
 #pod
+#pod =attr header
+#pod
+#pod The title of the header to be added.
+#pod (default: "NAME")
+#pod
 #pod =cut
+
+has header => (
+  is      => 'ro',
+  isa     => 'Str',
+  default => 'NAME',
+);
 
 use Pod::Elemental::Element::Pod5::Command;
 use Pod::Elemental::Element::Pod5::Ordinary;
@@ -91,7 +102,7 @@ sub weave_section {
 
   my $name_para = Pod::Elemental::Element::Nested->new({
     command  => 'head1',
-    content  => 'NAME',
+    content  => $self->header,
     children => [
       Pod::Elemental::Element::Pod5::Ordinary->new({ content => $name }),
     ],
@@ -115,7 +126,7 @@ Pod::Weaver::Section::Name - add a NAME section with abstract (for your Perl mod
 
 =head1 VERSION
 
-version 4.010
+version 4.012
 
 =head1 OVERVIEW
 
@@ -135,13 +146,20 @@ must be given.  It looks for comments in the form:
 If no C<PODNAME> comment is present, but a package declaration can be found,
 the package name will be used as the document name.
 
+=head1 ATTRIBUTES
+
+=head2 header
+
+The title of the header to be added.
+(default: "NAME")
+
 =head1 AUTHOR
 
 Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

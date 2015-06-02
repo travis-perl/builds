@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Authors;
 # ABSTRACT: a section listing authors
-$Pod::Weaver::Section::Authors::VERSION = '4.010';
+$Pod::Weaver::Section::Authors::VERSION = '4.012';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 
@@ -18,7 +18,17 @@ use Pod::Elemental::Element::Pod5::Verbatim;
 #pod     Author One <a1@example.com>
 #pod     Author Two <a2@example.com>
 #pod
+#pod =attr header
+#pod
+#pod The title of the header to be added.
+#pod (default: "AUTHOR" or "AUTHORS")
+#pod
 #pod =cut
+
+has header => (
+  is  => 'ro',
+  isa => 'Maybe[Str]',
+);
 
 sub weave_section {
   my ($self, $document, $input) = @_;
@@ -27,7 +37,10 @@ sub weave_section {
 
   my $multiple_authors = @{ $input->{authors} } > 1;
 
-  my $name = $multiple_authors ? 'AUTHORS' : 'AUTHOR';
+  # I think I might like to have header be a callback or something, so that you
+  # can get pluralization for your own custom header. -- rjbs, 2015-03-17
+  my $name = $self->header || ($multiple_authors ? 'AUTHORS' : 'AUTHOR');
+
   my $authors = [ map {
     Pod::Elemental::Element::Pod5::Ordinary->new({
       content => $_,
@@ -73,7 +86,7 @@ Pod::Weaver::Section::Authors - a section listing authors
 
 =head1 VERSION
 
-version 4.010
+version 4.012
 
 =head1 OVERVIEW
 
@@ -86,13 +99,20 @@ given, it will do nothing.  Otherwise, it produces a hunk like this:
     Author One <a1@example.com>
     Author Two <a2@example.com>
 
+=head1 ATTRIBUTES
+
+=head2 header
+
+The title of the header to be added.
+(default: "AUTHOR" or "AUTHORS")
+
 =head1 AUTHOR
 
 Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

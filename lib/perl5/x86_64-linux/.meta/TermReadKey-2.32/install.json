@@ -1,1 +1,1 @@
-{"target":"Term::ReadKey","pathname":"J/JS/JSTOWE/TermReadKey-2.32.tar.gz","dist":"TermReadKey-2.32","name":"Term::ReadKey","provides":{"Term::ReadKey":{"file":"ReadKey.pm","version":"2.32"}},"version":"2.32"}
+{"provides":{"Term::ReadKey":{"version":"2.32","file":"ReadKey.pm"}},"dist":"TermReadKey-2.32","pathname":"J/JS/JSTOWE/TermReadKey-2.32.tar.gz","target":"Term::ReadKey","version":"2.32","name":"Term::ReadKey"}

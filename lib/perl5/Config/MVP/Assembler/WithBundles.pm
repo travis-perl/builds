@@ -1,6 +1,6 @@
 package Config::MVP::Assembler::WithBundles;
 # ABSTRACT: a role to make assemblers expand bundles
-$Config::MVP::Assembler::WithBundles::VERSION = '2.200008';
+$Config::MVP::Assembler::WithBundles::VERSION = '2.200010';
 use Moose::Role;
 
 use Params::Util qw(_HASHLIKE _ARRAYLIKE);
@@ -87,14 +87,14 @@ sub replace_bundle_with_contents {
 };
 
 sub load_package {
-  my ($self, $package, $plugin) = @_;
+  my ($self, $package, $section_name) = @_;
 
   Class::Load::load_optional_class($package)
-    or $self->missing_package($package, $plugin);
+    or $self->missing_package($package, $section_name);
 }
 
 sub missing_package {
-  my ($self, $package, $plugin) = @_ ;
+  my ($self, $package, $section_name) = @_ ;
 
   my $class = Moose::Meta::Class->create_anon_class(
     superclasses => [ 'Config::MVP::Error' ],
@@ -104,13 +104,18 @@ sub missing_package {
         is       => 'ro',
         required => 1,
       )),
+      Moose::Meta::Attribute->new(section_name => (
+        is       => 'ro',
+        required => 1,
+      )),
     ],
   );
 
   $class->name->throw({
     ident   => 'package not installed',
-    message => "$package (for plugin $plugin) does not appear to be installed",
+    message => "$package (for section $section_name) does not appear to be installed",
     package => $package,
+    section_name => $section_name,
   });
 }
 
@@ -175,7 +180,7 @@ Config::MVP::Assembler::WithBundles - a role to make assemblers expand bundles
 
 =head1 VERSION
 
-version 2.200008
+version 2.200010
 
 =head1 DESCRIPTION
 
@@ -229,7 +234,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

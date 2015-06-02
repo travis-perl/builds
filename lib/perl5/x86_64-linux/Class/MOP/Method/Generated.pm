@@ -1,5 +1,5 @@
 package Class::MOP::Method::Generated;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use strict;
 use warnings;
@@ -76,7 +76,7 @@ Class::MOP::Method::Generated - Abstract base class for generated methods
 
 =head1 VERSION
 
-version 2.1403
+version 2.1404
 
 =head1 DESCRIPTION
 

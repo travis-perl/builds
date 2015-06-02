@@ -4,7 +4,7 @@ use strict;
 use warnings FATAL => 'all';
 use base qw(Exporter);
 
-our $VERSION = '1.003003';
+our $VERSION = '1.003005';
 $VERSION = eval $VERSION;
 
 sub _choose_json_module {
@@ -222,6 +222,27 @@ To include JSON-aware booleans (C<true>, C<false>) in your data, just do:
     use JSON::MaybeXS;
     my $true = JSON->true;
     my $false = JSON->false;
+
+=head1 CAVEATS
+
+The C<new()> method in this module is technically a factory, not a
+constructor, because the objects it returns will I<NOT> be blessed into the
+C<JSON::MaybeXS> class.
+
+If you are using an object returned by this module as a Moo(se) attribute,
+this type constraint code:
+
+    is 'json' => ( isa => 'JSON::MaybeXS' );
+
+will I<NOT> do what you expect. Instead, either rely on the C<JSON> class
+constant described above, as so:
+
+    is 'json' => ( isa => JSON::MaybeXS::JSON() );
+
+Alternatively, you can use duck typing:
+
+    use Moose::Util::TypeConstraints 'duck_type';
+    is 'json' => ( isa => Object , duck_type([qw/ encode decode /]));
 
 =head1 AUTHOR
 

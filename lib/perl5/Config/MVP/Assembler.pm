@@ -1,6 +1,6 @@
 package Config::MVP::Assembler;
 # ABSTRACT: multivalue-property config-loading state machine
-$Config::MVP::Assembler::VERSION = '2.200008';
+$Config::MVP::Assembler::VERSION = '2.200010';
 use Moose;
 
 use Config::MVP::Error;
@@ -251,7 +251,7 @@ Config::MVP::Assembler - multivalue-property config-loading state machine
 
 =head1 VERSION
 
-version 2.200008
+version 2.200010
 
 =head1 DESCRIPTION
 
@@ -380,7 +380,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.405';
+our $VERSION = '0.412';
 
 =pod
 
@@ -19,43 +19,62 @@ List::MoreUtils::PP - Provide List::MoreUtils pure Perl implementation
 
 =cut
 
-sub any (&@) {
+sub any (&@)
+{
     my $f = shift;
-    foreach ( @_ ) {
+    foreach (@_)
+    {
         return 1 if $f->();
     }
     return 0;
 }
 
-sub all (&@) {
+sub all (&@)
+{
     my $f = shift;
-    foreach ( @_ ) {
+    foreach (@_)
+    {
         return 0 unless $f->();
     }
     return 1;
 }
 
-sub none (&@) {
+sub none (&@)
+{
     my $f = shift;
-    foreach ( @_ ) {
+    foreach (@_)
+    {
         return 0 if $f->();
     }
     return 1;
 }
 
-sub notall (&@) {
+sub notall (&@)
+{
     my $f = shift;
-    foreach ( @_ ) {
+    foreach (@_)
+    {
         return 1 unless $f->();
     }
     return 0;
+}
+
+sub one (&@)
+{
+    my $f     = shift;
+    my $found = 0;
+    foreach (@_)
+    {
+        $f->() and $found++ and return 0;
+    }
+    $found;
 }
 
 sub any_u (&@)
 {
     my $f = shift;
     return if !@_;
-    $f->() and return 1 foreach(@_);
+    $f->() and return 1 foreach (@_);
     return 0;
 }
 
@@ -63,7 +82,7 @@ sub all_u (&@)
 {
     my $f = shift;
     return if !@_;
-    $f->() or return 0 foreach(@_);
+    $f->() or return 0 foreach (@_);
     return 1;
 }
 
@@ -71,7 +90,7 @@ sub none_u (&@)
 {
     my $f = shift;
     return if !@_;
-    $f->() and return 0 foreach(@_);
+    $f->() and return 0 foreach (@_);
     return 1;
 }
 
@@ -79,15 +98,27 @@ sub notall_u (&@)
 {
     my $f = shift;
     return if !@_;
-    $f->() or return 1 foreach(@_);
+    $f->() or return 1 foreach (@_);
     return 0;
+}
+
+sub one_u (&@)
+{
+    my $f = shift;
+    return if !@_;
+    my $found = 0;
+    foreach (@_)
+    {
+        $f->() and $found++ and return 0;
+    }
+    $found;
 }
 
 sub true (&@)
 {
     my $f     = shift;
     my $count = 0;
-     $f->() and ++$count foreach (@_);
+    $f->() and ++$count foreach (@_);
     return $count;
 }
 
@@ -110,6 +141,69 @@ sub firstidx (&@)
     return -1;
 }
 
+sub firstval (&@)
+{
+    my $test = shift;
+    foreach (@_)
+    {
+        return $_ if $test->();
+    }
+    return undef;
+}
+
+sub firstres (&@)
+{
+    my $test = shift;
+    foreach (@_)
+    {
+        my $testval = $test->();
+        $testval and return $testval;
+    }
+    return undef;
+}
+
+sub onlyidx (&@)
+{
+    my $f = shift;
+    my $found;
+    foreach my $i ( 0 .. $#_ )
+    {
+        local *_ = \$_[$i];
+        $f->() or next;
+        defined $found and return -1;
+        $found = $i;
+    }
+    return defined $found ? $found : -1;
+}
+
+sub onlyval (&@)
+{
+    my $test   = shift;
+    my $result = undef;
+    my $found  = 0;
+    foreach (@_)
+    {
+        $test->() or next;
+        $result = $_;
+        $found++ and return undef;
+    }
+    return $result;
+}
+
+sub onlyres (&@)
+{
+    my $test   = shift;
+    my $result = undef;
+    my $found  = 0;
+    foreach (@_)
+    {
+        my $rv = $test->() or next;
+        $result = $rv;
+        $found++ and return undef;
+    }
+    return $found ? $result : undef;
+}
+
 sub lastidx (&@)
 {
     my $f = shift;
@@ -119,6 +213,38 @@ sub lastidx (&@)
         return $i if $f->();
     }
     return -1;
+}
+
+sub lastval (&@)
+{
+    my $test = shift;
+    my $ix;
+    for ( $ix = $#_; $ix >= 0; $ix-- )
+    {
+        local *_ = \$_[$ix];
+        my $testval = $test->();
+
+        # Simulate $_ as alias
+        $_[$ix] = $_;
+        return $_ if $testval;
+    }
+    return undef;
+}
+
+sub lastres (&@)
+{
+    my $test = shift;
+    my $ix;
+    for ( $ix = $#_; $ix >= 0; $ix-- )
+    {
+        local *_ = \$_[$ix];
+        my $testval = $test->();
+
+        # Simulate $_ as alias
+        $_[$ix] = $_;
+        return $testval if $testval;
+    }
+    return undef;
 }
 
 sub insert_after (&$\@)
@@ -191,32 +317,6 @@ sub indexes (&@)
         local *_ = \$_[$_];
         $test->()
     } 0 .. $#_;
-}
-
-sub lastval (&@)
-{
-    my $test = shift;
-    my $ix;
-    for ( $ix = $#_; $ix >= 0; $ix-- )
-    {
-        local *_ = \$_[$ix];
-        my $testval = $test->();
-
-        # Simulate $_ as alias
-        $_[$ix] = $_;
-        return $_ if $testval;
-    }
-    return undef;
-}
-
-sub firstval (&@)
-{
-    my $test = shift;
-    foreach (@_)
-    {
-        return $_ if $test->();
-    }
-    return undef;
 }
 
 sub pairwise (&\@\@)
@@ -318,7 +418,18 @@ sub mesh (\@\@;\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\@)
 sub uniq (@)
 {
     my %seen = ();
-    grep { not $seen{$_}++ } @_;
+    my $k;
+    my $seen_undef;
+    grep { defined $_ ? not $seen{ $k = $_ }++ : not $seen_undef++ } @_;
+}
+
+sub singleton (@)
+{
+    my %seen = ();
+    my $k;
+    my $seen_undef;
+    grep { 1 == ( defined $_ ? $seen{ $k = $_ } : $seen_undef ) }
+      grep { defined $_ ? not $seen{ $k = $_ }++ : not $seen_undef++ } @_;
 }
 
 sub minmax (@)
@@ -398,22 +509,51 @@ sub bsearch(&@)
     return;
 }
 
+sub bsearchidx(&@)
+{
+    my $code = shift;
+
+    my $rc;
+    my $i = 0;
+    my $j = @_;
+    do
+    {
+        my $k = int( ( $i + $j ) / 2 );
+
+        $k >= @_ and return -1;
+
+        local *_ = \$_[$k];
+        $rc = $code->();
+
+        $rc == 0 and return $k;
+
+        if ( $rc < 0 )
+        {
+            $i = $k + 1;
+        }
+        else
+        {
+            $j = $k - 1;
+        }
+    } until $i > $j;
+
+    return -1;
+}
+
 sub sort_by(&@)
 {
-    my ($code, @list) = @_;
+    my ( $code, @list ) = @_;
     return map { $_->[0] }
-          sort { $a->[1] cmp $b->[1] }
-           map { [$_, scalar($code->())] }
-               @list;
+      sort     { $a->[1] cmp $b->[1] }
+      map { [ $_, scalar( $code->() ) ] } @list;
 }
 
 sub nsort_by(&@)
 {
-    my ($code, @list) = @_;
+    my ( $code, @list ) = @_;
     return map { $_->[0] }
-          sort { $a->[1] <=> $b->[1] }
-           map { [$_, scalar($code->())] }
-               @list;
+      sort     { $a->[1] <=> $b->[1] }
+      map { [ $_, scalar( $code->() ) ] } @list;
 }
 
 sub _XScompiled { 0 }

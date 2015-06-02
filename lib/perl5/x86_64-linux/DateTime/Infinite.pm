@@ -1,7 +1,9 @@
 package DateTime::Infinite;
-$DateTime::Infinite::VERSION = '1.18';
+
 use strict;
 use warnings;
+
+our $VERSION = '1.19';
 
 use DateTime;
 use DateTime::TimeZone;
@@ -34,7 +36,7 @@ sub STORABLE_freeze {return}
 sub STORABLE_thaw   {return}
 
 package DateTime::Infinite::Future;
-$DateTime::Infinite::Future::VERSION = '1.18';
+
 use strict;
 use warnings;
 
@@ -56,10 +58,10 @@ use base qw(DateTime::Infinite);
     $Pos->_calc_local_rd;
 
     sub new {$Pos}
- }
+}
 
 package DateTime::Infinite::Past;
-$DateTime::Infinite::Past::VERSION = '1.18';
+
 use strict;
 use warnings;
 
@@ -130,7 +132,7 @@ my @methods = qw(
 
 for my $meth (@methods) {
     no strict 'refs';
-    *{$meth} = sub { undef };
+    *{$meth} = sub {undef};
 }
 
 # Totally arbitrary
@@ -143,6 +145,7 @@ sub prefers_24_hour_time {
 }
 
 our $AUTOLOAD;
+
 sub AUTOLOAD {
     my $self = shift;
 
@@ -169,7 +172,7 @@ DateTime::Infinite - Infinite past and future DateTime objects
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 

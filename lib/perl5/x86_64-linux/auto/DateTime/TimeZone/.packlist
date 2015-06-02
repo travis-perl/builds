@@ -19,7 +19,6 @@
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Africa/Windhoek.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Adak.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Anchorage.pm
-/home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Antigua.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Araguaina.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Argentina/Buenos_Aires.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Argentina/Catamarca.pm
@@ -49,7 +48,6 @@
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Cancun.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Caracas.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Cayenne.pm
-/home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Cayman.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Chicago.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Chihuahua.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Costa_Rica.pm
@@ -106,7 +104,6 @@
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Moncton.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Monterrey.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Montevideo.pm
-/home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Montreal.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Nassau.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/New_York.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/America/Nipigon.pm
@@ -345,7 +342,6 @@
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Kwajalein.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Majuro.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Marquesas.pm
-/home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Midway.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Nauru.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Niue.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Norfolk.pm
@@ -356,7 +352,6 @@
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Pohnpei.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Port_Moresby.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Rarotonga.pm
-/home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Saipan.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Tahiti.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Tarawa.pm
 /home/travis/.perlbrew/libs/5.21.9@dzil/lib/perl5/DateTime/TimeZone/Pacific/Tongatapu.pm

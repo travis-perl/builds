@@ -1,12 +1,12 @@
 package Dist::Zilla::MVP::Section;
 # ABSTRACT: a standard section in Dist::Zilla's configuration sequence
-$Dist::Zilla::MVP::Section::VERSION = '5.032';
+$Dist::Zilla::MVP::Section::VERSION = '5.036';
 use Moose;
 extends 'Config::MVP::Section';
 
 use namespace::autoclean;
 
-use Config::MVP::Section 2.200002; # for not-installed error
+use Config::MVP::Section 2.200009; # not-installed error with section_name
 
 around add_value => sub {
   my ($orig, $self, $name, $value) = @_;
@@ -56,7 +56,7 @@ Dist::Zilla::MVP::Section - a standard section in Dist::Zilla's configuration se
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 AUTHOR
 

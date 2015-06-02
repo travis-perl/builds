@@ -16,6 +16,9 @@ package DateTime::Locale::Catalog;
 
 use strict;
 use warnings;
+
+our $VERSION = '0.46';
+
 use utf8;
 
 sub CLDRVersion { return "1\.7\.1" }
@@ -3396,11 +3399,19 @@ sub Aliases { return %Aliases }
 
 1;
 
+# ABSTRACT: Provides a list of all valid locale names
+
 __END__
+
+=pod
 
 =head1 NAME
 
 DateTime::Locale::Catalog - Provides a list of all valid locale names
+
+=head1 VERSION
+
+version 0.46
 
 =head1 SYNOPSIS
 
@@ -3409,6 +3420,8 @@ See DateTime::Locale for usage details.
 =head1 DESCRIPTION
 
 This module contains a list of all known locales.
+
+=encoding utf8
 
 =head1 LOCALES
 
@@ -3647,7 +3660,7 @@ The available locales are:
  kcg                 Tyap
  kcg_NG              Tyap Nigeria
  kfo                 Koro
- kfo_CI              Koro Côte d’Ivoire
+ kfo_CI              Koro Côte d'Ivoire
  kk                  Kazakh
  kk_Cyrl             Kazakh (Cyrillic)
  kk_Cyrl_KZ          Kazakh Kazakhstan (Cyrillic)
@@ -3892,7 +3905,6 @@ The available locales are:
  zh_TW               Chinese Taiwan
  zu                  Zulu
  zu_ZA               Zulu South Africa
-
 
 There are also many aliases available, mostly for three-letter
 (ISO639-2) language codes, these are:
@@ -4322,23 +4334,29 @@ There are also many aliases available, mostly for three-letter
  zul                 zu
  zul_ZA              zu_ZA
 
-
 =head1 SUPPORT
 
 See L<DateTime::Locale>.
 
-=head1 AUTHOR
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Richard Evans
+
+=item *
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT
+=back
 
-Copyright (c) 2008 David Rolsky. All rights reserved. This program is
-free software; you can redistribute it and/or modify it under the same
-terms as Perl itself.
+=head1 COPYRIGHT AND LICENSE
 
-This module was generated from data provided by the CLDR project, see
-the LICENSE.cldr in this distribution for details on the CLDR data's
-license.
+This software is copyright (c) 2015 by Dave Rolsky.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Subdispatch::DashedStyle;
-$App::Cmd::Subdispatch::DashedStyle::VERSION = '0.326';
+$App::Cmd::Subdispatch::DashedStyle::VERSION = '0.327';
 use App::Cmd::Subdispatch;
 BEGIN { our @ISA = 'App::Cmd::Subdispatch' };
 
@@ -31,15 +31,6 @@ sub get_command {
 	} else {
     return (undef, $opt, @sub_args);
   }
-}
-
-#pod =for Pod::Coverage prepare_default_command
-#pod
-#pod =cut
-
-sub prepare_default_command {
-  my ( $self, $opt, @args ) = @_;
-  $self->_prepare_command( "help" );
 }
 
 #pod =method opt_spec
@@ -84,7 +75,7 @@ App::Cmd::Subdispatch::DashedStyle - "app cmd --subcmd" style subdispatching
 
 =head1 VERSION
 
-version 0.326
+version 0.327
 
 =head1 METHODS
 
@@ -102,15 +93,13 @@ style:
 A version of C<opt_spec> that calculates the getopt specification from the
 subcommands.
 
-=for Pod::Coverage prepare_default_command
-
 =head1 AUTHOR
 
 Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2015 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

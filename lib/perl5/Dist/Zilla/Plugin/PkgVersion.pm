@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgVersion;
 # ABSTRACT: add a $VERSION to your packages
-$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.032';
+$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.036';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -65,6 +65,16 @@ use namespace::autoclean;
 #pod
 #pod Something else will replace it in the future.
 #pod
+#pod =attr use_begin
+#pod
+#pod If true, the version assignment is wrapped in a BEGIN block.  This may help in
+#pod rare cases, such as when DynaLoader has to be called at BEGIN time, and
+#pod requires VERSION.  This option should be needed rarely.
+#pod
+#pod Also note that assigning to C<$VERSION> before the module has finished
+#pod compiling can lead to confused behavior with attempts to determine whether a
+#pod module was successfully loaded on perl v5.8.
+#pod
 #pod =attr finder
 #pod
 #pod =for stopwords FileFinder
@@ -117,6 +127,12 @@ has die_on_line_insertion => (
 );
 
 has use_our => (
+  is  => 'ro',
+  isa => 'Bool',
+  default => 0,
+);
+
+has use_begin => (
   is  => 'ro',
   isa => 'Bool',
   default => 0,
@@ -176,6 +192,9 @@ sub munge_perl {
     my $perl = $self->use_our
         ? "{ our \$VERSION\x20=\x20'$version'; }$trial"
         : "\$$package\::VERSION\x20=\x20'$version';$trial";
+
+    $self->use_begin
+      and $perl = "BEGIN { $perl }";
 
     $self->log_debug([
       'adding $VERSION assignment to %s in %s',
@@ -268,7 +287,7 @@ Dist::Zilla::Plugin::PkgVersion - add a $VERSION to your packages
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 SYNOPSIS
 
@@ -324,6 +343,16 @@ $Module::Name::VERSION = '0.001'; >>.  It turns out that this causes problems
 with some analyzers.  Use of this feature is deprecated.
 
 Something else will replace it in the future.
+
+=head2 use_begin
+
+If true, the version assignment is wrapped in a BEGIN block.  This may help in
+rare cases, such as when DynaLoader has to be called at BEGIN time, and
+requires VERSION.  This option should be needed rarely.
+
+Also note that assigning to C<$VERSION> before the module has finished
+compiling can lead to confused behavior with attempts to determine whether a
+module was successfully loaded on perl v5.8.
 
 =head2 finder
 

@@ -8,7 +8,7 @@
 #
 package Dist::Zilla::Role::Git::StringFormatter;
 # ABSTRACT: Provide a String::Formatter for commit messages
-$Dist::Zilla::Role::Git::StringFormatter::VERSION = '2.029';
+$Dist::Zilla::Role::Git::StringFormatter::VERSION = '2.034';
 
 use 5.008;
 use strict;
@@ -97,7 +97,7 @@ Dist::Zilla::Role::Git::StringFormatter - Provide a String::Formatter for commit
 
 =head1 VERSION
 
-version 2.029
+version 2.034
 
 =head1 DESCRIPTION
 

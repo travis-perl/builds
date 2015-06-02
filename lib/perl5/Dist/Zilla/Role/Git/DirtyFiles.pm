@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Role::Git::DirtyFiles;
 # ABSTRACT: provide the allow_dirty & changelog attributes
-$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.029';
+$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.034';
 
 use Moose::Role;
 use MooseX::Types::Moose qw{ Any ArrayRef Str RegexpRef };
@@ -20,7 +20,6 @@ use MooseX::Types::Path::Tiny 0.010 qw{ Paths to_Paths };
 use Moose::Util::TypeConstraints;
 
 use namespace::autoclean;
-use List::Util 'first';
 use Path::Tiny 0.048 qw(); # subsumes
 use Try::Tiny;
 
@@ -137,7 +136,7 @@ Dist::Zilla::Role::Git::DirtyFiles - provide the allow_dirty & changelog attribu
 
 =head1 VERSION
 
-version 2.029
+version 2.034
 
 =head1 DESCRIPTION
 

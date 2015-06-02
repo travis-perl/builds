@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::NextRelease;
 # ABSTRACT: update the next release number in your changelog
-$Dist::Zilla::Plugin::NextRelease::VERSION = '5.032';
+$Dist::Zilla::Plugin::NextRelease::VERSION = '5.036';
 use namespace::autoclean;
 
 use Moose;
@@ -96,14 +96,23 @@ sub section_header {
   return _format_version($self->format, $self);
 }
 
+has _original_changes_content => (
+  is  => 'rw',
+  isa => 'Str',
+  init_arg => undef,
+);
+
 sub munge_files {
   my ($self) = @_;
 
   my ($file) = grep { $_->name eq $self->filename } @{ $self->zilla->files };
   return unless $file;
 
-  my $content = $self->fill_in_string(
-    $file->content,
+  # save original unmunged content, for replacing back in the repo later
+  my $content = $self->_original_changes_content($file->content);
+
+  $content = $self->fill_in_string(
+    $content,
     {
       dist    => \($self->zilla),
       version => \($self->zilla->version),
@@ -124,7 +133,7 @@ sub after_release {
   my $iolayer = sprintf(":raw:encoding(%s)", $gathered_file->encoding);
 
   # read original changelog
-  my $content = path($filename)->slurp({ binmode => $iolayer});
+  my $content = $self->_original_changes_content;
 
   # add the version and date to file content
   my $delim  = $self->delim;
@@ -261,7 +270,7 @@ Dist::Zilla::Plugin::NextRelease - update the next release number in your change
 
 =head1 VERSION
 
-version 5.032
+version 5.036
 
 =head1 SYNOPSIS
 

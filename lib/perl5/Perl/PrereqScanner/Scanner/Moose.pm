@@ -3,7 +3,7 @@ use warnings;
 
 package Perl::PrereqScanner::Scanner::Moose;
 # ABSTRACT: scan for Moose sugar indicators of required modules
-$Perl::PrereqScanner::Scanner::Moose::VERSION = '1.022';
+$Perl::PrereqScanner::Scanner::Moose::VERSION = '1.023';
 use Moose;
 with 'Perl::PrereqScanner::Scanner';
 
@@ -138,7 +138,7 @@ Perl::PrereqScanner::Scanner::Moose - scan for Moose sugar indicators of require
 
 =head1 VERSION
 
-version 1.022
+version 1.023
 
 =head1 DESCRIPTION
 
