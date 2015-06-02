@@ -1,0 +1,47 @@
+{
+   "abstract" : "A Path::Class type library for Moose",
+   "author" : [
+      "Todd Hepler <thepler@employees.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 4.300005, CPAN::Meta::Converter version 2.112621, CPAN::Meta::Converter version 2.150001",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "MooseX-Types-Path-Class",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : "0.88"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.30"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Class::MOP" : "0",
+            "Moose" : "0.39",
+            "MooseX::Types" : "0.04",
+            "Path::Class" : "0.16"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://rt.cpan.org/Dist/Display.html?Name=MooseX-Types-Path-Class"
+      },
+      "repository" : {
+         "type" : "git",
+         "url" : "git://git.moose.perl.org/MooseX-Types-Path-Class.git"
+      }
+   },
+   "version" : "0.06"
+}
