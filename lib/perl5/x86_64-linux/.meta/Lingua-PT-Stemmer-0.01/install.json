@@ -1,0 +1,1 @@
+{"dist":"Lingua-PT-Stemmer-0.01","pathname":"X/XE/XERN/Lingua-PT-Stemmer-0.01.tar.gz","provides":{"Lingua::PT::Stemmer":{"version":"0.01","file":"lib/Lingua/PT/Stemmer.pm"},"Lingua::GL::Stemmer":{"version":"0.01","file":"lib/Lingua/GL/Stemmer.pm"}},"name":"Lingua::PT::Stemmer","version":"0.01","target":"Lingua::GL::Stemmer"}
