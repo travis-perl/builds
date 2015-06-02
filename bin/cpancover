@@ -1,6 +1,6 @@
 #!/home/travis/perl5/perlbrew/perls/5.21.9-thr/bin/perl5.21.9
 
-# Copyright 2002-2014, Paul Johnson (paul@pjcj.net)
+# Copyright 2002-2015, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@
 use 5.16.0;
 use warnings;
 
-our $VERSION = '1.17'; # VERSION
+our $VERSION = '1.18'; # VERSION
 
 use Devel::Cover::Collection;
 
@@ -146,7 +146,7 @@ cpancover - report coverage statistics on CPAN modules
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -209,7 +209,7 @@ The following exit values are returned:
 
 =head1 LICENCE
 
-Copyright 2002-2014, Paul Johnson (paul@pjcj.net)
+Copyright 2002-2015, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

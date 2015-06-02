@@ -1,4 +1,4 @@
-# Copyright 2001-2014, Paul Johnson (paul@pjcj.net)
+# Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@ package Devel::Cover;
 use strict;
 use warnings;
 
-our $VERSION = '1.17'; # VERSION
+our $VERSION = '1.18'; # VERSION
 our $LVERSION = do { no warnings; eval '$VERSION' || "0.001" };  # for dev
 
 use DynaLoader ();
@@ -1218,7 +1218,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -1379,7 +1379,7 @@ information as possible.
 =head1 OPTIONS
 
  -blib               - "use blib" and ignore files matching \bt/ (default true
-                       iff blib directory exists).
+                       if blib directory exists, false otherwise).
  -coverage criterion - Turn on coverage for the specified criterion.  Criteria
                        include statement, branch, condition, path, subroutine,
                        pod, time, all and none (default all available).
@@ -1396,7 +1396,7 @@ information as possible.
  -silent val         - Don't print informational messages (default off).
  -subs_only val      - Only cover code in subroutine bodies (default off).
  -replace_ops val    - Use op replacing rather than runops (default on).
- -summary val        - Print summary information iff val is true (default on).
+ -summary val        - Print summary information if val is true (default on).
 
 =head2 More on Coverage Options
 
@@ -1474,7 +1474,7 @@ construct.
 =head3 Statements
 
 The "uncoverable" comment should appear on either the same line as the
-statement, of on the line before it:
+statement, or on the line before it:
 
     $impossible++;  # uncoverable statement
     # uncoverable statement
@@ -1546,7 +1546,7 @@ case at the moment.
 =head2 Non-invasive specification
 
 If you can't, or don't want to add coverage comments to your code, you can
-specify the uncoverable information in a separate file.  My default this file
+specify the uncoverable information in a separate file.  By default this file
 is L<.uncoverable> but you can override that.
 
 The interface to managing this file is the L<cover> program, and the options
@@ -1687,7 +1687,7 @@ Please report new bugs on Github.
 
 =head1 LICENCE
 
-Copyright 2001-2014, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

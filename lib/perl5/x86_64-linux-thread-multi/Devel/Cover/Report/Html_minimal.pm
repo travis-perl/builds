@@ -2,13 +2,13 @@ package Devel::Cover::Report::Html_minimal;
 BEGIN {require 5.006}
 use strict;
 use warnings;
-use CGI;
+use HTML::Entities;
 use Getopt::Long;
 use Devel::Cover::DB;
 use Devel::Cover::Html_Common "launch";
 use Devel::Cover::Truth_Table;
 
-our $VERSION = '1.17'; # VERSION
+our $VERSION = '1.18'; # VERSION
 our $LVERSION = do { eval '$VERSION' || "0.001" };  # for development purposes
 
 #-------------------------------------------------------------------------------
@@ -444,7 +444,7 @@ sub escape_HTML {
     my $text = shift;
     chomp $text;
 
-    $text = CGI::escapeHTML($text);
+    $text = encode_entities($text);
 
     # Do not allow FF in text
     $text =~ tr/\x0c//d;
@@ -751,7 +751,7 @@ Devel::Cover::Report::Html_minimal - HTML backend for Devel::Cover
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -809,7 +809,7 @@ Devel::Cover
 
 =head1 LICENCE
 
-Copyright 2001-2014, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
 
 This software is free. It is licensed under the same terms as Perl itself.
 

@@ -2,7 +2,7 @@ package Devel::Cover::Report::Html_subtle;
 use strict;
 use warnings;
 
-our $VERSION = '1.17'; # VERSION
+our $VERSION = '1.18'; # VERSION
 
 use Devel::Cover::DB;
 use Devel::Cover::Html_Common "launch";
@@ -10,7 +10,7 @@ use Devel::Cover::Truth_Table;
 
 use Getopt::Long;
 use Template 2.00;
-use CGI;
+use HTML::Entities;
 
 my $Template;
 my %Filenames;
@@ -163,7 +163,7 @@ sub print_file {
         my %metric = get_metrics($db, $options, $file_data, $.);
         my %line = (
             number  => $.,
-            text    => CGI::escapeHTML($l),
+            text    => encode_entities($l),
             metrics => [],
         );
         $line{text} =~ s/\t/        /g;
@@ -261,7 +261,7 @@ sub print_branches {
                 class      => cvg_class($b->percentage),
                 parts      => [{text => 'T', class => $tf[0] ? 'covered' : 'uncovered'},
                 {text => 'F', class => $tf[1] ? 'covered' : 'uncovered'}],
-                text       => CGI::escapeHTML($b->text),
+                text       => encode_entities($b->text),
             };
         }
     }
@@ -301,7 +301,7 @@ sub print_conditions {
                 ref        => "line$location",
                 percentage => sprintf("%.0f", $c->[0]->percentage),
                 class      => cvg_class($c->[0]->percentage),
-                condition  => CGI::escapeHTML($c->[1]),
+                condition  => encode_entities($c->[1]),
                 coverage   => $c->[0]->html,
             };
         }
@@ -389,7 +389,7 @@ package Devel::Cover::Report::Html_subtle::Template::Provider;
 use strict;
 use warnings;
 
-our $VERSION = '1.17'; # VERSION
+our $VERSION = '1.18'; # VERSION
 
 use base "Template::Provider";
 
@@ -708,7 +708,7 @@ Devel::Cover::Report::Html_subtle - HTML backend for Devel::Cover
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -732,7 +732,7 @@ Huh?
 
 =head1 LICENCE
 
-Copyright 2001-2014, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 
