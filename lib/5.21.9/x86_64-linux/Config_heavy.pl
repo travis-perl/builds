@@ -78,9 +78,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Sun Feb 22 00:01:23 UTC 2015
+## Configuration time: Tue Jun  2 21:31:31 UTC 2015
 ## Configured by     : travis
-## Target system     : linux testing-worker-linux-f25aadab-2-4977-linux-8-51676986 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-worker-linux-3da96de7-2-24996-linux-13-65154749 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -202,8 +202,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-worker-linux-f25aadab-2-4977-linux-8-51676986.c45665.blueboxgrid.com'
-cf_time='Sun Feb 22 00:01:23 UTC 2015'
+cf_email='travis@testing-worker-linux-3da96de7-2-24996-linux-13-65154749.c45665.blueboxgrid.com'
+cf_time='Tue Jun  2 21:31:31 UTC 2015'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1046,8 +1046,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.c45665.blueboxgrid.com'
-myhostname='testing-worker-linux-f25aadab-2-4977-linux-8-51676986'
-myuname='linux testing-worker-linux-f25aadab-2-4977-linux-8-51676986 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-worker-linux-3da96de7-2-24996-linux-13-65154749'
+myuname='linux testing-worker-linux-3da96de7-2-24996-linux-13-65154749 2.6.32-042stab090.5 #1 smp sat jun 21 00:15:09 msk 2014 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1086,7 +1086,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@testing-worker-linux-f25aadab-2-4977-linux-8-51676986.c45665.blueboxgrid.com'
+perladmin='travis@testing-worker-linux-3da96de7-2-24996-linux-13-65154749.c45665.blueboxgrid.com'
 perllibs='-lpthread -lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.21.9/bin/perl5.21.9'
 pg='pg'
