@@ -4,7 +4,7 @@
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "ExtUtils::MakeMaker version 7.0514, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -31,9 +31,6 @@
          }
       },
       "runtime" : {
-         "recommends" : {
-            "Business::ISBN" : "0"
-         },
          "requires" : {
             "Exporter" : "5.57",
             "MIME::Base64" : "2",
@@ -62,7 +59,8 @@
          "url" : "https://github.com/libwww-perl/uri.git",
          "web" : "https://github.com/libwww-perl/uri"
       },
+      "x_IRC" : "irc://irc.perl.org/#lwp",
       "x_MailingList" : "mailto:libwww@perl.org"
    },
-   "version" : "1.65"
+   "version" : "1.67"
 }
