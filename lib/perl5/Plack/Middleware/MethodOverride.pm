@@ -1,9 +1,10 @@
 use 5.008001;
 use strict;
+use warnings;
 use Plack::Request ();
 
 package Plack::Middleware::MethodOverride;
-$Plack::Middleware::MethodOverride::VERSION = '0.12';
+$Plack::Middleware::MethodOverride::VERSION = '0.14';
 # ABSTRACT: Override REST methods to Plack apps via POST
 
 use parent 'Plack::Middleware';
@@ -25,6 +26,7 @@ sub call {
     my $meth = $env->{'plack.original_request_method'} = $env->{REQUEST_METHOD};
 
     if ($meth and uc $meth eq 'POST') {
+        no warnings 'uninitialized';
         my $override = uc (
             $env->{$self->header}
             or $env->{QUERY_STRING} && Plack::Request->new($env)->query_parameters->{$self->param}
@@ -53,15 +55,15 @@ __END__
 
 =encoding UTF-8
 
-=head1 NAME
+=head1 Name
 
 Plack::Middleware::MethodOverride - Override REST methods to Plack apps via POST
 
-=head1 VERSION
+=head1 Version
 
-version 0.12
+version 0.14
 
-=head1 SYNOPSIS
+=head1 Synopsis
 
 In your Plack app:
 
@@ -83,7 +85,7 @@ Or override it via the C<X-HTTP-Method-Override> header in a request:
       'X-HTTP-Method-Override' => 'PUT'
   ]);
 
-=head1 DESCRIPTION
+=head1 Description
 
 Writing
 L<REST|http://en.wikipedia.org/wiki/Representational_State_Transfer>ful apps
@@ -97,21 +99,21 @@ what method it actually meant. That is, as long as it meant one of these:
 
 =over
 
-=item GET
+=item * GET
 
-=item POST
+=item * POST
 
-=item HEAD
+=item * HEAD
 
-=item PUT
+=item * PUT
 
-=item DELETE
+=item * DELETE
 
-=item OPTIONS
+=item * OPTIONS
 
-=item TRACE
+=item * TRACE
 
-=item CONNECT
+=item * CONNECT
 
 =back
 
@@ -119,7 +121,7 @@ If so, then the C<REQUEST_METHOD> in the PSGI environment will be replaced
 with the client's desired value. The original request method is always stored
 under the C<plack.original_request_method> key.
 
-=head1 CONFIGURATION
+=head1 Configuration
 
 These are the named arguments you can pass to C<new>. Or, more likely, on the
 C<enable> line in your C<builder> block, as in
@@ -138,7 +140,7 @@ Specifies the query parameter name to specify the overriding HTTP method.
 
 Defaults to C<x-tunneled-method>.
 
-=head1 ACKNOWLEDGEMENTS
+=head1 Acknowledgements
 
 This module gleefully steals from
 L<Catalyst::TraitFor::Request::REST::ForBrowsers> by Dave Rolsky and the
@@ -149,9 +151,13 @@ S Trout|http://www.trout.me.uk/> for suggesting that it be implemented as
 middleware, and to L<Hans Dieter Pearcey|http://www.weftsoar.net/> for
 convincing me not to parse body parameters.
 
-=head1 AUTHORS
+=head1 Authors
 
 =over 4
+
+=item *
+
+Tatsuhiko Miyagawa <miyagawa@bulknews.net>
 
 =item *
 
@@ -163,9 +169,9 @@ Aristotle Pagaltzis <pagaltzis@gmx.de>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 Copyright and License
 
-This software is copyright (c) 2015 by David E. Wheeler.
+This software is copyright (c) 2015 by Tatsuhiko Miyagawa, David E. Wheeler, Aristotle Pagaltzis.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

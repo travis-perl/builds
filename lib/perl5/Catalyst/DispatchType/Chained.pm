@@ -98,7 +98,7 @@ sub list {
                            @{ $self->_endpoints }
                   ) {
         my $args = $endpoint->list_extra_info->{Args};
-        my @parts = (defined($args) ? (("*") x $args) : '...');
+        my @parts = (defined($endpoint->attributes->{Args}[0]) ? (("*") x $args) : '...');
         my @parents = ();
         my $parent = "DUMMY";
         my $extra  = $self->_list_extra_http_methods($endpoint);
@@ -130,7 +130,12 @@ sub list {
                 $name = "${extra} ${name}";
             }
             if (defined(my $cap = $p->list_extra_info->{CaptureArgs})) {
-                $name .= ' ('.$cap.')';
+                if($p->has_captures_constraints) {
+                  my $tc = join ',', @{$p->captures_constraints};
+                  $name .= " ($tc)";
+                } else {
+                  $name .= " ($cap)";
+                }
             }
             if (defined(my $ct = $p->list_extra_info->{Consumes})) {
                 $name .= ' :'.$ct;
@@ -143,6 +148,13 @@ sub list {
                 $name = "-> ${name}";
             }
             push(@rows, [ '', $name ]);
+        }
+
+        if($endpoint->has_args_constraints) {
+          my $tc = join ',', @{$endpoint->args_constraints};
+          $endpoint .= " ($tc)";
+        } else {
+          $endpoint .= defined($endpoint->attributes->{Args}[0]) ? " ($args)" : " (...)";
         }
         push(@rows, [ '', (@rows ? "=> " : '').($extra ? "$extra " : ''). ($scheme ? "$scheme: ":'')."/${endpoint}". ($consumes ? " :$consumes":"" ) ]);
         my @display_parts = map { $_ =~s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg; decode_utf8 $_ } @parts;
@@ -235,8 +247,10 @@ sub recurse_match {
         }
         my @try_actions = @{$children->{$try_part}};
         TRY_ACTION: foreach my $action (@try_actions) {
+
+
             if (my $capture_attr = $action->attributes->{CaptureArgs}) {
-                my $capture_count = $capture_attr->[0] || 0;
+                my $capture_count = $action->number_of_captures|| 0;
 
                 # Short-circuit if not enough remaining parts
                 next TRY_ACTION unless @parts >= $capture_count;
@@ -248,7 +262,7 @@ sub recurse_match {
                 push(@captures, splice(@parts, 0, $capture_count));
 
                 # check if the action may fit, depending on a given test by the app
-                if ($action->can('match_captures')) { next TRY_ACTION unless $action->match_captures($c, \@captures) }
+                next TRY_ACTION unless $action->match_captures($c, \@captures);
 
                 # try the remaining parts against children of this action
                 my ($actions, $captures, $action_parts, $n_pathparts) = $self->recurse_match(
@@ -278,6 +292,7 @@ sub recurse_match {
                     next TRY_ACTION unless $action->match($c);
                 }
                 my $args_attr = $action->attributes->{Args}->[0];
+                my $args_count = $action->normalized_arg_number;
                 my @pathparts = split /\//, $action->attributes->{PathPart}->[0];
                 #    No best action currently
                 # OR This one matches with fewer parts left than the current best action,
@@ -285,14 +300,29 @@ sub recurse_match {
                 # OR No parts and this expects 0
                 #    The current best action might also be Args(0),
                 #    but we couldn't chose between then anyway so we'll take the last seen
-
-                if (!$best_action                       ||
+                if (
+                    !$best_action                       ||
                     @parts < @{$best_action->{parts}}   ||
-                    (!@parts && defined($args_attr) && $args_attr eq "0")){
+                    (
+                        !@parts && 
+                        defined($args_attr) && 
+                        (
+                            $args_count eq "0" &&
+                            (
+                              ($c->config->{use_chained_args_0_special_case}||0) || 
+                                (
+                                  exists($best_action->{args_count}) && defined($best_action->{args_count}) ?
+                                  ($best_action->{args_count} ne 0) : 1
+                                )
+                            )
+                        )
+                    )
+                ){
                     $best_action = {
                         actions => [ $action ],
                         captures=> [],
                         parts   => \@parts,
+                        args_count => $args_count,
                         n_pathparts => scalar(@pathparts),
                     };
                 }
@@ -308,32 +338,6 @@ sub recurse_match {
 Calls register_path for every Path attribute for the given $action.
 
 =cut
-
-sub _check_args_attr {
-    my ( $self, $action, $name ) = @_;
-
-    return unless exists $action->attributes->{$name};
-
-    if (@{$action->attributes->{$name}} > 1) {
-        Catalyst::Exception->throw(
-          "Multiple $name attributes not supported registering " . $action->reverse()
-        );
-    }
-    my $args = $action->attributes->{$name}->[0];
-    if (defined($args) and not (
-        Scalar::Util::looks_like_number($args) and
-        int($args) == $args and $args >= 0
-    )) {
-        require Data::Dumper;
-        local $Data::Dumper::Terse = 1;
-        local $Data::Dumper::Indent = 0;
-        $args = Data::Dumper::Dumper($args);
-        Catalyst::Exception->throw(
-          "Invalid $name($args) for action " . $action->reverse() .
-          " (use '$name' or '$name(<number>)')"
-        );
-    }
-}
 
 sub register {
     my ( $self, $c, $action ) = @_;
@@ -382,10 +386,6 @@ sub register {
 
     $self->_actions->{'/'.$action->reverse} = $action;
 
-    foreach my $name (qw(Args CaptureArgs)) {
-        $self->_check_args_attr($action, $name);
-    }
-
     if (exists $action->attributes->{Args} and exists $action->attributes->{CaptureArgs}) {
         Catalyst::Exception->throw(
           "Combining Args and CaptureArgs attributes not supported registering " .
@@ -417,11 +417,15 @@ sub uri_for_action {
     my @captures = @$captures;
     my $parent = "DUMMY";
     my $curr = $action;
+    # If this is an action chain get the last action in the chain
+    if($curr->can('chain') ) {
+      $curr = ${$curr->chain}[-1];
+    }
     while ($curr) {
-        if (my $cap = $curr->attributes->{CaptureArgs}) {
-            return undef unless @captures >= ($cap->[0]||0); # not enough captures
-            if ($cap->[0]) {
-                unshift(@parts, splice(@captures, -$cap->[0]));
+        if (my $cap = $curr->number_of_captures) {
+            return undef unless @captures >= $cap; # not enough captures
+            if ($cap) {
+                unshift(@parts, splice(@captures, -$cap));
             }
         }
         if (my $pp = $curr->attributes->{PathPart}) {
@@ -705,6 +709,32 @@ An action that is part of a chain (that is, one that has a C<:Chained>
 attribute) but has no C<:CaptureArgs> attribute is treated by Catalyst
 as a chain end.
 
+Allowed values for CaptureArgs is a single integer (CaptureArgs(2), meaning two
+allowed) or you can declare a L<Moose>, L<MooseX::Types> or L<Type::Tiny>
+named constraint such as CaptureArgs(Int,Str) would require two args with
+the first being a Integer and the second a string.  You may declare your own
+custom type constraints and import them into the controller namespace:
+
+    package MyApp::Controller::Root;
+
+    use Moose;
+    use MooseX::MethodAttributes;
+    use MyApp::Types qw/Int/;
+
+    extends 'Catalyst::Controller';
+
+    sub chain_base :Chained(/) CaptureArgs(1) { }
+
+      sub any_priority_chain :Chained(chain_base) PathPart('') Args(1) { }
+
+      sub int_priority_chain :Chained(chain_base) PathPart('') Args(Int) { }
+
+If you use a reference type constraint in CaptureArgs, it must be a type
+like Tuple in L<Types::Standard> that allows us to determine the number of
+args to match.  Otherwise this will raise an error during startup.
+
+See L<Catalyst::RouteMatching> for more.
+
 =item Args
 
 By default, endpoints receive the rest of the arguments in the path. You
@@ -722,6 +752,9 @@ of path parts after the endpoint.
 Just as with C<:CaptureArgs>, the arguments get passed to the action in
 C<@_> after the context object. They can also be reached through
 C<$c-E<gt>request-E<gt>arguments>.
+
+You should see 'Args' in L<Catalyst::Controller> for more details on using
+type constraints in your Args declarations.
 
 =back
 

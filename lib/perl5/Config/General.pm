@@ -5,7 +5,7 @@
 #          config values from a given file and
 #          return it as hash structure
 #
-# Copyright (c) 2000-2014 Thomas Linden <tlinden |AT| cpan.org>.
+# Copyright (c) 2000-2015 Thomas Linden <tlinden |AT| cpan.org>.
 # All Rights Reserved. Std. disclaimer applies.
 # Artistic License, same as perl itself. Have fun.
 #
@@ -32,7 +32,7 @@ use Carp::Heavy;
 use Carp;
 use Exporter;
 
-$Config::General::VERSION = "2.56";
+$Config::General::VERSION = "2.58";
 
 use vars  qw(@ISA @EXPORT_OK);
 use base qw(Exporter);
@@ -1258,6 +1258,11 @@ sub _store {
   my $config_string = q();
 
   foreach my $entry ( $this->{SaveSorted} ? sort keys %$config : keys %$config ) {
+    # fix rt#104548
+    if ($entry =~ /[<>\n\r]/) {
+      croak "Config::General: current key contains invalid characters: $entry!\n";
+    }
+
     if (ref($config->{$entry}) eq 'ARRAY') {
       if( $this->{ForceArray} && scalar @{$config->{$entry}} == 1 && ! ref($config->{$entry}->[0]) ) {
         # a single value array forced to stay as array
@@ -2748,7 +2753,7 @@ Thomas Linden <tlinden |AT| cpan.org>
 
 =head1 VERSION
 
-2.56
+2.58
 
 =cut
 

@@ -1,5 +1,5 @@
 package Moose::Util;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use strict;
 use warnings;
@@ -541,7 +541,7 @@ Moose::Util - Utilities for working with Moose classes
 
 =head1 VERSION
 
-version 2.1403
+version 2.1404
 
 =head1 SYNOPSIS
 
@@ -594,7 +594,7 @@ The class must already have a metaclass for this to work.
 
 =item B<apply_all_roles($applicant, @roles)>
 
-This function applies one or more roles to the given C<$applicant> The
+This function applies one or more roles to the given C<$applicant>. The
 applicant can be a role name, class name, or object.
 
 The C<$applicant> must already have a metaclass object.

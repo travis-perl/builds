@@ -63,7 +63,9 @@ has request => (
     is => 'rw',
     default => sub {
         my $self = shift;
-        $self->request_class->new($self->_build_request_constructor_args);
+        my $class = ref $self;
+        my $composed_request_class = $class->composed_request_class;
+        return $composed_request_class->new( $self->_build_request_constructor_args);
     },
     lazy => 1,
 );
@@ -77,11 +79,30 @@ sub _build_request_constructor_args {
     \%p;
 }
 
+sub composed_request_class {
+  my $class = shift;
+  my @traits = (@{$class->request_class_traits||[]}, @{$class->config->{request_class_traits}||[]});
+
+  # For each trait listed, figure out what the namespace is.  First we try the $trait
+  # as it is in the config.  Then try $MyApp::TraitFor::Request:$trait. Last we try
+  # Catalyst::TraitFor::Request::$trait.  If none load, throw error.
+
+  my $trait_ns = 'TraitFor::Request';
+  my @normalized_traits = map {
+    Class::Load::load_first_existing_class($_, $class.'::'.$trait_ns.'::'. $_, 'Catalyst::'.$trait_ns.'::'.$_)
+  } @traits;
+
+  return $class->_composed_request_class ||
+    $class->_composed_request_class(Moose::Util::with_traits($class->request_class, @normalized_traits));
+}
+
 has response => (
     is => 'rw',
     default => sub {
         my $self = shift;
-        $self->response_class->new($self->_build_response_constructor_args);
+        my $class = ref $self;
+        my $composed_response_class = $class->composed_response_class;
+        return $composed_response_class->new( $self->_build_response_constructor_args);
     },
     lazy => 1,
 );
@@ -90,6 +111,19 @@ sub _build_response_constructor_args {
       _log => $_[0]->log,
       encoding => $_[0]->encoding,
     };
+}
+
+sub composed_response_class {
+  my $class = shift;
+  my @traits = (@{$class->response_class_traits||[]}, @{$class->config->{response_class_traits}||[]});
+
+  my $trait_ns = 'TraitFor::Response';
+  my @normalized_traits = map {
+    Class::Load::load_first_existing_class($_, $class.'::'.$trait_ns.'::'. $_, 'Catalyst::'.$trait_ns.'::'.$_)
+  } @traits;
+
+  return $class->_composed_response_class ||
+    $class->_composed_response_class(Moose::Util::with_traits($class->response_class, @normalized_traits));
 }
 
 has namespace => (is => 'rw');
@@ -114,22 +148,39 @@ our $RECURSION = 1000;
 our $DETACH    = Catalyst::Exception::Detach->new;
 our $GO        = Catalyst::Exception::Go->new;
 
-#I imagine that very few of these really need to be class variables. if any.
+#I imagine that very few of these really 
+#need to be class variables. if any.
 #maybe we should just make them attributes with a default?
 __PACKAGE__->mk_classdata($_)
   for qw/components arguments dispatcher engine log dispatcher_class
   engine_loader context_class request_class response_class stats_class
   setup_finished _psgi_app loading_psgi_file run_options _psgi_middleware
-  _data_handlers _encoding _encode_check finalized_default_middleware/;
+  _data_handlers _encoding _encode_check finalized_default_middleware
+  request_class_traits response_class_traits stats_class_traits
+  _composed_request_class _composed_response_class _composed_stats_class/;
 
 __PACKAGE__->dispatcher_class('Catalyst::Dispatcher');
 __PACKAGE__->request_class('Catalyst::Request');
 __PACKAGE__->response_class('Catalyst::Response');
 __PACKAGE__->stats_class('Catalyst::Stats');
+
+sub composed_stats_class {
+  my $class = shift;
+  my @traits = (@{$class->stats_class_traits||[]}, @{$class->config->{stats_class_traits}||[]});
+
+  my $trait_ns = 'TraitFor::Stats';
+  my @normalized_traits = map {
+    Class::Load::load_first_existing_class($_, $class.'::'.$trait_ns.'::'. $_, 'Catalyst::'.$trait_ns.'::'.$_)
+  } @traits;
+
+  return $class->_composed_stats_class ||
+    $class->_composed_stats_class(Moose::Util::with_traits($class->stats_class, @normalized_traits));
+}
+
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90083';
+our $VERSION = '5.90093';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -170,6 +221,11 @@ sub _application { $_[0] }
 =head1 NAME
 
 Catalyst - The Elegant MVC Web Application Framework
+
+=for html
+<a href="https://badge.fury.io/pl/Catalyst-Runtime"><img src="https://badge.fury.io/pl/Catalyst-Runtime.svg" alt="CPAN version" height="18"></a>
+<a href="https://travis-ci.org/perl-catalyst/catalyst-runtime/"><img src="https://api.travis-ci.org/perl-catalyst/catalyst-runtime.png" alt="Catalyst></a>
+<a href="http://cpants.cpanauthors.org/dist/Catalyst-Runtime"><img src="http://cpants.cpanauthors.org/dist/Catalyst-Runtime.png" alt='Kwalitee Score' /></a>
 
 =head1 SYNOPSIS
 
@@ -465,7 +521,7 @@ L<< detach|/"$c->detach( $action [, \@arguments ] )" >>. Like C<< $c->visit >>,
 C<< $c->go >> will perform a full dispatch on the specified action or method,
 with localized C<< $c->action >> and C<< $c->namespace >>. Like C<detach>,
 C<go> escapes the processing of the current request chain on completion, and
-does not return to its caller.
+does not return to its cunless blessed $cunless blessed $caller.
 
 @arguments are arguments to the final destination of $action. @captures are
 arguments to the intermediate steps, if any, on the way to the final sub of
@@ -514,6 +570,7 @@ t/middleware-stash.t in the distribution /t directory.
 
 sub stash {
   my $c = shift;
+  $c->log->error("You are requesting the stash but you don't have a context") unless blessed $c;
   return Catalyst::Middleware::Stash::get_stash($c->req->env)->(@_);
 }
 
@@ -685,12 +742,19 @@ sub _comp_names {
 }
 
 # Filter a component before returning by calling ACCEPT_CONTEXT if available
+
 sub _filter_component {
     my ( $c, $comp, @args ) = @_;
 
-    if ( eval { $comp->can('ACCEPT_CONTEXT'); } ) {
-        return $comp->ACCEPT_CONTEXT( $c, @args );
+    if(ref $comp eq 'CODE') {
+      $comp = $comp->();
     }
+
+    if ( eval { $comp->can('ACCEPT_CONTEXT'); } ) {
+      return $comp->ACCEPT_CONTEXT( $c, @args );
+    }
+
+    $c->log->warn("You called component '${\$comp->catalyst_component_name}' with arguments [@args], but this component does not ACCEPT_CONTEXT, so args are ignored.") if scalar(@args) && $c->debug;
 
     return $comp;
 }
@@ -738,7 +802,8 @@ Gets a L<Catalyst::Model> instance by name.
 
     $c->model('Foo')->do_stuff;
 
-Any extra arguments are directly passed to ACCEPT_CONTEXT.
+Any extra arguments are directly passed to ACCEPT_CONTEXT, if the model
+defines ACCEPT_CONTEXT.  If it does not, the args are discarded.
 
 If the name is omitted, it will look for
  - a model object in $c->stash->{current_model_instance}, then
@@ -1342,6 +1407,7 @@ EOF
           : $class->log->debug(q/Couldn't find home/);
 
         my $column_width = Catalyst::Utils::term_width() - 8 - 9;
+
         my $t = Text::SimpleTable->new( [ $column_width, 'Class' ], [ 8, 'Type' ] );
         for my $comp ( sort keys %{ $class->components } ) {
             my $type = ref $class->components->{$comp} ? 'instance' : 'class';
@@ -1447,6 +1513,10 @@ In general the scheme of the generated URI object will follow the incoming reque
 however if your targeted action or action chain has the Scheme attribute it will
 use that instead.
 
+Also, if the targeted Action or Action chain declares Args/CaptureArgs that have
+type constraints, we will require that your proposed URL verify on those declared
+constraints.
+
 =cut
 
 sub uri_for {
@@ -1465,60 +1535,59 @@ sub uri_for {
 
     carp "uri_for called with undef argument" if grep { ! defined $_ } @args;
 
-    my @encoded_args = ();
-    foreach my $arg (@args) {
-      if(ref($arg)||'' eq 'ARRAY') {
-        push @encoded_args, [map {
-          my $encoded = encode_utf8 $_;
-          $encoded =~ s/([^$URI::uric])/$URI::Escape::escapes{$1}/go;
-         $encoded;
-        } @$arg];
-      } else {
-        push @encoded_args, do {
-          my $encoded = encode_utf8 $arg;
-          $encoded =~ s/([^$URI::uric])/$URI::Escape::escapes{$1}/go;
-          $encoded;
-        }
-      }
-    }
-
     my $target_action = $path->$_isa('Catalyst::Action') ? $path : undef;
     if ( $path->$_isa('Catalyst::Action') ) { # action object
-        s|/|%2F|g for @encoded_args;
+        s|/|%2F|g for @args;
         my $captures = [ map { s|/|%2F|g; $_; }
-                        ( scalar @encoded_args && ref $encoded_args[0] eq 'ARRAY'
-                         ? @{ shift(@encoded_args) }
+                        ( scalar @args && ref $args[0] eq 'ARRAY'
+                         ? @{ shift(@args) }
                          : ()) ];
 
         my $action = $path;
+        my $expanded_action = $c->dispatcher->expand_action( $action );
+        my $num_captures = $expanded_action->number_of_captures;
+
         # ->uri_for( $action, \@captures_and_args, \%query_values? )
-        if( !@encoded_args && $action->number_of_args ) {
-            my $expanded_action = $c->dispatcher->expand_action( $action );
-            my $num_captures = $expanded_action->number_of_captures;
-            unshift @encoded_args, splice @$captures, $num_captures;
+        if( !@args && $action->number_of_args ) {
+          unshift @args, splice @$captures, $num_captures;
         }
 
-       $path = $c->dispatcher->uri_for_action($action, $captures);
+        if($num_captures) {
+          unless($expanded_action->match_captures_constraints($c, $captures)) {
+            carp "captures [@{$captures}] do not match the type constraints in actionchain ending with '$expanded_action'";
+            return;
+          }
+        }
+
+        $path = $c->dispatcher->uri_for_action($action, $captures);
         if (not defined $path) {
             $c->log->debug(qq/Can't find uri_for action '$action' @$captures/)
                 if $c->debug;
             return undef;
         }
         $path = '/' if $path eq '';
+
+        # At this point @encoded_args is the remaining Args (all captures removed).
+        if($expanded_action->has_args_constraints) {
+          unless($expanded_action->match_args($c,\@args)) {
+             carp "args [@args] do not match the type constraints in action '$expanded_action'";
+             return;
+          }
+        }
     }
 
-    unshift(@encoded_args, $path);
+    unshift(@args, $path);
 
     unless (defined $path && $path =~ s!^/!!) { # in-place strip
         my $namespace = $c->namespace;
         if (defined $path) { # cheesy hack to handle path '../foo'
-           $namespace =~ s{(?:^|/)[^/]+$}{} while $encoded_args[0] =~ s{^\.\./}{};
+           $namespace =~ s{(?:^|/)[^/]+$}{} while $args[0] =~ s{^\.\./}{};
         }
-        unshift(@encoded_args, $namespace || '');
+        unshift(@args, $namespace || '');
     }
 
     # join args with '/', or a blank string
-    my $args = join('/', grep { defined($_) } @encoded_args);
+    my $args = join('/', grep { defined($_) } @args);
     $args =~ s/\?/%3F/g; # STUPID STUPID SPECIAL CASE
     $args =~ s!^/+!!;
 
@@ -1567,6 +1636,11 @@ sub uri_for {
       } @keys);
     }
 
+    $base = encode_utf8 $base;
+    $base =~ s/([^$URI::uric])/$URI::Escape::escapes{$1}/go;
+    $args = encode_utf8 $args;
+    $args =~ s/([^$URI::uric])/$URI::Escape::escapes{$1}/go;
+    
     my $res = bless(\"${base}${args}${query}", $class);
     $res;
 }
@@ -2154,9 +2228,10 @@ sub finalize_encoding {
         # Set the charset if necessary.  This might be a bit bonkers since encodable response
         # is false when the set charset is not the same as the encoding mimetype (maybe 
         # confusing action at a distance here..
-        # Don't try to set the charset if one already exists
+        # Don't try to set the charset if one already exists or if headers are already finalized
         $c->res->content_type($c->res->content_type . "; charset=" . $c->encoding->mime_name)
-          unless($c->res->content_type_charset);
+          unless($c->res->content_type_charset ||
+                ($c->res->_context && $c->res->finalized_headers && !$c->res->_has_response_cb));
     }
 }
 
@@ -2261,8 +2336,8 @@ sub prepare {
 
     $c->response->_context($c);
 
-    #surely this is not the most efficient way to do things...
     $c->stats($class->stats_class->new)->enable($c->use_stats);
+
     if ( $c->debug || $c->config->{enable_catalyst_header} ) {
         $c->res->headers->header( 'X-Catalyst' => $Catalyst::VERSION );
     }
@@ -2668,9 +2743,64 @@ sub prepare_write { my $c = shift; $c->engine->prepare_write( $c, @_ ) }
 
 Returns or sets the request class. Defaults to L<Catalyst::Request>.
 
+=head2 $app->request_class_traits
+
+An arrayref of L<Moose::Role>s which are applied to the request class.  You can
+name the full namespace of the role, or a namespace suffix, which will then
+be tried against the following standard namespace prefixes.
+
+    $MyApp::TraitFor::Request::$trait_suffix
+    Catalyst::TraitFor::Request::$trait_suffix
+
+So for example if you set:
+
+    MyApp->request_class_traits(['Foo']);
+
+We try each possible role in turn (and throw an error if none load)
+
+    Foo
+    MyApp::TraitFor::Request::Foo
+    Catalyst::TraitFor::Request::Foo
+
+The namespace part 'TraitFor::Request' was choosen to assist in backwards
+compatibility with L<CatalystX::RoleApplicator> which previously provided
+these features in a stand alone package.
+  
+=head2 $app->composed_request_class
+
+This is the request class which has been composed with any request_class_traits.
+
 =head2 $c->response_class
 
 Returns or sets the response class. Defaults to L<Catalyst::Response>.
+
+=head2 $app->response_class_traits
+
+An arrayref of L<Moose::Role>s which are applied to the response class.  You can
+name the full namespace of the role, or a namespace suffix, which will then
+be tried against the following standard namespace prefixes.
+
+    $MyApp::TraitFor::Response::$trait_suffix
+    Catalyst::TraitFor::Response::$trait_suffix
+
+So for example if you set:
+
+    MyApp->response_class_traits(['Foo']);
+
+We try each possible role in turn (and throw an error if none load)
+
+    Foo
+    MyApp::TraitFor::Response::Foo
+    Catalyst::TraitFor::Responset::Foo
+
+The namespace part 'TraitFor::Response' was choosen to assist in backwards
+compatibility with L<CatalystX::RoleApplicator> which previously provided
+these features in a stand alone package.
+
+
+=head2 $app->composed_response_class
+
+This is the request class which has been composed with any response_class_traits.
 
 =head2 $c->read( [$maxlength] )
 
@@ -2780,15 +2910,117 @@ sub setup_components {
     }
 
     for my $component (@comps) {
-        my $instance = $class->components->{ $component } = $class->setup_component($component);
-        my @expanded_components = $instance->can('expand_modules')
-            ? $instance->expand_modules( $component, $config )
-            : $class->expand_component_module( $component, $config );
-        for my $component (@expanded_components) {
-            next if $comps{$component};
-            $class->components->{ $component } = $class->setup_component($component);
-        }
+        my $instance = $class->components->{ $component } = $class->delayed_setup_component($component);
     }
+
+    # Inject a component or wrap a stand alone class in an adaptor. This makes a list
+    # of named components in the configuration that are not actually existing (not a
+    # real file).
+
+    my @injected = $class->setup_injected_components;
+
+    # All components are registered, now we need to 'init' them.
+    foreach my $component_name (@comps, @injected) {
+      $class->components->{$component_name} = $class->components->{$component_name}->() if
+        (ref($class->components->{$component_name}) || '') eq 'CODE';
+    }
+}
+
+=head2 $app->setup_injected_components
+
+Called by setup_compoents to setup components that are injected.
+
+=cut
+
+sub setup_injected_components {
+    my ($class) = @_;
+    my @injected_components = keys %{$class->config->{inject_components} ||+{}};
+
+    foreach my $injected_comp_name(@injected_components) {
+        $class->setup_injected_component(
+          $injected_comp_name,
+          $class->config->{inject_components}->{$injected_comp_name});
+    }
+
+    return map { $class ."::" . $_ }
+      @injected_components;
+}
+
+=head2 $app->setup_injected_component( $injected_component_name, $config )
+
+Setup a given injected component.
+
+=cut
+
+sub setup_injected_component {
+    my ($class, $injected_comp_name, $config) = @_;
+    if(my $component_class = $config->{from_component}) {
+        my @roles = @{$config->{roles} ||[]};
+        Catalyst::Utils::inject_component(
+          into => $class,
+          component => $component_class,
+          (scalar(@roles) ? (traits => \@roles) : ()),
+          as => $injected_comp_name);
+    }
+}
+
+=head2 $app->inject_component($MyApp_Component_name => \%args);
+
+Add a component that is injected at setup:
+
+    MyApp->inject_component( 'Model::Foo' => { from_component => 'Common::Foo' } );
+
+Must be called before ->setup.  Expects a component name for your
+current application and \%args where
+
+=over 4
+
+=item from_component
+
+The target component being injected into your application
+
+=item roles
+
+An arrayref of L<Moose::Role>s that are applied to your component.
+
+=back
+
+Example
+
+    MyApp->inject_component(
+      'Model::Foo' => {
+        from_component => 'Common::Model::Foo',
+        roles => ['Role1', 'Role2'],
+      });
+
+=head2 $app->inject_components
+
+Inject a list of components:
+
+    MyApp->inject_components(
+      'Model::FooOne' => {
+        from_component => 'Common::Model::Foo',
+        roles => ['Role1', 'Role2'],
+      },
+      'Model::FooTwo' => {
+        from_component => 'Common::Model::Foo',
+        roles => ['Role1', 'Role2'],
+      });
+
+=cut
+
+sub inject_component {
+  my ($app, $name, $args) = @_;
+  die "Component $name exists" if
+    $app->config->{inject_components}->{$name};
+  $app->config->{inject_components}->{$name} = $args;
+}
+
+sub inject_components {
+  my $app = shift;
+  while(@_) {
+    $app->inject_component(shift, shift);
+  }
 }
 
 =head2 $c->locate_components( $setup_component_config )
@@ -2832,6 +3064,21 @@ sub expand_component_module {
     return Devel::InnerPackage::list_packages( $module );
 }
 
+=head2 $app->delayed_setup_component
+
+Returns a coderef that points to a setup_component instance.  Used
+internally for when you want to delay setup until the first time
+the component is called.
+
+=cut
+
+sub delayed_setup_component {
+  my($class, $component, @more) = @_;
+  return sub {
+    return my $instance = $class->setup_component($component, @more);
+  };
+}
+
 =head2 $c->setup_component
 
 =cut
@@ -2843,21 +3090,21 @@ sub setup_component {
         return $component;
     }
 
-    my $suffix = Catalyst::Utils::class2classsuffix( $component );
-    my $config = $class->config->{ $suffix } || {};
+    my $config = $class->config_for($component);
     # Stash catalyst_component_name in the config here, so that custom COMPONENT
     # methods also pass it. local to avoid pointlessly shitting in config
     # for the debug screen, as $component is already the key name.
     local $config->{catalyst_component_name} = $component;
 
-    my $instance = eval { $component->COMPONENT( $class, $config ); };
-
-    if ( my $error = $@ ) {
-        chomp $error;
-        Catalyst::Exception->throw(
-            message => qq/Couldn't instantiate component "$component", "$error"/
-        );
-    }
+    my $instance = eval {
+      $component->COMPONENT( $class, $config );
+    } || do {
+      my $error = $@;
+      chomp $error;
+      Catalyst::Exception->throw(
+        message => qq/Couldn't instantiate component "$component", "$error"/
+      );
+    };
 
     unless (blessed $instance) {
         my $metaclass = Moose::Util::find_meta($component);
@@ -2869,7 +3116,43 @@ sub setup_component {
             qq/Couldn't instantiate component "$component", COMPONENT() method (from $component_method_from) didn't return an object-like value (value was $value)./
         );
     }
-    return $instance;
+
+    my @expanded_components = $instance->can('expand_modules')
+      ? $instance->expand_modules( $component, $config )
+      : $class->expand_component_module( $component, $config );
+    for my $component (@expanded_components) {
+      next if $class->components->{ $component };
+      $class->components->{ $component } = $class->setup_component($component);
+    }
+
+    return $instance; 
+}
+
+=head2 $app->config_for( $component_name )
+
+Return the application level configuration (which is not yet merged with any
+local component configuration, via $component_class->config) for the named
+component or component object. Example:
+
+    MyApp->config(
+      'Model::Foo' => { a => 1, b => 2},
+    );
+
+    my $config = MyApp->config_for('MyApp::Model::Foo');
+
+In this case $config is the hashref C< {a=>1, b=>2} >.
+
+This is also handy for looking up configuration for a plugin, to make sure you follow
+existing L<Catalyst> standards for where a plugin should put its configuration.
+
+=cut
+
+sub config_for {
+    my ($class, $component_name) = @_;
+    my $component_suffix = Catalyst::Utils::class2classsuffix($component_name);
+    my $config = $class->config->{ $component_suffix } || {};
+
+    return $config;
 }
 
 =head2 $c->setup_dispatcher
@@ -3233,6 +3516,7 @@ sub _handle_unicode_decoding {
 sub _handle_param_unicode_decoding {
     my ( $self, $value ) = @_;
     return unless defined $value; # not in love with just ignoring undefs - jnap
+    return $value if blessed($value); #don't decode when the value is an object.
 
     my $enc = $self->encoding;
     return try {
@@ -3674,6 +3958,33 @@ by itself.
 
 Returns or sets the stats (timing statistics) class. L<Catalyst::Stats|Catalyst::Stats> is used by default.
 
+=head2 $app->stats_class_traits
+
+A arrayref of L<Moose::Role>s that are applied to the stats_class before creating it.
+
+=head2 $app->composed_stats_class
+
+this is the stats_class composed with any 'stats_class_traits'.  You can
+name the full namespace of the role, or a namespace suffix, which will then
+be tried against the following standard namespace prefixes.
+
+    $MyApp::TraitFor::Stats::$trait_suffix
+    Catalyst::TraitFor::Stats::$trait_suffix
+
+So for example if you set:
+
+    MyApp->stats_class_traits(['Foo']);
+
+We try each possible role in turn (and throw an error if none load)
+
+    Foo
+    MyApp::TraitFor::Stats::Foo
+    Catalyst::TraitFor::Stats::Foo
+
+The namespace part 'TraitFor::Stats' was choosen to assist in backwards
+compatibility with L<CatalystX::RoleApplicator> which previously provided
+these features in a stand alone package.
+
 =head2 $c->use_stats
 
 Returns 1 when L<< stats collection|/"-Stats" >> is enabled.
@@ -3882,11 +4193,126 @@ backwardly compatible).
 
 =item *
 
+C<skip_complex_post_part_handling>
+
+When creating body parameters from a POST, if we run into a multpart POST
+that does not contain uploads, but instead contains inlined complex data
+(very uncommon) we cannot reliably convert that into field => value pairs.  So
+instead we create an instance of L<Catalyst::Request::PartData>.  If this causes
+issue for you, you can disable this by setting C<skip_complex_post_part_handling>
+to true (default is false).  
+
+=item *
+
+C<skip_body_param_unicode_decoding>
+
+Generally we decode incoming POST params based on your declared encoding (the
+default for this is to decode UTF-8).  If this is causing you trouble and you
+do not wish to turn all encoding support off (with the C<encoding> configuration
+parameter) you may disable this step atomically by setting this configuration
+parameter to true.
+
+=item *
+
+C<do_not_decode_query>
+
+If true, then do not try to character decode any wide characters in your
+request URL query or keywords.  Most readings of the relevent specifications
+suggest these should be UTF-* encoded, which is the default that L<Catalyst>
+will use, hwoever if you are creating a lot of URLs manually or have external
+evil clients, this might cause you trouble.  If you find the changes introduced
+in Catalyst version 5.90080+ break some of your query code, you may disable 
+the UTF-8 decoding globally using this configuration.
+
+This setting takes precedence over C<default_query_encoding> and
+C<decode_query_using_global_encoding>
+
+=item *
+
+C<default_query_encoding>
+
+By default we decode query and keywords in your request URL using UTF-8, which
+is our reading of the relevent specifications.  This setting allows one to
+specify a fixed value for how to decode your query.  You might need this if
+you are doing a lot of custom encoding of your URLs and not using UTF-8.
+
+This setting take precedence over C<decode_query_using_global_encoding>.
+
+=item *
+
+C<decode_query_using_global_encoding>
+
+Setting this to true will default your query decoding to whatever your
+general global encoding is (the default is UTF-8).
+
+=item *
+
+C<use_chained_args_0_special_case>
+
+In older versions of Catalyst, when more than one action matched the same path
+AND all those matching actions declared Args(0), we'd break the tie by choosing
+the first action defined.  We now normalized how Args(0) works so that it
+follows the same rule as Args(N), which is to say when we need to break a tie
+we choose the LAST action defined.  If this breaks your code and you don't
+have time to update to follow the new normalized approach, you may set this
+value to true and it will globally revert to the original chaining behavior.
+
+=item *
+
 C<psgi_middleware> - See L<PSGI MIDDLEWARE>.
 
 =item *
 
 C<data_handlers> - See L<DATA HANDLERS>.
+
+=item *
+
+C<stats_class_traits>
+
+An arrayref of L<Moose::Role>s that get componsed into your stats class.
+
+=item *
+
+C<request_class_traits>
+
+An arrayref of L<Moose::Role>s that get componsed into your request class.
+
+=item *
+
+C<response_class_traits>
+
+An arrayref of L<Moose::Role>s that get componsed into your response class.
+
+=item *
+
+C<inject_components>
+
+A Hashref of L<Catalyst::Component> subclasses that are 'injected' into configuration.
+For example:
+
+    MyApp->config({
+      inject_components => {
+        'Controller::Err' => { from_component => 'Local::Controller::Errors' },
+        'Model::Zoo' => { from_component => 'Local::Model::Foo' },
+        'Model::Foo' => { from_component => 'Local::Model::Foo', roles => ['TestRole'] },
+      },
+      'Controller::Err' => { a => 100, b=>200, namespace=>'error' },
+      'Model::Zoo' => { a => 2 },
+      'Model::Foo' => { a => 100 },
+    });
+
+Generally L<Catalyst> looks for components in your Model/View or Controller directories.
+However for cases when you which to use an existing component and you don't need any
+customization (where for when you can apply a role to customize it) you may inject those
+components into your application.  Please note any configuration should be done 'in the
+normal way', with a key under configuration named after the component affix, as in the
+above example.
+
+Using this type of injection allows you to construct significant amounts of your application
+with only configuration!.  This may or may not lead to increased code understanding.
+
+Please not you may also call the ->inject_components application method as well, although
+you must do so BEFORE setup.
 
 =back
 

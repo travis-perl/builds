@@ -71,7 +71,7 @@
 .\" ========================================================================
 .\"
 .IX Title "AppConfig 3"
-.TH AppConfig 3 "2015-02-12" "perl v5.21.9" "User Contributed Perl Documentation"
+.TH AppConfig 3 "2015-03-01" "perl v5.21.9" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -561,7 +561,7 @@ normal.  The compact definition format will override any configuration
 values provided for \s-1ARGS\s0 and \s-1ARGCOUNT.\s0
 .PP
 .Vb 1
-\&    $config\->define("file|filelist|f=s@", { VALIDATE => \e&check_file() } );
+\&    $config\->define("file|filelist|f=s@", { VALIDATE => \e&check_file } );
 .Ve
 .SS "\s-1READING AND MODIFYING VARIABLE VALUES\s0"
 .IX Subsection "READING AND MODIFYING VARIABLE VALUES"
@@ -738,7 +738,7 @@ previously set values for the variable.
 A reference to a list of values is returned when the variable is requested.
 .PP
 .Vb 2
-\&    my $beverages = $config\->drinks();
+\&    my $beverages = $config\->drink();
 \&    print join(", ", @$beverages);      # prints "coffee, tea"
 .Ve
 .PP

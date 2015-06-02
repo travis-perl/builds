@@ -374,6 +374,9 @@ sub gather_default_action_roles {
 
   push @roles, 'Catalyst::ActionRole::Scheme'
     if $args{attributes}->{Scheme};
+
+  push @roles, 'Catalyst::ActionRole::QueryMatching'
+    if $args{attributes}->{Query};
     return @roles;
 }
 
@@ -550,6 +553,7 @@ sub _parse_PUT_attr     { Method => 'PUT'     }
 sub _parse_DELETE_attr  { Method => 'DELETE'  }
 sub _parse_OPTIONS_attr { Method => 'OPTIONS' }
 sub _parse_HEAD_attr    { Method => 'HEAD'    }
+sub _parse_PATCH_attr  { Method => 'PATCH'  }
 
 sub _expand_role_shortname {
     my ($self, @shortnames) = @_;
@@ -786,7 +790,29 @@ Like L</Regex> but scoped under the namespace of the containing controller
 
 =head2 CaptureArgs
 
-Please see L<Catalyst::DispatchType::Chained>
+Allowed values for CaptureArgs is a single integer (CaptureArgs(2), meaning two
+allowed) or you can declare a L<Moose>, L<MooseX::Types> or L<Type::Tiny>
+named constraint such as CaptureArgs(Int,Str) would require two args with
+the first being a Integer and the second a string.  You may declare your own
+custom type constraints and import them into the controller namespace:
+
+    package MyApp::Controller::Root;
+
+    use Moose;
+    use MooseX::MethodAttributes;
+    use MyApp::Types qw/Int/;
+
+    extends 'Catalyst::Controller';
+
+    sub chain_base :Chained(/) CaptureArgs(1) { }
+
+      sub any_priority_chain :Chained(chain_base) PathPart('') Args(1) { }
+
+      sub int_priority_chain :Chained(chain_base) PathPart('') Args(Int) { }
+
+See L<Catalyst::RouteMatching> for more.
+
+Please see L<Catalyst::DispatchType::Chained> for more.
 
 =head2 ActionClass
 
@@ -835,6 +861,53 @@ L<Catalyst::ActionRole::HTTPMethods>).
 When used with L</Path> indicates the number of arguments expected in
 the path.  However if no Args value is set, assumed to 'slurp' all
 remaining path pars under this namespace.
+
+Allowed values for Args is a single integer (Args(2), meaning two allowed) or you
+can declare a L<Moose>, L<MooseX::Types> or L<Type::Tiny> named constraint such
+as Args(Int,Str) would require two args with the first being a Integer and the
+second a string.  You may declare your own custom type constraints and import
+them into the controller namespace:
+
+    package MyApp::Controller::Root;
+
+    use Moose;
+    use MooseX::MethodAttributes;
+    use MyApp::Types qw/Tuple Int Str StrMatch UserId/;
+
+    extends 'Catalyst::Controller';
+
+    sub user :Local Args(UserId) {
+      my ($self, $c, $int) = @_;
+    }
+
+    sub an_int :Local Args(Int) {
+      my ($self, $c, $int) = @_;
+    }
+
+    sub many_ints :Local Args(ArrayRef[Int]) {
+      my ($self, $c, @ints) = @_;
+    }
+
+    sub match :Local Args(StrMatch[qr{\d\d-\d\d-\d\d}]) {
+      my ($self, $c, $int) = @_;
+    }
+
+If you choose not to use imported type constraints (like L<Type::Tiny>, or <MooseX::Types>
+you may use L<Moose> 'stringy' types however just like when you use these types in your
+declared attributes you must quote them:
+
+    sub my_moose_type :Local Args('Int') { ... }
+
+If you use 'reference' type constraints (such as ArrayRef[Int]) that have an unknown
+number of allowed matches, we set this the same way "Args" is.  Please keep in mind
+that actions with an undetermined number of args match at lower precidence than those
+with a fixed number.  You may use reference types such as Tuple from L<Types::Standard>
+that allows you to fix the number of allowed args.  For example Args(Tuple[Int,Int])
+would be determined to be two args (or really the same as Args(Int,Int).)  You may
+find this useful for creating custom subtypes with complex matching rules that you 
+wish to reuse over many actions.
+
+See L<Catalyst::RouteMatching> for more.
 
 =head2 Consumes('...')
 

@@ -11,6 +11,8 @@ use Class::Load 'is_class_loaded';
 use String::RewritePrefix;
 use Class::Load ();
 use namespace::clean;
+use Devel::InnerPackage;
+use Moose::Util;
 
 =head1 NAME
 
@@ -502,7 +504,82 @@ sub apply_registered_middleware {
     return $new_psgi;
 }
 
+=head2 inject_component
 
+Used to add components at runtime:
+
+    into        The Catalyst package to inject into (e.g. My::App)
+    component   The component package to inject
+    traits      (Optional) ArrayRef of L<Moose::Role>s that the componet should consume.
+    as          An optional moniker to use as the package name for the derived component
+
+For example:
+
+    Catalyst::Utils::inject_component( into => My::App, component => Other::App::Controller::Apple )
+
+        The above will create 'My::App::Controller::Other::App::Controller::Apple'
+
+    Catalyst::Utils::inject_component( into => My::App, component => Other::App::Controller::Apple, as => Apple )
+
+        The above will create 'My::App::Controller::Apple'
+
+    Catalyst::Utils::inject_component( into => $myapp, component => 'MyRootV', as => 'Controller::Root' );
+
+Will inject Controller, Model, and View components into your Catalyst application
+at setup (run)time. It does this by creating a new package on-the-fly, having that
+package extend the given component, and then having Catalyst setup the new component
+(via $app->setup_component).
+
+B<NOTE:> This is basically a core version of L<CatalystX::InjectComponent>.  If you were using that
+you can now use this safely instead.  Going forward changes required to make this work will be
+synchronized with the core method.
+
+B<NOTE:> The 'traits' option is unique to the L<Catalyst::Utils> version of this feature.
+
+B<NOTE:> These injected components really need to be a L<Catalyst::Component> and a L<Moose>
+based class.
+
+=cut
+
+sub inject_component {
+    my %given = @_;
+    my ($into, $component, $as) = @given{qw/into component as/};
+
+    croak "No Catalyst (package) given" unless $into;
+    croak "No component (package) given" unless $component;
+
+    Class::Load::load_class($component);
+
+    $as ||= $component;
+    unless ( $as =~ m/^(?:Controller|Model|View)::/ || $given{skip_mvc_renaming} ) {
+        my $category;
+        for (qw/ Controller Model View /) {
+            if ( $component->isa( "Catalyst::$_" ) ) {
+                $category = $_;
+                last;
+            }
+        }
+        croak "Don't know what kind of component \"$component\" is" unless $category;
+        $as = "${category}::$as";
+    }
+    my $component_package = join '::', $into, $as;
+
+    unless ( Class::Load::is_class_loaded $component_package ) {
+        eval "package $component_package; use base qw/$component/; 1;" or
+            croak "Unable to build component package for \"$component_package\": $@";
+        Moose::Util::apply_all_roles($component_package, @{$given{traits}}) if $given{traits};
+        (my $file = "$component_package.pm") =~ s{::}{/}g;
+        $INC{$file} ||= 1;    
+    }
+
+    my $_setup_component = sub {
+      my $into = shift;
+      my $component_package = shift;
+      $into->components->{$component_package} = $into->delayed_setup_component( $component_package );
+    };
+
+    $_setup_component->( $into, $component_package );
+}
 
 =head1 PSGI Helpers
 

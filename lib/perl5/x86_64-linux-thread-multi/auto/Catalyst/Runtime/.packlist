@@ -5,12 +5,14 @@
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/ActionContainer.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/ActionRole/ConsumesContent.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/ActionRole/HTTPMethods.pm
+/home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/ActionRole/QueryMatching.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/ActionRole/Scheme.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Base.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/ClassData.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Component.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Component/ApplicationAttribute.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Component/ContextClosure.pm
+/home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Contributing.pod
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Controller.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Delta.pod
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/DispatchType.pm
@@ -33,9 +35,11 @@
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/PSGI.pod
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Plugin/Unicode/Encoding.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Request.pm
+/home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Request/PartData.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Request/Upload.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Response.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Response/Writer.pm
+/home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/RouteMatching.pod
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Runtime.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Script/CGI.pm
 /home/travis/.perlbrew/libs/5.21.9-thr@cat/lib/perl5/Catalyst/Script/Create.pm

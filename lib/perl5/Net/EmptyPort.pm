@@ -2,57 +2,67 @@ package Net::EmptyPort;
 use strict;
 use warnings;
 use base qw/Exporter/;
-use IO::Socket::INET;
+use IO::Socket::IP;
 use Time::HiRes ();
 
-our @EXPORT = qw/ empty_port check_port wait_port /;
+our @EXPORT = qw/ can_bind empty_port check_port wait_port /;
+
+sub can_bind {
+    my ($host, $port, $proto) = @_;
+    $port ||= 0;
+    $proto ||= 'tcp';
+    my $s = IO::Socket::IP->new(
+        (($proto eq 'udp') ? () : (Listen => 5)),
+        LocalAddr => $host,
+        LocalPort => $port,
+        Proto     => $proto,
+        V6Only    => 1,
+        (($^O eq 'MSWin32') ? () : (ReuseAddr => 1)),
+    );
+    defined $s;
+}
 
 # get a empty port on 49152 .. 65535
 # http://www.iana.org/assignments/port-numbers
 sub empty_port {
-    my $port = do {
-        if (defined $_[0]) {
-            my $p = $_[0];
-            $p = 49152 unless $p =~ /^[0-9]+$/ && $p < 49152;
-            $p;
-        } else {
-            50000 + (int(rand()*1500) + abs($$)) % 1500;
-        }
-    };
-    my $proto = $_[1] ? lc($_[1]) : 'tcp';
+    my ($host, $port, $proto) = @_ && ref $_[0] eq 'HASH' ? ($_[0]->{host}, $_[0]->{port}, $_[0]->{proto}) : (undef, @_);
+    $host = '127.0.0.1'
+        unless defined $host;
+    if (defined $port) {
+        $port = 49152 unless $port =~ /^[0-9]+$/ && $port < 49152;
+    } else {
+        $port = 50000 + (int(rand()*1500) + abs($$)) % 1500;
+    }
+    $proto = $proto ? lc($proto) : 'tcp';
 
     while ( $port++ < 65000 ) {
         # Remote checks don't work on UDP, and Local checks would be redundant here...
-        next if ($proto eq 'tcp' && check_port($port));
-
-        my $sock = IO::Socket::INET->new(
-            (($proto eq 'udp') ? () : (Listen => 5)),
-            LocalAddr => '127.0.0.1',
-            LocalPort => $port,
-            Proto     => $proto,
-            (($^O eq 'MSWin32') ? () : (ReuseAddr => 1)),
-        );
-        return $port if $sock;
+        next if ($proto eq 'tcp' && check_port({ host => $host, port => $port }));
+        return $port if can_bind($host, $port, $proto);
     }
     die "empty port not found";
 }
 
 sub check_port {
-    my $port = $_[0];
-    my $proto = $_[1] ? lc($_[1]) : 'tcp';
+    my ($host, $port, $proto) = @_ && ref $_[0] eq 'HASH' ? ($_[0]->{host}, $_[0]->{port}, $_[0]->{proto}) : (undef, @_);
+    $host = '127.0.0.1'
+        unless defined $host;
+    $proto = $proto ? lc($proto) : 'tcp';
 
     # for TCP, we do a remote port check
     # for UDP, we do a local port check, like empty_port does
     my $sock = ($proto eq 'tcp') ?
-        IO::Socket::INET->new(
+        IO::Socket::IP->new(
             Proto    => 'tcp',
-            PeerAddr => '127.0.0.1',
+            PeerAddr => $host,
             PeerPort => $port,
+            V6Only   => 1,
         ) :
-        IO::Socket::INET->new(
+        IO::Socket::IP->new(
             Proto     => $proto,
-            LocalAddr => '127.0.0.1',
+            LocalAddr => $host,
             LocalPort => $port,
+            V6Only   => 1,
             (($^O eq 'MSWin32') ? () : (ReuseAddr => 1)),
         )
     ;
@@ -84,22 +94,23 @@ sub _make_waiter {
 }
 
 sub wait_port {
-    my ($port, $max_wait, $proto);
-    if (@_==4) {
+    my ($host, $port, $max_wait, $proto);
+    if (@_ && ref $_[0] eq 'HASH') {
+        ($host, $port, $max_wait, $proto) = ($_[0]->{host}, $_[0]->{port}, $_[0]->{max_wait}, $_[0]->{proto});
+    } elsif (@_==4) {
         # backward compat.
         ($port, (my $sleep), (my $retry), $proto) = @_;
         $max_wait = $sleep * $retry;
-        $proto = $proto ? lc($proto) : 'tcp';
     } else {
         ($port, $max_wait, $proto) = @_;
-        $proto = $proto ? lc($proto) : 'tcp';
     }
-
-    $max_wait = 10 unless defined $max_wait;
+    $host = '127.0.0.1' unless defined $host;
+    $max_wait ||= 10;
+    $proto = $proto ? lc($proto) : 'tcp';
     my $waiter = _make_waiter($max_wait);
 
     while ( $waiter->() ) {
-        if ($^O eq 'MSWin32' ? `$^X -MTest::TCP::CheckPort -echeck_port $port $proto` : check_port( $port, $proto )) {
+        if ($^O eq 'MSWin32' ? `$^X -MTest::TCP::CheckPort -echeck_port $port $proto` : check_port({ host => $host, port => $port, proto => $proto })) {
             return 1;
         }
     }
@@ -138,49 +149,116 @@ Net::EmptyPort helps finding an empty TCP/UDP port.
 
 =item C<< empty_port() >>
 
+=item C<< empty_port(\%args) >>
+
+=item C<< empty_port($port) >>
+
+=item C<< empty_port($port, $proto) >>
+
     my $port = empty_port();
 
-Get the available port number, you can use.
+Returns a port number that is NOT in use.
 
-Normally, empty_port() finds empty port number from 49152..65535.
+The function recognizes the following keys when given a hashref as the argument.
+
+=over 4
+
+=item C<< host >>
+
+specifies the address on which the search should be performed.  Default is C<< 127.0.0.1 >>.
+
+=item C<< port >>
+
+Lower bound of the search for an empty port.  If omitted, the function searches for an empty port within 49152..65535.
+
 See L<http://www.iana.org/assignments/port-numbers>
 
-But you want to use another range, use a following form:
+=item C<< proto >>
 
-    # 5963..65535
-    my $port = empty_port(5963);
+Name of the protocol.  Default is C<< tcp >>. You can find an empty UDP port by specifying C<< udp >>.
 
-You can also find an empty UDP port by specifying the protocol as
+=back
+
+To maintain backwards compatibility, the function accepts scalar arguments as well.  For example, you can also find an empty UDP port by specifying the protocol as
 the second parameter:
 
     my $port = empty_port(1024, 'udp');
     # use 49152..65535 range
     my $port = empty_port(undef, 'udp');
 
-=item C<< check_port($port:Int) >>
+=item C<< check_port(\%args) >>
+
+=item C<< check_port($port) >>
+
+=item C<< check_port($port, $proto) >>
 
     my $true_or_false = check_port(5000);
 
 Checks if the given port is already in use. Returns true if it is in use (i.e. if the port is NOT free). Returns false if the port is free.
 
-Also works for UDP:
+The function recognizes the following keys when given a hashref as the argument.
 
-    my $true_or_false = check_port(5000, 'udp');
+=over 4
 
-=item C<< wait_port($port:Int[, $max_wait:Number,$proto:String]) >>
+=item C<< host >>
 
-Waits for a particular port is available for connect.
+specifies the address on which the search should be performed.  Default is C<< 127.0.0.1 >>.
 
-This method waits the C<< $port >> number is ready to accept a request.
+=item C<< port >>
 
-C<$port> is a port number to check.
+specifies the port to check.  This argument is mandatory.
 
-Sleep up to C<$max_wait> seconds (10 seconds by default) for checking the
-port. Pass negative C<$max_wait> value to wait infinitely.
+=item C<< proto >>
 
-I<Return value> : Return true if the port is available, false otherwise.
+name of the protocol.  Default is C<< tcp >>.
+
+=back
+
+To maintain backwards compatibility, the function accepts scalar arguments as well in the form described above.
+
+=item C<< wait_port(\%args) >>
+
+=item C<< wait_port($port) >>
+
+=item C<< wait_port($port, $max_wait) >>
+
+=item C<< wait_port($port, $max_wait, $proto) >>
+
+Waits until a particular port becomes ready to connect to.  Returns true if the port becomes ready, or false if otherwise.
+
+The function recognizes the following keys when given a hashref as the argument.
+
+=over 4
+
+=item C<< host >>
+
+specifies the address on which the search should be performed.  Default is C<< 127.0.0.1 >>.
+
+=item C<< port >>
+
+specifies the port to check.  This argument is mandatory.
+
+=item C<< max_wait >>
+
+maximum seconds to wait for (default is 10 seconds).  Pass a negative value to wait infinitely.
+
+=item C<< proto >>
+
+name of the protocol.  Default is C<< tcp >>.
+
+=back
+
+To maintain backwards compatibility, the function accepts scalar arguments as well in the form described above.
 
 B<Incompatible changes>: Before 2.0, C<< wait_port($port:Int[, $sleep:Number, $retry:Int, $proto:String]) >> is a signature.
+
+=item C<< can_bind($host) >>
+
+=item C<< can_bind($host, $port) >>
+
+=item C<< can_bind($host, $port, $proto) >>
+
+Checks if the application is capable of binding to given port.
 
 =back
 

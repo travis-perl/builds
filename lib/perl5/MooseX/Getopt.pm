@@ -1,7 +1,9 @@
-package MooseX::Getopt; # git description: v0.65-1-g4973fbb
+package MooseX::Getopt; # git description: v0.67-7-g7122518
 # ABSTRACT: A Moose role for processing command line options
 # KEYWORDS: moose extension command line options attributes executable flags switches arguments
-$MooseX::Getopt::VERSION = '0.66';
+
+our $VERSION = '0.68';
+
 use Moose::Role 0.56;
 use namespace::autoclean;
 
@@ -21,7 +23,7 @@ MooseX::Getopt - A Moose role for processing command line options
 
 =head1 VERSION
 
-version 0.66
+version 0.68
 
 =head1 SYNOPSIS
 
@@ -305,7 +307,7 @@ the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Hans Dieter Pearcey Ryan D Johnson Nelo Onyiah Ricardo SIGNES Ævar Arnfjörð Bjarmason Damien Krotkine Hinrik Örn Sigurðsson Devin Austin Todd Hepler Chris Prather John Goulah Jesse Luehrs Justin Hunter Drew Taylor Dagfinn Ilmari Mannsåker Gordon Irving Jonathan Swartz Olaf Alders
+=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Hans Dieter Pearcey Ryan D Johnson Nelo Onyiah Ricardo SIGNES Ævar Arnfjörð Bjarmason Damien Krotkine Hinrik Örn Sigurðsson Todd Hepler Devin Austin Jose Luis Martinez Chris Prather Justin Hunter Gordon Irving Dagfinn Ilmari Mannsåker Jesse Luehrs Olaf Alders Jonathan Swartz John Goulah
 
 =over 4
 
@@ -367,11 +369,15 @@ Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
 
 =item *
 
-Devin Austin <devin@devin-laptop.(none)>
+Todd Hepler <thepler@employees.org>
 
 =item *
 
-Todd Hepler <thepler@employees.org>
+Devin Austin <dhoss@cpan.org>
+
+=item *
+
+Jose Luis Martinez <jlmartinez@capside.com>
 
 =item *
 
@@ -379,23 +385,7 @@ Chris Prather <chris@prather.org>
 
 =item *
 
-John Goulah <jgoulah@cpan.org>
-
-=item *
-
-Jesse Luehrs <doy@tozt.net>
-
-=item *
-
 Justin Hunter <justin.d.hunter@gmail.com>
-
-=item *
-
-Drew Taylor <drew@drewtaylor.com>
-
-=item *
-
-Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
 
 =item *
 
@@ -403,11 +393,23 @@ Gordon Irving <goraxe@goraxe.me.uk>
 
 =item *
 
-Jonathan Swartz <swartz@pobox.com>
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
 
 =item *
 
 Olaf Alders <olaf@wundersolutions.com>
+
+=item *
+
+Jonathan Swartz <swartz@pobox.com>
+
+=item *
+
+John Goulah <jgoulah@cpan.org>
 
 =back
 

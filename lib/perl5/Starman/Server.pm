@@ -34,6 +34,11 @@ sub run {
     $self->{options} = $options;
 
     my %extra = ();
+
+    if ($options->{net_server_args}) {
+        %extra = %{ $options->{net_server_args} };
+    }
+
     if ( $options->{pid} ) {
         $extra{pid_file} = $options->{pid};
     }

@@ -3,8 +3,11 @@
 package Devel::AssertOS::MacOSX::v10_4;
 
 use Devel::CheckOS;
+use strict;
+use warnings;
+no warnings 'redefine';
 
-$VERSION = '1.3';
+our $VERSION = '1.4';
 
 sub os_is {
     Devel::CheckOS::os_is('MacOSX') &&

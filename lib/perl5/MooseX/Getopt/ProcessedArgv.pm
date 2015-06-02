@@ -1,6 +1,8 @@
 package MooseX::Getopt::ProcessedArgv;
 # ABSTRACT: MooseX::Getopt::ProcessedArgv - Class containing the results of process_argv
-$MooseX::Getopt::ProcessedArgv::VERSION = '0.66';
+
+our $VERSION = '0.68';
+
 use Moose;
 use namespace::autoclean;
 
@@ -26,7 +28,7 @@ MooseX::Getopt::ProcessedArgv - MooseX::Getopt::ProcessedArgv - Class containing
 
 =head1 VERSION
 
-version 0.66
+version 0.68
 
 =head1 SYNOPSIS
 

@@ -13,7 +13,7 @@ Moose::Manual - What is Moose, and how do I use it?
 
 =head1 VERSION
 
-version 2.1403
+version 2.1404
 
 =head1 WHAT IS MOOSE?
 
@@ -199,6 +199,10 @@ and using them consistently makes everyone's life easier.
 =item L<Moose::Manual::FAQ>
 
 Frequently asked questions about Moose.
+
+=item L<Moose::Manual::Resources>
+
+Links to various tutorials, videos, blogs, presentations, interviews, etc...
 
 =item L<Moose::Manual::Contributing>
 

@@ -13,10 +13,11 @@
 
 package AppConfig;
 
+use 5.006;
 use strict;
 use warnings;
 use base 'Exporter';
-our $VERSION = '1.69';
+our $VERSION = '1.71';
 
 # variable expansion constants
 use constant EXPAND_NONE   => 0;
@@ -642,7 +643,7 @@ Additional configuration options may be specified by hash reference, as per
 normal.  The compact definition format will override any configuration 
 values provided for ARGS and ARGCOUNT.
 
-    $config->define("file|filelist|f=s@", { VALIDATE => \&check_file() } );
+    $config->define("file|filelist|f=s@", { VALIDATE => \&check_file } );
 
 =head2 READING AND MODIFYING VARIABLE VALUES
 
@@ -784,7 +785,7 @@ previously set values for the variable.
 
 A reference to a list of values is returned when the variable is requested.
 
-    my $beverages = $config->drinks();
+    my $beverages = $config->drink();
     print join(", ", @$beverages);      # prints "coffee, tea"
 
 Variables may also be defined as hash lists (ARGCOUNT = ARGCOUNT_HASH).

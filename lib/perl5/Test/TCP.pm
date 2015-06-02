@@ -2,7 +2,7 @@ package Test::TCP;
 use strict;
 use warnings;
 use 5.00800;
-our $VERSION = '2.07';
+our $VERSION = '2.12';
 use base qw/Exporter/;
 use IO::Socket::INET;
 use Test::SharedFork 0.12;
@@ -24,13 +24,10 @@ sub test_tcp {
         die "missing madatory parameter $k" unless exists $args{$k};
     }
     my $server_code = delete $args{server};
-    my $port = delete($args{port}) || empty_port();
-
     my $client_code = delete $args{client};
 
     my $server = Test::TCP->new(
         code => $server_code,
-        port => $port,
         %args,
     );
     $client_code->($server->port, $server->pid);
@@ -38,18 +35,24 @@ sub test_tcp {
 }
 
 sub wait_port {
-    my ($port, $max_wait);
-    if (@_==3) {
+    my ($host, $port, $max_wait);
+    if (@_ && ref $_[0] eq 'HASH') {
+        $host = $_[0]->{host};
+        $port = $_[0]->{port};
+        $max_wait = $_[0]->{max_wait};
+    } elsif (@_ == 3) {
         # backward compat
         ($port, (my $sleep), (my $retry)) = @_;
         $max_wait = $sleep * $retry;
-    }  else {
+    } else {
         ($port, $max_wait) = @_;
     }
+    $host = '127.0.0.1'
+        unless defined $host;
     $max_wait ||= 10;
 
-    Net::EmptyPort::wait_port($port, $max_wait)
-        or die "cannot open port: $port";
+    Net::EmptyPort::wait_port({ host => $host, port => $port, max_wait => $max_wait })
+        or die "cannot open port: $host:$port";
 }
 
 # ------------------------------------------------------------------------- 
@@ -62,10 +65,11 @@ sub new {
     my $self = bless {
         auto_start => 1,
         max_wait   => 10,
+        host       => '127.0.0.1',
         _my_pid    => $$,
         %args,
     }, $class;
-    $self->{port} = empty_port() unless exists $self->{port};
+    $self->{port} ||= empty_port({ host => $self->{host} });
     $self->start()
       if $self->{auto_start};
     return $self;
@@ -81,7 +85,7 @@ sub start {
 
     if ( $pid ) { # parent process.
         $self->{pid} = $pid;
-        Test::TCP::wait_port($self->port, $self->{max_wait});
+        Test::TCP::wait_port({ host => $self->{host}, port => $self->port, max_wait => $self->{max_wait} });
         return;
     } else { # child process
         $self->{code}->($self->port);
@@ -214,6 +218,7 @@ Functional interface.
             # run server
         },
         # optional
+        host => '127.0.0.1', # specify '::1' to test using IPv6
         port => 8080,
         max_wait => 3, # seconds
     );
@@ -350,6 +355,40 @@ You can use C<exec()> in child process.
     is $memd->get('foo'), 'bar';
 
     done_testing;
+
+=item How do I use address other than "127.0.0.1" for testing?
+
+You can use the C<< host >> parameter to specify the bind address.
+
+    # let the server bind to "0.0.0.0" for testing
+    test_tcp(
+        client => sub {
+            ...
+        },
+        server => sub {
+            ...
+        },
+        host => '0.0.0.0',
+    );
+
+=item How should I write IPv6 tests?
+
+You should use the `Net::EmptyPort::can_bind` function to check if the program can bind to the loopback address of IPv6, as well as the `host` parameter of the `test_tcp` function to specify the same address as the bind address.
+
+    use Net::EmptyPort qw(can_bind);
+
+    plan skip_all => "IPv6 not available"
+        unless can_bind('::1');
+
+    test_tcp(
+        client => sub {
+            ...
+        },
+        server => sub {
+            ...
+        },
+        host => '::1',
+    );
 
 =back
 
