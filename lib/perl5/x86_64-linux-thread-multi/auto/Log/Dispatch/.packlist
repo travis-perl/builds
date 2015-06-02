@@ -1,0 +1,17 @@
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/ApacheLog.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Base.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Code.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Conflicts.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Email.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Email/MIMELite.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Email/MailSend.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Email/MailSender.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Email/MailSendmail.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/File.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/File/Locked.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Handle.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Null.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Output.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Screen.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Syslog.pm
