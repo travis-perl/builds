@@ -1,0 +1,1 @@
+{"version":"1.39","dist":"Exception-Class-1.39","target":"Exception::Class","name":"Exception::Class","pathname":"D/DR/DROLSKY/Exception-Class-1.39.tar.gz","provides":{"Exception::Class::Base":{"file":"lib/Exception/Class/Base.pm","version":"1.39"},"Exception::Class":{"file":"lib/Exception/Class.pm","version":"1.39"}}}
