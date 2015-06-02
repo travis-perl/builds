@@ -20,16 +20,16 @@ use File::Temp ();
 use Class::Unload;
 use Class::Inspector ();
 use Scalar::Util 'looks_like_number';
-use DBIx::Class::Schema::Loader::Utils qw/split_name dumper_squashed eval_package_without_redefine_warnings class_path slurp_file sigwarn_silencer/;
+use DBIx::Class::Schema::Loader::Utils qw/split_name dumper_squashed eval_package_without_redefine_warnings class_path slurp_file sigwarn_silencer firstidx uniq/;
 use DBIx::Class::Schema::Loader::Optional::Dependencies ();
 use Try::Tiny;
 use DBIx::Class ();
 use Encode qw/encode decode/;
-use List::MoreUtils qw/all any firstidx uniq/;
+use List::Util qw/all any none/;
 use File::Temp 'tempfile';
 use namespace::clean;
 
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 __PACKAGE__->mk_group_ro_accessors('simple', qw/
                                 schema
@@ -84,6 +84,7 @@ __PACKAGE__->mk_group_ro_accessors('simple', qw/
                                 moniker_to_table
                                 uniq_to_primary
                                 quiet
+                                allow_extra_m2m_cols
 /);
 
 
@@ -210,7 +211,7 @@ How to name column accessors in Result classes.
 =item force_ascii
 
 For L</v8> mode and later, uses L<String::ToIdentifier::EN> instead of
-L<String::ToIdentifier::EM::Unicode> to force monikers and other identifiers to
+L<String::ToIdentifier::EN::Unicode> to force monikers and other identifiers to
 ASCII.
 
 =back
@@ -993,6 +994,13 @@ Automatically promotes the largest unique constraints with non-nullable columns
 on tables to primary keys, assuming there is only one largest unique
 constraint.
 
+=head2 allow_extra_m2m_cols
+
+Generate C<many_to_many> relationship bridges even if the link table has
+extra columns other than the foreign keys.  The primary key must still
+equal the union of the foreign keys.
+
+
 =head2 filter_generated_code
 
 An optional hook that lets you filter the generated text for various classes
@@ -1009,8 +1017,19 @@ be generated.
 
     filter_generated_code => sub {
         my ($type, $class, $text) = @_;
-	...
-	return $new_code;
+        ...
+        return $new_code;
+    }
+
+You can also use this option to set L<perltidy markers|perltidy/Skipping
+Selected Sections of Code> in your generated classes.  This will leave
+the generated code in the default format, but will allow you to tidy
+your classes at any point in future, without worrying about changing the
+portions of the file which are checksummed, since C<perltidy> will just
+ignore all text between the markers.
+
+    filter_generated_code => sub {
+        return "#<<<\n$_[2]\n#>>>";
     }
 
 =head1 METHODS
@@ -1272,7 +1291,7 @@ sub new {
         if (ref $self->moniker_parts ne 'ARRAY') {
             croak 'moniker_parts must be an arrayref';
         }
-        if ((firstidx { $_ eq 'name' } @{ $self->moniker_parts }) == -1) {
+        if (none { $_ eq 'name' } @{ $self->moniker_parts }) {
             croak "moniker_parts option *must* contain 'name'";
         }
     }
@@ -2143,10 +2162,10 @@ sub _write_classfile {
                 croak "filter '$filter' exited non-zero: $exit_code";
             }
         }
-	if (not $text or not $text =~ /\bpackage\b/) {
-	    warn("$class skipped due to filter") if $self->debug;
-	    return;
-	}
+        if (not $text or not $text =~ /\bpackage\b/) {
+            warn("$class skipped due to filter") if $self->debug;
+            return;
+        }
     }
 
     # Check and see if the dump is in fact different
@@ -2168,7 +2187,7 @@ sub _write_classfile {
       $self->omit_timestamp ? undef : POSIX::strftime('%Y-%m-%d %H:%M:%S', localtime)
     );
 
-    open(my $fh, '>:encoding(UTF-8)', $filename)
+    open(my $fh, '>:raw:encoding(UTF-8)', $filename)
         or croak "Cannot open '$filename' for writing: $!";
 
     # Write the top half and its MD5 sum
@@ -2217,12 +2236,12 @@ sub _parse_generated_file {
     my $mark_re =
         qr{^(# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:)([A-Za-z0-9/+]{22})\r?\n};
 
-    my ($md5, $ts, $ver, $gen);
+    my ($real_md5, $ts, $ver, $gen);
     local $_;
     while(<$fh>) {
         if(/$mark_re/) {
             my $pre_md5 = $1;
-            $md5 = $2;
+            my $mark_md5 = $2;
 
             # Pull out the version and timestamp from the line above
             ($ver, $ts) = $gen =~ m/^# Created by DBIx::Class::Schema::Loader( v[\d.]+)?( @ [\d-]+ [\d:]+)?\r?\Z/m;
@@ -2230,8 +2249,9 @@ sub _parse_generated_file {
             $ts =~ s/^ @ // if $ts;
 
             $gen .= $pre_md5;
+            $real_md5 = Digest::MD5::md5_base64(encode 'UTF-8', $gen);
             croak "Checksum mismatch in '$fn', the auto-generated part of the file has been modified outside of this loader.  Aborting.\nIf you want to overwrite these modifications, set the 'overwrite_modifications' loader option.\n"
-                if !$self->overwrite_modifications && Digest::MD5::md5_base64(encode 'UTF-8', $gen) ne $md5;
+                if !$self->overwrite_modifications && $real_md5 ne $mark_md5;
 
             last;
         }
@@ -2241,14 +2261,14 @@ sub _parse_generated_file {
     }
 
     my $custom = do { local $/; <$fh> }
-        if $md5;
+        if $real_md5;
 
     $custom ||= '';
     $custom =~ s/$CRLF|$LF/\n/g;
 
     close $fh;
 
-    return ($gen, $md5, $ver, $ts, $custom);
+    return ($gen, $real_md5, $ver, $ts, $custom);
 }
 
 sub _use {
@@ -3011,12 +3031,7 @@ sub _base_class_pod {
 
     return '' unless $self->generate_pod;
 
-    return <<"EOF"
-=head1 BASE CLASS: L<$base_class>
-
-=cut
-
-EOF
+    return "\n=head1 BASE CLASS: L<$base_class>\n\n=cut\n\n";
 }
 
 sub _filter_comment {

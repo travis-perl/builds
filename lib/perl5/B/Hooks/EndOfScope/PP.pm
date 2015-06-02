@@ -4,9 +4,8 @@ package B::Hooks::EndOfScope::PP;
 use warnings;
 use strict;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
-use Module::Runtime 'require_module';
 use constant _PERL_VERSION => "$]";
 
 BEGIN {
@@ -15,16 +14,16 @@ BEGIN {
     die "By design B::Hooks::EndOfScope does not operate in pure-perl mode on perl 5.9.X\n"
   }
   elsif (_PERL_VERSION < '5.010') {
-    require_module('B::Hooks::EndOfScope::PP::HintHash');
+    require B::Hooks::EndOfScope::PP::HintHash;
     *on_scope_end = \&B::Hooks::EndOfScope::PP::HintHash::on_scope_end;
   }
   else {
-    require_module('B::Hooks::EndOfScope::PP::FieldHash');
+    require B::Hooks::EndOfScope::PP::FieldHash;
     *on_scope_end = \&B::Hooks::EndOfScope::PP::FieldHash::on_scope_end;
   }
 }
 
-use Sub::Exporter::Progressive -setup => {
+use Sub::Exporter::Progressive 0.001006 -setup => {
   exports => ['on_scope_end'],
   groups  => { default => ['on_scope_end'] },
 };
@@ -80,7 +79,7 @@ B::Hooks::EndOfScope::PP - Execute code after a scope finished compilation - PP 
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 DESCRIPTION
 

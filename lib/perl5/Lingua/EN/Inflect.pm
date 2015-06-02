@@ -7,7 +7,7 @@ use Env;
 require Exporter;
 @ISA = qw(Exporter);
 
-our $VERSION = '1.895';
+our $VERSION = '1.899';
 
 %EXPORT_TAGS =
 (
@@ -28,7 +28,7 @@ our $VERSION = '1.895';
                   PL PL_N PL_V PL_ADJ NO NUM
                   PL_eq PL_N_eq PL_V_eq PL_ADJ_eq )],
 
-    COMPARISONS =>  [ qw( classical 
+    COMPARISONS =>  [ qw( classical
                   PL_eq PL_N_eq PL_V_eq PL_ADJ_eq )],
 
     ARTICLES => [ qw( classical inflect NUM A AN )],
@@ -52,12 +52,13 @@ my %def_classical = (
 );
 
 my %all_classical = (
-    all      => 1,
-    zero     => 1,
-    herd     => 1,
-    names    => 1,
-    persons  => 1,
-    ancient  => 1,
+    all               => 1,
+    zero              => 1,
+    herd              => 1,
+    names             => 1,
+    persons           => 1,
+    ancient           => 1,
+    noble_and_ancient => 10,
 );
 
 my %classical = %def_classical;
@@ -142,7 +143,7 @@ sub inflect
 
 # 1. PLURALS
 
-my %PL_sb_irregular_s = 
+my %PL_sb_irregular_s =
 (
     "corpus"          => "corpuses|corpora",
     "opus"            => "opuses|opera",
@@ -223,7 +224,7 @@ my $PL_sb_z_zes = enclose join '|', @PL_sb_z_zes;
 
 # UNCONDITIONAL "..is" -> "..ides"
 
-my @PL_sb_U_is_ides = 
+my @PL_sb_U_is_ides =
 (
     "aphis",
 );
@@ -232,7 +233,7 @@ my $PL_sb_U_is_ides = enclose join "|", map { substr($_,0,-2) } @PL_sb_U_is_ides
 
 # CLASSICAL "..is" -> "..ides"
 
-my @PL_sb_C_is_ides = 
+my @PL_sb_C_is_ides =
 (
 # GENERAL WORDS...
 
@@ -241,7 +242,7 @@ my @PL_sb_C_is_ides =
 
 # INFLAMATIONS...
 
-    ".*itis", 
+    ".*itis",
 
 );
 
@@ -249,7 +250,7 @@ my $PL_sb_C_is_ides = enclose join "|", map { substr($_,0,-2) } @PL_sb_C_is_ides
 
 # UNCONDITIONAL "..a" -> "..ata"
 
-my @PL_sb_U_a_ata = 
+my @PL_sb_U_a_ata =
 (
     "plasmalemma", "pseudostoma",
 );
@@ -258,7 +259,7 @@ my $PL_sb_U_a_ata = enclose join "|", map { substr($_,0,-1) } @PL_sb_U_a_ata;
 
 # CLASSICAL "..a" -> "..ata"
 
-my @PL_sb_C_a_ata = 
+my @PL_sb_C_a_ata =
 (
     "anathema", "bema", "carcinoma", "charisma", "diploma",
     "dogma", "drama", "edema", "enema", "enigma", "lemma",
@@ -271,14 +272,14 @@ my $PL_sb_C_a_ata = enclose join "|", map { substr($_,0,-1) } @PL_sb_C_a_ata;
 
 # UNCONDITIONAL "..a" -> "..ae"
 
-my $PL_sb_U_a_ae = enclose join "|", 
+my $PL_sb_U_a_ae = enclose join "|",
 (
     "alumna", "alga", "vertebra", "persona"
 );
 
 # CLASSICAL "..a" -> "..ae"
 
-my $PL_sb_C_a_ae = enclose join "|", 
+my $PL_sb_C_a_ae = enclose join "|",
 (
     "amoeba", "antenna", "formula", "hyperbola",
     "medusa", "nebula", "parabola", "abscissa",
@@ -310,9 +311,9 @@ my $PL_sb_C_um_a = enclose join "|", map { substr($_,0,-2) }
     "quantum",  "cranium",    "curriculum", "dictum",
     "phylum",   "aquarium",   "compendium", "emporium",
     "enconium", "gymnasium",  "honorarium", "interregnum",
-    "lustrum",  "memorandum", "millennium", "rostrum", 
+    "lustrum",  "memorandum", "millennium", "rostrum",
     "spectrum", "speculum",   "stadium",    "trapezium",
-    "ultimatum",    "medium",   "vacuum",   "velum", 
+    "ultimatum",    "medium",   "vacuum",   "velum",
     "consortium",
 );
 
@@ -363,7 +364,7 @@ my $PL_sb_C_on_a = enclose join "|", map { substr($_,0,-2) }
 
 # CLASSICAL "..o" -> "..i"  (BUT NORMALLY -> "..os")
 
-my @PL_sb_C_o_i = 
+my @PL_sb_C_o_i =
 (
     "solo",     "soprano",  "basso",    "alto",
     "contralto",    "tempo",    "piano",    "virtuoso",
@@ -384,7 +385,7 @@ my $PL_sb_U_o_os = enclose join "|",
         "Cairo",        "canto",        "cappuccino",
         "casino",       "cello",        "Chicago",
         "Chimango",     "cilantro",     "cochito",
-        "coco",         "Colombo",      "Colorado",     
+        "coco",         "Colombo",      "Colorado",
         "commando",     "concertino",   "contango",
         "credo",        "crescendo",    "cyano",
         "demo",         "ditto",        "Draco",
@@ -402,7 +403,7 @@ my $PL_sb_U_o_os = enclose join "|",
         "junto",        "Kakapo",       "kilo",
         "Kinkimavo",    "Kokako",       "Kosovo",
         "Lesotho",      "libero",       "libido",
-        "libretto",     "lido",         "Lilo", 
+        "libretto",     "lido",         "Lilo",
         "limbo",        "limo",         "lineno",
         "lingo",        "lino",         "livedo",
         "loco",         "logo",         "lumbago",
@@ -411,7 +412,7 @@ my $PL_sb_U_o_os = enclose join "|",
         "Malabo",       "manifesto",    "Maputo",
         "Maracaibo",    "medico",       "memo",
         "metro",        "Mexico",       "micro",
-        "Milano",       "Monaco",       "mono", 
+        "Milano",       "Monaco",       "mono",
         "Montenegro",   "Morocco",      "Muqdisho",
         "myo",          "^NATO",         "^NCO",
         "neutrino",     "^NGO",          "Ningbo",
@@ -438,9 +439,9 @@ my $PL_sb_U_o_os = enclose join "|",
         "typo",         "tyro",         "ufo",
         "UNESCO",       "vaquero",      "vermicello",
         "verso",        "vibrato",      "violoncello",
-        "Virgo",        "weirdo",       "WHO",  
-        "WTO",          "Yamoussoukro", "yo-yo",        
-        "zero",         "Zibo",         
+        "Virgo",        "weirdo",       "WHO",
+        "WTO",          "Yamoussoukro", "yo-yo",
+        "zero",         "Zibo",
 
     @PL_sb_C_o_i,
 );
@@ -480,7 +481,7 @@ my $PL_sb_C_ix_ices = enclose join "|", map { substr($_,0,-2) }
 
 # ARABIC: ".." -> "..i"
 
-my $PL_sb_C_i = enclose join "|", 
+my $PL_sb_C_i = enclose join "|",
 (
     "afrit",    "afreet",   "efreet",
 );
@@ -494,13 +495,13 @@ my $PL_sb_C_im = enclose join "|",
 
 # UNCONDITIONAL "..man" -> "..mans"
 
-my $PL_sb_U_man_mans = enclose join "|", 
+my $PL_sb_U_man_mans = enclose join "|",
 qw(
     \bataman caiman cayman ceriman
     \bdesman \bdolman \bfarman \bharman \bhetman
     human \bleman ottoman shaman talisman
     Alabaman Bahaman Burman German
-    Hiroshiman Liman Nakayaman Norman Oklahoman 
+    Hiroshiman Liman Nakayaman Norman Oklahoman
     Panaman Roman Selman Sonaman Tacoman Yakiman
     Yokohaman Yuman
 );
@@ -519,7 +520,7 @@ my @PL_sb_uninflected_s =
 # RECENT IMPORTS...
     "contretemps", "corps", "debris",
     ".*ois", "siemens",
-    
+
 # DISEASES
     ".*measles", "mumps",
 
@@ -551,7 +552,7 @@ my $PL_sb_uninflected = enclose join "|",
 (
 # SOME FISH AND HERD ANIMALS
     ".*fish", "tuna", "salmon", "mackerel", "trout",
-    "bream", "sea[- ]bass", "carp", "cod", "flounder", "whiting", 
+    "bream", "sea[- ]bass", "carp", "cod", "flounder", "whiting",
 
     ".*deer", ".*sheep", "moose",
 
@@ -584,11 +585,11 @@ my $PL_sb_singular_s = enclose join '|',
         "acropolis", "aegis", "alias", "asbestos", "bathos", "bias",
     "bronchitis", "bursitis", "caddis", "cannabis",
         "canvas", "chaos", "cosmos", "dais", "digitalis",
-        "epidermis", "ethos", "eyas", "gas", "glottis", 
+        "epidermis", "ethos", "eyas", "gas", "glottis",
     "hubris", "ibis", "lens", "mantis", "marquis", "metropolis",
         "pathos", "pelvis", "polis", "rhinoceros",
         "sassafras", "trellis", ".*us", "[A-Z].*es",
-    
+
     @PL_sb_C_is_ides,
     @PL_sb_U_is_ides,
 );
@@ -682,7 +683,7 @@ my $PL_pron_acc = enclose join '|', keys %PL_pron_acc;
 my %PL_v_irregular_pres =
 (
 #   1st PERS. SING.     2ND PERS. SING.     3RD PERS. SINGULAR
-#               3RD PERS. (INDET.)  
+#               3RD PERS. (INDET.)
 
 "am"    => "are",   "are"   => "are",   "is"     => "are",
 "was"   => "were",  "were"  => "were",  "was"    => "were",
@@ -695,7 +696,7 @@ my $PL_v_irregular_pres = enclose join '|', keys %PL_v_irregular_pres;
 my %PL_v_ambiguous_pres =
 (
 #   1st PERS. SING.     2ND PERS. SING.     3RD PERS. SINGULAR
-#               3RD PERS. (INDET.)  
+#               3RD PERS. (INDET.)
 
 "act"   => "act",   "act"   => "act",   "acts"    => "act",
 "blame" => "blame", "blame" => "blame", "blames"  => "blame",
@@ -721,7 +722,7 @@ my $PL_v_ambiguous_pres = enclose join '|', keys %PL_v_ambiguous_pres;
 
 my $PL_v_irregular_non_pres = enclose join '|',
 (
-"did", "had", "ate", "made", "put", 
+"did", "had", "ate", "made", "put",
 "spent", "fought", "sank", "gave", "sought",
 "shall", "could", "ought", "should",
 );
@@ -931,14 +932,14 @@ $result = "s:p" if !$result && &$PL($word1) eq $word2;
 
 if ($PL == \&PL || $PL == \&PL_N)
 {
-    $result = "p:p" 
+    $result = "p:p"
         if !$result && _PL_check_plurals_N($word1,$word2);
-    $result = "p:p" 
+    $result = "p:p"
         if !$result && _PL_check_plurals_N($word2,$word1);
 }
 if ($PL == \&PL || $PL == \&PL_ADJ)
 {
-    $result = "p:p" 
+    $result = "p:p"
         if !$result && _PL_check_plurals_ADJ($word1,$word2,$PL);
 }
 
@@ -1023,7 +1024,7 @@ $count = $persistent_count
 $count = (defined $count and $count=~/^($PL_count_one)$/io
          or defined $count and $classical{zero}
          and $count=~/^($PL_count_zero)$/io)
-            ? 1  
+            ? 1
             : 2;
 
 return $word if $count==1;
@@ -1037,14 +1038,14 @@ return $value if defined($value = ud_match($word, @PL_sb_user_defined));
 
 $word eq ''         and return $word;
 
-$word =~ /^($PL_sb_uninflected)$/i && !exists $PL_sb_irregular{$word} && $word !~ /^($PL_sb_lese_lesen)$/i 
+$word =~ /^($PL_sb_uninflected)$/i && !exists $PL_sb_irregular{$word} && $word !~ /^($PL_sb_lese_lesen)$/i
                 and return $word;
 
 $classical{herd} and $word =~ /^($PL_sb_uninflected_herd)$/i
                 and return $word;
 
 
-# HANDLE ISOLATED IRREGULAR PLURALS 
+# HANDLE ISOLATED IRREGULAR PLURALS
 
 $word =~ /^($PL_sb_irregular)$/i
                 and return ( $PL_sb_irregular{$1} || $PL_sb_irregular{lc $1} );
@@ -1060,13 +1061,13 @@ $word =~ /^(?:$PL_sb_postfix_adj)$/i
                        . $value;
 
 $word =~ /^(?:$PL_sb_prep_dual_compound)$/i
-                and $value = [$2,$3] 
+                and $value = [$2,$3]
                 and return _PL_noun($1,2)
                        . $value->[0]
                        . _PL_noun($value->[1]);
 
 $word =~ /^(?:$PL_sb_prep_compound)$/i
-                and $value = $2 
+                and $value = $2
                 and return _PL_noun($1,2)
                        . $value;
 
@@ -1082,7 +1083,7 @@ $word =~ /^($PL_pron_acc)$/i
                 and return $PL_pron_acc{lc($1)};
 
 
-# HANDLE FAMILIES OF IRREGULAR PLURALS 
+# HANDLE FAMILIES OF IRREGULAR PLURALS
 
 $word =~ /(.*$PL_sb_U_man_mans)$/i
                 and return "$1s";
@@ -1146,7 +1147,7 @@ $word =~ /^(.*)([cs]h|x|zz|ss)$/i   and return "$1$2es";
 
 # HANDLE ...f -> ...ves
 
-$word =~ /(.*[eao])lf$/i    and return "$1lves"; 
+$word =~ /(.*[eao])lf$/i    and return "$1lves";
 $word =~ /(.*[^d])eaf$/i    and return "$1eaves";
 $word =~ /(.*[nlw])ife$/i   and return "$1ives";
 $word =~ /(.*)arf$/i        and return "$1arves";
@@ -1176,7 +1177,7 @@ my ( $word, $count ) = @_;
 $count = $persistent_count
     if !defined($count) && defined($persistent_count);
 $count = (defined $count and $count=~/^($PL_count_one)$/io or
-      defined $count and $classical{zero} and $count=~/^($PL_count_zero)$/io) ? 1  
+      defined $count and $classical{zero} and $count=~/^($PL_count_zero)$/io) ? 1
        : 2;
 
 return undef if $count=~/^($PL_count_one)$/io;
@@ -1192,7 +1193,7 @@ return $value if defined($value = ud_match($word, @PL_v_user_defined));
 $word =~ /^($PL_v_irregular_pres)((\s.*)?)$/i
         and return $PL_v_irregular_pres{lc $1}.$2;
 
-# HANDLE IRREGULAR FUTURE, PRETERITE AND PERFECT TENSES 
+# HANDLE IRREGULAR FUTURE, PRETERITE AND PERFECT TENSES
 
 $word =~ /^($PL_v_irregular_non_pres)((\s.*)?)$/i
         and return $word;
@@ -1225,7 +1226,7 @@ $word =~ /^(.*[^s])s$/i         and return $1;
 # OTHERWISE, A REGULAR VERB (HANDLE ELSEWHERE)
 
 return undef;
-}  
+}
 
 sub _PL_general_verb
 {
@@ -1233,7 +1234,7 @@ my ( $word, $count ) = @_;
 $count = $persistent_count
     if !defined($count) && defined($persistent_count);
 $count = (defined $count and $count=~/^($PL_count_one)$/io or
-      defined $count and $classical{zero} and $count=~/^($PL_count_zero)$/io) ? 1  
+      defined $count and $classical{zero} and $count=~/^($PL_count_zero)$/io) ? 1
        : 2;
 
 return $word if $count=~/^($PL_count_one)$/io;
@@ -1243,7 +1244,7 @@ return $word if $count=~/^($PL_count_one)$/io;
 $word =~ /^($PL_v_ambiguous_pres)((\s.*)?)$/i
         and return $PL_v_ambiguous_pres{lc $1}.$2;
 
-# HANDLE AMBIGUOUS PRETERITE AND PERFECT TENSES 
+# HANDLE AMBIGUOUS PRETERITE AND PERFECT TENSES
 
 $word =~ /^($PL_v_ambiguous_non_pres)((\s.*)?)$/i
         and return $word;
@@ -1260,7 +1261,7 @@ my ( $word, $count ) = @_;
 $count = $persistent_count
     if !defined($count) && defined($persistent_count);
 $count = (defined $count and $count=~/^($PL_count_one)$/io or
-      defined $count and $classical{zero} and $count=~/^($PL_count_zero)$/io) ? 1  
+      defined $count and $classical{zero} and $count=~/^($PL_count_zero)$/io) ? 1
        : 2;
 
 return $word if $count=~/^($PL_count_one)$/io;
@@ -1414,6 +1415,8 @@ sub NO
         return "${pre}no ". PL($word,0) . $post ;
     }
 
+    $count =~ s{[^\d.e+-]}{}gi;
+    1 while $count =~ s{([.].*)[.]}{$1};
     $count = defined $opt_ref->{words_below} && $count < $opt_ref->{words_below}
                  ? NUMWORDS($count)
                  : $count;
@@ -1494,7 +1497,8 @@ sub ORD($)
 {
     my $num = shift;
     if ($num =~ /\d/) {
-        return $num . ($nth{$num%100} || $nth{$num%10});
+        my $tail = substr($num, -3);
+        return $num . ($nth{$tail%100} || $nth{$tail%10});
     }
     else {
         $num =~ s/($ordinal_suff)\Z/$ordinal{$1}/;
@@ -1503,7 +1507,7 @@ sub ORD($)
 }
 
 
-my %default_args = 
+my %default_args =
 (
     'group'   => 0,
     'comma'   => ',',
@@ -1517,9 +1521,99 @@ my @unit = ('',qw(one two three four five six seven eight nine));
 my @teen = qw(ten eleven twelve thirteen fourteen
           fifteen sixteen seventeen eighteen nineteen);
 my @ten  = ('','',qw(twenty thirty forty fifty sixty seventy eighty ninety));
-my @mill = map { (my $val=$_) =~ s/_/illion/; " $val" }
-       ('',qw(thousand m_ b_ tr_ quadr_ quint_ sext_ sept_ oct_ non_ dec_));
 
+## From http://en.wikipedia.org/wiki/Names_of_large_numbers
+our %millmap = (
+     #num zeros
+     '0'    => { US => q(),                       UK => q(),                                       EU => q()},
+     '3'    => { US => q(thousand),               UK => q(thousand),                               EU => q(thousand)},
+     '6'    => { US => q(million),                UK => q(million),                                EU => q(million)},
+     '9'    => { US => q(billion),                UK => q(thousand million),                       EU => q(milliard)},
+     '12'   => { US => q(trillion),               UK => q(billion),                                EU => q(billion)},
+     '15'   => { US => q(quadrillion),            UK => q(thousand billion),                       EU => q(billiard)},
+     '18'   => { US => q(quintillion),            UK => q(trillion),                               EU => q(trillion)},
+     '21'   => { US => q(sextillion),             UK => q(thousand trillion),                      EU => q(trilliard)},
+     '24'   => { US => q(septillion),             UK => q(quadrillion),                            EU => q(quadrillion)},
+     '27'   => { US => q(octillion),              UK => q(thousand quadrillion),                   EU => q(quadrilliard)},
+     '30'   => { US => q(nonillion),              UK => q(quintillion),                            EU => q(quintillion)},
+     '33'   => { US => q(decillion),              UK => q(thousand quintillion),                   EU => q(quintilliard)},
+     '36'   => { US => q(undecillion),            UK => q(sextillion),                             EU => q(sextillion)},
+     '39'   => { US => q(duodecillion),           UK => q(thousand sextillion),                    EU => q(sextilliard)},
+     '42'   => { US => q(tredecillion),           UK => q(septillion),                             EU => q(septillion)},
+     '45'   => { US => q(quattuordecillion),      UK => q(thousand septillion),                    EU => q(septilliard)},
+     '48'   => { US => q(quindecillion),          UK => q(octillion),                              EU => q(octillion)},
+     '51'   => { US => q(sedecillion),            UK => q(thousand octillion),                     EU => q(octilliard)},
+     '54'   => { US => q(septendecillion),        UK => q(nonillion),                              EU => q(nonillion)},
+     '57'   => { US => q(octodecillion),          UK => q(thousand nonillion),                     EU => q(nonilliard)},
+     '60'   => { US => q(novendecillion),         UK => q(decillion),                              EU => q(decillion)},
+     '63'   => { US => q(vigintillion),           UK => q(thousand decillion),                     EU => q(decilliard)},
+     '66'   => { US => q(unvigintillion),         UK => q(undecillion),                            EU => q(undecillion)},
+     '69'   => { US => q(duovigintillion),        UK => q(thousand undecillion),                   EU => q(undecilliard)},
+     '72'   => { US => q(tresvigintillion),       UK => q(duodecillion),                           EU => q(duodecillion)},
+     '75'   => { US => q(quattuorvigintillion),   UK => q(thousand duodecillion),                  EU => q(duodecilliard)},
+     '78'   => { US => q(quinquavigintillion),    UK => q(tredecillion),                           EU => q(tredecillion)},
+     '81'   => { US => q(sesvigintillion),        UK => q(thousand tredecillion),                  EU => q(tredecilliard)},
+     '84'   => { US => q(septemvigintillion),     UK => q(quattuordecillion),                      EU => q(quattuordecillion)},
+     '87'   => { US => q(octovigintillion),       UK => q(thousand quattuordecillion),             EU => q(quattuordecilliard)},
+     '90'   => { US => q(novemvigintillion),      UK => q(quindecillion),                          EU => q(quindecillion)},
+     '93'   => { US => q(trigintillion),          UK => q(thousand quindecillion),                 EU => q(quindecilliard)},
+     '96'   => { US => q(untrigintillion),        UK => q(sedecillion),                            EU => q(sedecillion)},
+     '99'   => { US => q(duotrigintillion),       UK => q(thousand sedecillion),                   EU => q(sedecilliard)},
+     '102'  => { US => q(trestrigintillion),      UK => q(septendecillion),                        EU => q(septendecillion)},
+     '105'  => { US => q(quattuortrigintillion),  UK => q(thousand septendecillion),               EU => q(septendecilliard)},
+     '108'  => { US => q(quinquatrigintillion),   UK => q(octodecillion),                          EU => q(octodecillion)},
+     '111'  => { US => q(sestrigintillion),       UK => q(thousand octodecillion),                 EU => q(octodecilliard)},
+     '114'  => { US => q(septentrigintillion),    UK => q(novendecillion),                         EU => q(novendecillion)},
+     '117'  => { US => q(octotrigintillion),      UK => q(thousand novendecillion),                EU => q(novendecilliard)},
+     '120'  => { US => q(noventrigintillion),     UK => q(vigintillion),                           EU => q(vigintillion)},
+     '123'  => { US => q(quadragintillion),       UK => q(thousand vigintillion),                  EU => q(vigintilliard)},
+     '153'  => { US => q(quinquagintillion),      UK => q(thousand quinquavigintillion),           EU => q(quinquavigintilliard) },
+     '183'  => { US => q(sexagintillion),         UK => q(thousand trigintillion),                 EU => q(trigintilliard) },
+     '213'  => { US => q(septuagintillion),       UK => q(thousand quinquatrigintillion),          EU => q(quinquatrigintilliard) },
+     '243'  => { US => q(octogintillion),         UK => q(thousand quadragintillion),              EU => q(quadragintilliard) },
+     '273'  => { US => q(nonagintillion),         UK => q(thousand quinquaquadragintillion),       EU => q(quinquaquadragintilliard) },
+     '303'  => { US => q(centillion),             UK => q(thousand quinquagintillion),             EU => q(quinquagintilliard) },
+     '306'  => { US => q(uncentillion),           UK => q(unquinquagintillion),                    EU => q(unquinquagintillion) },
+     '309'  => { US => q(duocentillion),          UK => q(thousand unquinquagintillion),           EU => q(unquinquagintilliard) },
+     '312'  => { US => q(trescentillion),         UK => q(duoquinquagintillion),                   EU => q(duoquinquagintillion) },
+     '333'  => { US => q(decicentillion),         UK => q(thousand quinquaquinquagintillion),      EU => q(quinquaquinquagintilliard) },
+     '336'  => { US => q(undecicentillion),       UK => q(sesquinquagintillion),                   EU => q(sesquinquagintillion) },
+     '363'  => { US => q(viginticentillion),      UK => q(thousand sexagintillion),                EU => q(sexagintilliard) },
+     '366'  => { US => q(unviginticentillion),    UK => q(unsexagintillion),                       EU => q(unsexagintillion) },
+     '393'  => { US => q(trigintacentillion),     UK => q(thousand quinquasexagintillion),         EU => q(quinquasexagintilliard) },
+     '423'  => { US => q(quadragintacentillion),  UK => q(thousand septuagintillion),              EU => q(septuagintilliard) },
+     '453'  => { US => q(quinquagintacentillion), UK => q(thousand quinquaseptuagintillion),       EU => q(quinquaseptuagintilliard) },
+     '483'  => { US => q(sexagintacentillion),    UK => q(thousand octogintillion),                EU => q(octogintilliard) },
+     '513'  => { US => q(septuagintacentillion),  UK => q(thousand quinquaoctogintillion),         EU => q(quinquaoctogintilliard) },
+     '543'  => { US => q(octogintacentillion),    UK => q(thousand nonagintillion),                EU => q(nonagintilliard) },
+     '573'  => { US => q(nonagintacentillion),    UK => q(thousand quinquanonagintillion),         EU => q(quinquanonagintilliard) },
+     '603'  => { US => q(ducentillion),           UK => q(thousand centillion),                    EU => q(centilliard) },
+     '903'  => { US => q(trecentillion),          UK => q(thousand quinquagintacentillion),        EU => q(quinquagintacentilliard) },
+     '1203' => { US => q(quadringentillion),      UK => q(thousand ducentillion),                  EU => q(ducentilliard) },
+     '1503' => { US => q(quingentillion),         UK => q(thousand quinquagintaducentillion),      EU => q(quinquagintaducentilliard) },
+     '1803' => { US => q(sescentillion),          UK => q(thousand trecentillion),                 EU => q(trecentilliard) },
+     '2103' => { US => q(septingentillion),       UK => q(thousand quinquagintatrecentillion),     EU => q(quinquagintatrecentilliard) },
+     '2403' => { US => q(octingentillion),        UK => q(thousand quadringentillion),             EU => q(quadringentilliard) },
+     '2703' => { US => q(nongentillion),          UK => q(thousand quinquagintaquadringentillion), EU => q(quinquagintaquadringentilliard) },
+     '3003' => { US => q(millinillion),           UK => q(thousand quingentillion),                EU => q(quingentilliard) },
+);
+
+my $millchoice = 'US';
+my @millkeys = sort {$a <=> $b } keys %millmap;
+my $maxmill = (sort {$a <=> $b } keys %millmap)[-1];
+our $millast = undef;
+our @mill;
+for my $numZeros ( 0..$maxmill ) {
+    next if $numZeros%3 != 0;
+    my $arraySlot = $numZeros/3;
+    if( defined( $millmap{$numZeros} ) ) {
+        $mill[$arraySlot] = " $millmap{$numZeros}->{$millchoice}";
+        $millast = $arraySlot;
+    } else {
+        my $missing = $arraySlot - $millast;
+        $mill[$arraySlot] = $mill[$missing] . $mill[$millast];
+    }
+}
 
 sub mill { my $ind = $_[0]||0;
        die "Number out of range\n" if $ind > $#mill;
@@ -1737,7 +1831,7 @@ Lingua::EN::Inflect - Convert singular to plural. Select "a" or "an".
 
 =head1 VERSION
 
-This document describes version 1.895 of Lingua::EN::Inflect
+This document describes version 1.899 of Lingua::EN::Inflect
 
 =head1 SYNOPSIS
 
@@ -1748,7 +1842,7 @@ This document describes version 1.895 of Lingua::EN::Inflect
                   ORD NUMWORDS
                   WORDLIST
                   inflect classical
-                  def_noun def_verb def_adj def_a def_an ); 
+                  def_noun def_verb def_adj def_a def_an );
 
 
  # UNCONDITIONALLY FORM THE PLURAL
@@ -1861,7 +1955,7 @@ This document describes version 1.895 of Lingua::EN::Inflect
 
       classical 'zero';      #  "no error" INSTEAD OF "no errors"
       classical zero=>1;     #  "no error" INSTEAD OF "no errors"
-      classical zero=>0;     #  "no errors" INSTEAD OF "no error" 
+      classical zero=>0;     #  "no errors" INSTEAD OF "no error"
 
       classical 'herd';      #  "2 buffalo" INSTEAD OF "2 buffalos"
       classical herd=>1;     #  "2 buffalo" INSTEAD OF "2 buffalos"
@@ -1901,12 +1995,18 @@ This document describes version 1.895 of Lingua::EN::Inflect
 
       def_adj   "hir"  => "their",  # SINGULAR => PLURAL
 
-      def_a "h"         # "AY HALWAYS SEZ 'HAITCH'!"
+      def_a     "h"                 # "AY HALWAYS SEZ 'HAITCH'!"
 
       def_an    "horrendous.*"      # "AN HORRENDOUS AFFECTATION"
 
 
 =head1 DESCRIPTION
+
+B<< [I<Note:> This module is strictly in maintenance mode now. If you're
+mostly interested in singular/plural and a/an inflections, take a look
+at the newer Lingua::EN::Inflexion module, which offers a cleaner and
+more convenient interface, has many more features (including
+plural->singular inflexions), and is also much better tested.] >>
 
 The exportable subroutines of Lingua::EN::Inflect provide plural
 inflections, "a"/"an" selection for English words, and manipulation
@@ -2108,9 +2208,9 @@ C<PL_...> subroutines makes for tiresome repetition. For example:
           PL_V(" was",$errors), " fatal.\n";
 
 Lingua::EN::Inflect therefore provides an exportable subroutine
-(C<NUM($;$)>) which may be used to set a persistent "default number"
+(C<NUM($;$)>) that may be used to set a persistent "default number"
 value. If such a value is set, it is subsequently used whenever an
-optional second "number" argument is omitted. The default value thus set 
+optional second "number" argument is omitted. The default value thus set
 can subsequently be removed by calling C<NUM()> with no arguments.
 Hence we could rewrite the previous example:
 
@@ -2134,7 +2234,7 @@ instead of its first argument. For example:
     print NUM($errors,0), NO("error"), PL_V(" was"), " detected.\n";
     print PL_ADJ("This"), PL_N(" error"), PL_V(" was"), "fatal.\n"
         if $severity > 1;
-    
+
 
 
 =head2 Number-insensitive equality
@@ -2263,7 +2363,7 @@ exists at the start of the string. Thus:
 C<A()> and C<AN()> both take an optional second argument. As with the
 C<PL_...> subroutines, this second argument is a "number" specifier. If
 its value is C<1> (or some other value implying singularity), C<A()> and
-C<AN()> insert "a" or "an" as appropriate. If the number specifier 
+C<AN()> insert "a" or "an" as appropriate. If the number specifier
 implies plurality, (C<A()> and C<AN()> insert the actual second argument instead.
 For example:
 
@@ -2276,7 +2376,7 @@ Note that, as implied by the previous examples, C<A()> and
 C<AN()> both assume that their job is merely to provide the correct
 qualifier for a word (that is: "a", "an", or the specified count).
 In other words, they assume that the word they are given has
-already been correctly inflected for plurality. Hence, if C<$N> 
+already been correctly inflected for plurality. Hence, if C<$N>
 has the value 2, then:
 
       print A("cat",$N);
@@ -2296,7 +2396,7 @@ solution is:
 
       NUM($N);
       print A(PL("cat"));
-    
+
 
 =head2 Indefinite articles and initialisms
 
@@ -2381,7 +2481,7 @@ If the argument isn't a numerical integer, it just adds "-th".
 =head1 CONVERTING NUMBERS TO WORDS
 
 The exportable subroutine C<NUMWORDS> takes a number (cardinal or ordinal)
-and returns an English representation of that number. In a scalar context 
+and returns an English representation of that number. In a scalar context
 a string is returned. Hence:
 
     use Lingua::EN::Inflect qw( NUMWORDS );
@@ -2391,7 +2491,7 @@ a string is returned. Hence:
 puts the string:
 
     "one million, two hundred and thirty-four thousand, five hundred and sixty-seven"
-    
+
 into $words.
 
 In a list context each comma-separated chunk is returned as a separate element.
@@ -2406,6 +2506,19 @@ puts the list:
      "five hundred and sixty-seven")
 
 into @words.
+
+Note that this also means that:
+
+    print NUMWORDS(1234567);
+
+
+will (misprint) print:
+
+    one milliontwo hundred and thirty-four thousandfive hundred and sixty-seven
+
+To get readable output, make sure the call in in scalar context:
+
+    print scalar NUMWORDS(1234567);
 
 Non-digits (apart from an optional leading plus or minus sign,
 any decimal points, and ordinal suffixes -- see below) are silently
@@ -2489,13 +2602,13 @@ C<'one'> argument as well:
         #     two bottles of beer on the wall
         #     a solitary bottle of beer on the wall
         #     no more bottles of beer on the wall
-              
+
 Care is needed if the word "a/an" is to be used as a C<'one'> value.
 Unless the next word is known in advance, it's almost always necessary
 to use the C<A> function as well:
 
         print A( NUMWORDS(1, one=>'a') . " $_\n")
-         for qw(cat aardvark ewe hour);   
+         for qw(cat aardvark ewe hour);
 
     # prints:
     #     a cat
@@ -2618,7 +2731,7 @@ string do not "escape" and interfere with subsequent inflections.
 =head1 MODERN VS CLASSICAL INFLECTIONS
 
 Certain words, mainly of Latin or Ancient Greek origin, can form
-plurals either using the standard English "-s" suffix, or with 
+plurals either using the standard English "-s" suffix, or with
 their original Latin or Greek inflections. For example:
 
         PL("stigma")            # -> "stigmas" or "stigmata"
@@ -2632,14 +2745,14 @@ their original Latin or Greek inflections. For example:
 Lingua::EN::Inflect caters to such words by providing an
 "alternate state" of inflection known as "classical mode".
 By default, words are inflected using their contemporary English
-plurals, but if classical mode is invoked, the more traditional 
+plurals, but if classical mode is invoked, the more traditional
 plural forms are returned instead.
 
 The exportable subroutine C<classical()> controls this feature.
 If C<classical()> is called with no arguments, it unconditionally
 invokes classical mode. If it is called with a single argument, it
 turns all classical inflects on or off (depending on whether the argument is
-true or false). If called with two or more arguments, those arguments 
+true or false). If called with two or more arguments, those arguments
 specify which aspects of classical behaviour are to be used.
 
 Thus:
@@ -2685,7 +2798,7 @@ the programmer to override the module's behaviour for specific cases:
 =item C<def_noun($$)>
 
 The C<def_noun> subroutine takes a pair of string arguments: the singular and
-plural forms of the noun being specified. The singular form 
+plural forms of the noun being specified. The singular form
 specifies a pattern to be interpolated (as C<m/^(?:$first_arg)$/i>).
 Any noun matching this pattern is then replaced by the string in the
 second argument. The second argument specifies a string which is
@@ -2750,11 +2863,11 @@ run-time-interpolated patterns, whilst the plural forms are specifications of
 (up to two) run-time-interpolated strings:
 
        def_verb 'am'       => 'are',
-                'are'      => 'are|art",
+                'are'      => 'are|art',
                 'is'       => 'are';
 
        def_verb 'have'     => 'have',
-                'have'     => 'have",
+                'have'     => 'have',
                 'ha(s|th)' => 'have';
 
 Note that as with C<def_noun>, modern/classical variants of plurals
@@ -2852,12 +2965,12 @@ actual Perl error message is also given.
 
 The plural form(s) of a user-defined noun or verb
 (as defined by a call to C<def_noun>, C<def_verb> or C<def_adj>)
-is not a valid Perl interpolated string (usually because it 
+is not a valid Perl interpolated string (usually because it
 interpolates some undefined variable).
 
 =item C<"Bad .inflectrc file (%s):\n %s">
 
-Some other problem occurred in loading the named local 
+Some other problem occurred in loading the named local
 or global F<.inflectrc> file. The Perl error message (including
 the line number) is also given.
 
@@ -2880,18 +2993,14 @@ The optional argument to C<NUMWORDS()> wasn't 1, 2 or 3.
 
 =item C<"Number out of range">
 
-C<NUMWORDS()> was passed a number larger than
-999,999,999,999,999,999,999,999,999,999,999,999 (that is: nine hundred
-and ninety-nine decillion, nine hundred and ninety-nine nonillion, nine
-hundred and ninety-nine octillion, nine hundred and ninety-nine
-septillion, nine hundred and ninety-nine sextillion, nine hundred and
-ninety-nine quintillion, nine hundred and ninety-nine quadrillion, nine
-hundred and ninety-nine trillion, nine hundred and ninety-nine billion,
-nine hundred and ninety-nine million, nine hundred and ninety-nine
-thousand, nine hundred and ninety-nine :-) 
+C<NUMWORDS()> was passed a number larger than the number represented
+by 3006 consecutive nines. The words representing that number are
+63,681 characters long, including commas and spaces. If you're
+interested in the actual value, see t/numwords.t.
 
-The problem is that C<NUMWORDS> doesn't know any
-words for number components bigger than "decillion".
+The reference for the names is http://en.wikipedia.org/wiki/Names_of_large_numbers
+
+There are no names for any higher numbers.
 
 =back
 
@@ -3023,10 +3132,9 @@ The only plural is the Anglicized "viruses".
 
 =back
 
-=head1 AUTHORS
+=head1 AUTHOR
 
 Damian Conway (damian@conway.org)
-Matthew Persico (ORD inflection)
 
 
 =head1 BUGS AND IRRITATIONS

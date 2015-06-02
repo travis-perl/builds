@@ -13,7 +13,7 @@ use List::Util qw/first/;
 use Context::Preserve 'preserve_context';
 use Try::Tiny;
 use SQL::Abstract qw(is_plain_value is_literal_value);
-use DBIx::Class::_Util qw(quote_sub perlstring serialize);
+use DBIx::Class::_Util qw(quote_sub perlstring serialize detected_reinvoked_destructor);
 use namespace::clean;
 
 # default cursor class, overridable in connect_info attributes
@@ -253,6 +253,8 @@ sub new {
 }
 
 sub DESTROY {
+  return if &detected_reinvoked_destructor;
+
   $_[0]->_verify_pid unless DBIx::Class::_ENV_::BROKEN_FORK;
   # some databases spew warnings on implicit disconnect
   local $SIG{__WARN__} = sub {};
@@ -1667,8 +1669,8 @@ sub _gen_sql_bind {
   ) {
     carp_unique 'DateTime objects passed to search() are not supported '
       . 'properly (InflateColumn::DateTime formats and settings are not '
-      . 'respected.) See "Formatting DateTime objects in queries" in '
-      . 'DBIx::Class::Manual::Cookbook. To disable this warning for good '
+      . 'respected.) See ".. format a DateTime object for searching?" in '
+      . 'DBIx::Class::Manual::FAQ. To disable this warning for good '
       . 'set $ENV{DBIC_DT_SEARCH_OK} to true'
   }
 

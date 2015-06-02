@@ -1,6 +1,6 @@
 package Lingua::EN::Tagger;
 
-our $VERSION = '0.24';
+our $VERSION = '0.25';
 
 use warnings;
 use strict;
@@ -582,10 +582,10 @@ sub _classify_unknown_word {
     } elsif(m/[\)\]\}]/o){ # Right brackets
         $word = "*RRB*";
 
-    } elsif (m/-?(?:\p{IsDigit}+(?:\.\p{IsDigit}*)?|\.\p{IsDigit}+)/){ # Floating point number
+    } elsif (m/^-?(?:\p{IsDigit}+(?:\.\p{IsDigit}*)?|\.\p{IsDigit}+)$/){ # Floating point number
         $word = "*NUM*";
 
-    } elsif (m/^\p{IsDigit}+[\p{IsDigit}\/:-]+\p{IsDigit}/){ # Other number constructs
+    } elsif (m/^\p{IsDigit}+[\p{IsDigit}\/:-]+\p{IsDigit}$/){ # Other number constructs
         $word = "*NUM*";
 
     } elsif (m/^-?\p{IsDigit}+\p{IsWord}+$/o){  # Ordinal number

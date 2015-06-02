@@ -18,7 +18,7 @@ Somewhere in your build-file (e.g. L<Module::Install>'s Makefile.PL):
 
   ...
 
-  configure_requires 'DBIx::Class::Schema::Loader' => '0.07042';
+  configure_requires 'DBIx::Class::Schema::Loader' => '0.07043';
 
   require DBIx::Class::Schema::Loader::Optional::Dependencies;
 

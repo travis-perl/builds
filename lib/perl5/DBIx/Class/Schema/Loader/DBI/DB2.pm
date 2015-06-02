@@ -8,12 +8,12 @@ use base qw/
 /;
 use mro 'c3';
 
-use List::MoreUtils 'any';
+use List::Util 'any';
 use namespace::clean;
 
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 =head1 NAME
 
@@ -104,6 +104,8 @@ JOIN syscat.references sr
         AND tc.tabname = sr.tabname
 JOIN syscat.keycoluse rkcu
     ON sr.refkeyname = rkcu.constname
+        AND sr.reftabschema = rkcu.tabschema
+        AND sr.reftabname = rkcu.tabname
         AND kcu.colseq = rkcu.colseq
 WHERE tc.tabschema = ?
     AND tc.tabname = ?
@@ -160,6 +162,14 @@ sub _dbh_tables {
     my ($self, $schema) = @_;
 
     return $self->dbh->tables($schema ? { TABLE_SCHEM => $schema, TABLE_NAME => '%' } : undef);
+}
+
+sub _dbh_table_info {
+    my $self = shift;
+
+    local $^W = 0; # shut up undef warning from DBD::DB2
+
+    $self->next::method(@_);
 }
 
 sub _columns_info_for {

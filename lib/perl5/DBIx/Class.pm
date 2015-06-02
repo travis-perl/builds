@@ -11,7 +11,7 @@ our $VERSION;
 # $VERSION declaration must stay up here, ahead of any other package
 # declarations, as to not confuse various modules attempting to determine
 # this ones version, whether that be s.c.o. or Module::Metadata, etc
-$VERSION = '0.082810';
+$VERSION = '0.082820';
 
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
@@ -26,6 +26,13 @@ use DBIx::Class::Exception;
 
 __PACKAGE__->mk_group_accessors(inherited => '_skip_namespace_frames');
 __PACKAGE__->_skip_namespace_frames('^DBIx::Class|^SQL::Abstract|^Try::Tiny|^Class::Accessor::Grouped|^Context::Preserve');
+
+# FIXME - this is not really necessary, and is in
+# fact going to slow things down a bit
+# However it is the right thing to do in order to get
+# various install bases to highlight their brokenness
+# Remove at some unknown point in the future
+sub DESTROY { &DBIx::Class::_Util::detected_reinvoked_destructor }
 
 sub mk_classdata {
   shift->mk_classaccessor(@_);
@@ -279,7 +286,8 @@ accessible at the following locations:
 =item * Travis-CI log: L<https://travis-ci.org/dbsrgits/dbix-class/builds>
 
 =for html
-&#x21AA; Stable branch CI status: <img src="https://secure.travis-ci.org/dbsrgits/dbix-class.png?branch=master"></img>
+&#x21AA; Main dev branch CI status: <img src="https://secure.travis-ci.org/dbsrgits/dbix-class.png?branch=current/blead"></img>
+&#x21AA; Release branch CI status: <img src="https://secure.travis-ci.org/dbsrgits/dbix-class.png?branch=current/for_cpan_index"></img>
 
 =back
 

@@ -5,12 +5,12 @@ use warnings;
 use base 'DBIx::Class::Schema::Loader::DBI::Sybase::Common';
 use mro 'c3';
 use Try::Tiny;
-use List::MoreUtils 'any';
+use List::Util 'any';
 use namespace::clean;
 
 use DBIx::Class::Schema::Loader::Table::Sybase ();
 
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 =head1 NAME
 

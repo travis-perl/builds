@@ -5,15 +5,14 @@ use warnings;
 use base 'DBIx::Class::Schema::Loader::DBI';
 use mro 'c3';
 use Carp::Clan qw/^DBIx::Class/;
-use List::Util 'first';
-use List::MoreUtils 'any';
+use List::Util qw/any first/;
 use Try::Tiny;
 use Scalar::Util 'blessed';
 use DBIx::Class::Schema::Loader::Utils qw/sigwarn_silencer/;
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 =head1 NAME
 

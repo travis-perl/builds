@@ -55,32 +55,18 @@ BEGIN {
 # Carp::Skip to the rescue soon
 use DBIx::Class::Carp '^DBIx::Class|^DBICTest';
 
+use B ();
 use Carp 'croak';
-use Scalar::Util qw(weaken blessed reftype);
+use Storable 'nfreeze';
+use Scalar::Util qw(weaken blessed reftype refaddr);
 use List::Util qw(first);
-
-# DO NOT edit away without talking to riba first, he will just put it back
-# BEGIN pre-Moo2 import block
-BEGIN {
-  my $initial_fatal_bits = (${^WARNING_BITS}||'') & $warnings::DeadBits{all};
-
-  local $ENV{PERL_STRICTURES_EXTRA} = 0;
-  # load all of these now, so that lazy-loading does not escape
-  # the current PERL_STRICTURES_EXTRA setting
-  require Sub::Quote;
-  require Sub::Defer;
-
-  Sub::Quote->import('quote_sub');
-  ${^WARNING_BITS} &= ( $initial_fatal_bits | ~ $warnings::DeadBits{all} );
-}
-sub qsub ($) { goto &quote_sub }  # no point depping on new Moo just for this
-# END pre-Moo2 import block
+use Sub::Quote qw(qsub quote_sub);
 
 use base 'Exporter';
 our @EXPORT_OK = qw(
-  sigwarn_silencer modver_gt_or_eq
+  sigwarn_silencer modver_gt_or_eq modver_gt_or_eq_and_lt
   fail_on_internal_wantarray fail_on_internal_call
-  refdesc refcount hrefaddr is_exception
+  refdesc refcount hrefaddr is_exception detected_reinvoked_destructor
   quote_sub qsub perlstring serialize
   UNRESOLVABLE_CONDITION
 );
@@ -99,7 +85,7 @@ sub sigwarn_silencer ($) {
 
 sub perlstring ($) { q{"}. quotemeta( shift ). q{"} };
 
-sub hrefaddr ($) { sprintf '0x%x', &Scalar::Util::refaddr||0 }
+sub hrefaddr ($) { sprintf '0x%x', &refaddr||0 }
 
 sub refdesc ($) {
   croak "Expecting a reference" if ! length ref $_[0];
@@ -109,23 +95,21 @@ sub refdesc ($) {
   sprintf '%s%s(0x%x)',
     ( defined( $_[1] = blessed $_[0]) ? "$_[1]=" : '' ),
     reftype $_[0],
-    Scalar::Util::refaddr($_[0]),
+    refaddr($_[0]),
   ;
 }
 
 sub refcount ($) {
   croak "Expecting a reference" if ! length ref $_[0];
 
-  require B;
   # No tempvars - must operate on $_[0], otherwise the pad
   # will count as an extra ref
   B::svref_2object($_[0])->REFCNT;
 }
 
 sub serialize ($) {
-  require Storable;
   local $Storable::canonical = 1;
-  Storable::nfreeze($_[0]);
+  nfreeze($_[0]);
 }
 
 sub is_exception ($) {
@@ -180,6 +164,54 @@ sub is_exception ($) {
   return $not_blank;
 }
 
+{
+  my $destruction_registry = {};
+
+  sub CLONE {
+    $destruction_registry = { map
+      { defined $_ ? ( refaddr($_) => $_ ) : () }
+      values %$destruction_registry
+    };
+  }
+
+  # This is almost invariably invoked from within DESTROY
+  # throwing exceptions won't work
+  sub detected_reinvoked_destructor {
+
+    # quick "garbage collection" pass - prevents the registry
+    # from slowly growing with a bunch of undef-valued keys
+    defined $destruction_registry->{$_} or delete $destruction_registry->{$_}
+      for keys %$destruction_registry;
+
+    if (! length ref $_[0]) {
+      printf STDERR '%s() expects a blessed reference %s',
+        (caller(0))[3],
+        Carp::longmess,
+      ;
+      return undef; # don't know wtf to do
+    }
+    elsif (! defined $destruction_registry->{ my $addr = refaddr($_[0]) } ) {
+      weaken( $destruction_registry->{$addr} = $_[0] );
+      return 0;
+    }
+    else {
+      carp_unique ( sprintf (
+        'Preventing *MULTIPLE* DESTROY() invocations on %s - an *EXTREMELY '
+      . 'DANGEROUS* condition which is *ALMOST CERTAINLY GLOBAL* within your '
+      . 'application, affecting *ALL* classes without active protection against '
+      . 'this. Diagnose and fix the root cause ASAP!!!%s',
+      refdesc $_[0],
+        ( ( $INC{'Devel/StackTrace.pm'} and ! do { local $@; eval { Devel::StackTrace->VERSION(2) } } )
+          ? " (likely culprit Devel::StackTrace\@@{[ Devel::StackTrace->VERSION ]} found in %INC, http://is.gd/D_ST_refcap)"
+          : ''
+        )
+      ));
+
+      return 1;
+    }
+  }
+}
+
 sub modver_gt_or_eq ($$) {
   my ($mod, $ver) = @_;
 
@@ -197,6 +229,19 @@ sub modver_gt_or_eq ($$) {
 
   local $@;
   eval { $mod->VERSION($ver) } ? 1 : 0;
+}
+
+sub modver_gt_or_eq_and_lt ($$$) {
+  my ($mod, $v_ge, $v_lt) = @_;
+
+  croak "Nonsensical maximum version supplied"
+    if ! defined $v_lt or $v_lt =~ /[^0-9\.\_]/;
+
+  return (
+    modver_gt_or_eq($mod, $v_ge)
+      and
+    ! modver_gt_or_eq($mod, $v_lt)
+  ) ? 1 : 0;
 }
 
 {
