@@ -4,7 +4,7 @@
       "mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -30,6 +30,7 @@
       },
       "develop" : {
          "requires" : {
+            "Class::Tiny" : "1.001",
             "Moose" : "0",
             "MooseX::Types::Common::Numeric" : "0",
             "Mouse" : "0",
@@ -38,28 +39,29 @@
             "indirect" : "0",
             "multidimensional" : "0",
             "namespace::autoclean" : "0",
-            "namespace::clean" : "0"
+            "namespace::clean" : "0",
+            "strictures" : "2"
          }
       },
       "runtime" : {
          "recommends" : {
             "Class::XSAccessor" : "1.18",
-            "Sub::Name" : "0"
+            "Sub::Name" : "0",
+            "strictures" : "2"
          },
          "requires" : {
             "Class::Method::Modifiers" : "1.1",
             "Devel::GlobalDestruction" : "0.11",
             "Exporter" : "5.57",
-            "Import::Into" : "1.002",
             "Module::Runtime" : "0.014",
-            "Role::Tiny" : "1.003004",
+            "Role::Tiny" : "2",
             "Scalar::Util" : "0",
-            "perl" : "5.006",
-            "strictures" : "1.004003"
+            "perl" : "5.006"
          }
       },
       "test" : {
          "recommends" : {
+            "CPAN::Meta" : "0",
             "CPAN::Meta::Requirements" : "0"
          },
          "requires" : {
@@ -84,9 +86,14 @@
       },
       "x_IRC" : "irc://irc.perl.org/#moose"
    },
-   "version" : "1.007000",
+   "version" : "2.000001",
    "x_authority" : "cpan:MSTROUT",
    "x_breaks" : {
-      "HTML::Restrict" : "== 2.1.5"
+      "App::Commando" : "<= 0.012",
+      "File::DataClass" : "<= 0.54.1",
+      "HTML::Restrict" : "== 2.1.5",
+      "MooX::Emulate::Class::Accessor::Fast" : "<= 0.02",
+      "MySQL::Workbench::Parser" : "<= 0.05",
+      "WebService::Shutterstock" : "<= 0.006"
    }
 }
