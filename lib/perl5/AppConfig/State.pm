@@ -37,10 +37,11 @@
 #============================================================================
 
 package AppConfig::State;
+use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '1.69';
+our $VERSION = '1.71';
 our $DEBUG   = 0;
 our $AUTOLOAD;
 
@@ -1318,6 +1319,27 @@ a parameter is specified, the variable is set to that value and the
 result of the set() operation is returned.
 
     $state->age(29);        # sets 'age' to 29, returns 1 (ok)
+
+=head2 VARLIST
+
+The varlist() method can be used to extract a number of variables into
+a hash array.  The first parameter should be a regular expression
+used for matching against the variable names.
+
+    my %vars = $state->varlist("^file");   # all "file*" variables
+
+A second parameter may be specified (any true value) to indicate that
+the part of the variable name matching the regex should be removed
+when copied to the target hash.
+
+    $state->file_name("/tmp/file");
+    $state->file_path("/foo:/bar:/baz");
+
+    my %vars = $state->varlist("^file_", 1);
+
+    # %vars:
+    #    name => /tmp/file
+    #    path => "/foo:/bar:/baz"
 
 =head2 INTERNAL METHODS
 

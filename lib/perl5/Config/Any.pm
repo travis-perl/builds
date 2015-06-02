@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use Module::Pluggable::Object ();
 
-our $VERSION = '0.24';
+our $VERSION = '0.26';
 
 =head1 NAME
 
@@ -194,12 +194,16 @@ sub _load {
         for my $loader ( @try_plugins ) {
             next unless $loader->is_supported;
             $supported = 1;
-            my @configs
-                = eval { $loader->load( $filename, $loader_args{ $loader } ); };
+            my @configs;
+            my $err = do {
+                local $@;
+                @configs = eval { $loader->load( $filename, $loader_args{ $loader } ); };
+                $@;
+            };
 
             # fatal error if we used extension matching
-            croak "Error parsing $filename: $@" if $@ and $use_ext_lut;
-            next if $@ or !@configs;
+            croak "Error parsing $filename: $err" if $err and $use_ext_lut;
+            next if $err or !@configs;
 
             # post-process config with a filter callback
             if ( $args->{ filter } ) {

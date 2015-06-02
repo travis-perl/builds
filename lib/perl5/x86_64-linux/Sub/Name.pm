@@ -1,6 +1,4 @@
-package Sub::Name;
-# git description: v0.11-TRIAL-5-g86f08d9
-$Sub::Name::VERSION = '0.12';
+package Sub::Name; # git description: v0.13-7-g79187d2
 # ABSTRACT: (re)name a sub
 
 #pod =pod
@@ -55,6 +53,8 @@ use 5.006;
 use strict;
 use warnings;
 
+our $VERSION = '0.14';
+
 use Exporter 5.57 'import';
 
 our @EXPORT = qw(subname);
@@ -63,9 +63,7 @@ our @EXPORT_OK = @EXPORT;
 use XSLoader;
 XSLoader::load(
     __PACKAGE__,
-    exists $Sub::Name::{VERSION}
-        ? ${ $Sub::Name::{VERSION} }
-        : (),
+    $VERSION,
 );
 
 1;
@@ -82,7 +80,7 @@ Sub::Name - (re)name a sub
 
 =head1 VERSION
 
-version 0.12
+version 0.14
 
 =head1 SYNOPSIS
 

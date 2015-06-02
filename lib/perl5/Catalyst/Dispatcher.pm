@@ -614,6 +614,7 @@ sub setup_actions {
     @{ $self->_registered_dispatch_types }{@classes} = (1) x @classes;
 
     foreach my $comp ( values %{ $c->components } ) {
+        $comp = $comp->() if ref($comp) eq 'CODE';
         $comp->register_actions($c) if $comp->can('register_actions');
     }
 

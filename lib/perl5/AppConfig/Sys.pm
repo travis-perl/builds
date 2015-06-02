@@ -15,11 +15,12 @@
 #============================================================================
 
 package AppConfig::Sys;
+use 5.006;
 use strict;
 use warnings;
 use POSIX qw( getpwnam getpwuid );
 
-our $VERSION = '1.69';
+our $VERSION = '1.71';
 our ($AUTOLOAD, $OS, %CAN, %METHOD);
 
 

@@ -15,6 +15,13 @@ sub run {
         @Starman::Server::ISA = qw(Net::Server::SS::PreFork); # Yikes.
     }
 
+    my %nsa;
+    while (my($key, $value) = each %$self) {
+        $key =~ s/^net_server_// or next;
+        $nsa{$key} = $value;
+    }
+    $self->{net_server_args} = \%nsa if %nsa;
+
     Starman::Server->new->run($app, {%$self});
 }
 

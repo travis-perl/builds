@@ -6,7 +6,7 @@ use Module::Install::Base;
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.14';
+	$VERSION = '1.16';
 	@ISA     = 'Module::Install::Base';
 }
 
@@ -172,10 +172,10 @@ sub dump_meta {
 		$meta->{version} = $meta->{version}->numify;
 	}
 
-    # extra metadata
-    foreach my $key (grep /^x_/, keys %$val) {
-        $meta->{$key} = $val->{$key};
-    } 
+	# extra metadata
+	foreach my $key (grep /^x_/, keys %$val) {
+		$meta->{$key} = $val->{$key};
+	}
 
 	YAML::Tiny::Dump($meta);
 }

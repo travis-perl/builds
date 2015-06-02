@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @EXPORT @EXPORT_OK @ISA $CurrentPackage @IncludeLibs $ScanFileRE );
 
-$VERSION   = '1.18';
+$VERSION   = '1.19';
 @EXPORT    = qw( scan_deps scan_deps_runtime );
 @EXPORT_OK = qw( scan_line scan_chunk add_deps scan_deps_runtime path_to_inc_name );
 
@@ -225,6 +225,7 @@ my %SeenRuntimeLoader;
 my %Preload;
 %Preload = (
     'AnyDBM_File.pm'  => [qw( SDBM_File.pm )],
+    'AnyEvent.pm'     => 'sub',
     'Authen/SASL.pm'  => 'sub',
     'B/Hooks/EndOfScope.pm' => [qw( B/Hooks/EndOfScope/PP.pm B/Hooks/EndOfScope/XS.pm )],
     'Bio/AlignIO.pm'  => 'sub',
@@ -364,10 +365,11 @@ my %Preload;
     },
     'Locale/Maketext/Lexicon.pm'    => 'sub',
     'Locale/Maketext/GutsLoader.pm' => [qw( Locale/Maketext/Guts.pm )],
-    'Log/Any.pm' => 'sub',
-    'Log/Log4perl.pm' => 'sub',
-    'Log/Report/Dispatcher.pm' => 'sub',
-    'LWP/Parallel.pm' => sub {
+    'Log/Any.pm'                => 'sub',
+    'Log/Log4perl.pm'           => 'sub',
+    'Log/Report/Dispatcher.pm'  => 'sub',
+    'LWP/MediaTypes.pm'         => [qw( LWP/media.types )],
+    'LWP/Parallel.pm'           => sub {
         _glob_in_inc( 'LWP/Parallel', 1 ),
         qw(
             LWP/ParallelUA.pm       LWP/UserAgent.pm
@@ -378,7 +380,7 @@ my %Preload;
         qw( LWP/Parallel.pm ),
         @{ _get_preload('LWP/Parallel.pm') }
     },
-    'LWP/UserAgent.pm' => sub {
+    'LWP/UserAgent.pm'          => sub {
         return( 
           qw( URI/URL.pm URI/http.pm LWP/Protocol/http.pm ),
           _glob_in_inc("LWP/Authen", 1),
@@ -390,6 +392,7 @@ my %Preload;
     'Math/BigFloat.pm'              => 'sub',
     'Math/Symbolic.pm'              => 'sub',
     'MIME/Decoder.pm'               => 'sub',
+    'MIME/Types.pm'                 => [qw( MIME/types.db )],
     'Module/Build.pm'               => 'sub',
     'Module/Pluggable.pm'           => sub {
         _glob_in_inc('$CurrentPackage/Plugin', 1);
@@ -956,9 +959,9 @@ sub scan_chunk {
         #   decode("klingon", ...)
         #   open FH, "<:encoding(klingon)", ...
         if (my ($io_layer, $encoding) = /(?:(:encoding)|\b(?:en|de)code)\(\s*['"]?([-\w]+)/) {
-            my @mods;
-            my $mod = _find_encoding($encoding);
-            push @mods, $mod if $mod;           # "external" Encode module
+            my @mods = qw( Encode.pm );
+            my $ext = _find_encoding($encoding); # "external" Encode module
+            push @mods, $ext if $ext;
             push @mods, qw( PerlIO.pm PerlIO/encoding.pm ) if $io_layer;
             return \@mods;
         }

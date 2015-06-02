@@ -1,13 +1,12 @@
 package Package::DeprecationManager;
-{
-  $Package::DeprecationManager::VERSION = '0.13';
-}
 
 use strict;
 use warnings;
 
+our $VERSION = '0.14';
+
 use Carp qw( croak );
-use List::MoreUtils qw( any );
+use List::Util 1.33 qw( any );
 use Params::Util qw( _HASH0 );
 use Sub::Install;
 
@@ -22,7 +21,8 @@ sub import {
     my %registry;
 
     my $import = _build_import( \%registry );
-    my $warn = _build_warn( \%registry, $args{-deprecations}, $args{-ignore} );
+    my $warn
+        = _build_warn( \%registry, $args{-deprecations}, $args{-ignore} );
 
     my $caller = caller();
 
@@ -94,12 +94,12 @@ sub _build_warn {
 
         my $compat_version = $registry->{$package};
 
-        my $deprecated_at = $deprecated_at->{ $args{feature} };
+        my $at = $deprecated_at->{ $args{feature} };
 
         return
-            if defined $compat_version
-                && defined $deprecated_at
-                && $compat_version lt $deprecated_at;
+               if defined $compat_version
+            && defined $deprecated_at
+            && $compat_version lt $at;
 
         my $msg;
         if ( defined $args{message} ) {
@@ -107,8 +107,8 @@ sub _build_warn {
         }
         else {
             $msg = "$args{feature} has been deprecated";
-            $msg .= " since version $deprecated_at"
-                if defined $deprecated_at;
+            $msg .= " since version $at"
+                if defined $at;
         }
 
         return if $warned{$package}{ $args{feature} }{$msg};
@@ -127,7 +127,7 @@ sub _build_warn {
 
 # ABSTRACT: Manage deprecation warnings for your distribution
 
-
+__END__
 
 =pod
 
@@ -137,7 +137,7 @@ Package::DeprecationManager - Manage deprecation warnings for your distribution
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 SYNOPSIS
 
@@ -206,7 +206,7 @@ C<deprecated()> sub.
 
 The C<import()> sub allows callers of I<your> class to specify an C<-api_version>
 parameter. If this is supplied, then deprecation warnings are only issued for
-deprecations for api versions earlier than the one specified.
+deprecations with API versions earlier than the one specified.
 
 You must call the C<deprecated()> sub in each deprecated subroutine. When
 called, it will issue a warning using C<Carp::cluck()>.
@@ -261,16 +261,32 @@ created as L<Class::MOP::Deprecated> by Goro Fuji.
 
 Dave Rolsky <autarch@urth.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Jesse Luehrs Karen Etheridge Tomas Doran
+
+=over 4
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Tomas Doran <bobtfish@bobtfish.net>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2012 by Dave Rolsky.
+This software is Copyright (c) 2015 by Dave Rolsky.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
 
 =cut
-
-
-__END__
-

@@ -1,12 +1,10 @@
 package Moose::Meta::Method::Accessor::Native::Array;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use strict;
 use warnings;
 
 use Moose::Role;
-
-use Scalar::Util qw( looks_like_number );
 
 sub _inline_check_var_is_valid_index {
     my $self = shift;

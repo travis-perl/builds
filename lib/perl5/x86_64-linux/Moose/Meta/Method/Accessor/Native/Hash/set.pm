@@ -1,12 +1,10 @@
 package Moose::Meta::Method::Accessor::Native::Hash::set;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use strict;
 use warnings;
 
 use List::MoreUtils ();
-use Scalar::Util qw( looks_like_number );
-
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native::Hash::Writer';

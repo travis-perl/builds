@@ -4,15 +4,10 @@ package B::Hooks::EndOfScope::XS;
 use strict;
 use warnings;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
-BEGIN {
-  require Module::Runtime;
-  # Adjust the Makefile.PL if changing this minimum version
-  Module::Runtime::use_module('Variable::Magic', '0.48');
-}
-
-use Sub::Exporter::Progressive -setup => {
+use Variable::Magic 0.48 ();
+use Sub::Exporter::Progressive 0.001006 -setup => {
   exports => ['on_scope_end'],
   groups  => { default => ['on_scope_end'] },
 };
@@ -76,7 +71,7 @@ B::Hooks::EndOfScope::XS - Execute code after a scope finished compilation - XS 
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 DESCRIPTION
 

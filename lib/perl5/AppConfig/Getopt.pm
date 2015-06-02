@@ -18,11 +18,12 @@
 #============================================================================
 
 package AppConfig::Getopt;
+use 5.006;
 use strict;
 use warnings;
 use AppConfig::State;
 use Getopt::Long 2.17;
-our $VERSION = '1.69';
+our $VERSION = '1.71';
 
 
 #------------------------------------------------------------------------

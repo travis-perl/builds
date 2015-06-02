@@ -13,11 +13,12 @@
 #============================================================================
 
 package AppConfig::File;
+use 5.006;
 use strict;
 use warnings;
 use AppConfig;
 use AppConfig::State;
-our $VERSION = '1.69';
+our $VERSION = '1.71';
 
 
 #------------------------------------------------------------------------
@@ -140,6 +141,7 @@ sub parse {
         # initialise $prefix to nothing (no [block])
         $prefix = '';
 
+        local $_;
         while (<$handle>) {
             chomp;
 

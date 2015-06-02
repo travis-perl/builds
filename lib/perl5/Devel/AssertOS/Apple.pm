@@ -1,12 +1,13 @@
-# $Id: Apple.pm,v 1.5 2008/11/05 22:52:34 drhyde Exp $
-
 package Devel::AssertOS::Apple;
 
 use Devel::CheckOS;
+use strict;
+use warnings;
+no warnings 'redefine';
 
-$VERSION = '1.2';
+our $VERSION = '1.3';
 
-sub matches { return qw(MacOSX MacOSclassis); }
+sub matches { return qw(iOS MacOSX MacOSclassic); }
 sub os_is { Devel::CheckOS::os_is(matches()); }
 Devel::CheckOS::die_unsupported() unless(os_is());
 

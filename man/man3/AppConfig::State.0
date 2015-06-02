@@ -71,7 +71,7 @@
 .\" ========================================================================
 .\"
 .IX Title "AppConfig::State 3"
-.TH AppConfig::State 3 "2015-02-12" "perl v5.21.9" "User Contributed Perl Documentation"
+.TH AppConfig::State 3 "2015-03-01" "perl v5.21.9" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -529,6 +529,30 @@ result of the \fIset()\fR operation is returned.
 .PP
 .Vb 1
 \&    $state\->age(29);        # sets \*(Aqage\*(Aq to 29, returns 1 (ok)
+.Ve
+.SS "\s-1VARLIST\s0"
+.IX Subsection "VARLIST"
+The \fIvarlist()\fR method can be used to extract a number of variables into
+a hash array.  The first parameter should be a regular expression
+used for matching against the variable names.
+.PP
+.Vb 1
+\&    my %vars = $state\->varlist("^file");   # all "file*" variables
+.Ve
+.PP
+A second parameter may be specified (any true value) to indicate that
+the part of the variable name matching the regex should be removed
+when copied to the target hash.
+.PP
+.Vb 2
+\&    $state\->file_name("/tmp/file");
+\&    $state\->file_path("/foo:/bar:/baz");
+\&
+\&    my %vars = $state\->varlist("^file_", 1);
+\&
+\&    # %vars:
+\&    #    name => /tmp/file
+\&    #    path => "/foo:/bar:/baz"
 .Ve
 .SS "\s-1INTERNAL METHODS\s0"
 .IX Subsection "INTERNAL METHODS"
