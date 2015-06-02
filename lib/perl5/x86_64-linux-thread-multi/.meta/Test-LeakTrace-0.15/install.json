@@ -1,0 +1,1 @@
+{"pathname":"G/GF/GFUJI/Test-LeakTrace-0.15.tar.gz","target":"Test::LeakTrace","dist":"Test-LeakTrace-0.15","name":"Test::LeakTrace","provides":{"Test::LeakTrace":{"file":"lib/Test/LeakTrace.pm","version":"0.15"},"Test::LeakTrace::Script":{"file":"lib/Test/LeakTrace/Script.pm"}},"version":"0.15"}
