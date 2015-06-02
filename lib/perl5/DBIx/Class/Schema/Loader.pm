@@ -7,7 +7,7 @@ use MRO::Compat;
 use mro 'c3';
 use Carp::Clan qw/^DBIx::Class/;
 use Scalar::Util 'weaken';
-use Sub::Name 'subname';
+use Sub::Util 'set_subname';
 use DBIx::Class::Schema::Loader::Utils 'array_eq';
 use Try::Tiny;
 use Hash::Merge 'merge';
@@ -16,7 +16,7 @@ use namespace::clean;
 # Always remember to do all digits for the version even if they're 0
 # i.e. first release of 0.XX *must* be 0.XX000. This avoids fBSD ports
 # brain damage and presumably various other packaging systems too
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 __PACKAGE__->mk_group_accessors('inherited', qw/
                                 _loader_args
@@ -37,49 +37,49 @@ DBIx::Class::Schema::Loader - Create a DBIx::Class::Schema based on a database
 
 =head1 SYNOPSIS
 
-  ### use this module to generate a set of class files
+    ### use this module to generate a set of class files
 
-  # in a script
-  use DBIx::Class::Schema::Loader qw/ make_schema_at /;
-  make_schema_at(
-      'My::Schema',
-      { debug => 1,
-        dump_directory => './lib',
-      },
-      [ 'dbi:Pg:dbname="foo"', 'myuser', 'mypassword',
-         { loader_class => 'MyLoader' } # optionally
-      ],
-  );
+    # in a script
+    use DBIx::Class::Schema::Loader qw/ make_schema_at /;
+    make_schema_at(
+        'My::Schema',
+        { debug => 1,
+          dump_directory => './lib',
+        },
+        [ 'dbi:Pg:dbname="foo"', 'myuser', 'mypassword',
+           { loader_class => 'MyLoader' } # optionally
+        ],
+    );
 
-  # from the command line or a shell script with dbicdump (distributed
-  # with this module).  Do `perldoc dbicdump` for usage.
-  dbicdump -o dump_directory=./lib \
-           -o components='["InflateColumn::DateTime"]' \
-           -o debug=1 \
-           My::Schema \
-           'dbi:Pg:dbname=foo' \
-           myuser \
-           mypassword
+    # from the command line or a shell script with dbicdump (distributed
+    # with this module).  Do `perldoc dbicdump` for usage.
+    dbicdump -o dump_directory=./lib \
+             -o components='["InflateColumn::DateTime"]' \
+             -o debug=1 \
+             My::Schema \
+             'dbi:Pg:dbname=foo' \
+             myuser \
+             mypassword
 
-  ### or generate and load classes at runtime
-  # note: this technique is not recommended
-  # for use in production code
+    ### or generate and load classes at runtime
+    # note: this technique is not recommended
+    # for use in production code
 
-  package My::Schema;
-  use base qw/DBIx::Class::Schema::Loader/;
+    package My::Schema;
+    use base qw/DBIx::Class::Schema::Loader/;
 
-  __PACKAGE__->loader_options(
-      constraint              => '^foo.*',
-      # debug                 => 1,
-  );
+    __PACKAGE__->loader_options(
+        constraint              => '^foo.*',
+        # debug                 => 1,
+    );
 
-  #### in application code elsewhere:
+    #### in application code elsewhere:
 
-  use My::Schema;
+    use My::Schema;
 
-  my $schema1 = My::Schema->connect( $dsn, $user, $password, $attrs);
-  # -or-
-  my $schema1 = "My::Schema"; $schema1->connection(as above);
+    my $schema1 = My::Schema->connect( $dsn, $user, $password, $attrs);
+    # -or-
+    my $schema1 = "My::Schema"; $schema1->connection(as above);
 
 =head1 DESCRIPTION
 
@@ -341,7 +341,7 @@ sub connection {
         # ->load_components and we are now in a different place in the mro.
         no warnings 'redefine';
 
-        local *connection = subname __PACKAGE__.'::connection' => sub {
+        local *connection = set_subname __PACKAGE__.'::connection' => sub {
             my $self = shift;
             $self->next::method(@_);
         };
@@ -678,6 +678,10 @@ mattp: Matt Phillips <mattp@cpan.org>
 Dag-Erling Smørgrav <des@des.no>
 
 moritz: Moritz Lenz <moritz@faui2k3.org>
+
+oalders: Olaf Alders <olaf@wundersolutions.com>
+
+mephinet: Philipp Gortan <philipp.gortan@apa.at>
 
 ... and lots of other folks. If we forgot you, please write the current
 maintainer or RT.

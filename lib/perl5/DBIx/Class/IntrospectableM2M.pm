@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base 'DBIx::Class';
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 
 #namespace pollution. sadface.
 __PACKAGE__->mk_classdata( _m2m_metadata => {} );
@@ -18,7 +18,7 @@ sub many_to_many {
 
   my $attrs = {
     accessor => $meth_name,
-    relation => $link, #"link" table or imediate relation
+    relation => $link, #"link" table or immediate relation
     foreign_relation => $far_side, #'far' table or foreign relation
     (@_ > 3 ? (attrs => $_[3]) : ()), #only store if exist
     rs_method => "${meth_name}_rs",      #for completeness..
@@ -68,9 +68,9 @@ B<Note:> The component needs to be loaded I<before> Core.
 =head1 COMPATIBILITY NOTICE
 
 This module is fairly esoteric and, unless you are dynamically creating
-something out of of a DBIC Schema, is probably the wrong solution for
+something out of a DBIC Schema, is probably the wrong solution for
 whatever it is you are trying to do. Please be advised that compatibility
-is not guaranteed for DBIx::Class 0.09000+. We will try to mantain all
+is not guaranteed for DBIx::Class 0.09000+. We will try to manitain all
 compatibility, but internal changes might make it impossible.
 
 =head1 DESCRIPTION

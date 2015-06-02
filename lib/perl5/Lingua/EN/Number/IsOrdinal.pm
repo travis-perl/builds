@@ -1,11 +1,6 @@
 package Lingua::EN::Number::IsOrdinal;
-BEGIN {
-  $Lingua::EN::Number::IsOrdinal::AUTHORITY = 'cpan:AVAR';
-}
-{
-  $Lingua::EN::Number::IsOrdinal::VERSION = '0.04';
-}
-
+our $AUTHORITY = 'cpan:RKITOVER';
+$Lingua::EN::Number::IsOrdinal::VERSION = '0.05';
 use strict;
 use warnings;
 use Exporter 'import';
@@ -133,6 +128,13 @@ sub _is_number {
 =head1 AUTHOR
 
 Rafael Kitover <rkitover@cpan.org>
+
+=head1 LICENSE
+
+Copyright 2013-2015 by Rafael Kitover
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 =cut
 

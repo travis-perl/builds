@@ -8,7 +8,7 @@ use Try::Tiny;
 use DBIx::Class::Schema::Loader::Utils qw/sigwarn_silencer/;
 use namespace::clean;
 
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 =head1 NAME
 
@@ -85,22 +85,25 @@ sub _table_fk_info {
 
     my $deferrable_sth = $self->dbh->prepare_cached(<<'EOF');
 select deferrable from all_constraints
-where owner = ? and table_name = ? and constraint_name = ?
+where owner = ? and table_name = ? and constraint_name = ? and status = 'ENABLED'
 EOF
 
+    my @enabled_rels;
     foreach my $rel (@$rels) {
         # Oracle does not have update rules
         $rel->{attrs}{on_update} = 'NO ACTION';;
 
         # DBD::Oracle's foreign_key_info does not return DEFERRABILITY, so we get it ourselves
-        my ($deferrable) = $self->dbh->selectrow_array(
+        # Also use this to filter out disabled foreign keys, which are returned by DBD::Oracle < 1.76
+        my $deferrable = $self->dbh->selectrow_array(
             $deferrable_sth, undef, $table->schema, $table->name, $rel->{_constraint_name}
-        );
+        ) or next;
 
-        $rel->{attrs}{is_deferrable} = $deferrable && $deferrable =~ /^DEFERRABLE/i ? 1 : 0;
+        $rel->{attrs}{is_deferrable} = $deferrable =~ /^DEFERRABLE/i ? 1 : 0;
+        push @enabled_rels, $rel;
     }
 
-    return $rels;
+    return \@enabled_rels;
 }
 
 sub _table_uniq_info {
@@ -112,7 +115,8 @@ FROM all_constraints ac, all_cons_columns acc
 WHERE acc.table_name=? AND acc.owner = ?
     AND ac.table_name = acc.table_name AND ac.owner = acc.owner
     AND acc.constraint_name = ac.constraint_name
-    AND ac.constraint_type='U'
+    AND ac.constraint_type = 'U'
+    AND ac.status = 'ENABLED'
 ORDER BY acc.position
 EOF
 
@@ -177,7 +181,7 @@ sub _columns_info_for {
     my $sth = $self->dbh->prepare_cached(<<'EOF', {}, 1);
 SELECT trigger_body
 FROM all_triggers
-WHERE table_name = ? AND table_owner = ?
+WHERE table_name = ? AND table_owner = ? AND status = 'ENABLED'
 AND upper(trigger_type) LIKE '%BEFORE EACH ROW%' AND lower(triggering_event) LIKE '%insert%'
 EOF
 

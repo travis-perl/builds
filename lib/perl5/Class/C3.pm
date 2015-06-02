@@ -4,7 +4,7 @@ package Class::C3;
 use strict;
 use warnings;
 
-our $VERSION = '0.27';
+our $VERSION = '0.28';
 
 our $C3_IN_CORE;
 our $C3_XS;
@@ -519,7 +519,7 @@ L<Devel::Cover> was reporting 94.4% overall test coverage earlier in this module
 
 =over 4
 
-=item L<http://www.webcom.com/haahr/dylan/linearization-oopsla96.html>
+=item L<https://web.archive.org/web/20000817033012id_/http://www.webcom.com/haahr/dylan/linearization-oopsla96.html>
 
 =back
 

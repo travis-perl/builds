@@ -211,6 +211,12 @@ The length of your column, if it is a column type that can have a size
 restriction. This is currently only used to create tables from your
 schema, see L<DBIx::Class::Schema/deploy>.
 
+   { size => [ 9, 6 ] }
+
+For decimal or float values you can specify an ArrayRef in order to
+control precision, assuming your database's
+L<SQL::Translator::Producer> supports it.
+
 =item is_nullable
 
    { is_nullable => 1 }
@@ -1904,11 +1910,11 @@ sub _resolve_relationship_condition {
 
   $args->{condition} ||= $rel_info->{cond};
 
-  $self->throw_exception( "Argument 'self_result_object' must be an object of class '@{[ $self->result_class ]}'" )
+  $self->throw_exception( "Argument 'self_result_object' must be an object inheriting from DBIx::Class::Row" )
     if (
       exists $args->{self_result_object}
         and
-      ( ! defined blessed $args->{self_result_object} or ! $args->{self_result_object}->isa($self->result_class) )
+      ( ! defined blessed $args->{self_result_object} or ! $args->{self_result_object}->isa('DBIx::Class::Row') )
     )
   ;
 
@@ -2306,6 +2312,9 @@ sub handle {
 
 my $global_phase_destroy;
 sub DESTROY {
+  ### NO detected_reinvoked_destructor check
+  ### This code very much relies on being called multuple times
+
   return if $global_phase_destroy ||= in_global_destruction;
 
 ######

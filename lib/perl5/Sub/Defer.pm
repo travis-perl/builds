@@ -1,11 +1,11 @@
 package Sub::Defer;
 
-use strictures 1;
+use Moo::_strictures;
 use Exporter qw(import);
-use Moo::_Utils;
+use Moo::_Utils qw(_getglob _install_coderef);
 use Scalar::Util qw(weaken);
 
-our $VERSION = '1.007000';
+our $VERSION = '2.000001';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(defer_sub undefer_sub undefer_all);

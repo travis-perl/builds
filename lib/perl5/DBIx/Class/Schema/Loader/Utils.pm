@@ -6,12 +6,12 @@ use warnings;
 use Test::More;
 use String::CamelCase 'wordsplit';
 use Carp::Clan qw/^DBIx::Class/;
-use Scalar::Util 'looks_like_number';
+use List::Util 'all';
 use namespace::clean;
 use Exporter 'import';
 use Data::Dumper ();
 
-our @EXPORT_OK = qw/split_name dumper dumper_squashed eval_package_without_redefine_warnings class_path no_warnings warnings_exist warnings_exist_silent slurp_file write_file array_eq sigwarn_silencer/;
+our @EXPORT_OK = qw/split_name dumper dumper_squashed eval_package_without_redefine_warnings class_path no_warnings warnings_exist warnings_exist_silent slurp_file write_file array_eq sigwarn_silencer apply firstidx uniq/;
 
 use constant BY_CASE_TRANSITION_V7 =>
     qr/(?<=[[:lower:]\d])[\W_]*(?=[[:upper:]])|[\W_]+/;
@@ -52,13 +52,34 @@ sub dumper_squashed($) {
 
 # copied from DBIx::Class::_Util, import from there once it's released
 sub sigwarn_silencer {
-  my $pattern = shift;
+    my $pattern = shift;
 
-  croak "Expecting a regexp" if ref $pattern ne 'Regexp';
+    croak "Expecting a regexp" if ref $pattern ne 'Regexp';
 
-  my $orig_sig_warn = $SIG{__WARN__} || sub { CORE::warn(@_) };
+    my $orig_sig_warn = $SIG{__WARN__} || sub { CORE::warn(@_) };
 
-  return sub { &$orig_sig_warn unless $_[0] =~ $pattern };
+    return sub { &$orig_sig_warn unless $_[0] =~ $pattern };
+}
+
+# Copied with stylistic adjustments from List::MoreUtils::PP
+sub firstidx (&@) {
+    my $f = shift;
+    foreach my $i (0..$#_) {
+        local *_ = \$_[$i];
+        return $i if $f->();
+    }
+    return -1;
+}
+
+sub uniq (@) {
+    my %seen = ();
+    grep { not $seen{$_}++ } @_;
+}
+
+sub apply (&@) {
+    my $action = shift;
+    $action->() foreach my @values = @_;
+    wantarray ? @values : $values[-1];
 }
 
 sub eval_package_without_redefine_warnings {
@@ -177,19 +198,9 @@ sub write_file($$) {
 
 sub array_eq($$) {
     no warnings 'uninitialized';
-    my ($a, $b) = @_;
+    my ($l, $r) = @_;
 
-    return unless @$a == @$b;
-
-    for (my $i = 0; $i < @$a; $i++) {
-        if (looks_like_number $a->[$i]) {
-            return unless $a->[$i] == $b->[$i];
-        }
-        else {
-            return unless $a->[$i] eq $b->[$i];
-        }
-    }
-    return 1;
+    return @$l == @$r && all { $l->[$_] eq $r->[$_] } 0..$#$l;
 }
 
 1;

@@ -6,10 +6,9 @@ use base 'Class::Accessor::Grouped';
 use mro 'c3';
 use Carp::Clan qw/^DBIx::Class/;
 use Scalar::Util 'weaken';
-use DBIx::Class::Schema::Loader::Utils qw/split_name slurp_file array_eq/;
+use DBIx::Class::Schema::Loader::Utils qw/split_name slurp_file array_eq apply uniq/;
 use Try::Tiny;
-use List::Util 'first';
-use List::MoreUtils qw/apply uniq any all/;
+use List::Util qw/all any first/;
 use namespace::clean;
 use Lingua::EN::Inflect::Phrase ();
 use Lingua::EN::Tagger ();
@@ -18,7 +17,7 @@ use String::ToIdentifier::EN::Unicode ();
 use Class::Unload ();
 use Class::Inspector ();
 
-our $VERSION = '0.07042';
+our $VERSION = '0.07043';
 
 # Glossary:
 #
@@ -116,6 +115,7 @@ __PACKAGE__->mk_group_accessors('simple', qw/
     relationship_attrs
     rel_collision_map
     rel_name_map
+    allow_extra_m2m_cols
     _temp_classes
     __tagger
 /);
@@ -134,12 +134,11 @@ sub new {
 
     my $self = {
         loader             => $loader,
-        schema             => $loader->schema,
-        inflect_plural     => $loader->inflect_plural,
-        inflect_singular   => $loader->inflect_singular,
-        relationship_attrs => $loader->relationship_attrs,
-        rel_collision_map  => $loader->rel_collision_map,
-        rel_name_map       => $loader->rel_name_map,
+        (map { $_ => $loader->$_ } qw(
+            schema inflect_plural inflect_singular
+            relationship_attrs rel_collision_map
+            rel_name_map allow_extra_m2m_cols
+        )),
         _temp_classes      => [],
     };
 
@@ -547,6 +546,8 @@ sub _generate_m2ms {
             } ];
 
             $class{to_cols} = [ apply { s/^foreign\.//i } keys %{ $rels[$that]{args}[2] } ];
+
+            $class{from_link_cols} = [ apply { s/^self\.//i } values %{ $rels[$this]{args}[2] } ];
         }
 
         my $link_moniker = $rels[0]{extra}{local_moniker};
@@ -557,8 +558,10 @@ sub _generate_m2ms {
         my @link_table_primary_cols =
             @{[ $self->schema->source($link_moniker)->primary_columns ]};
 
-        next unless @{$class[0]{to_cols}} + @{$class[1]{to_cols}} == @link_table_cols
-            && @link_table_cols == @link_table_primary_cols;
+        next unless array_eq(
+            [ sort +uniq @{$class[0]{from_link_cols}}, @{$class[1]{from_link_cols}} ],
+            [ sort @link_table_primary_cols ],
+        ) && ($self->allow_extra_m2m_cols || @link_table_cols == @link_table_primary_cols);
 
         foreach my $this (0, 1) {
             my $that = $this ? 0 : 1;
