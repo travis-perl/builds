@@ -1,0 +1,1 @@
+{"provides":{"Plack::Middleware::MethodOverride":{"file":"lib/Plack/Middleware/MethodOverride.pm","version":"0.14"}},"name":"Plack::Middleware::MethodOverride","target":"Plack::Middleware::MethodOverride","pathname":"A/AR/ARISTOTLE/Plack-Middleware-MethodOverride-0.14.tar.gz","version":"0.14","dist":"Plack-Middleware-MethodOverride-0.14"}
