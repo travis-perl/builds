@@ -1,5 +1,5 @@
 package Lingua::EN::Inflect::Number;
-$Lingua::EN::Inflect::Number::VERSION = '1.11';
+$Lingua::EN::Inflect::Number::VERSION = '1.12';
 use 5.006;
 use strict;
 use warnings;

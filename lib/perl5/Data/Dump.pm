@@ -9,7 +9,7 @@ require Exporter;
 @EXPORT = qw(dd ddx);
 @EXPORT_OK = qw(dump pp dumpf quote);
 
-$VERSION = "1.22";
+$VERSION = "1.23";
 $DEBUG = 0;
 
 use overload ();
@@ -358,7 +358,7 @@ sub _dump
 	    my $vpad = $INDENT . (" " x ($klen_pad ? $klen_pad + 4 : 0));
 	    $val =~ s/\n/\n$vpad/gm;
 	    my $kpad = $nl ? $INDENT : " ";
-	    $key .= " " x ($klen_pad - length($key)) if $nl;
+	    $key .= " " x ($klen_pad - length($key)) if $nl && $klen_pad > length($key);
 	    $out .= "$kpad$key => $val,$nl";
 	}
 	$out =~ s/,$/ / unless $nl;
@@ -481,7 +481,7 @@ sub str {
       for ($_[0]) {
       # Check for repeated string
       if (/^(.)\1\1\1/s) {
-          # seems to be a repating sequence, let's check if it really is
+          # seems to be a repeating sequence, let's check if it really is
           # without backtracking
           unless (/[^\Q$1\E]/) {
               my $base = quote($1);

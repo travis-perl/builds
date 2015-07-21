@@ -1,1 +1,1 @@
-{"provides":{"Data::Page":{"version":"2.02","file":"lib/Data/Page.pm"}},"dist":"Data-Page-2.02","target":"Data::Page","version":"2.02","name":"Data::Page","pathname":"L/LB/LBROCARD/Data-Page-2.02.tar.gz"}
+{"version":"2.02","pathname":"L/LB/LBROCARD/Data-Page-2.02.tar.gz","dist":"Data-Page-2.02","name":"Data::Page","target":"Data::Page","provides":{"Data::Page":{"version":"2.02","file":"lib/Data/Page.pm"}}}

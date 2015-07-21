@@ -4,7 +4,7 @@
       "Simon Cozens <simon@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.019, CPAN::Meta::Converter version 2.141170, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 5.032, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -21,13 +21,14 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.30"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
          "requires" : {
             "Exporter" : "0",
             "Lingua::EN::Inflect" : "0",
+            "perl" : "5.006",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -42,8 +43,10 @@
    "resources" : {
       "homepage" : "https://github.com/neilbowers/Lingua-EN-Inflect-Number",
       "repository" : {
-         "url" : "https://github.com/neilbowers/Lingua-EN-Inflect-Number.git"
+         "type" : "git",
+         "url" : "https://github.com/neilbowers/Lingua-EN-Inflect-Number.git",
+         "web" : "https://github.com/neilbowers/Lingua-EN-Inflect-Number"
       }
    },
-   "version" : "1.11"
+   "version" : "1.12"
 }
