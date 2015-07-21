@@ -168,10 +168,10 @@ do{ my $x = [
        {},
        {
          'HTML_support' => {
+                             'description' => 'Create HTML documentation',
                              'requires' => {
                                              'Pod::Html' => 0
-                                           },
-                             'description' => 'Create HTML documentation'
+                                           }
                            },
          'PPM_support' => {
                             'description' => 'Generate PPM files for distributions'
@@ -189,9 +189,9 @@ do{ my $x = [
          'inc_bundling_support' => {
                                      'description' => 'Bundle Module::Build in inc/',
                                      'requires' => {
-                                                     'inc::latest' => '0.5',
                                                      'ExtUtils::Install' => '1.54',
-                                                     'ExtUtils::Installed' => '1.999'
+                                                     'ExtUtils::Installed' => '1.999',
+                                                     'inc::latest' => '0.5'
                                                    }
                                    },
          'license_creation' => {
