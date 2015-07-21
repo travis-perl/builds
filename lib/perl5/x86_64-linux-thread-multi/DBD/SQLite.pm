@@ -5,7 +5,7 @@ use strict;
 use DBI   1.57 ();
 use DynaLoader ();
 
-our $VERSION = '1.46';
+our $VERSION = '1.48';
 our @ISA     = 'DynaLoader';
 
 # sqlite_version cache (set in the XS bootstrap)
@@ -75,7 +75,8 @@ sub CLONE {
 }
 
 
-package DBD::SQLite::dr;
+package # hide from PAUSE
+    DBD::SQLite::dr;
 
 sub connect {
     my ($drh, $dbname, $user, $auth, $attr) = @_;
@@ -186,7 +187,8 @@ sub regexp {
     return scalar($_[1] =~ $_[0]);
 }
 
-package DBD::SQLite::db;
+package # hide from PAUSE
+    DBD::SQLite::db;
 
 sub prepare {
     my $dbh = shift;
@@ -204,6 +206,16 @@ sub prepare {
 
 sub do {
     my ($dbh, $statement, $attr, @bind_values) = @_;
+
+    # shortcut
+    if  (defined $statement && !defined $attr && !@bind_values) {
+        # _do() (i.e. sqlite3_exec()) runs semicolon-separate SQL
+        # statements, which is handy but insecure sometimes.
+        # Use this only when it's safe or explicitly allowed.
+        if (index($statement, ';') == -1 or $dbh->FETCH('sqlite_allow_multiple_statements')) {
+            return DBD::SQLite::db::_do($dbh, $statement);
+        }
+    }
 
     my @copy = @{[@bind_values]};
     my $rows = 0;
@@ -883,7 +895,8 @@ END_SQL
 # An internal tied hash package used for %DBD::SQLite::COLLATION, to
 # prevent people from unintentionally overriding globally registered collations.
 
-package DBD::SQLite::_WriteOnceHash;
+package # hide from PAUSE
+    DBD::SQLite::_WriteOnceHash;
 
 require Tie::Hash;
 
@@ -1190,7 +1203,7 @@ bind values with no explicit type.
 =head2 Placeholders
 
 SQLite supports several placeholder expressions, including C<?>
-and C<:AAAA>. Consult the L<DBI> and sqlite documentation for
+and C<:AAAA>. Consult the L<DBI> and SQLite documentation for
 details. 
 
 L<http://www.sqlite.org/lang_expr.html#varparam>
@@ -1225,13 +1238,13 @@ turning the pragma off:
   $dbh->do("PRAGMA foreign_keys = OFF");
 
 As of this writing, this feature is disabled by default by the
-sqlite team, and by us, to secure backward compatibility, as
+SQLite team, and by us, to secure backward compatibility, as
 this feature may break your applications, and actually broke
 some for us. If you have used a schema with foreign key constraints
 but haven't cared them much and supposed they're always ignored for
 SQLite, be prepared, and B<please do extensive testing to ensure
 that your applications will continue to work when the foreign keys
-support is enabled by default>. It is very likely that the sqlite
+support is enabled by default>. It is very likely that the SQLite
 team will turn it default-on in the future, and we plan to do it
 NO LATER THAN they do so.
 
@@ -1360,8 +1373,8 @@ operation, and thus it is possible that another thread or process
 could create a separate transaction and write to the database after
 the C<BEGIN> on the current thread has executed, and eventually
 cause a "deadlock". To avoid this, DBD::SQLite internally issues
-a C<BEGIN IMMEDIATE> when you begin a transaction by
-C<begin_work> or under the C<AutoCommit> mode (since 1.38_01).
+a C<BEGIN IMMEDIATE> if you begin a transaction by calling
+C<begin_work> or by turning off C<AutoCommit> (since 1.38_01).
 
 If you really need to turn off this feature for some reasons,
 set C<sqlite_use_immediate_transaction> database handle attribute
@@ -1370,6 +1383,9 @@ to false, and the default C<deferred> transaction will be used.
   my $dbh = DBI->connect("dbi:SQLite::memory:", "", "", {
     sqlite_use_immediate_transaction => 0,
   });
+
+Or, issue a C<BEGIN> statement explicitly each time you begin
+a transaction.
 
 See L<http://sqlite.org/lockingv3.html> for locking details.
 
@@ -1446,7 +1462,7 @@ are using linux. Also you might want to set:
 
   PRAGMA synchronous = OFF
 
-Which will prevent sqlite from doing fsync's when writing (which
+Which will prevent SQLite from doing fsync's when writing (which
 slows down non-transactional writes significantly) at the expense
 of some peace of mind. Also try playing with the cache_size pragma.
 
@@ -1703,7 +1719,7 @@ method (to avoid conflict with DBI's trace() method).
 
 This method returns the last inserted rowid. If you specify an INTEGER PRIMARY
 KEY as the first column in your table, that is the column that is returned.
-Otherwise, it is the hidden ROWID column. See the sqlite docs for details.
+Otherwise, it is the hidden ROWID column. See the SQLite docs for details.
 
 Generally you should not be using this method. Use the L<DBI> last_insert_id
 method instead. The usage of this is:
@@ -1725,7 +1741,7 @@ Retrieve the current busy timeout.
 
 Set the current busy timeout. The timeout is in milliseconds.
 
-=head2 $dbh->sqlite_create_function( $name, $argc, $code_ref )
+=head2 $dbh->sqlite_create_function( $name, $argc, $code_ref, $flags )
 
 This method will register a new function which will be usable in an SQL
 query. The method's parameters are:
@@ -1745,6 +1761,10 @@ the function can take any number of arguments.
 =item $code_ref
 
 This should be a reference to the function's implementation.
+
+=item $flags
+
+You can optionally pass an extra flag bit to create_function, which then would be ORed with SQLITE_UTF8 (default). As of 1.47_02 (SQLite 3.8.9), only meaning bit is SQLITE_DETERMINISTIC (introduced at SQLite 3.8.3), which can make the function perform better. See C API documentation at L<http://sqlite.org/c3ref/create_function.html> for details.
 
 =back
 
@@ -1814,7 +1834,7 @@ so for most common cases it will be simpler to just
 add your collation sequences in the C<%DBD::SQLite::COLLATION>
 hash (see section L</"COLLATION FUNCTIONS"> below).
 
-=head2 $dbh->sqlite_create_aggregate( $name, $argc, $pkg )
+=head2 $dbh->sqlite_create_aggregate( $name, $argc, $pkg, $flags )
 
 This method will register a new aggregate function which can then be used
 from SQL. The method's parameters are:
@@ -1835,6 +1855,10 @@ of arguments.
 =item $pkg
 
 This is the package which implements the aggregator interface.
+
+=item $flags
+
+You can optionally pass an extra flag bit to create_aggregate, which then would be ORed with SQLITE_UTF8 (default). As of 1.47_02 (SQLite 3.8.9), only meaning bit is SQLITE_DETERMINISTIC (introduced at SQLite 3.8.3), which can make the function perform better. See C API documentation at L<http://sqlite.org/c3ref/create_function.html> for details.
 
 =back
 
@@ -2060,7 +2084,7 @@ the currently connected database, and write it out to the named file.
 =head2 $dbh->sqlite_enable_load_extension( $bool )
 
 Calling this method with a true value enables loading (external)
-sqlite3 extensions. After the call, you can load extensions like this:
+SQLite3 extensions. After the call, you can load extensions like this:
 
   $dbh->sqlite_enable_load_extension(1);
   $sth = $dbh->prepare("select load_extension('libsqlitefunctions.so')")
@@ -2068,7 +2092,7 @@ sqlite3 extensions. After the call, you can load extensions like this:
 
 =head2 $dbh->sqlite_load_extension( $file, $proc )
 
-Loading an extension by a select statement (with the "load_extension" sqlite3 function like above) has some limitations. If you need to, say, create other functions from an extension, use this method. $file (a path to the extension) is mandatory, and $proc (an entry point name) is optional. You need to call C<sqlite_enable_load_extension> before calling C<sqlite_load_extension>.
+Loading an extension by a select statement (with the "load_extension" SQLite3 function like above) has some limitations. If you need to, say, create other functions from an extension, use this method. $file (a path to the extension) is mandatory, and $proc (an entry point name) is optional. You need to call C<sqlite_enable_load_extension> before calling C<sqlite_load_extension>.
 
 =head2 $dbh->sqlite_trace( $code_ref )
 
@@ -2129,7 +2153,7 @@ is for internal use only.
 
 =head2 DBD::SQLite::compile_options()
 
-Returns an array of compile options (available since sqlite 3.6.23,
+Returns an array of compile options (available since SQLite 3.6.23,
 bundled in DBD::SQLite 1.30_01), or an empty array if the bundled
 library is old or compiled with SQLITE_OMIT_COMPILEOPTION_DIAGS.
 
@@ -2443,7 +2467,7 @@ Other Perl virtual tables may also be published separately on CPAN.
 
 =head1 FOR DBD::SQLITE EXTENSION AUTHORS
 
-Since 1.30_01, you can retrieve the bundled sqlite C source and/or
+Since 1.30_01, you can retrieve the bundled SQLite C source and/or
 header like this:
 
   use File::ShareDir 'dist_dir';
@@ -2499,9 +2523,17 @@ Bugs should be reported via the CPAN bug tracker at
 
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=DBD-SQLite>
 
-Note that bugs of bundled sqlite library (i.e. bugs in C<sqlite3.[ch]>)
-should be reported to the sqlite developers at sqlite.org via their bug
+Note that bugs of bundled SQLite library (i.e. bugs in C<sqlite3.[ch]>)
+should be reported to the SQLite developers at sqlite.org via their bug
 tracker or via their mailing list.
+
+The master repository is on GitHub:
+
+L<https://github.com/DBD-SQLite/DBD-SQLite>.
+
+We also have a mailing list:
+
+L<http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbd-sqlite>
 
 =head1 AUTHORS
 

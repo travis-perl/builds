@@ -4,7 +4,7 @@
       "Fergal Daly <fergal@esatclear.ie>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.0401, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -47,11 +47,18 @@
    },
    "release_status" : "stable",
    "resources" : {
+      "bugtracker" : {
+         "web" : "http://github.com/rjbs/Test-Deep/issues"
+      },
       "homepage" : "http://github.com/rjbs/Test-Deep/",
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ],
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/rjbs/Test-Deep.git",
+         "web" : "https://github.com/rjbs/Test-Deep"
+      },
+      "x_IRC" : "irc://irc.perl.org/#perl-qa",
       "x_MailingList" : "http://lists.perl.org/list/perl-qa.html"
    },
-   "version" : "0.115"
+   "version" : "0.117",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }

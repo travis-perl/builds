@@ -1,5 +1,5 @@
 package Lingua::EN::FindNumber;
-$Lingua::EN::FindNumber::VERSION = '1.30';
+$Lingua::EN::FindNumber::VERSION = '1.31';
 use 5.006;
 use strict;
 use warnings;
