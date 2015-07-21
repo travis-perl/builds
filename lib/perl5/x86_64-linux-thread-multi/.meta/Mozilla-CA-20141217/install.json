@@ -1,1 +1,1 @@
-{"pathname":"A/AB/ABH/Mozilla-CA-20141217.tar.gz","version":"20141217","provides":{"Mozilla::CA":{"version":"20141217","file":"lib/Mozilla/CA.pm"}},"name":"Mozilla::CA","dist":"Mozilla-CA-20141217","target":"Mozilla::CA"}
+{"target":"Mozilla::CA","pathname":"A/AB/ABH/Mozilla-CA-20141217.tar.gz","provides":{"Mozilla::CA":{"version":"20141217","file":"lib/Mozilla/CA.pm"}},"version":"20141217","dist":"Mozilla-CA-20141217","name":"Mozilla::CA"}

@@ -4,7 +4,7 @@
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.0514, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.0522, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -21,9 +21,7 @@
    },
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
+         "requires" : {}
       },
       "configure" : {
          "requires" : {
@@ -43,7 +41,6 @@
       "test" : {
          "requires" : {
             "File::Temp" : "0",
-            "Test" : "0",
             "Test::More" : "0.96"
          }
       }
@@ -62,5 +59,32 @@
       "x_IRC" : "irc://irc.perl.org/#lwp",
       "x_MailingList" : "mailto:libwww@perl.org"
    },
-   "version" : "1.67"
+   "version" : "1.68",
+   "x_authority" : "cpan:GAAS",
+   "x_contributors" : [
+      "Gisle Aas <gisle@aas.no>",
+      "Karen Etheridge <ether@cpan.org>",
+      "Ville Skyttä <ville.skytta@iki.fi>",
+      "Mark Stosberg <mark@stosberg.com>",
+      "Michael G. Schwern <schwern@pobox.com>",
+      "Olaf Alders <olaf@wundersolutions.com>",
+      "Slaven Rezic <slaven@rezic.de>",
+      "Matt Lawrence <matthewlawrence@venda.com>",
+      "Peter Rabbitson <ribasushi@cpan.org>",
+      "Piotr Roszatycki <piotr.roszatycki@gmail.com>",
+      "Salvatore Bonaccorso <carnil@launchpad.net>",
+      "Tatsuhiko Miyagawa <miyagawa@bulknews.net>",
+      "Torsten Förtsch <torsten.foertsch@gmx.net>",
+      "Adam Herzog <adam@adamherzog.com>",
+      "gerard <gerard@tty.nl>",
+      "Alex Kapranoff <kapranoff@gmail.com>",
+      "Brendan Byrd <Perl@ResonatorSoft.org>",
+      "David Schmidt <davewood@gmx.at>",
+      "Jan Dubois <jand@activestate.com>",
+      "John Miller <john@rimmkaufman.com>",
+      "Kenichi Ishigaki <ishigaki@cpan.org>",
+      "Kent Fredric <kentfredric@gmail.com>",
+      "Masahiro Honma <hiratara@cpan.org>"
+   ],
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }
