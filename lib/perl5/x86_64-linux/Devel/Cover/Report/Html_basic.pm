@@ -10,7 +10,7 @@ package Devel::Cover::Report::Html_basic;
 use strict;
 use warnings;
 
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.20'; # VERSION
 our $LVERSION = do { eval '$VERSION' || "0.001" };  # for development purposes
 
 use Devel::Cover::DB;
@@ -445,7 +445,7 @@ package Devel::Cover::Report::Html_basic::Template::Provider;
 use strict;
 use warnings;
 
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.20'; # VERSION
 
 use base "Template::Provider";
 
@@ -804,7 +804,7 @@ Devel::Cover::Report::Html_basic - HTML backend for Devel::Cover
 
 =head1 VERSION
 
-version 1.18
+version 1.20
 
 =head1 SYNOPSIS
 

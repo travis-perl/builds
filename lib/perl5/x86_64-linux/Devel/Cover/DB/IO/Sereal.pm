@@ -14,7 +14,7 @@ use Fcntl ":flock";
 use Sereal::Decoder;
 use Sereal::Encoder;
 
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.20'; # VERSION
 
 my $Decoder;
 my $Encoder;
@@ -64,7 +64,7 @@ Devel::Cover::DB::IO::Sereal - Sereal based IO routines for Devel::Cover::DB
 
 =head1 VERSION
 
-version 1.18
+version 1.20
 
 =head1 SYNOPSIS
 
