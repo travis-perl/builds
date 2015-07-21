@@ -1,4 +1,4 @@
-=head2 Tue Jul 21 17:16:56 2015: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Tue Jul 21 17:49:35 2015: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jul 21 17:16:57 2015: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Tue Jul 21 17:49:36 2015: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jul 21 17:16:58 2015: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Tue Jul 21 17:49:37 2015: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jul 21 17:16:59 2015: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Tue Jul 21 17:49:37 2015: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jul 21 17:17:00 2015: C<Module> L<Moo|Moo>
+=head2 Tue Jul 21 17:49:41 2015: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jul 21 17:17:01 2015: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Tue Jul 21 17:49:42 2015: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jul 21 17:17:02 2015: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Tue Jul 21 17:49:43 2015: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
