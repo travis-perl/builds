@@ -8,11 +8,34 @@
 #
 package Dist::Zilla::Role::Git::Repo;
 # ABSTRACT: Provide repository information for Git plugins
-$Dist::Zilla::Role::Git::Repo::VERSION = '2.034';
+$Dist::Zilla::Role::Git::Repo::VERSION = '2.036';
 
 use Moose::Role;
+use MooseX::Types::Moose qw(Str Maybe);
 
-has 'repo_root'   => ( is => 'ro', isa => 'Str', default => '.' );
+has 'repo_root'   => ( is => 'ro', isa => Str, default => '.' );
+
+
+has current_git_branch => (
+    is => 'ro',
+    isa => Maybe[Str],
+    lazy => 1,
+    builder => '_build_current_git_branch',
+    init_arg => undef,          # Not configurable
+);
+
+sub _build_current_git_branch
+{
+  my $self = shift;
+
+  # Git 1.7+ allows "rev-parse --abbrev-ref HEAD", but we want to support 1.5.4
+  my ($branch) = $self->git->RUN(qw(symbolic-ref -q HEAD));
+
+  no warnings 'uninitialized';
+  undef $branch unless $branch =~ s!^refs/heads/!!;
+
+  $branch;
+} # end _build_current_git_branch
 
 
 my %cached_wrapper;
@@ -54,7 +77,7 @@ Dist::Zilla::Role::Git::Repo - Provide repository information for Git plugins
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 DESCRIPTION
 
@@ -68,6 +91,14 @@ repository structure, and to create a Git::Wrapper object.
 The repository root, either as a full path or relative to the distribution root. Default is C<.>.
 
 =head1 METHODS
+
+=head2 current_git_branch
+
+  $branch = $plugin->current_git_branch;
+
+The current branch in the repository, or C<undef> if the repository
+has a detached HEAD.  Note: This value is cached; it will not
+be updated if the branch is changed during the run.
 
 =head2 git
 

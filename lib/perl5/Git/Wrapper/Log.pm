@@ -1,17 +1,17 @@
 package Git::Wrapper::Log;
 # ABSTRACT: Log line of the Git
-$Git::Wrapper::Log::VERSION = '0.044';
+$Git::Wrapper::Log::VERSION = '0.045';
 use 5.006;
 use strict;
 use warnings;
 
 sub new {
   my ($class, $id, %arg) = @_;
-  my $modifications = defined $arg{modifications} ? $arg{modifications} : [];
+  my $modifications = defined $arg{modifications} ? delete $arg{modifications} : [];
   return bless {
     id            => $id,
     attr          => {},
-    modifications => [],
+    modifications => $modifications,
     %arg,
   } => $class;
 }
@@ -48,7 +48,7 @@ Git::Wrapper::Log - Log line of the Git
 
 =head1 VERSION
 
-version 0.044
+version 0.045
 
 =head1 METHODS
 

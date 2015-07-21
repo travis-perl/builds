@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::UploadToCPAN;
 # ABSTRACT: upload the dist to CPAN
-$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.036';
+$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.037';
 use Moose;
 with qw(Dist::Zilla::Role::BeforeRelease Dist::Zilla::Role::Releaser);
 
@@ -33,6 +33,8 @@ use namespace::autoclean;
 #pod If neither configuration exists, it will prompt you to enter your
 #pod username and password during the BeforeRelease phase.  Entering a
 #pod blank username or password will abort the release.
+#pod
+#pod You can't put your password in your F<dist.ini>.  C'mon now!
 #pod
 #pod =cut
 
@@ -77,8 +79,9 @@ sub mvp_aliases {
 
 #pod =attr username
 #pod
-#pod This option supplies the user's PAUSE username.  If not supplied, it will be
-#pod looked for in the user's PAUSE configuration.
+#pod This option supplies the user's PAUSE username.
+#pod It will be looked for in the user's PAUSE configuration; if not
+#pod found, the user will be prompted.
 #pod
 #pod =cut
 
@@ -86,7 +89,6 @@ has username => (
   is   => 'ro',
   isa  => 'Str',
   lazy => 1,
-  required => 1,
   default  => sub {
     my ($self) = @_;
     return $self->_credential('username')
@@ -95,23 +97,34 @@ has username => (
   },
 );
 
+sub cpanid { shift->username }
+
 #pod =attr password
 #pod
-#pod This option supplies the user's PAUSE password.  If not supplied, it will be
-#pod looked for in the user's PAUSE configuration.
+#pod This option supplies the user's PAUSE password.  It cannot be provided via
+#pod F<dist.ini>.  It will be looked for in the user's PAUSE configuration; if not
+#pod found, the user will be prompted.
 #pod
 #pod =cut
 
 has password => (
   is   => 'ro',
   isa  => 'Str',
+  init_arg => undef,
   lazy => 1,
-  required => 1,
   default  => sub {
     my ($self) = @_;
-    return $self->_credential('password')
-        || $self->pause_cfg->{password}
-        || $self->zilla->chrome->prompt_str('PAUSE password: ', { noecho => 1 });
+    my $pw = $self->_credential('password') || $self->pause_cfg->{password};
+
+    unless ($pw){
+      my $uname = $self->username;
+      $pw = $self->zilla->chrome->prompt_str(
+        "PAUSE password for $uname: ",
+        { noecho => 1 },
+      );
+    }
+
+    return $pw;
   },
 );
 
@@ -261,7 +274,7 @@ Dist::Zilla::Plugin::UploadToCPAN - upload the dist to CPAN
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 SYNOPSIS
 
@@ -286,17 +299,21 @@ If neither configuration exists, it will prompt you to enter your
 username and password during the BeforeRelease phase.  Entering a
 blank username or password will abort the release.
 
+You can't put your password in your F<dist.ini>.  C'mon now!
+
 =head1 ATTRIBUTES
 
 =head2 username
 
-This option supplies the user's PAUSE username.  If not supplied, it will be
-looked for in the user's PAUSE configuration.
+This option supplies the user's PAUSE username.
+It will be looked for in the user's PAUSE configuration; if not
+found, the user will be prompted.
 
 =head2 password
 
-This option supplies the user's PAUSE password.  If not supplied, it will be
-looked for in the user's PAUSE configuration.
+This option supplies the user's PAUSE password.  It cannot be provided via
+F<dist.ini>.  It will be looked for in the user's PAUSE configuration; if not
+found, the user will be prompted.
 
 =head2 pause_cfg_file
 

@@ -1,14 +1,14 @@
 package Dist::Zilla::Plugin::MakeMaker;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.036';
+$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.037';
 use Moose;
 
 use namespace::autoclean;
 
 use Config;
 use CPAN::Meta::Requirements 2.121; # requirements_for_module
-use List::Util 'first';
-
+use List::Util 1.29 qw(first pairs pairgrep);
+use version;
 use Dist::Zilla::File::InMemory;
 use Dist::Zilla::Plugin::MakeMaker::Runner;
 
@@ -203,8 +203,21 @@ sub write_makefile_args {
     );
   };
 
-  my $build_prereq = $prereqs_dump->(qw(build requires));
-  my $test_prereq = $prereqs_dump->(qw(test requires));
+  my %require_prereqs = map {
+    $_ => $prereqs_dump->($_, 'requires');
+  } qw(configure build test runtime);
+
+  # EUMM may soon be able to support this, but until we decide to inject a
+  # higher configure-requires version, we should at least warn the user
+  # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/215
+  foreach my $phase (qw(configure build test runtime)) {
+    if (my @version_ranges = pairgrep { !version::is_lax($b) } %{ $require_prereqs{$phase} }) {
+      $self->log([
+        'found version range in %s prerequisites, which ExtUtils::MakeMaker cannot parse: %s %s',
+        $phase, $_->[0], $_->[1]
+      ]) foreach pairs @version_ranges;
+    }
+  }
 
   my %write_makefile_args = (
     DISTNAME  => $self->zilla->name,
@@ -215,10 +228,10 @@ sub write_makefile_args {
     LICENSE   => $self->zilla->license->meta_yml_name,
     EXE_FILES => [ @exe_files ],
 
-    CONFIGURE_REQUIRES => $prereqs_dump->(qw(configure requires)),
-    keys %$build_prereq ? ( BUILD_REQUIRES => $build_prereq ) : (),
-    keys %$test_prereq ? ( TEST_REQUIRES => $test_prereq ) : (),
-    PREREQ_PM          => $prereqs_dump->(qw(runtime   requires)),
+    CONFIGURE_REQUIRES => $require_prereqs{configure},
+    keys %{ $require_prereqs{build} } ? ( BUILD_REQUIRES => $require_prereqs{build} ) : (),
+    keys %{ $require_prereqs{test} } ? ( TEST_REQUIRES => $require_prereqs{test} ) : (),
+    PREREQ_PM          => $require_prereqs{runtime},
 
     test => { TESTS => join q{ }, sort keys %test_dirs },
   );
@@ -336,7 +349,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 DESCRIPTION
 

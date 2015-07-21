@@ -1,10 +1,12 @@
 use strict;
 use warnings;
 
-package namespace::autoclean; # git description: 0.23-2-g474266b
+package namespace::autoclean; # git description: 0.25-3-g42ee123
 # ABSTRACT: Keep imports out of your namespace
 # KEYWORDS: namespaces clean dirty imports exports subroutines methods development
-$namespace::autoclean::VERSION = '0.24';
+
+our $VERSION = '0.26';
+
 use B::Hooks::EndOfScope 0.12;
 use List::Util qw( first );
 use namespace::clean 0.20;
@@ -119,6 +121,9 @@ use namespace::clean 0.20;
 #pod   # Good, methods from role will be maintained
 #pod   with 'Some::Role';
 #pod
+#pod Additionally, method detection may not work properly in L<Mouse> classes in
+#pod perls earlier than 5.10.
+#pod
 #pod =head1 SEE ALSO
 #pod
 #pod =for :list
@@ -199,6 +204,7 @@ sub _method_check {
             my $code_stash = Sub::Identify::stash_name($coderef);
             return 1 if $code_stash eq $package;
             return 1 if $code_stash eq 'constant';
+            # TODO: consider if we really need this eval
             return 1 if $does && eval { $package->$does($code_stash) };
             return 0;
         };
@@ -219,7 +225,7 @@ namespace::autoclean - Keep imports out of your namespace
 
 =head1 VERSION
 
-version 0.24
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -331,6 +337,9 @@ work correctly for methods from roles consumed at compile time.
   # Good, methods from role will be maintained
   with 'Some::Role';
 
+Additionally, method detection may not work properly in L<Mouse> classes in
+perls earlier than 5.10.
+
 =head1 SEE ALSO
 
 =over 4
@@ -372,13 +381,6 @@ L<Dist::Zilla::Plugin::Test::CleanNamespaces>
 =head1 AUTHOR
 
 Florian Ragwitz <rafl@debian.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2009 by Florian Ragwitz.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
@@ -423,5 +425,12 @@ Chris Prather <cprather@hdpublishing.com>
 Andrew Rodland <andrew@hbslabs.com>
 
 =back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Florian Ragwitz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

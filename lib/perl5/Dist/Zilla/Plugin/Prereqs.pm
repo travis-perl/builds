@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Prereqs;
 # ABSTRACT: list simple prerequisites
-$Dist::Zilla::Plugin::Prereqs::VERSION = '5.036';
+$Dist::Zilla::Plugin::Prereqs::VERSION = '5.037';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
@@ -213,7 +213,7 @@ Dist::Zilla::Plugin::Prereqs - list simple prerequisites
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 SYNOPSIS
 

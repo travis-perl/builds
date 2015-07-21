@@ -11,7 +11,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::NextVersion;
 # ABSTRACT: provide a version number by bumping the last git release tag
-$Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.036';
 
 use Dist::Zilla 4 ();
 use version 0.80 ();
@@ -21,29 +21,30 @@ use namespace::autoclean 0.09;
 use Path::Tiny qw();
 use Try::Tiny;
 use Moose::Util::TypeConstraints;
+use MooseX::Types::Moose qw(Str RegexpRef Bool ArrayRef);
 
 use constant _cache_fn => '.gitnxtver_cache';
 
-with 'Dist::Zilla::Role::BeforeRelease';
-with 'Dist::Zilla::Role::AfterRelease';
-with 'Dist::Zilla::Role::FilePruner';
-with 'Dist::Zilla::Role::VersionProvider';
-with 'Dist::Zilla::Role::Git::Repo';
+with 'Dist::Zilla::Role::BeforeRelease',
+    'Dist::Zilla::Role::AfterRelease',
+    'Dist::Zilla::Role::FilePruner',
+    'Dist::Zilla::Role::VersionProvider',
+    'Dist::Zilla::Role::Git::Repo';
 
 # -- attributes
 
 use constant _CoercedRegexp => do {
-    my $tc = subtype as 'RegexpRef';
-    coerce $tc, from 'Str', via { qr/$_/ };
+    my $tc = subtype as RegexpRef;
+    coerce $tc, from Str, via { qr/$_/ };
     $tc;
 };
 
 has version_regexp  => ( is => 'ro', isa=> _CoercedRegexp, coerce => 1,
                          default => sub { qr/^v(.+)$/ } );
 
-has first_version  => ( is => 'ro', isa=>'Str', default => '0.001' );
+has first_version  => ( is => 'ro', isa=>Str, default => '0.001' );
 
-has version_by_branch  => ( is => 'ro', isa=>'Bool', default => 0 );
+has version_by_branch  => ( is => 'ro', isa=>Bool, default => 0 );
 
 sub _versions_from_tags {
   my ($regexp, $tags) = @_;
@@ -54,7 +55,7 @@ sub _versions_from_tags {
 } # end _versions_from_tags
 
 has _all_versions => (
-  is => 'ro',  isa=>'ArrayRef',  init_arg => undef,  lazy => 1,
+  is => 'ro',  isa=>ArrayRef,  init_arg => undef,  lazy => 1,
   default => sub {
     my $self = shift;
     my $v = _versions_from_tags($self->version_regexp, [ $self->git->tag ]);
@@ -129,7 +130,8 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        map { $_ => $self->$_ } qw(version_regexp first_version version_by_branch),
+        (map { $_ => $self->$_ } qw(version_regexp first_version)),
+        version_by_branch => $self->version_by_branch ? 1 : 0,
     };
 
     return $config;
@@ -202,7 +204,7 @@ Dist::Zilla::Plugin::Git::NextVersion - provide a version number by bumping the 
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 

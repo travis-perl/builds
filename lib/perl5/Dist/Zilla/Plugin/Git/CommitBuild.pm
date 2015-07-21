@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::CommitBuild;
 # ABSTRACT: checkin build results on separate branch
-$Dist::Zilla::Plugin::Git::CommitBuild::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::CommitBuild::VERSION = '2.036';
 
 use Git::Wrapper 0.021 ();      # need -STDIN
 use IPC::Open3;
@@ -25,7 +25,7 @@ use namespace::autoclean;
 use Path::Tiny qw();
 use MooseX::Types::Path::Tiny qw( Path );
 use MooseX::Has::Sugar;
-use MooseX::Types::Moose qw{ Str };
+use MooseX::Types::Moose qw{ Str Bool };
 use Cwd qw(abs_path);
 use Try::Tiny;
 
@@ -51,8 +51,9 @@ use String::Formatter (
 # debugging...
 #use Smart::Comments '###';
 
-with 'Dist::Zilla::Role::AfterBuild', 'Dist::Zilla::Role::AfterRelease';
-with 'Dist::Zilla::Role::Git::Repo';
+with 'Dist::Zilla::Role::AfterBuild',
+    'Dist::Zilla::Role::AfterRelease',
+    'Dist::Zilla::Role::Git::Repo';
 
 # -- attributes
 
@@ -64,7 +65,7 @@ has build_root => ( rw, coerce => 1, isa => Path );
 
 has _source_branch => (
     is      => 'ro',
-    isa     => 'Str',
+    isa     => Str,
     lazy    => 1,
     init_arg=> undef,
     default => sub {
@@ -74,7 +75,7 @@ has _source_branch => (
 
 has multiple_inheritance => (
     is      => 'ro',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 0,
 );
 
@@ -92,8 +93,9 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        map { $_ => $self->$_ }
-            qw(branch release_branch message release_message build_root multiple_inheritance),
+        (map { $_ => $self->$_ }
+            qw(branch release_branch message release_message build_root)),
+        multiple_inheritance => $self->multiple_inheritance ? 1 : 0,
     };
 
     return $config;
@@ -208,7 +210,7 @@ Dist::Zilla::Plugin::Git::CommitBuild - checkin build results on separate branch
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 

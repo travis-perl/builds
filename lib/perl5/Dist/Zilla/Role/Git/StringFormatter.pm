@@ -8,7 +8,7 @@
 #
 package Dist::Zilla::Role::Git::StringFormatter;
 # ABSTRACT: Provide a String::Formatter for commit messages
-$Dist::Zilla::Role::Git::StringFormatter::VERSION = '2.034';
+$Dist::Zilla::Role::Git::StringFormatter::VERSION = '2.036';
 
 use 5.008;
 use strict;
@@ -40,6 +40,19 @@ use String::Formatter method_stringf => {
 
 
 has time_zone => ( ro, isa=>Str, default => 'local' );
+
+around dump_config => sub
+{
+    my $orig = shift;
+    my $self = shift;
+
+    my $config = $self->$orig;
+    $config->{+__PACKAGE__} = {
+        time_zone => $self->time_zone,
+    };
+
+    return $config;
+};
 
 # -- private methods
 
@@ -97,7 +110,7 @@ Dist::Zilla::Role::Git::StringFormatter - Provide a String::Formatter for commit
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 DESCRIPTION
 

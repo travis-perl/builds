@@ -1,5 +1,5 @@
 package File::Slurp::Tiny;
-$File::Slurp::Tiny::VERSION = '0.003';
+$File::Slurp::Tiny::VERSION = '0.004';
 use strict;
 use warnings;
 
@@ -60,7 +60,7 @@ sub write_file {
 sub read_dir {
 	my ($dirname, %options) = @_;
 	opendir my ($dir), $dirname or croak "Could not open $dirname: $!";
-	my @ret = grep { not m/ ^ \.\.? $ /x } readdir $dir;
+	my @ret = grep { not m/ \A \.\.? \z /x } readdir $dir;
 	@ret = map { catfile($dirname, $_) } @ret if $options{prefix};
 	closedir $dir;
 	return @ret;
@@ -68,7 +68,7 @@ sub read_dir {
 
 1;
 
-# ABSTRACT: A simple, sane and efficient file slurper
+# ABSTRACT: A simple, sane and efficient file slurper [DISCOURAGED]
 
 __END__
 
@@ -78,16 +78,22 @@ __END__
 
 =head1 NAME
 
-File::Slurp::Tiny - A simple, sane and efficient file slurper
+File::Slurp::Tiny - A simple, sane and efficient file slurper [DISCOURAGED]
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
  use File::Slurp::Tiny 'read_file';
  my $content = read_file($filename);
+
+=head1 DISCOURAGED
+
+B<This module is discouraged in favor of L<File::Slurper|File::Slurper>>. While a useful experiment, it turned out to be both too similar to File::Slurp (still containing most problematic features of File::Slurp's interface) and yet not similar enough to be a true drop-in replacement.
+
+Bugs will still be fixed, but new features will probably not be added.
 
 =head1 DESCRIPTION
 

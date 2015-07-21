@@ -12,23 +12,22 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Check;
 # ABSTRACT: check your git repository before releasing
-$Dist::Zilla::Plugin::Git::Check::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::Check::VERSION = '2.036';
 
 use Moose;
 use namespace::autoclean 0.09;
 use Moose::Util::TypeConstraints qw(enum);
+use MooseX::Types::Moose qw(Bool);
 
-use constant _DieWarnIgnore => do { enum [qw[ die warn ignore ]] };
+with 'Dist::Zilla::Role::AfterBuild',
+    'Dist::Zilla::Role::BeforeRelease',
+    'Dist::Zilla::Role::Git::Repo';
+with 'Dist::Zilla::Role::Git::DirtyFiles',
+    'Dist::Zilla::Role::GitConfig';
 
-with 'Dist::Zilla::Role::AfterBuild';
-with 'Dist::Zilla::Role::BeforeRelease';
-with 'Dist::Zilla::Role::Git::Repo';
-with 'Dist::Zilla::Role::Git::DirtyFiles';
-with 'Dist::Zilla::Role::GitConfig';
+has build_warnings => ( is=>'ro', isa => Bool, default => 0 );
 
-has build_warnings => ( is=>'ro', isa => 'Bool', default => 0 );
-
-has untracked_files => ( is=>'ro', isa => _DieWarnIgnore, default => 'die' );
+has untracked_files => ( is=>'ro', isa => enum([qw(die warn ignore)]), default => 'die' );
 
 sub _git_config_mapping { +{
    changelog => '%{changelog}s',
@@ -44,6 +43,7 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
+        # build_warnings does not affect the build outcome; do not need to track it
         untracked_files => $self->untracked_files,
     };
 
@@ -137,7 +137,7 @@ Dist::Zilla::Plugin::Git::Check - check your git repository before releasing
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 

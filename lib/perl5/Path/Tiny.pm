@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.068';
+our $VERSION = '0.072'; # from Path-Tiny-0.072.tar.gz
 
 # Dependencies
 use Config;
@@ -314,7 +314,7 @@ sub rootdir { path( File::Spec->rootdir ) }
 #pod     $temp = Path::Tiny->tempfile( "customXXXXXXXX" );             # ok
 #pod     $temp = Path::Tiny->tempfile( TEMPLATE => "customXXXXXXXX" ); # ok
 #pod
-#pod The tempfile path object will normalized to have an absolute path, even if
+#pod The tempfile path object will be normalized to have an absolute path, even if
 #pod created in a relative directory using C<DIR>.
 #pod
 #pod C<tempdir> is just like C<tempfile>, except it calls
@@ -324,7 +324,7 @@ sub rootdir { path( File::Spec->rootdir ) }
 #pod functions instead of as methods.
 #pod
 #pod B<Note>: for tempfiles, the filehandles from File::Temp are closed and not
-#pod reused.  This is not as secure than using File::Temp handles directly, but is
+#pod reused.  This is not as secure as using File::Temp handles directly, but is
 #pod less prone to deadlocks or access problems on some platforms.  Think of what
 #pod C<Path::Tiny> gives you to be just a temporary file B<name> that gets cleaned
 #pod up.
@@ -670,9 +670,11 @@ sub chmod {
 #pod
 #pod     path("/tmp/foo.txt")->copy("/tmp/bar.txt");
 #pod
-#pod Copies a file using L<File::Copy>'s C<copy> function.
+#pod Copies a file using L<File::Copy>'s C<copy> function. Upon
+#pod success, returns the C<Path::Tiny> object for the newly copied
+#pod file.
 #pod
-#pod Current API available since 0.001.
+#pod Current API available since 0.070.
 #pod
 #pod =cut
 
@@ -682,6 +684,8 @@ sub copy {
     require File::Copy;
     File::Copy::copy( $self->[PATH], $dest )
       or Carp::croak("copy failed for $self to $dest: $!");
+
+    return -d $dest ? path( $dest, $self->basename ) : path($dest);
 }
 
 #pod =method digest
@@ -1108,7 +1112,7 @@ sub mkpath {
     my ( $self, $args ) = @_;
     $args = {} unless ref $args eq 'HASH';
     my $err;
-    $args->{err} = \$err unless defined $args->{err};
+    $args->{error} = \$err unless defined $args->{error};
     require File::Path;
     my @dirs = File::Path::make_path( $self->[PATH], $args );
     if ( $err && @$err ) {
@@ -1365,8 +1369,8 @@ sub remove_tree {
     return 0 if !-e $self->[PATH] && !-l $self->[PATH];
     $args = {} unless ref $args eq 'HASH';
     my $err;
-    $args->{err}  = \$err unless defined $args->{err};
-    $args->{safe} = 1     unless defined $args->{safe};
+    $args->{error} = \$err unless defined $args->{error};
+    $args->{safe}  = 1     unless defined $args->{safe};
     require File::Path;
     my $count = File::Path::remove_tree( $self->[PATH], $args );
 
@@ -1684,7 +1688,7 @@ sub touchpath {
 #pod         sub {
 #pod             my ($path, $state) = @_;
 #pod             return if $path->is_dir;
-#pod             $state{$path} = -s $path;
+#pod             $state->{$path} = -s $path;
 #pod         },
 #pod         { recurse => 1 }
 #pod     );
@@ -1703,7 +1707,7 @@ sub touchpath {
 #pod     my $files = path("/tmp")->visit(
 #pod         sub {
 #pod             my ($path, $state) = @_;
-#pod             $state{$path}++ if -s $path > 102400
+#pod             $state->{$path}++ if -s $path > 102400
 #pod             return \0 if keys %$state == 10;
 #pod         },
 #pod         { recurse => 1 }
@@ -1726,7 +1730,7 @@ sub visit {
     while ( my $file = $next->() ) {
         local $_ = $file;
         my $r = $cb->( $file, $state );
-        last if ref($r) && !$$r;
+        last if ref($r) eq 'SCALAR' && !$$r;
     }
     return $state;
 }
@@ -1781,7 +1785,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.068
+version 0.072
 
 =head1 SYNOPSIS
 
@@ -1946,7 +1950,7 @@ C<TEMPLATE> option and does the right thing.
     $temp = Path::Tiny->tempfile( "customXXXXXXXX" );             # ok
     $temp = Path::Tiny->tempfile( TEMPLATE => "customXXXXXXXX" ); # ok
 
-The tempfile path object will normalized to have an absolute path, even if
+The tempfile path object will be normalized to have an absolute path, even if
 created in a relative directory using C<DIR>.
 
 C<tempdir> is just like C<tempfile>, except it calls
@@ -1956,7 +1960,7 @@ Both C<tempfile> and C<tempdir> may be exported on request and used as
 functions instead of as methods.
 
 B<Note>: for tempfiles, the filehandles from File::Temp are closed and not
-reused.  This is not as secure than using File::Temp handles directly, but is
+reused.  This is not as secure as using File::Temp handles directly, but is
 less prone to deadlocks or access problems on some platforms.  Think of what
 C<Path::Tiny> gives you to be just a temporary file B<name> that gets cleaned
 up.
@@ -2109,9 +2113,11 @@ Current API available since 0.053.
 
     path("/tmp/foo.txt")->copy("/tmp/bar.txt");
 
-Copies a file using L<File::Copy>'s C<copy> function.
+Copies a file using L<File::Copy>'s C<copy> function. Upon
+success, returns the C<Path::Tiny> object for the newly copied
+file.
 
-Current API available since 0.001.
+Current API available since 0.070.
 
 =head2 digest
 
@@ -2570,7 +2576,7 @@ and a hash reference to accumulate state as the second argument.  For example:
         sub {
             my ($path, $state) = @_;
             return if $path->is_dir;
-            $state{$path} = -s $path;
+            $state->{$path} = -s $path;
         },
         { recurse => 1 }
     );
@@ -2589,7 +2595,7 @@ stops all iteration and returns the state hash reference.
     my $files = path("/tmp")->visit(
         sub {
             my ($path, $state) = @_;
-            $state{$path}++ if -s $path > 102400
+            $state->{$path}++ if -s $path > 102400
             return \0 if keys %$state == 10;
         },
         { recurse => 1 }
@@ -2782,7 +2788,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Efros Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt Karen Etheridge Martin Kjeldsen Michael G. Schwern regina-verbae Smylers Toby Inkster 김도형 - Keedi Kim
+=for stopwords Alex Efros Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt Karen Etheridge Martin Kjeldsen Michael G. Schwern Philippe Bruhat (BooK) Regina Verbae regina-verbae Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
 
 =over 4
 
@@ -2844,6 +2850,14 @@ Michael G. Schwern <mschwern@cpan.org>
 
 =item *
 
+Philippe Bruhat (BooK) <book@cpan.org>
+
+=item *
+
+Regina Verbae <regina-verbae@users.noreply.github.com>
+
+=item *
+
 regina-verbae <regina-verbae@users.noreply.github.com>
 
 =item *
@@ -2852,7 +2866,15 @@ Smylers <Smylers@stripey.com>
 
 =item *
 
+Tatsuhiko Miyagawa <miyagawa@bulknews.net>
+
+=item *
+
 Toby Inkster <tobyink@cpan.org>
+
+=item *
+
+Yanick Champoux <yanick@babyl.dyndns.org>
 
 =item *
 

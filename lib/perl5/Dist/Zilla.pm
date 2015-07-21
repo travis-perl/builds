@@ -1,6 +1,6 @@
 package Dist::Zilla;
 # ABSTRACT: distribution builder; installer not included!
-$Dist::Zilla::VERSION = '5.036';
+$Dist::Zilla::VERSION = '5.037';
 use Moose 0.92; # role composition fixes
 with 'Dist::Zilla::Role::ConfigDumper';
 
@@ -651,7 +651,7 @@ sub plugin_named {
 #pod   my $roles = $zilla->plugins_with( -SomeRole );
 #pod
 #pod This method returns an arrayref containing all the Dist::Zilla object's plugins
-#pod that perform a the named role.  If the given role name begins with a dash, the
+#pod that perform the named role.  If the given role name begins with a dash, the
 #pod dash is replaced with "Dist::Zilla::Role::"
 #pod
 #pod =cut
@@ -869,7 +869,7 @@ Dist::Zilla - distribution builder; installer not included!
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 DESCRIPTION
 
@@ -1039,7 +1039,7 @@ log_fatal
   my $roles = $zilla->plugins_with( -SomeRole );
 
 This method returns an arrayref containing all the Dist::Zilla object's plugins
-that perform a the named role.  If the given role name begins with a dash, the
+that perform the named role.  If the given role name begins with a dash, the
 dash is replaced with "Dist::Zilla::Role::"
 
 =head2 find_files
@@ -1123,7 +1123,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Cory G Watson csjewell Curtis Brandt Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David Golden Steinbrunner Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Mike Doherty Moritz Onken Neil Bowers Nickolay Platonov nperez Olivier Mengué Pedro Melo Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
+=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Cory G Watson csjewell Curtis Brandt Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David Golden H. Adler Steinbrunner Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Mike Doherty Moritz Onken Neil Bowers Nickolay Platonov nperez Olivier Mengué Pedro Melo Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
 
 =over 4
 
@@ -1213,6 +1213,10 @@ David Golden <dagolden@cpan.org>
 
 =item *
 
+David H. Adler <dha@pobox.com>
+
+=item *
+
 David Steinbrunner <dsteinbrunner@pobox.com>
 
 =item *
@@ -1258,6 +1262,10 @@ Graham Barr <gbarr@pobox.com>
 =item *
 
 Graham Knop <haarg@haarg.org>
+
+=item *
+
+Graham Ollis <plicease@cpan.org>
 
 =item *
 

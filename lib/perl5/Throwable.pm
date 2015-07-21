@@ -1,6 +1,6 @@
 package Throwable;
 # ABSTRACT: a role for classes that can be thrown
-$Throwable::VERSION = '0.200012';
+$Throwable::VERSION = '0.200013';
 use Moo::Role;
 use Sub::Quote ();
 use Scalar::Util ();
@@ -9,6 +9,7 @@ use Carp ();
 #pod =head1 SYNOPSIS
 #pod
 #pod   package Redirect;
+#pod   # NOTE: Moo can also be used here instead of Moose
 #pod   use Moose;
 #pod   with 'Throwable';
 #pod
@@ -24,7 +25,7 @@ use Carp ();
 #pod standard program flow.  It is very simple and does only two things: saves any
 #pod previous value for C<$@> and calls C<die $self>.
 #pod
-#pod Throwable is implemented with L<Moo>, so you can stick to Moo or use L<Moose>
+#pod Throwable is implemented with L<Moo>, so you can stick to Moo or use L<Moose>,
 #pod as you prefer.
 #pod
 #pod =attr previous_exception
@@ -90,11 +91,12 @@ Throwable - a role for classes that can be thrown
 
 =head1 VERSION
 
-version 0.200012
+version 0.200013
 
 =head1 SYNOPSIS
 
   package Redirect;
+  # NOTE: Moo can also be used here instead of Moose
   use Moose;
   with 'Throwable';
 
@@ -110,7 +112,7 @@ Throwable is a role for classes that are meant to be thrown as exceptions to
 standard program flow.  It is very simple and does only two things: saves any
 previous value for C<$@> and calls C<die $self>.
 
-Throwable is implemented with L<Moo>, so you can stick to Moo or use L<Moose>
+Throwable is implemented with L<Moo>, so you can stick to Moo or use L<Moose>,
 as you prefer.
 
 =head1 ATTRIBUTES
@@ -147,9 +149,65 @@ Florian Ragwitz <rafl@debian.org>
 
 =back
 
+=head1 CONTRIBUTORS
+
+=for stopwords Arthur Axel 'fREW' Schmidt Brian Manning Dagfinn Ilmari Mannsåker Dave Rolsky David E. Wheeler Graham Knop Jeffrey Ryan Thalhammer Justin Hunter Matt S Trout Olaf Alders Toby Inkster
+
+=over 4
+
+=item *
+
+Arthur Axel 'fREW' Schmidt <frioux@gmail.com>
+
+=item *
+
+Brian Manning <brian@xaoc.org>
+
+=item *
+
+Brian Manning <xaoc@cpan.org>
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+David E. Wheeler <david@justatheory.com>
+
+=item *
+
+Graham Knop <haarg@haarg.org>
+
+=item *
+
+Jeffrey Ryan Thalhammer <jeff@imaginative-software.com>
+
+=item *
+
+Justin Hunter <justin.d.hunter@gmail.com>
+
+=item *
+
+Matt S Trout <mst@shadowcat.co.uk>
+
+=item *
+
+Olaf Alders <olaf@wundersolutions.com>
+
+=item *
+
+Toby Inkster <mail@tobyinkster.co.uk>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,12 +1,13 @@
 package Throwable::Error;
 # ABSTRACT: an easy-to-use class for error objects
-$Throwable::Error::VERSION = '0.200012';
+$Throwable::Error::VERSION = '0.200013';
 use Moo 1.000001;
 with 'Throwable', 'StackTrace::Auto';
 
 #pod =head1 SYNOPSIS
 #pod
 #pod   package MyApp::Error;
+#pod   # NOTE: Moo can also be used here instead of Moose
 #pod   use Moose;
 #pod   extends 'Throwable::Error';
 #pod
@@ -32,7 +33,7 @@ with 'Throwable', 'StackTrace::Auto';
 #pod Throwable::Error is a base class for exceptions that will be thrown to signal
 #pod errors and abort normal program flow.  Throwable::Error is an alternative to
 #pod L<Exception::Class|Exception::Class>, the features of which are largely
-#pod provided by the Moose object system atop which Throwable::Error is built.
+#pod provided by the Moo object system atop which Throwable::Error is built.
 #pod
 #pod Throwable::Error performs the L<Throwable|Throwable> and L<StackTrace::Auto>
 #pod roles.  That means you can call C<throw> on it to create and throw an error
@@ -113,11 +114,12 @@ Throwable::Error - an easy-to-use class for error objects
 
 =head1 VERSION
 
-version 0.200012
+version 0.200013
 
 =head1 SYNOPSIS
 
   package MyApp::Error;
+  # NOTE: Moo can also be used here instead of Moose
   use Moose;
   extends 'Throwable::Error';
 
@@ -143,7 +145,7 @@ version 0.200012
 Throwable::Error is a base class for exceptions that will be thrown to signal
 errors and abort normal program flow.  Throwable::Error is an alternative to
 L<Exception::Class|Exception::Class>, the features of which are largely
-provided by the Moose object system atop which Throwable::Error is built.
+provided by the Moo object system atop which Throwable::Error is built.
 
 Throwable::Error performs the L<Throwable|Throwable> and L<StackTrace::Auto>
 roles.  That means you can call C<throw> on it to create and throw an error
@@ -188,7 +190,7 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

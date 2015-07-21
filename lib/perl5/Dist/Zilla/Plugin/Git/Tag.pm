@@ -12,11 +12,11 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Tag;
 # ABSTRACT: tag the new version
-$Dist::Zilla::Plugin::Git::Tag::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::Tag::VERSION = '2.036';
 
 use Moose;
 use MooseX::Has::Sugar;
-use MooseX::Types::Moose qw{ Str };
+use MooseX::Types::Moose qw{ Str Bool};
 
 sub _git_config_mapping { +{
    changelog => '%{changelog}s',
@@ -28,12 +28,12 @@ has tag_format  => ( ro, isa=>Str, default => 'v%v' );
 has tag_message => ( ro, isa=>Str, default => 'v%v' );
 has changelog   => ( ro, isa=>Str, default => 'Changes' );
 has branch => ( ro, isa=>Str, predicate=>'has_branch' );
-has signed => ( ro, isa=>'Bool', default=>0 );
+has signed => ( ro, isa=>Bool, default=>0 );
 
-with 'Dist::Zilla::Role::BeforeRelease';
-with 'Dist::Zilla::Role::AfterRelease';
+with 'Dist::Zilla::Role::BeforeRelease',
+    'Dist::Zilla::Role::AfterRelease',
+    'Dist::Zilla::Role::Git::Repo';
 with 'Dist::Zilla::Role::Git::StringFormatter';
-with 'Dist::Zilla::Role::Git::Repo';
 with 'Dist::Zilla::Role::GitConfig';
 
 
@@ -56,7 +56,8 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        map { $_ => $self->$_ } qw(tag_format tag_message time_zone branch signed tag),
+        (map { $_ => $self->$_ } qw(tag_format tag_message changelog branch tag)),
+        signed => $self->signed ? 1 : 0,
     };
 
     return $config;
@@ -102,7 +103,7 @@ Dist::Zilla::Plugin::Git::Tag - tag the new version
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 
