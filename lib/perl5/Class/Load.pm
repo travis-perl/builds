@@ -1,22 +1,16 @@
 use strict;
 use warnings;
-package Class::Load;
-# git description: v0.21-14-g8465ff7
-$Class::Load::VERSION = '0.22';
+package Class::Load; # git description: v0.22-9-g29ebb54
 # ABSTRACT: A working (require "Class::Name") and more
 # KEYWORDS: class module load require use runtime
 
+our $VERSION = '0.23';
+
 use base 'Exporter';
-use Data::OptList 'mkopt';
+use Data::OptList ();
 use Module::Implementation 0.04;
-use Module::Runtime 0.012 qw(
-    check_module_name
-    module_notional_filename
-    require_module
-    use_module
-);
+use Module::Runtime 0.012 ();
 use Try::Tiny;
-use namespace::clean;
 
 {
     my $loader = Module::Implementation::build_loader_sub(
@@ -49,7 +43,7 @@ sub load_first_existing_class {
         or return;
 
     foreach my $class (@{$classes}) {
-        check_module_name($class->[0]);
+        Module::Runtime::check_module_name($class->[0]);
     }
 
     for my $class (@{$classes}) {
@@ -63,7 +57,7 @@ sub load_first_existing_class {
 
         return $name if $res;
 
-        my $file = module_notional_filename($name);
+        my $file = Module::Runtime::module_notional_filename($name);
 
         next if $e =~ /^Can't locate \Q$file\E in \@INC/;
         next
@@ -98,7 +92,7 @@ sub _version_fail_re {
 sub _nonexistent_fail_re {
     my $name = shift;
 
-    my $file = module_notional_filename($name);
+    my $file = Module::Runtime::module_notional_filename($name);
     return qr/Can't locate \Q$file\E in \@INC/;
 }
 
@@ -119,7 +113,7 @@ sub load_optional_class {
     my $class   = shift;
     my $options = shift;
 
-    check_module_name($class);
+    Module::Runtime::check_module_name($class);
 
     my ($res, $e) = try_load_class($class, $options);
     return 1 if $res;
@@ -139,7 +133,7 @@ sub try_load_class {
     my $class   = shift;
     my $options = shift;
 
-    check_module_name($class);
+    Module::Runtime::check_module_name($class);
 
     local $@;
     undef $ERROR;
@@ -158,7 +152,7 @@ sub try_load_class {
         };
     }
 
-    my $file = module_notional_filename($class);
+    my $file = Module::Runtime::module_notional_filename($class);
     # This says "our diagnostics of the package
     # say perl's INC status about the file being loaded are
     # wrong", so we delete it from %INC, so when we call require(),
@@ -174,10 +168,10 @@ sub try_load_class {
     return try {
         local $SIG{__DIE__} = 'DEFAULT';
         if ($options && defined $options->{-version}) {
-            use_module($class, $options->{-version});
+            Module::Runtime::use_module($class, $options->{-version});
         }
         else {
-            require_module($class);
+            Module::Runtime::require_module($class);
         }
         1;
     }
@@ -217,7 +211,7 @@ Class::Load - A working (require "Class::Name") and more
 
 =head1 VERSION
 
-version 0.22
+version 0.23
 
 =head1 SYNOPSIS
 
@@ -365,13 +359,6 @@ A leaner approach to loading modules
 
 Shawn M Moore <sartak at bestpractical.com>
 
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2008 by Shawn M Moore.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =head1 CONTRIBUTORS
 
 =for stopwords Dave Rolsky Shawn Moore Karen Etheridge M Jesse Luehrs Kent Fredric Caleb Cushing
@@ -407,5 +394,12 @@ Kent Fredric <kentfredric@gmail.com>
 Caleb Cushing <xenoterracide@gmail.com>
 
 =back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2008 by Shawn M Moore.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

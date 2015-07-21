@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.16
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.17
 
 use Dist::CheckConflicts
     -dist      => 'Log::Dispatch',
@@ -22,8 +22,6 @@ use Dist::CheckConflicts
         Sys::Syslog
         base
         strict
-        threads
-        threads::shared
         warnings
     ) ],
 

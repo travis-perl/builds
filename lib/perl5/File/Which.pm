@@ -1,25 +1,22 @@
 package File::Which;
 
-use 5.008001;
 use strict;
 use warnings;
 use Exporter   ();
 use File::Spec ();
 
 # ABSTRACT: Perl implementation of the which utility as an API
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.19'; # VERSION
 
 
 our @ISA       = 'Exporter';
 our @EXPORT    = 'which';
 our @EXPORT_OK = 'where';
 
-use constant {
-  IS_VMS => ($^O eq 'VMS'),
-  IS_MAC => ($^O eq 'MacOS'),
-  IS_DOS => ($^O eq 'MSWin32' or $^O eq 'dos' or $^O eq 'os2'),
-  IS_CYG => ($^O eq 'cygwin'),
-};
+use constant IS_VMS => ($^O eq 'VMS');
+use constant IS_MAC => ($^O eq 'MacOS');
+use constant IS_DOS => ($^O eq 'MSWin32' or $^O eq 'dos' or $^O eq 'os2');
+use constant IS_CYG => ($^O eq 'cygwin');
 
 # For Win32 systems, stores the extensions used for
 # executable files
@@ -148,7 +145,7 @@ File::Which - Perl implementation of the which utility as an API
 
 =head1 VERSION
 
-version 1.18
+version 1.19
 
 =head1 SYNOPSIS
 
@@ -269,6 +266,13 @@ matching C<$short_exe_name>.
 
 =head1 CAVEATS
 
+This module has no non-core requirements for Perl 5.6.2 and better.
+
+This module is fully supported back to Perl 5.8.1.  It may work on 5.8.0.  
+It should work on Perl 5.6.x and I may even test on 5.6.2.  I will accept
+patches to maintain compatibility for such older Perls, but you may
+need to fix it on 5.6.x / 5.8.0 and send me a patch.
+
 Not tested on VMS although there is platform specific code
 for those. Anyone who haves a second would be very kind to send me a
 report of how it went.
@@ -302,8 +306,6 @@ This module purports to "check that a command is available", but does not
 provide any documentation on how you might use it.
 
 =back
-
-=cut
 
 =head1 AUTHORS
 

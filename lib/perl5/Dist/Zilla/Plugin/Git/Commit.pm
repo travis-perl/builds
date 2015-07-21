@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Commit;
 # ABSTRACT: commit dirty files
-$Dist::Zilla::Plugin::Git::Commit::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::Commit::VERSION = '2.036';
 
 use namespace::autoclean;
 use File::Temp           qw{ tempfile };
@@ -23,8 +23,8 @@ use MooseX::Types::Path::Tiny 0.010 qw{ Paths };
 use Path::Tiny 0.048 qw(); # subsumes
 use Cwd;
 
-with 'Dist::Zilla::Role::AfterRelease';
-with 'Dist::Zilla::Role::Git::Repo';
+with 'Dist::Zilla::Role::AfterRelease',
+    'Dist::Zilla::Role::Git::Repo';
 with 'Dist::Zilla::Role::Git::DirtyFiles';
 with 'Dist::Zilla::Role::Git::StringFormatter';
 with 'Dist::Zilla::Role::GitConfig';
@@ -51,7 +51,8 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        map { $_ => $self->$_ } qw(commit_msg time_zone add_files_in),
+        commit_msg => $self->commit_msg,
+        add_files_in => [ sort @{ $self->add_files_in } ],
     };
 
     return $config;
@@ -119,7 +120,7 @@ Dist::Zilla::Plugin::Git::Commit - commit dirty files
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 

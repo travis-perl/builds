@@ -6,14 +6,14 @@ use strict;
 use warnings;
 use warnings::register;
 
-our $VERSION = '1.19';
+our $VERSION = '1.20';
 
 use Carp;
 use DateTime::Duration;
 use DateTime::Helpers;
 use DateTime::Locale 0.41;
 use DateTime::TimeZone 1.74;
-use Params::Validate 0.76
+use Params::Validate 1.03
     qw( validate validate_pos UNDEF SCALAR BOOLEAN HASHREF OBJECT );
 use POSIX qw(floor);
 use Try::Tiny;
@@ -2151,7 +2151,7 @@ DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 

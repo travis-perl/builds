@@ -4,7 +4,7 @@ use warnings;
 
 package Git::Wrapper;
 #ABSTRACT: Wrap git(7) command-line interface
-$Git::Wrapper::VERSION = '0.044';
+$Git::Wrapper::VERSION = '0.045';
 our $DEBUG=0;
 
 # Prevent ANSI color with extreme prejudice
@@ -179,6 +179,7 @@ sub log {
   my $opt  = ref $_[0] eq 'HASH' ? shift : {};
   $opt->{no_color}         = 1;
   $opt->{pretty}           = 'medium';
+  $opt->{no_abbrev}        = 1;  # https://github.com/genehack/Git-Wrapper/issues/67
 
   $opt->{no_abbrev_commit} = 1
     if $self->supports_log_no_abbrev_commit;
@@ -219,7 +220,9 @@ sub log {
     if ($raw) {
       my @modifications;
 
-      while(@out and $out[0] =~ m/^\:(\d{6}) (\d{6}) (\w{7})\.\.\. (\w{7})\.\.\. (\w{1})\t(.*)$/) {
+      # example output:
+      # :000000 100644 0000000000000000000000000000000000000000 ce013625030ba8dba906f756967f9e9ca394464a A     foo/bar
+      while(@out and $out[0] =~ m/^\:(\d{6}) (\d{6}) (\w{40}) (\w{40}) (\w{1})\t(.*)$/) {
         push @modifications, Git::Wrapper::File::RawModification->new($6,$5,$1,$2,$3,$4);
         shift @out;
       }
@@ -227,6 +230,9 @@ sub log {
     }
 
     push @logs, $current;
+
+    last unless @out; # handle running out of log
+    shift @out unless $out[0] =~ /^commit/;  # blank line at end of entry, except merge commits;
   }
 
   return @logs;
@@ -396,7 +402,7 @@ Git::Wrapper - Wrap git(7) command-line interface
 
 =head1 VERSION
 
-version 0.044
+version 0.045
 
 =head1 SYNOPSIS
 
@@ -542,7 +548,9 @@ L<Git::Wrapper>.
 
 =head3 Using C<eval>
 
-If for some reason you are unable to use L<Try::Tiny>, it is also possible to use the C<eval> function to catch exception objects. B<THIS IS NOT RECOMMENDED!>
+If for some reason you are unable to use L<Try::Tiny>, it is also possible to
+use the C<eval> function to catch exception objects. B<THIS IS NOT
+RECOMMENDED!>
 
   my $git = Git::Wrapper->new('/path/to/my/repo');
 
@@ -603,7 +611,7 @@ you want ANSI color highlighting, you'll need to bypass via the RUN() method
 Instead of giving back an arrayref of lines, the C<log> method returns a list
 of C<Git::Wrapper::Log> objects.
 
-There are four methods in a C<Git::Wrapper::Log> objects:
+There are five methods in a C<Git::Wrapper::Log> objects:
 
 =over
 
@@ -615,7 +623,33 @@ There are four methods in a C<Git::Wrapper::Log> objects:
 
 =item * message
 
+=item * modifications
+
+Only populated with when C<< raw => 1 >> option is set; see L<Raw logs> below.
+
 =back
+
+=head3 Raw logs
+
+Calling the C<log> method with the C<< raw => 1 >> option set, as below, will
+do additional parsing to populate the C<modifications> attribute on each
+C<Git::Wrapper::Log> object. This method returns a list of
+C<Git::Wrapper::File::RawModification> objects, with can be used to get
+filenames, permissions, and other metadata associated with individual files in
+the given commit. A short example, to loop over all commits in the log and
+print the filenames that were changed in each commit, one filename per file:
+
+    my @logs = $git->log({ raw => 1 });
+    foreach my $log ( @logs ) {
+        say "In commit '" . $log->id . "', the following files changed:";
+        my @mods = $log->modifications;
+        foreach my $mod ( @mods ) {
+            say "\t" . $mod->filename;
+        }
+    }
+
+Note that some commits (e.g., merge commits) will not contain any file
+changes. The C<modifications> method will return an empty list in that case.
 
 =head3 Custom log formats
 

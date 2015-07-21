@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::NextRelease;
 # ABSTRACT: update the next release number in your changelog
-$Dist::Zilla::Plugin::NextRelease::VERSION = '5.036';
+$Dist::Zilla::Plugin::NextRelease::VERSION = '5.037';
 use namespace::autoclean;
 
 use Moose;
@@ -12,6 +12,7 @@ with (
 
 use Path::Tiny;
 use Moose::Util::TypeConstraints;
+use List::Util 'first';
 use String::Formatter 0.100680 stringf => {
   -as => '_format_version',
 
@@ -35,6 +36,11 @@ use String::Formatter 0.100680 stringf => {
     V => sub { $_[0]->zilla->version
                 . ($_[0]->zilla->is_trial
                    ? (defined $_[1] ? $_[1] : '-TRIAL') : '') },
+    P => sub {
+      my $releaser = first { $_->can('cpanid') } @{ $_[0]->zilla->plugins_with('-Releaser') };
+      $_[0]->log_fatal('releaser doesn\'t provide cpanid, but %P used') unless $releaser;
+      $releaser->cpanid;
+    },
   },
 };
 
@@ -238,6 +244,10 @@ __PACKAGE__->meta->make_immutable;
 #pod = C<%E>
 #pod The email address of the user making this release (from C<user_stash>).
 #pod
+#pod = C<%P>
+#pod The CPAN (PAUSE) id of the user namking this release (from -Releaser plugins;
+#pod see L<[UploadToCPAN]|Dist::Zilla::Plugin::UploadToCPAN/username>).
+#pod
 #pod = C<%n>
 #pod A newline
 #pod
@@ -270,7 +280,7 @@ Dist::Zilla::Plugin::NextRelease - update the next release number in your change
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 SYNOPSIS
 
@@ -368,6 +378,11 @@ The name of the user making this release (from C<user_stash>).
 =item C<%E>
 
 The email address of the user making this release (from C<user_stash>).
+
+=item C<%P>
+
+The CPAN (PAUSE) id of the user namking this release (from -Releaser plugins;
+see L<[UploadToCPAN]|Dist::Zilla::Plugin::UploadToCPAN/username>).
 
 =item C<%n>
 

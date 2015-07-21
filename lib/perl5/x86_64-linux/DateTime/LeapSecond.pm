@@ -3,7 +3,7 @@ package DateTime::LeapSecond;
 use strict;
 use warnings;
 
-our $VERSION = '1.19';
+our $VERSION = '1.20';
 
 use vars qw( @RD @LEAP_SECONDS %RD_LENGTH );
 
@@ -76,9 +76,6 @@ sub day_length {
 
 sub _initialize {
 
-    # this table: ftp://62.161.69.5/pub/tai/publication/leaptab.txt
-    # known accurate until (at least): 2005-12-31
-    #
     # There are no leap seconds before 1972, because that's the
     # year this system was implemented.
     #
@@ -111,6 +108,7 @@ sub _initialize {
             2006  Jan. 1  +1
             2009  Jan. 1  +1
             2012  Jun. 1  +1
+            2015  Jul. 1  +1
             )
     );
 }
@@ -131,7 +129,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 

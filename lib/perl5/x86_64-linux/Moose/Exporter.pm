@@ -1,5 +1,5 @@
 package Moose::Exporter;
-our $VERSION = '2.1404';
+our $VERSION = '2.1405';
 
 use strict;
 use warnings;
@@ -808,7 +808,7 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
 =head1 VERSION
 
-version 2.1404
+version 2.1405
 
 =head1 SYNOPSIS
 

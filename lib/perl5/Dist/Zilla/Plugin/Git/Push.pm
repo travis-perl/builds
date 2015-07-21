@@ -12,18 +12,18 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Push;
 # ABSTRACT: push current branch
-$Dist::Zilla::Plugin::Git::Push::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::Push::VERSION = '2.036';
 
 use Moose;
 use MooseX::Has::Sugar;
-use MooseX::Types::Moose qw{ ArrayRef Str };
+use MooseX::Types::Moose qw{ ArrayRef Str Bool };
 
 use namespace::autoclean;
 
-with 'Dist::Zilla::Role::BeforeRelease';
-with 'Dist::Zilla::Role::AfterRelease';
-with 'Dist::Zilla::Role::Git::Repo';
-with 'Dist::Zilla::Role::GitConfig';
+with 'Dist::Zilla::Role::BeforeRelease',
+    'Dist::Zilla::Role::AfterRelease';
+with 'Dist::Zilla::Role::Git::Repo',
+    'Dist::Zilla::Role::GitConfig';
 
 sub mvp_multivalue_args { qw(push_to) }
 
@@ -33,11 +33,11 @@ sub _git_config_mapping { +{
 
 # -- attributes
 
-has remotes_must_exist => ( ro, isa=>'Bool', default=>1 );
+has remotes_must_exist => ( ro, isa=>Bool, default=>1 );
 
 has push_to => (
   is   => 'ro',
-  isa  => 'ArrayRef[Str]',
+  isa  => ArrayRef[Str],
   lazy => 1,
   default => sub { [ qw(origin) ] },
 );
@@ -50,7 +50,8 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        map { $_ => $self->$_ } qw(push_to remotes_must_exist),
+        push_to => $self->push_to,
+        remotes_must_exist => $self->remotes_must_exist ? 1 : 0,
     };
 
     return $config;
@@ -89,6 +90,16 @@ sub after_release {
     for my $remote ( @{ $self->push_to } ) {
       $self->log("pushing to $remote");
       my @remote = split(/\s+/,$remote);
+      if (@remote == 1) {
+        # Newer versions of Git may not push the current branch automatically.
+        # Append the current branch since the remote didn't specify a branch.
+        my $branch = $self->current_git_branch;
+        unless (defined $branch) {
+          $self->log("skipped push to @remote (can't determine branch to push)");
+          next;
+        }
+        push @remote, $branch;
+      }
       $self->log_debug($_) for $git->push( @remote );
       $self->log_debug($_) for $git->push( { tags=>1 },  $remote[0] );
     }
@@ -108,7 +119,7 @@ Dist::Zilla::Plugin::Git::Push - push current branch
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 

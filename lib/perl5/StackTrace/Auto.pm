@@ -1,6 +1,6 @@
 package StackTrace::Auto;
 # ABSTRACT: a role for generating stack traces during instantiation
-$StackTrace::Auto::VERSION = '0.200012';
+$StackTrace::Auto::VERSION = '0.200013';
 use Moo::Role;
 use Sub::Quote ();
 use Module::Runtime 0.002 ();
@@ -8,9 +8,10 @@ use Scalar::Util ();
 
 #pod =head1 SYNOPSIS
 #pod
-#pod First, include StackTrace::Auto in a Moose class...
+#pod First, include StackTrace::Auto in a Moose or Mooclass...
 #pod
 #pod   package Some::Class;
+#pod   # NOTE: Moo can also be used here instead of Moose
 #pod   use Moose;
 #pod   with 'StackTrace::Auto';
 #pod
@@ -132,13 +133,14 @@ StackTrace::Auto - a role for generating stack traces during instantiation
 
 =head1 VERSION
 
-version 0.200012
+version 0.200013
 
 =head1 SYNOPSIS
 
-First, include StackTrace::Auto in a Moose class...
+First, include StackTrace::Auto in a Moose or Mooclass...
 
   package Some::Class;
+  # NOTE: Moo can also be used here instead of Moose
   use Moose;
   with 'StackTrace::Auto';
 
@@ -186,7 +188,7 @@ Florian Ragwitz <rafl@debian.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2015 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

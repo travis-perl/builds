@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Init;
 # ABSTRACT: initialize git repository on dzil new
-$Dist::Zilla::Plugin::Git::Init::VERSION = '2.034';
+$Dist::Zilla::Plugin::Git::Init::VERSION = '2.036';
 
 our %transform = (
   lc => sub { lc shift },
@@ -30,35 +30,36 @@ use String::Formatter method_stringf => {
   },
 };
 
+use MooseX::Types::Moose qw(Str Bool ArrayRef);
 with 'Dist::Zilla::Role::AfterMint';
 
 has commit_message => (
     is      => 'ro',
-    isa     => 'Str',
+    isa     => Str,
     default => 'initial commit',
 );
 
 has commit => (
     is      => 'ro',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 1,
 );
 
 has branch => (
     is      => 'ro',
-    isa     => 'Str',
+    isa     => Str,
     default => '',
 );
 
 has remotes => (
   is   => 'ro',
-  isa  => 'ArrayRef[Str]',
+  isa  => ArrayRef[Str],
   default => sub { [] },
 );
 
 has config_entries => (
   is   => 'ro',
-  isa  => 'ArrayRef[Str]',
+  isa  => ArrayRef[Str],
   default => sub { [] },
 );
 
@@ -109,7 +110,7 @@ Dist::Zilla::Plugin::Git::Init - initialize git repository on dzil new
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 SYNOPSIS
 

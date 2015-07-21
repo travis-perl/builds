@@ -12,7 +12,7 @@ use warnings;
 
 package Dist::Zilla::Role::Git::DirtyFiles;
 # ABSTRACT: provide the allow_dirty & changelog attributes
-$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.034';
+$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.036';
 
 use Moose::Role;
 use MooseX::Types::Moose qw{ Any ArrayRef Str RegexpRef };
@@ -78,7 +78,8 @@ around dump_config => sub
     my $config = $self->$orig;
 
     $config->{+__PACKAGE__} = {
-        map { $_ => $self->$_ } qw(allow_dirty allow_dirty_match changelog),
+        (map { $_ => [ sort @{ $self->$_ } ] } qw(allow_dirty allow_dirty_match)),
+        changelog => $self->changelog,
     };
 
     return $config;
@@ -136,7 +137,7 @@ Dist::Zilla::Role::Git::DirtyFiles - provide the allow_dirty & changelog attribu
 
 =head1 VERSION
 
-version 2.034
+version 2.036
 
 =head1 DESCRIPTION
 

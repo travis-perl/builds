@@ -275,7 +275,7 @@ choose to license this under the standard Perl license:
 
 use vars qw($VERSION);
 
-$VERSION = '2.32';
+$VERSION = '2.33';
 
 require Exporter;
 require AutoLoader;
@@ -390,7 +390,7 @@ sub GetTerminalSize
         push( @fail, "COLUMNS and LINES environment variables" );
     }
 
-    if ( @results < 4 )
+    if ( @results < 4 && $^O ne 'MSWin32')
     {
         my ($prog) = "resize";
 
@@ -425,7 +425,7 @@ sub GetTerminalSize
         push( @fail, "resize program" );
     }
 
-    if ( @results < 4 )
+    if ( @results < 4 && $^O ne 'MSWin32' )
     {
         my ($prog) = "stty size";
 

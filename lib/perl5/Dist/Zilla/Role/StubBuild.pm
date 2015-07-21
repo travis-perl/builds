@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::StubBuild;
 # ABSTRACT: provides an empty BUILD methods
-$Dist::Zilla::Role::StubBuild::VERSION = '5.036';
+$Dist::Zilla::Role::StubBuild::VERSION = '5.037';
 use Moose::Role;
 
 sub BUILD {}
@@ -19,7 +19,7 @@ Dist::Zilla::Role::StubBuild - provides an empty BUILD methods
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 AUTHOR
 

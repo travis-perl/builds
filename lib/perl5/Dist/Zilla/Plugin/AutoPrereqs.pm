@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::AutoPrereqs;
 # ABSTRACT: automatically extract prereqs from your modules
-$Dist::Zilla::Plugin::AutoPrereqs::VERSION = '5.036';
+$Dist::Zilla::Plugin::AutoPrereqs::VERSION = '5.037';
 use Moose;
 with(
   'Dist::Zilla::Role::PrereqSource',
@@ -170,8 +170,10 @@ sub register_prereqs {
       s{\.pm$}{} for @this_thing;
       s{/}{::}g for @this_thing;
 
-      push @this_thing, $file->content =~ /package\s+([^\s;]+)/g;
-      push @modules, List::MoreUtils::uniq @this_thing;
+      # this is a bunk heuristic and can still capture strings from pod - the
+      # proper thing to do is grab all packages from Module::Metadata
+      push @this_thing, $file->content =~ /^[^#]*?(?:^|\s)package\s+([^\s;#]+)/mg;
+      push @modules, @this_thing;
 
       # parse a file, and merge with existing prereqs
       $self->log_debug([ 'scanning %s for %s prereqs', $file->name, $phase ]);
@@ -182,11 +184,6 @@ sub register_prereqs {
       $req->add_requirements($file_req);
     }
 
-    # remove prereqs shipped with current dist
-    $req->clear_requirement($_) for @modules;
-
-    $req->clear_requirement($_) for qw(Config Errno); # never indexed
-
     # remove prereqs from skiplist
     for my $skip (@{ $self->skips || [] }) {
       my $re   = qr/$skip/;
@@ -195,6 +192,12 @@ sub register_prereqs {
         $req->clear_requirement($k) if $k =~ $re;
       }
     }
+
+    # remove prereqs shipped with current dist
+    $self->log_debug([ 'excluding local packages: %s', sub { join(', ', List::MoreUtils::uniq @modules) } ]);
+    $req->clear_requirement($_) for @modules;
+
+    $req->clear_requirement($_) for qw(Config DB Errno NEXT Pod::Functions); # never indexed
 
     # we're done, return what we've found
     my %got = %{ $req->as_string_hash };
@@ -225,7 +228,7 @@ Dist::Zilla::Plugin::AutoPrereqs - automatically extract prereqs from your modul
 
 =head1 VERSION
 
-version 5.036
+version 5.037
 
 =head1 SYNOPSIS
 
