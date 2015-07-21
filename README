@@ -1,0 +1,20 @@
+Perl 5.23.1 built by Travis Helpers: heads/master-0-g2cc588f
+------------------------------------------------------------------------------
+
+This is perl 5, version 23, subversion 1 (v5.23.1) built for x86_64-linux
+(with 1 registered patch, see perl -V for more detail)
+
+Copyright 1987-2015, Larry Wall
+
+Perl may be copied only under the terms of either the Artistic License or the
+GNU General Public License, which may be found in the Perl 5 source kit.
+
+Complete documentation for Perl, including FAQ lists, should be found on
+this system using "man perl" or "perldoc perl".  If you have access to the
+Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+
+------------------------------------------------------------------------------
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=12.04
+DISTRIB_CODENAME=precise
+DISTRIB_DESCRIPTION="Ubuntu 12.04 LTS"
