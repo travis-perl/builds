@@ -10,7 +10,7 @@ package Devel::Cover;
 use strict;
 use warnings;
 
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.20'; # VERSION
 our $LVERSION = do { no warnings; eval '$VERSION' || "0.001" };  # for dev
 
 use DynaLoader ();
@@ -980,7 +980,17 @@ sub deparse {
 
         if ($class eq "COP" && $Coverage{statement}) {
             # print STDERR "COP $$op, seen [$Seen{statement}{$$op}]\n";
-            add_statement_cover($op) unless $Seen{statement}{$$op}++;
+            my $nnnext = "";
+            eval {
+                my $next   = $op->next;
+                my $nnext  = $next && $next->next;
+                   $nnnext = $nnext && $nnext->next;
+            };
+            # print STDERR "COP $$op, ", $next, " -> ", $nnext,
+                                              # " -> ", $nnnext, "\n";
+            if ($nnnext) {
+                add_statement_cover($op) unless $Seen{statement}{$$op}++;
+            }
         } elsif (!$null && $name eq "null"
                       && ppname($op->targ) eq "pp_nextstate"
                       && $Coverage{statement}) {
@@ -1218,7 +1228,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.18
+version 1.20
 
 =head1 SYNOPSIS
 
@@ -1350,10 +1360,6 @@ installed, it is preferred.
 
 Required if you want to run Devel::Cover's own tests.
 
-=item * L<Test::Warn>
-
-Some of Devel::Cover's own tests require it.
-
 =item * L<Test::Differences>
 
 Needed if the tests fail and you would like nice output telling you why.
@@ -1375,6 +1381,11 @@ able to collect coverage information when running under mod_perl.  You can
 also add any options you need at this point.  I would suggest adding this as
 early as possible in your startup script in order to collect as much coverage
 information as possible.
+
+Alternatively, add -MDevel::Cover to the parameters for mod_perl.
+In this example, Devel::Cover will be operating in silent mode.
+
+ PerlSwitches -MDevel::Cover=-silent,1
 
 =head1 OPTIONS
 

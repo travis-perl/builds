@@ -1,48 +1,4 @@
-=head2 Tue Jun  2 21:37:57 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.25>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Jun  2 21:37:58 2015: C<Module> L<Test::Warn|Test::Warn>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.30>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Jun  2 21:37:59 2015: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Tue Jul 21 17:43:43 2015: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -64,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jun  2 21:38:02 2015: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Tue Jul 21 17:43:45 2015: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -86,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jun  2 21:38:04 2015: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Tue Jul 21 17:43:48 2015: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -100,7 +56,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.18>
+C<VERSION: 1.20>
 
 =item *
 
@@ -108,29 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Tue Jun  2 21:38:26 2015: C<Module> L<Net::SSLeay|Net::SSLeay>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.68>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Jun  2 21:38:28 2015: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Tue Jul 21 17:43:51 2015: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -152,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jun  2 21:38:28 2015: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Tue Jul 21 17:44:07 2015: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -166,7 +100,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.016>
+C<VERSION: 1.70>
 
 =item *
 
@@ -174,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jun  2 21:38:30 2015: C<Module> L<YAML|YAML>
+=head2 Tue Jul 21 17:44:08 2015: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -189,6 +123,28 @@ C<LINKTYPE: dynamic>
 =item *
 
 C<VERSION: 1.15>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jul 21 17:44:09 2015: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.016>
 
 =item *
 

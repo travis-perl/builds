@@ -10,7 +10,7 @@ package Devel::Cover::Collection;
 use 5.16.0;
 use warnings;
 
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.20'; # VERSION
 
 use Devel::Cover::DB;
 use Devel::Cover::DB::IO::JSON;
@@ -359,6 +359,7 @@ sub generate_html {
         $vars->{vals}{$module}{log} = $file;
         print "-" if !($n++ % 1000) && !$self->verbose;
     }
+    say "";
 
     # print "vars ", Dumper $vars;
 
@@ -379,7 +380,7 @@ sub generate_html {
     # print Dumper $vars;
     $self->write_json($vars);
 
-    say "\nWrote collection output to $f";
+    say "Wrote collection output to $f";
 }
 
 sub local_build {
@@ -610,7 +611,7 @@ package Devel::Cover::Collection::Template::Provider;
 use strict;
 use warnings;
 
-our $VERSION = '1.18'; # VERSION
+our $VERSION = '1.20'; # VERSION
 
 use base "Template::Provider";
 
@@ -765,7 +766,7 @@ Devel::Cover::Collection - Code coverage for a collection of modules
 
 =head1 VERSION
 
-version 1.18
+version 1.20
 
 =head1 SYNOPSIS
 
