@@ -78,9 +78,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Tue Jul 21 17:05:09 UTC 2015
+## Configuration time: Tue Jul 21 17:37:42 UTC 2015
 ## Configured by     : travis
-## Target system     : linux testing-worker-linux-44a99d76-2-8313-linux-2-71978267 2.6.32-042stab108.3 #1 smp thu jun 11 21:06:20 msk 2015 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-worker-linux-f25aadab-1-2244-linux-3-71979496 2.6.32-042stab108.6 #1 smp thu jul 9 13:40:24 msk 2015 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -202,8 +202,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-worker-linux-44a99d76-2-8313-linux-2-71978267.c45665.blueboxgrid.com'
-cf_time='Tue Jul 21 17:05:09 UTC 2015'
+cf_email='travis@testing-worker-linux-f25aadab-1-2244-linux-3-71979496.c45665.blueboxgrid.com'
+cf_time='Tue Jul 21 17:37:42 UTC 2015'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1045,8 +1045,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.c45665.blueboxgrid.com'
-myhostname='testing-worker-linux-44a99d76-2-8313-linux-2-71978267'
-myuname='linux testing-worker-linux-44a99d76-2-8313-linux-2-71978267 2.6.32-042stab108.3 #1 smp thu jun 11 21:06:20 msk 2015 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-worker-linux-f25aadab-1-2244-linux-3-71979496'
+myuname='linux testing-worker-linux-f25aadab-1-2244-linux-3-71979496 2.6.32-042stab108.6 #1 smp thu jul 9 13:40:24 msk 2015 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1074,7 +1074,7 @@ old_pthread_create_joinable=''
 optimize='-O2'
 orderlib='false'
 osname='linux'
-osvers='2.6.32-042stab108.3'
+osvers='2.6.32-042stab108.6'
 otherlibdirs=' '
 package='perl5'
 pager='/usr/bin/less -R'
@@ -1085,7 +1085,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@testing-worker-linux-44a99d76-2-8313-linux-2-71978267.c45665.blueboxgrid.com'
+perladmin='travis@testing-worker-linux-f25aadab-1-2244-linux-3-71979496.c45665.blueboxgrid.com'
 perllibs='-lpthread -lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.22.0/bin/perl'
 pg='pg'
