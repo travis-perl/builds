@@ -2,9 +2,9 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = '1.0034';
+our $VERSION = '1.0037';
 
-use HTTP::Headers;
+use HTTP::Headers::Fast;
 use Carp ();
 use Hash::MultiValue;
 use HTTP::Body;
@@ -86,10 +86,11 @@ sub _parse_query {
     my @query;
     my $query_string = $self->env->{QUERY_STRING};
     if (defined $query_string) {
+        $query_string =~ s/\A[&;]+//;
         @query =
             map { s/\+/ /g; URI::Escape::uri_unescape($_) }
             map { /=/ ? split(/=/, $_, 2) : ($_ => '')}
-            split(/[&;]/, $query_string);
+            split(/[&;]+/, $query_string);
     }
 
     Hash::MultiValue->new(@query);
@@ -120,7 +121,7 @@ sub headers {
     my $self = shift;
     if (!defined $self->{headers}) {
         my $env = $self->env;
-        $self->{headers} = HTTP::Headers->new(
+        $self->{headers} = HTTP::Headers::Fast->new(
             map {
                 (my $field = $_) =~ s/^HTTPS?_//;
                 ( $field => $env->{$_} );
@@ -304,7 +305,7 @@ sub _parse_request_body {
 sub _make_upload {
     my($self, $upload) = @_;
     my %copy = %$upload;
-    $copy{headers} = HTTP::Headers->new(%{$upload->{headers}});
+    $copy{headers} = HTTP::Headers::Fast->new(%{$upload->{headers}});
     Plack::Request::Upload->new(%copy);
 }
 
@@ -502,7 +503,7 @@ Returns C<REMOTE_USER> if it's set.
 
 =item headers
 
-Returns an L<HTTP::Headers> object containing the headers for the current request.
+Returns an L<HTTP::Headers::Fast> object containing the headers for the current request.
 
 =item uploads
 
@@ -670,11 +671,11 @@ up to your application or framework. Also, C<cookies> hash reference
 now returns I<strings> for the cookies rather than CGI::Simple::Cookie
 objects, which means you no longer have to write a wacky code such as:
 
-  $v = $req->cookie->{foo} ? $req->cookie->{foo}->value : undef;
+  $v = $req->cookies->{foo} ? $req->cookies->{foo}->value : undef;
 
 and instead, simply do:
 
-  $v = $req->cookie->{foo};
+  $v = $req->cookies->{foo};
 
 =head1 AUTHORS
 

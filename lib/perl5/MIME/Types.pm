@@ -1,11 +1,11 @@
-# Copyrights 1999,2001-2014 by [Mark Overmeer].
+# Copyrights 1999,2001-2015 by [Mark Overmeer].
 #  For other contributors see ChangeLog.
 # See the manual pages for details on the licensing terms.
 # Pod stripped from pm file by OODoc 2.01.
 
 package MIME::Types;
 use vars '$VERSION';
-$VERSION = '2.09';
+$VERSION = '2.11';
 
 
 use strict;
@@ -31,7 +31,8 @@ sub _read_db($)
     my $only_complete   = $args->{only_complete};
     my $only_iana       = $args->{only_iana};
 
-    my $db              = $args->{db_file}
+    my $db              = $ENV{PERL_MIME_TYPE_DB}
+      || $args->{db_file}
       || File::Spec->catfile(dirname(__FILE__), 'types.db');
 
     local *DB;
@@ -166,8 +167,15 @@ sub httpAccept($)
           $ !x or next;
 
         my $mime = "$1/$2$4";
-        my $q    = $3 || ($1 eq '*' ? -2 : $2 eq '*' ? -1 : 1);
-        push @listed, [ $mime, $q-@listed*0.001 ];
+        my $q    = defined $3 ? $3 : 1;   # q, default=1
+
+        # most complex first
+        $q += $4 ? +0.01 : $1 eq '*' ? -0.02 : $2 eq '*' ? -0.01 : 0;
+
+        # keep order
+        $q -= @listed*0.0001;
+
+        push @listed, [ $mime => $q ];
     }
     map $_->[0], sort {$b->[1] <=> $a->[1]} @listed;
 }
