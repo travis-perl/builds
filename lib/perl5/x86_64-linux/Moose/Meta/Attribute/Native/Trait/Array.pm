@@ -1,5 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
-our $VERSION = '2.1404';
+our $VERSION = '2.1405';
 
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
@@ -24,7 +24,7 @@ Moose::Meta::Attribute::Native::Trait::Array - Helper trait for ArrayRef attribu
 
 =head1 VERSION
 
-version 2.1404
+version 2.1405
 
 =head1 SYNOPSIS
 
@@ -203,7 +203,8 @@ This method requires a single argument.
 
 =item * B<sort( sub { ... } )>
 
-Returns the elements of the array in sorted order.
+Returns the elements of the array (not an array reference) in sorted order,
+or, like C<elements>, returns the number of elements in the array in scalar context.
 
 You can provide an optional subroutine reference to sort with (as you can with
 Perl's core C<sort> function). However, instead of using C<$a> and C<$b> in

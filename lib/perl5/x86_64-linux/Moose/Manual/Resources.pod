@@ -13,7 +13,7 @@ Moose::Manual::Resources - Links to various tutorials, videos, blogs, presentati
 
 =head1 VERSION
 
-version 2.1404
+version 2.1405
 
 =head1 Resources
 
@@ -57,6 +57,11 @@ L<https://www.youtube.com/watch?v=BIMREkoPYKA>
 
 Testing with Test::Class::Moose, Curtis Poe
 L<https://www.youtube.com/watch?v=kUHI1iRrfF4>
+
+=item
+
+"Moose is Perl" tutorial, OSCON 2014, Ricardo Signes
+L<https://www.youtube.com/watch?v=LKXvG6VKew4>
 
 =back
 

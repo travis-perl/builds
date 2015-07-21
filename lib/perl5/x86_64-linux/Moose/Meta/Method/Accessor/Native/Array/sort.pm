@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::sort;
-our $VERSION = '2.1404';
+our $VERSION = '2.1405';
 
 use strict;
 use warnings;
@@ -31,9 +31,12 @@ sub _return_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return '$_[0] '
-             . '? sort { $_[0]->($a, $b) } @{ (' . $slot_access . ') } '
-             . ': sort @{ (' . $slot_access . ') }';
+    return
+        'wantarray ? ( ' .
+            '$_[0] '
+                . '? sort { $_[0]->($a, $b) } @{ (' . $slot_access . ') } '
+                . ': sort @{ (' . $slot_access . ') }'
+            . ' ) : @{ (' . $slot_access . ') }';
 }
 
 no Moose::Role;
