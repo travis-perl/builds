@@ -41,6 +41,7 @@
 /home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/rsync.pm
 /home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/rtsp.pm
 /home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/rtspu.pm
+/home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/sftp.pm
 /home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/sip.pm
 /home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/sips.pm
 /home/travis/.perlbrew/libs/5.22.0@lwp/lib/perl5/URI/snews.pm
