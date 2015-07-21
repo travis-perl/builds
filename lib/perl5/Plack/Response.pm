@@ -1,12 +1,13 @@
 package Plack::Response;
 use strict;
 use warnings;
-our $VERSION = '1.0034';
+our $VERSION = '1.0037';
 
 use Plack::Util::Accessor qw(body status);
 use Carp ();
+use Cookie::Baker ();
 use Scalar::Util ();
-use HTTP::Headers;
+use HTTP::Headers::Fast;
 use URI::Escape ();
 
 sub code    { shift->status(@_) }
@@ -30,13 +31,13 @@ sub headers {
         my $headers = shift;
         if (ref $headers eq 'ARRAY') {
             Carp::carp("Odd number of headers") if @$headers % 2 != 0;
-            $headers = HTTP::Headers->new(@$headers);
+            $headers = HTTP::Headers::Fast->new(@$headers);
         } elsif (ref $headers eq 'HASH') {
-            $headers = HTTP::Headers->new(%$headers);
+            $headers = HTTP::Headers::Fast->new(%$headers);
         }
         return $self->{headers} = $headers;
     } else {
-        return $self->{headers} ||= HTTP::Headers->new();
+        return $self->{headers} ||= HTTP::Headers::Fast->new();
     }
 }
 
@@ -123,47 +124,12 @@ sub _body {
 sub _finalize_cookies {
     my($self, $headers) = @_;
 
-    while (my($name, $val) = each %{$self->cookies}) {
-        my $cookie = $self->_bake_cookie($name, $val);
+    foreach my $name ( keys %{ $self->cookies } ) {
+        my $val = $self->cookies->{$name};
+
+        my $cookie = Cookie::Baker::bake_cookie( $name, $val );
         push @$headers, 'Set-Cookie' => $cookie;
     }
-}
-
-sub _bake_cookie {
-    my($self, $name, $val) = @_;
-
-    return '' unless defined $val;
-    $val = { value => $val } unless ref $val eq 'HASH';
-
-    my @cookie = ( URI::Escape::uri_escape($name) . "=" . URI::Escape::uri_escape($val->{value}) );
-    push @cookie, "domain=" . $val->{domain}   if $val->{domain};
-    push @cookie, "path=" . $val->{path}       if $val->{path};
-    push @cookie, "expires=" . $self->_date($val->{expires}) if $val->{expires};
-    push @cookie, "max-age=" . $val->{"max-age"} if $val->{"max-age"};
-    push @cookie, "secure"                     if $val->{secure};
-    push @cookie, "HttpOnly"                   if $val->{httponly};
-
-    return join "; ", @cookie;
-}
-
-my @MON  = qw( Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec );
-my @WDAY = qw( Sun Mon Tue Wed Thu Fri Sat );
-
-sub _date {
-    my($self, $expires) = @_;
-
-    if ($expires =~ /^\d+$/) {
-        # all numbers -> epoch date
-        # (cookies use '-' as date separator, HTTP uses ' ')
-        my($sec, $min, $hour, $mday, $mon, $year, $wday) = gmtime($expires);
-        $year += 1900;
-
-        return sprintf("%s, %02d-%s-%04d %02d:%02d:%02d GMT",
-                       $WDAY[$wday], $mday, $MON[$mon], $year, $hour, $min, $sec);
-
-    }
-
-    return $expires;
 }
 
 1;
@@ -216,10 +182,10 @@ Sets and gets HTTP status code. C<code> is an alias.
   $headers = $res->headers;
   $res->headers([ 'Content-Type' => 'text/html' ]);
   $res->headers({ 'Content-Type' => 'text/html' });
-  $res->headers( HTTP::Headers->new );
+  $res->headers( HTTP::Headers::Fast->new );
 
 Sets and gets HTTP headers of the response. Setter can take either an
-array ref, a hash ref or L<HTTP::Headers> object containing a list of
+array ref, a hash ref or L<HTTP::Headers::Fast> object containing a list of
 headers.
 
 =item body

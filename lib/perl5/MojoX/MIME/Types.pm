@@ -1,10 +1,10 @@
-# Copyrights 1999,2001-2014 by [Mark Overmeer].
+# Copyrights 1999,2001-2015 by [Mark Overmeer].
 #  For other contributors see ChangeLog.
 # See the manual pages for details on the licensing terms.
 # Pod stripped from pm file by OODoc 2.01.
 package MojoX::MIME::Types;
 use vars '$VERSION';
-$VERSION = '2.09';
+$VERSION = '2.11';
 
 use Mojo::Base -base;
 

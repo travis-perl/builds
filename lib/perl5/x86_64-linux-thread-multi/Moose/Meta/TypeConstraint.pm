@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint;
-our $VERSION = '2.1404';
+our $VERSION = '2.1405';
 
 use strict;
 use warnings;
@@ -375,7 +375,7 @@ Moose::Meta::TypeConstraint - The Moose Type Constraint metaclass
 
 =head1 VERSION
 
-version 2.1404
+version 2.1405
 
 =head1 DESCRIPTION
 

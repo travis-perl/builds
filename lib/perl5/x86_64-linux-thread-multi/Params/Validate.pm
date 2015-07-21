@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.18';
+our $VERSION = '1.21';
 
 use Exporter;
 use Module::Implementation;
@@ -75,7 +75,7 @@ Params::Validate - Validate method/function parameters
 
 =head1 VERSION
 
-version 1.18
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -510,8 +510,8 @@ the presence of one or more other optional parameters.
                 optional => 1,
                 depends  => [ 'cc_expiration', 'cc_holder_name' ],
             },
-            cc_expiration  { type => SCALAR, optional => 1 },
-            cc_holder_name { type => SCALAR, optional => 1 },
+            cc_expiration  => { type => SCALAR, optional => 1 },
+            cc_holder_name => { type => SCALAR, optional => 1 },
         }
     );
 
@@ -863,9 +863,13 @@ Ilya Martynov <ilya@martynov.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords J.R. Mash Olivier Mengué
+=for stopwords Ivan Bessarabov J.R. Mash Noel Maddy Olivier Mengué Vincent Pit
 
 =over 4
+
+=item *
+
+Ivan Bessarabov <ivan@bessarabov.ru>
 
 =item *
 
@@ -873,7 +877,15 @@ J.R. Mash <jmash.code@gmail.com>
 
 =item *
 
+Noel Maddy <zhtwnpanta@gmail.com>
+
+=item *
+
 Olivier Mengué <dolmen@cpan.org>
+
+=item *
+
+Vincent Pit <perl@profvince.com>
 
 =back
 

@@ -67,6 +67,14 @@ within your program, but in the future this may change.
 
 =item db_file => FILENAME
 
+The location of the database which contains the type information.  Only the
+first instantiation of this object will have this parameter obeyed.
+
+[2.10] This parameter can be globally overruled via the C<PERL_MIME_TYPE_DB>
+environment variable, which may be needed in case of PAR or other tricky
+installations.  For PAR, you probably set this environment variable to
+"inc/lib/MIME/types.db"
+
 =item only_complete => BOOLEAN
 
 Only include complete MIME type definitions: requires at least one known
@@ -166,7 +174,7 @@ kept.  See RFC2616 section 14.1
 
 example: 
 
-  my @types = $types->httpAccept('text/html, application/json;q=9');
+  my @types = $types->httpAccept('text/html, application/json;q=0.9');
 
 =item $obj-E<gt>B<httpAcceptBest>($accept|\@types, @have)
 
@@ -246,12 +254,12 @@ missing, please contact the maintainer for inclusion.
 
 =head1 SEE ALSO
 
-This module is part of MIME-Types distribution version 2.09,
-built on September 14, 2014. Website: F<http://perl.overmeer.net/mimetypes/>
+This module is part of MIME-Types distribution version 2.11,
+built on June 16, 2015. Website: F<http://perl.overmeer.net/mimetypes/>
 
 =head1 LICENSE
 
-Copyrights 1999,2001-2014 by [Mark Overmeer]. For other contributors see ChangeLog.
+Copyrights 1999,2001-2015 by [Mark Overmeer]. For other contributors see ChangeLog.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

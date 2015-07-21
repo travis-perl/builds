@@ -6,7 +6,7 @@ use Test::Builder;
 use Sub::Uplevel qw( uplevel );
 use base qw( Exporter );
 
-our $VERSION = '0.38';
+our $VERSION = '0.40';
 our @EXPORT = qw(dies_ok lives_ok throws_ok lives_and);
 
 my $Tester = Test::Builder->new;
@@ -23,7 +23,7 @@ sub import {
 
 =head1 NAME
 
-Test::Exception - Test exception based code
+Test::Exception - Test exception-based code
 
 =head1 SYNOPSIS
 
@@ -79,6 +79,11 @@ See L<Test::More> for details.
 NOTE: Test::Exception only checks for exceptions. It will ignore other methods of stopping 
 program execution - including exit(). If you have an exit() in evalled code Test::Exception
 will not catch this with any of its testing functions.
+
+NOTE: This module uses L<Sub::Uplevel> and relies on overriding
+C<CORE::GLOBAL::caller> to hide your test blocks from the call stack.  If this
+use of global overrides concerns you, the L<Test::Fatal> module offers a more
+minimalist alternative.
 
 =cut
 
@@ -332,10 +337,10 @@ The test description is optional, but recommended.
 
 =cut
 
-my $is_stream = $INC{'Test/Stream.pm'};
+my $is_stream = $INC{'Test/Stream/Sync.pm'};
 our $LIVES_AND_NAME;
 if ($is_stream) {
-    Test::Stream->shared->munge(sub {
+    Test::Stream::Sync->stack->top->munge(sub {
         return unless defined $LIVES_AND_NAME;
         my ($stream, $e) = @_;
         return unless $e->isa('Test::Stream::Event::Ok');
@@ -486,7 +491,11 @@ If you can spare the time, please drop me a line if you find this module useful.
 
 Delicious links on Test::Exception.
 
-=item L<Test::Warn> & L<Test::NoWarnings>
+=item L<Test::Fatal>
+
+A slightly different interface to testing exceptions, without overriding C<CORE::caller>.
+
+=item L<Test::Warnings> & L<Test::Warn> & L<Test::NoWarnings>
 
 Modules to help test warnings.
 
