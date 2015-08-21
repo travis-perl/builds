@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Delegation;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -149,7 +149,7 @@ Moose::Meta::Method::Delegation - A Moose Method metaclass for delegation method
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -158,9 +158,7 @@ methods.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Method::Delegation->new(%options) >>
+=head2 Moose::Meta::Method::Delegation->new(%options)
 
 This creates the delegation methods based on the provided C<%options>.
 
@@ -183,20 +181,18 @@ any call to the delegating method.
 
 =back
 
-=item B<< $metamethod->associated_attribute >>
+=head2 $metamethod->associated_attribute
 
 Returns the attribute associated with this method.
 
-=item B<< $metamethod->curried_arguments >>
+=head2 $metamethod->curried_arguments
 
 Return any curried arguments that will be passed to the delegated method.
 
-=item B<< $metamethod->delegate_to_method >>
+=head2 $metamethod->delegate_to_method
 
 Returns the method to which this method delegates, as passed to the
 constructor.
-
-=back
 
 =head1 BUGS
 

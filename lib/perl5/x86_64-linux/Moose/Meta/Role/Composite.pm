@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Composite;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -215,7 +215,7 @@ Moose::Meta::Role::Composite - An object to represent the set of roles
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -228,16 +228,14 @@ role.
 
 C<Moose::Meta::Role::Composite> is a subclass of L<Moose::Meta::Role>.
 
-=head2 METHODS
+=head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Role::Composite->new(%options) >>
+=head2 Moose::Meta::Role::Composite->new(%options)
 
 This returns a new composite role object. It accepts the same
 options as its parent class, with a few changes:
 
-=over 8
+=over 4
 
 =item * roles
 
@@ -259,8 +257,6 @@ attribute.
 
 Like C<< Class::MOP::Package->reinitialize >>, but doesn't allow passing a
 string with the package name, as there is no real package for composite roles.
-
-=back
 
 =back
 

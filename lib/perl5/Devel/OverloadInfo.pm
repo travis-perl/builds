@@ -1,15 +1,15 @@
 package Devel::OverloadInfo;
-$Devel::OverloadInfo::VERSION = '0.002';
+$Devel::OverloadInfo::VERSION = '0.004';
 # ABSTRACT: introspect overloaded operators
 
-# =head1 DESCRIPTION
-#
-# Devel::OverloadInfo returns information about L<overloaded|overload>
-# operators for a given class (or object), including where in the
-# inheritance hierarchy the overloads are declared and where the code
-# implementing it is.
-#
-# =cut
+#pod =head1 DESCRIPTION
+#pod
+#pod Devel::OverloadInfo returns information about L<overloaded|overload>
+#pod operators for a given class (or object), including where in the
+#pod inheritance hierarchy the overloads are declared and where the code
+#pod implementing it is.
+#pod
+#pod =cut
 
 use strict;
 use warnings;
@@ -20,7 +20,7 @@ use Package::Stash 0.14;
 use MRO::Compat;
 
 use Exporter 5.57 qw(import);
-our @EXPORT_OK = qw(overload_info);
+our @EXPORT_OK = qw(overload_info is_overloaded);
 
 sub stash_with_symbol {
     my ($class, $symbol) = @_;
@@ -33,53 +33,80 @@ sub stash_with_symbol {
     return;
 }
 
-# =func overload_info
-#
-#     my $info = overload_info($class_or_object);
-#
-# Returns a hash reference with information about all the overloaded
-# operators of the argument, which can be either a class name or a blessed
-# object. The keys are the overloaded operators, as specified in
-# C<%overload::ops> (see L<overload/Overloadable Operations>).
-#
-# =over
-#
-# =item class
-#
-# The name of the class in which the operator overloading was declared.
-#
-# =item code
-#
-# A reference to the function implementing the overloaded operator.
-#
-# =item code_name
-#
-# The name of the function implementing the overloaded operator, as
-# returned by C<sub_fullname> in L<Sub::Identify>.
-#
-# =item method_name (optional)
-#
-# The name of the method implementing the overloaded operator, if the
-# overloading was specified as a named method, e.g. C<< use overload $op
-# => 'method'; >>.
-#
-# =item code_class (optional)
-#
-# The name of the class in which the method specified by C<method_name>
-# was found.
-#
-# =item value (optional)
-#
-# For the special C<fallback> key, the value it was given in C<class>.
-#
-# =back
-#
-# =cut
+#pod =func is_overloaded
+#pod
+#pod    if (is_overloaded($class_or_object)) { ... }
+#pod
+#pod Returns a boolean indicating whether the given class or object has any
+#pod overloading declared.  Note that a bare C<use overload;> with no
+#pod actual operators counts as being overloaded.
+#pod
+#pod Equivalent to
+#pod L<overload::Overloaded()|overload/overload::Overloaded(arg)>, but
+#pod doesn't trigger various bugs associated with it in versions of perl
+#pod before 5.16.
+#pod
+#pod =cut
+
+sub is_overloaded {
+    my $class = blessed($_[0]) || $_[0];
+
+    # Perl before 5.16 seems to corrupt inherited overload info if
+    # there's a lone dereference overload and overload::Overloaded()
+    # is called before any object has been blessed into the class.
+    return !!("$]" >= 5.016
+        ? overload::Overloaded($class)
+        : stash_with_symbol($class, '&()')
+    );
+}
+
+#pod =func overload_info
+#pod
+#pod     my $info = overload_info($class_or_object);
+#pod
+#pod Returns a hash reference with information about all the overloaded
+#pod operators of the argument, which can be either a class name or a blessed
+#pod object. The keys are the overloaded operators, as specified in
+#pod C<%overload::ops> (see L<overload/Overloadable Operations>).
+#pod
+#pod =over
+#pod
+#pod =item class
+#pod
+#pod The name of the class in which the operator overloading was declared.
+#pod
+#pod =item code
+#pod
+#pod A reference to the function implementing the overloaded operator.
+#pod
+#pod =item code_name
+#pod
+#pod The name of the function implementing the overloaded operator, as
+#pod returned by C<sub_fullname> in L<Sub::Identify>.
+#pod
+#pod =item method_name (optional)
+#pod
+#pod The name of the method implementing the overloaded operator, if the
+#pod overloading was specified as a named method, e.g. C<< use overload $op
+#pod => 'method'; >>.
+#pod
+#pod =item code_class (optional)
+#pod
+#pod The name of the class in which the method specified by C<method_name>
+#pod was found.
+#pod
+#pod =item value (optional)
+#pod
+#pod For the special C<fallback> key, the value it was given in C<class>.
+#pod
+#pod =back
+#pod
+#pod =cut
 
 sub overload_info {
     my $class = blessed($_[0]) || $_[0];
 
-    return undef unless overload::Overloaded($class);
+    return {} unless is_overloaded($class);
 
     my (%overloaded);
     for my $op (map split(/\s+/), values %overload::ops) {
@@ -112,6 +139,14 @@ sub overload_info {
     return \%overloaded;
 }
 
+#pod =head1 CAVEATS
+#pod
+#pod Whether the C<fallback> key exists when it has its default value of
+#pod C<undef> varies between perl versions: Before 5.18 it's there, in
+#pod later versions it's not.
+#pod
+#pod =cut
+
 1;
 
 __END__
@@ -126,7 +161,7 @@ Devel::OverloadInfo - introspect overloaded operators
 
 =head1 VERSION
 
-version 0.002
+version 0.004
 
 =head1 DESCRIPTION
 
@@ -136,6 +171,19 @@ inheritance hierarchy the overloads are declared and where the code
 implementing it is.
 
 =head1 FUNCTIONS
+
+=head2 is_overloaded
+
+   if (is_overloaded($class_or_object)) { ... }
+
+Returns a boolean indicating whether the given class or object has any
+overloading declared.  Note that a bare C<use overload;> with no
+actual operators counts as being overloaded.
+
+Equivalent to
+L<overload::Overloaded()|overload/overload::Overloaded(arg)>, but
+doesn't trigger various bugs associated with it in versions of perl
+before 5.16.
 
 =head2 overload_info
 
@@ -177,6 +225,12 @@ was found.
 For the special C<fallback> key, the value it was given in C<class>.
 
 =back
+
+=head1 CAVEATS
+
+Whether the C<fallback> key exists when it has its default value of
+C<undef> varies between perl versions: Before 5.18 it's there, in
+later versions it's not.
 
 =head1 AUTHOR
 

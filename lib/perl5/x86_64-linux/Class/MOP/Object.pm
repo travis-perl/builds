@@ -1,5 +1,5 @@
 package Class::MOP::Object;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -115,7 +115,7 @@ Class::MOP::Object - Base class for metaclasses
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -125,24 +125,20 @@ This class is a very minimal base class for metaclasses.
 
 This class provides a few methods which are useful in all metaclasses.
 
-=over 4
-
-=item B<< Class::MOP::???->meta >>
+=head2 Class::MOP::???->meta
 
 This returns a L<Class::MOP::Class> object.
 
-=item B<< $metaobject->dump($max_depth) >>
+=head2 $metaobject->dump($max_depth)
 
 This method uses L<Data::Dumper> to dump the object. You can pass an
 optional maximum depth, which will set C<$Data::Dumper::Maxdepth>. The
 default maximum depth is 1.
 
-=item B<< $metaclass->throw_error($message) >>
+=head2 $metaclass->throw_error($message)
 
 This method calls L<Class::MOP::Mixin/_throw_exception> internally, with an object
 of class L<Moose::Exception::Legacy>.
-
-=back
 
 =head1 AUTHORS
 
