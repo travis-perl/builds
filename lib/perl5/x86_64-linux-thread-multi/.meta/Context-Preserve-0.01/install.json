@@ -1,1 +1,1 @@
-{"name":"Context::Preserve","dist":"Context-Preserve-0.01","version":"0.01","target":"Context::Preserve","pathname":"J/JR/JROCKWAY/Context-Preserve-0.01.tar.gz","provides":{"Context::Preserve":{"version":"0.01","file":"lib/Context/Preserve.pm"}}}
+{"name":"Context::Preserve","provides":{"Context::Preserve":{"version":"0.01","file":"lib/Context/Preserve.pm"}},"target":"Context::Preserve","pathname":"J/JR/JROCKWAY/Context-Preserve-0.01.tar.gz","version":"0.01","dist":"Context-Preserve-0.01"}

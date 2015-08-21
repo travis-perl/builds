@@ -11,13 +11,13 @@ Variable::Magic - Associate user-defined magic to variables from Perl.
 
 =head1 VERSION
 
-Version 0.57
+Version 0.58
 
 =cut
 
 our $VERSION;
 BEGIN {
- $VERSION = '0.57';
+ $VERSION = '0.58';
 }
 
 =head1 SYNOPSIS
@@ -309,8 +309,12 @@ C<$_[-1]> is the C<B::OP> object for the current op.
 
 Both result in a small performance hit, but just getting the name is lighter than getting the op object.
 
-These callbacks are executed in scalar context and are expected to return an integer, which is then passed straight to the perl magic API.
-However, only the return value of the I<len> magic callback currently holds a meaning.
+These callbacks are always executed in scalar context.
+The returned value is coerced into a signed integer, which is then passed straight to the perl magic API.
+However, note that perl currently only cares about the return value of the I<len> magic callback and ignores all the others.
+Starting with Variable::Magic 0.58, a reference returned from a non-I<len> magic callback will not be destroyed immediately but will be allowed to survive until the end of the statement that triggered the magic.
+This lets you use this return value as a token for triggering a destructor after the original magic action takes place.
+You can see an example of this technique in the L<cookbook|/COOKBOOK>.
 
 =back
 
@@ -576,6 +580,44 @@ When C<%h> goes out of scope, this prints something among the lines of :
     free SCALAR at depth 3
 
 Of course, this example does nothing with the values that are added after the C<cast>.
+
+=head2 Delayed magic actions
+
+Starting with Variable::Magic 0.58, the return value of the magic callbacks can be used to delay the action until after the original action takes place :
+
+    my $delayed;
+    my $delayed_aux = wizard(
+     data => sub { $_[1] },
+     free => sub {
+      my ($target) = $_[1];
+      my $target_data = &getdata($target, $delayed);
+      local $target_data->{guard} = 1;
+      if (ref $target eq 'SCALAR') {
+       my $orig = $$target;
+       $$target = $target_data->{mangler}->($orig);
+      }
+      return;
+     },
+    );
+    $delayed = wizard(
+     data => sub {
+      return +{ guard => 0, mangler => $_[1] };
+     },
+     set  => sub {
+      return if $_[1]->{guard};
+      my $token;
+      cast $token, $delayed_aux, $_[0];
+      return \$token;
+     },
+    );
+    my $x = 1;
+    cast $x, $delayed => sub { $_[0] * 2 };
+    $x = 2;
+    # $x is now 4
+    # But note that the delayed action only takes place at the end of the
+    # current statement :
+    my @y = ($x = 5, $x);
+    # $x is now 10, but @y is (5, 5)
 
 =head1 PERL MAGIC HISTORY
 
