@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint::DuckType;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -117,7 +117,7 @@ Moose::Meta::TypeConstraint::DuckType - Type constraint for duck typing
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -131,9 +131,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeConstraint::DuckType->new(%options) >>
+=head2 Moose::Meta::TypeConstraint::DuckType->new(%options)
 
 This creates a new duck type constraint based on the given
 C<%options>.
@@ -146,20 +144,18 @@ names. Second, it automatically sets the parent to the C<Object> type.
 Finally, it ignores any provided C<constraint> option. The constraint
 is generated automatically based on the provided C<methods>.
 
-=item B<< $constraint->methods >>
+=head2 $constraint->methods
 
 Returns the array reference of required methods provided to the
 constructor.
 
-=item B<< $constraint->create_child_type >>
+=head2 $constraint->create_child_type
 
 This returns a new L<Moose::Meta::TypeConstraint> object with the type
 as its parent.
 
 Note that it does I<not> return a C<Moose::Meta::TypeConstraint::DuckType>
 object!
-
-=back
 
 =head1 BUGS
 

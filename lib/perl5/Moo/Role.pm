@@ -5,10 +5,11 @@ use Moo::_Utils;
 use Role::Tiny ();
 our @ISA = qw(Role::Tiny);
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
+Moo::sification->import;
 
 BEGIN {
     *INFO = \%Role::Tiny::INFO;
@@ -379,6 +380,7 @@ sub does_role {
   if ($INC{'Moose.pm'}
       and $meta = Class::MOP::class_of($proto)
       and ref $meta ne 'Moo::HandleMoose::FakeMetaClass'
+      and $meta->can('does_role')
   ) {
     return $meta->does_role($role);
   }

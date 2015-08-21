@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Destructor;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -145,7 +145,7 @@ Moose::Meta::Method::Destructor - Method Meta Object for destructors
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -162,13 +162,11 @@ L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Inlined>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Method::Destructor->new(%options) >>
+=head2 Moose::Meta::Method::Destructor->new(%options)
 
 This constructs a new object. It accepts the following options:
 
-=over 8
+=over 4
 
 =item * package_name
 
@@ -187,13 +185,11 @@ $metamethod->attach_to_class >>.
 
 =back
 
-=item B<< Moose::Meta;:Method::Destructor->is_needed($metaclass) >>
+=head2 Moose::Meta;:Method::Destructor->is_needed($metaclass)
 
 Given a L<Moose::Meta::Class> object, this method returns a boolean
 indicating whether the class needs a destructor. If the class or any
 of its parents defines a C<DEMOLISH> method, it needs a destructor.
-
-=back
 
 =head1 BUGS
 

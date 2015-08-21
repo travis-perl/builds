@@ -1,5 +1,5 @@
 package Moose::Exception::AttributeConflictInSummation;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use Moose;
 extends 'Moose::Exception';
