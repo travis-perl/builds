@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint::Enum;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -126,7 +126,7 @@ Moose::Meta::TypeConstraint::Enum - Type constraint for enumerated values.
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -140,9 +140,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeConstraint::Enum->new(%options) >>
+=head2 Moose::Meta::TypeConstraint::Enum->new(%options)
 
 This creates a new enum type constraint based on the given
 C<%options>.
@@ -155,20 +153,18 @@ values. Second, it automatically sets the parent to the C<Str> type.
 Finally, it ignores any provided C<constraint> option. The constraint
 is generated automatically based on the provided C<values>.
 
-=item B<< $constraint->values >>
+=head2 $constraint->values
 
 Returns the array reference of acceptable values provided to the
 constructor.
 
-=item B<< $constraint->create_child_type >>
+=head2 $constraint->create_child_type
 
 This returns a new L<Moose::Meta::TypeConstraint> object with the type
 as its parent.
 
 Note that it does I<not> return a C<Moose::Meta::TypeConstraint::Enum>
 object!
-
-=back
 
 =head1 BUGS
 

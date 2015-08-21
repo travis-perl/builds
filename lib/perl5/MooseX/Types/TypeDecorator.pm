@@ -2,7 +2,9 @@ use strict;
 use warnings;
 package MooseX::Types::TypeDecorator;
 # ABSTRACT: Wraps Moose::Meta::TypeConstraint objects with added features
-$MooseX::Types::TypeDecorator::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use Carp::Clan '^MooseX::Types';
 use Moose::Util::TypeConstraints ();
 use Moose::Meta::TypeConstraint::Union;
@@ -233,7 +235,7 @@ MooseX::Types::TypeDecorator - Wraps Moose::Meta::TypeConstraint objects with ad
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 DESCRIPTION
 

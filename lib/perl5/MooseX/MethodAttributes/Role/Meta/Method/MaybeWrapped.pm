@@ -1,11 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Method::MaybeWrapped;
-{
-  $MooseX::MethodAttributes::Role::Meta::Method::MaybeWrapped::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Method::MaybeWrapped::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: proxy attributes of wrapped methods if their metaclass supports it
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 use Moose::Util qw/does_role/;
@@ -33,16 +29,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Method::MaybeWrapped - proxy attributes of wrapped methods if their metaclass supports it
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 AUTHORS
 

@@ -1,11 +1,9 @@
 use strict;
 use warnings;
-package MooseX::Daemonize;
-BEGIN {
-  $MooseX::Daemonize::AUTHORITY = 'cpan:PERIGRIN';
-}
-# git description: v0.18-20-g1125a07
-$MooseX::Daemonize::VERSION = '0.19';
+package MooseX::Daemonize; # git description: v0.19-17-gf6822c0
+# ABSTRACT: Role for daemonizing your Moose based application
+
+our $VERSION = '0.20';
 
 use Moose::Role;
 use MooseX::Types::Path::Class;
@@ -315,9 +313,12 @@ $_kill = sub {
 };
 
 1;
+
 __END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -325,11 +326,7 @@ MooseX::Daemonize - Role for daemonizing your Moose based application
 
 =head1 VERSION
 
-version 0.19
-
-=head1 WARNING
-
-The maintainers of this module now recommend using L<Daemon::Control> instead.
+version 0.20
 
 =head1 SYNOPSIS
 
@@ -367,6 +364,10 @@ Often you want to write a persistent daemon that has a pid file, and responds
 appropriately to Signals. This module provides a set of basic roles as an
 infrastructure to do that.
 
+=head1 WARNING
+
+The maintainers of this module now recommend using L<Daemon::Control> instead.
+
 =head1 CAVEATS
 
 When going into background MooseX::Daemonize closes all open file
@@ -387,7 +388,6 @@ MooseX::Daemonize example above like this.
         $logger->info("Daemon started");
         # your daemon code here ...
     };
-
 
 =head1 ATTRIBUTES
 
@@ -434,7 +434,6 @@ Normally you don't want this.
 
 If true, the objects open filehandles will not be closed when daemonized.
 Normally you don't want this.
-
 
 =item I<is_daemon Bool>
 
@@ -494,7 +493,6 @@ Literally this is:
 =item B<shutdown>
 
 =back
-
 
 =head2 Pidfile Handling Methods
 
@@ -576,11 +574,9 @@ L<Moose>, L<MooseX::Getopt>, L<MooseX::Types::Path::Class> and L<POSIX>
 
 =head1 INCOMPATIBILITIES
 
-None reported. Although obviously this will not work on Windows.
+Obviously this will not work on Windows.
 
 =head1 BUGS AND LIMITATIONS
-
-No bugs have been reported.
 
 Please report any bugs or feature requests to
 C<bug-MooseX-Daemonize@rt.cpan.org>, or through the web interface at
@@ -590,48 +586,72 @@ L<http://rt.cpan.org>.
 
 L<Daemon::Control>, L<Proc::Daemon>, L<Daemon::Generic>
 
-=head1 AUTHORS
-
-Chris Prather  C<< <chris@prather.org >>
-
-Stevan Little  C<< <stevan.little@iinteractive.com> >>
-
 =head1 THANKS
 
 Mike Boyko, Matt S. Trout, Stevan Little, Brandon Black, Ash Berlin and the
-#moose denzians
+#moose denizens
 
 Some bug fixes sponsored by Takkle Inc.
 
-=head1 LICENCE AND COPYRIGHT
+=head1 AUTHORS
 
-Copyright (c) 2007-2011, Chris Prather C<< <chris@prather.org> >>. Some rights
-reserved.
+=over 4
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
+=item *
 
-=head1 DISCLAIMER OF WARRANTY
+Stevan Little <stevan.little@iinteractive.com>
 
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
-OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
-YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR, OR CORRECTION.
+=item *
 
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
-LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
-OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
-THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
+Chris Prather <chris@prather.org>
+
+=back
+
+=head1 CONTRIBUTORS
+
+=for stopwords Karen Etheridge Michael Reddick Yuval Kogman Ash Berlin Brandon L Black David Steinbrunner Dave Rolsky Chisel Wright
+
+=over 4
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Michael Reddick <michael.reddick@gmail.com>
+
+=item *
+
+Yuval Kogman <nothingmuch@woobling.org>
+
+=item *
+
+Ash Berlin <ash@cpan.org>
+
+=item *
+
+Brandon L Black <blblack@gmail.com>
+
+=item *
+
+David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Chisel Wright <chisel@chizography.net>
+
+=back
+
+=head1 COPYRIGHT AND LICENCE
+
+This software is copyright (c) 2007 by Chris Prather.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

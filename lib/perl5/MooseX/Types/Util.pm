@@ -2,7 +2,9 @@ use warnings;
 use strict;
 package MooseX::Types::Util;
 # ABSTRACT: Common utility functions for the distribution
-$MooseX::Types::Util::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use Scalar::Util 'blessed';
 use base 'Exporter';
 use namespace::autoclean;
@@ -109,7 +111,7 @@ MooseX::Types::Util - Common utility functions for the distribution
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 DESCRIPTION
 

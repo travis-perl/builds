@@ -2,7 +2,7 @@ package Test::TCP;
 use strict;
 use warnings;
 use 5.00800;
-our $VERSION = '2.12';
+our $VERSION = '2.13';
 use base qw/Exporter/;
 use IO::Socket::INET;
 use Test::SharedFork 0.12;
@@ -146,7 +146,7 @@ sub DESTROY {
 1;
 __END__
 
-=for stopwords OO-ish
+=for stopwords OO
 
 =encoding utf8
 
@@ -198,7 +198,7 @@ And functional interface is available:
 
 =head1 DESCRIPTION
 
-Test::TCP is test utilities for TCP/IP programs.
+Test::TCP is a test utility to test TCP/IP-based server programs.
 
 =head1 METHODS
 
@@ -232,7 +232,7 @@ Waits for a particular port is available for connect.
 
 =back
 
-=head1 OO-ish interface
+=head1 Object Oriented interface
 
 =over 4
 
@@ -312,7 +312,7 @@ You can call test_tcp() twice!
         },
     );
 
-Or use OO-ish interface instead.
+Or use the OO interface instead.
 
     my $server1 = Test::TCP->new(code => sub {
         my $port1 = shift;

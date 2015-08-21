@@ -4,7 +4,7 @@ use warnings;
 use 5.00800;
 use Carp ();
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 
 our $TRANSLATE_UNDERSCORE = 1;
 
@@ -50,7 +50,7 @@ my @header_order =
 # Make alternative representations of @header_order.  This is used
 # for sorting and case matching.
 my %header_order;
-my %standard_case;
+our %standard_case;
 
 {
     my $i = 0;

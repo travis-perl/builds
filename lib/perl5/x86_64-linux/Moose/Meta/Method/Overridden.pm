@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Overridden;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -65,7 +65,7 @@ Moose::Meta::Method::Overridden - A Moose Method metaclass for overridden method
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -77,13 +77,11 @@ the C<super> keyword from the parent class's method definition.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Method::Overridden->new(%options) >>
+=head2 Moose::Meta::Method::Overridden->new(%options)
 
 This constructs a new object. It accepts the following options:
 
-=over 8
+=over 4
 
 =item * class
 
@@ -99,8 +97,6 @@ in one of the class's superclasses. This option is required.
 
 The subroutine reference which implements the overriding. This option
 is required.
-
-=back
 
 =back
 

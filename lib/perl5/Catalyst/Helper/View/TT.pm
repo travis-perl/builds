@@ -2,6 +2,9 @@ package Catalyst::Helper::View::TT;
 
 use strict;
 
+our $VERSION = '0.43';
+$VERSION = eval $VERSION;
+
 =head1 NAME
 
 Catalyst::Helper::View::TT - Helper for TT Views

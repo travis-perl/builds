@@ -1,9 +1,9 @@
 use strict;
 use warnings;
-package MooseX::Types::Path::Class; # git description: v0.06-10-ge028d57
+package MooseX::Types::Path::Class; # git description: v0.07-6-g6afe19a
 # ABSTRACT: A Path::Class type library for Moose
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Path::Class 0.16 ();
 
@@ -11,6 +11,7 @@ use MooseX::Types
     -declare => [qw( Dir File )];
 
 use MooseX::Types::Moose qw(Str ArrayRef);
+use if MooseX::Types->VERSION >= 0.42, 'namespace::autoclean';
 
 class_type('Path::Class::Dir');
 class_type('Path::Class::File');
@@ -51,7 +52,7 @@ MooseX::Types::Path::Class - A Path::Class type library for Moose
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 SYNOPSIS
 

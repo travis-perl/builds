@@ -1,16 +1,14 @@
 use strict;
 use warnings;
 package Test::MooseX::Daemonize;
-BEGIN {
-  $Test::MooseX::Daemonize::AUTHORITY = 'cpan:PERIGRIN';
-}
-$Test::MooseX::Daemonize::VERSION = '0.19';
+# ABSTRACT: Tool to help test MooseX::Daemonize applications
+
+our $VERSION = '0.20';
+
 # BEGIN CARGO CULTING
-use Sub::Exporter::ForMethods 'method_installer';
 use Sub::Exporter -setup => {
     exports => [ qw(daemonize_ok check_test_output) ],
     groups  => { default => [ qw(daemonize_ok check_test_output) ] },
-    installer => method_installer,
 };
 
 use Test::Builder;
@@ -59,10 +57,7 @@ sub check_test_output {
 }
 
 package Test::MooseX::Daemonize::Testable;
-BEGIN {
-  $Test::MooseX::Daemonize::Testable::AUTHORITY = 'cpan:PERIGRIN';
-}
-$Test::MooseX::Daemonize::Testable::VERSION = '0.19';
+
 use Moose::Role;
 
 has test_output => (
@@ -88,9 +83,12 @@ after daemonize => sub {
 };
 
 1;
+
 __END__
 
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -98,7 +96,7 @@ Test::MooseX::Daemonize - Tool to help test MooseX::Daemonize applications
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 SYNOPSIS
 
@@ -117,8 +115,8 @@ version 0.19
 
 =head1 DESCRIPTION
 
-This module provides some basic Test::Builder compatible test methods to
-use when writing tests for you MooseX::Daemonize based modules.
+This module provides some basic L<Test::Builder>-compatible test methods to
+use when writing tests for your L<MooseX::Daemonize>-based modules.
 
 =head1 EXPORTED FUNCTIONS
 
@@ -140,54 +138,35 @@ more info. If we get time we will document this more thoroughly.
 
 =back
 
-=head1 INCOMPATIBILITIES
-
-None reported.
-
 =head1 BUGS AND LIMITATIONS
 
-No bugs have been reported.
-
 Please report any bugs or feature requests to
-C<bug-acme-dahut-call@rt.cpan.org>, or through the web interface at
+C<bug-MooseX-Daemonize@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
 
 =head1 SEE ALSO
 
 L<MooseX::Daemonize>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Chris Prather  C<< <perigrin@cpan.org> >>
+=over 4
 
-=head1 LICENCE AND COPYRIGHT
+=item *
 
-Copyright (c) 2007-2011, Chris Prather C<< <perigrin@cpan.org> >>. All rights reserved.
+Stevan Little <stevan.little@iinteractive.com>
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
+=item *
 
-=head1 DISCLAIMER OF WARRANTY
+Chris Prather <chris@prather.org>
 
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
-OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
-YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR, OR CORRECTION.
+=back
 
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
-LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
-OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
-THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
+=head1 COPYRIGHT AND LICENCE
+
+This software is copyright (c) 2007 by Chris Prather.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

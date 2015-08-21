@@ -1,13 +1,7 @@
-package MooseX::MethodAttributes;
-{
-  $MooseX::MethodAttributes::VERSION = '0.29';
-}
-# git description: v0.28-17-g7c32d1f
+package MooseX::MethodAttributes; # git description: v0.29-26-ga5bac5b
+# ABSTRACT: Code attribute introspection
 
-BEGIN {
-  $MooseX::MethodAttributes::AUTHORITY = 'cpan:FLORA';
-}
-# ABSTRACT: code attribute introspection
+our $VERSION = '0.30';
 
 use Moose ();
 use Moose::Exporter;
@@ -15,7 +9,31 @@ use Moose::Util::MetaRole;
 use Moose::Util qw/find_meta does_role/;
 # Ensure trait is registered
 use MooseX::MethodAttributes::Role::Meta::Role ();
+use namespace::autoclean;
 
+#pod =head1 SYNOPSIS
+#pod
+#pod     package MyClass;
+#pod
+#pod     use Moose;
+#pod     use MooseX::MethodAttributes;
+#pod
+#pod     sub foo : Bar Baz('corge') { ... }
+#pod
+#pod     my $attrs = MyClass->meta->get_method('foo')->attributes; # ["Bar", "Baz('corge')"]
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod This module allows code attributes of methods to be introspected using Moose
+#pod meta method objects.
+#pod
+#pod =begin Pod::Coverage
+#pod
+#pod init_meta
+#pod
+#pod =end Pod::Coverage
+#pod
+#pod =cut
 
 Moose::Exporter->setup_import_methods(
     also => 'Moose',
@@ -61,16 +79,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E
-
 =head1 NAME
 
-MooseX::MethodAttributes - code attribute introspection
+MooseX::MethodAttributes - Code attribute introspection
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 SYNOPSIS
 
@@ -104,28 +119,19 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2009 by Florian Ragwitz.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =head1 CONTRIBUTORS
+
+=for stopwords Karen Etheridge Dave Rolsky Marcus Ramberg Peter E Karman David Steinbrunner
 
 =over 4
 
 =item *
 
-Dave Rolsky <autarch@urth.org>
-
-=item *
-
-David Steinbrunner <dsteinbrunner@pobox.com>
-
-=item *
-
 Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
 
 =item *
 
@@ -137,8 +143,15 @@ Peter E Karman <pek@dewpoint.msi.umn.edu>
 
 =item *
 
-Tomas Doran (t0m) <bobtfish@bobtfish.net>
+David Steinbrunner <dsteinbrunner@pobox.com>
 
 =back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2009 by Florian Ragwitz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

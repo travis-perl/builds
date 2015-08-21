@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Method::Conflicting;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -35,7 +35,7 @@ Moose::Meta::Role::Method::Conflicting - A Moose metaclass for conflicting metho
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -46,13 +46,11 @@ L<Moose::Meta::Role::Method::Required>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Role::Method::Conflicting->new(%options) >>
+=head2 Moose::Meta::Role::Method::Conflicting->new(%options)
 
 This creates a new type constraint based on the provided C<%options>:
 
-=over 8
+=over 4
 
 =item * name
 
@@ -64,20 +62,18 @@ The list of role names that generated the conflict. This is required.
 
 =back
 
-=item B<< $method->name >>
+=head2 $method->name
 
 Returns the conflicting method's name, as provided to the constructor.
 
-=item B<< $method->roles >>
+=head2 $method->roles
 
 Returns the roles that generated this conflicting method, as provided to the
 constructor.
 
-=item B<< $method->roles_as_english_list >>
+=head2 $method->roles_as_english_list
 
 Returns the roles that generated this conflicting method as an English list.
-
-=back
 
 =head1 BUGS
 

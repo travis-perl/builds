@@ -1,11 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Role;
-{
-  $MooseX::MethodAttributes::Role::Meta::Role::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Role::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: metarole role for storing code attributes
+
+our $VERSION = '0.30';
 
 use Moose ();
 use Moose::Util::MetaRole;
@@ -18,6 +14,41 @@ use MooseX::MethodAttributes::Role ();
 
 use namespace::autoclean;
 
+#pod =head1 SYNOPSIS
+#pod
+#pod     package MyRole;
+#pod     use MooseX::MethodAttributes::Role;
+#pod
+#pod     sub foo : Bar Baz('corge') { ... }
+#pod
+#pod     package MyClass
+#pod     use Moose;
+#pod
+#pod     with 'MyRole';
+#pod
+#pod     my $attrs = MyClass->meta->get_method('foo')->attributes; # ["Bar", "Baz('corge')"]
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod This module is a metaclass role which is applied by L<MooseX::MethodAttributes::Role>, allowing
+#pod you to add code attributes to methods in Moose roles.
+#pod
+#pod These attributes can then be found by introspecting the role metaclass, and are automatically copied
+#pod into any classes or roles that the role is composed onto.
+#pod
+#pod =head1 CAVEATS
+#pod
+#pod =over
+#pod
+#pod =item *
+#pod
+#pod Currently roles with attributes cannot have methods excluded
+#pod or aliased, and will in turn confer this property onto any roles they
+#pod are composed onto.
+#pod
+#pod =back
+#pod
+#pod =cut
 
 with qw/
     MooseX::MethodAttributes::Role::Meta::Map
@@ -34,12 +65,28 @@ $Moose::VERSION >= 0.9301
         default => sub { [ 'MooseX::MethodAttributes::Role::Meta::Role::Application::Summation' ] },
     );
 
+#pod =method initialize
+#pod
+#pod Ensures that the package containing the role methods does the
+#pod L<MooseX::MethodAttributes::Role::AttrContainer> role during initialisation,
+#pod which in turn is responsible for capturing the method attributes on the class
+#pod and registering them with the metaclass.
+#pod
+#pod =cut
 
 after 'initialize' => sub {
     my ($self, $class, %args) = @_;
     ensure_all_roles($class, 'MooseX::MethodAttributes::Role::AttrContainer');
 };
 
+#pod =method method_metaclass
+#pod
+#pod Wraps the normal method and ensures that the method metaclass performs the
+#pod L<MooseX::MethodAttributes::Role::Meta::Method> role, which allows you to
+#pod introspect the attributes from the method objects returned by the MOP when
+#pod querying the metaclass.
+#pod
+#pod =cut
 
 # FIXME - Skip this logic if the method metaclass already does the right role?
 around method_metaclass => sub {
@@ -80,16 +127,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E metarole initialisation
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Role - metarole role for storing code attributes
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 SYNOPSIS
 
