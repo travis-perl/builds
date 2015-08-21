@@ -1,12 +1,14 @@
 package MooseX::Types::Base;
 # ABSTRACT: Type library base class
-$MooseX::Types::Base::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use Moose;
 
 use Carp::Clan                      qw( ^MooseX::Types );
 use MooseX::Types::Util             qw( filter_tags );
 use Sub::Exporter                   qw( build_exporter );
-use Moose::Util::TypeConstraints;
+use Moose::Util::TypeConstraints    qw( find_type_constraint );
 
 use namespace::autoclean;
 
@@ -295,7 +297,7 @@ MooseX::Types::Base - Type library base class
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 DESCRIPTION
 

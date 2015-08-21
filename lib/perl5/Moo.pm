@@ -3,10 +3,11 @@ package Moo;
 use Moo::_strictures;
 use Moo::_Utils;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000002';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
+Moo::sification->import;
 
 our %MAKERS;
 
@@ -405,7 +406,7 @@ or
    unshift @args, "attr1" if @args % 2 == 1;
 
    return { @args };
- };
+ }
 
  Foo::Bar->new( 3 );
 
@@ -987,6 +988,8 @@ mattp - Matt Phillips (cpan:MATTP) <mattp@cpan.org>
 bluefeet - Aran Deltac (cpan:BLUEFEET) <bluefeet@gmail.com>
 
 bubaflub - Bob Kuo (cpan:BUBAFLUB) <bubaflub@cpan.org>
+
+ether = Karen Etheridge (cpan:ETHER) <ether@cpan.org>
 
 =head1 COPYRIGHT
 

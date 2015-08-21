@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::test;
 # ABSTRACT: test your dist
-$Dist::Zilla::App::Command::test::VERSION = '5.037';
+$Dist::Zilla::App::Command::test::VERSION = '5.039';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -35,6 +35,7 @@ sub opt_spec {
   [ 'all' => 'enables the RELEASE_TESTING, AUTOMATED_TESTING and AUTHOR_TESTING env variables', { default => 0 } ],
   [ 'keep-build-dir|keep' => 'keep the build directory even after a success' ],
   [ 'jobs|j=i' => 'number of parallel test jobs to run' ],
+  [ 'test-verbose' => 'enables verbose testing (TEST_VERBOSE env variable on Makefile.PL, --verbose on Build.PL', { default => 0 } ],
 }
 
 #pod =head1 OPTIONS
@@ -73,6 +74,9 @@ sub execute {
     $opt->jobs
       ? (jobs => $opt->jobs)
       : (),
+	$opt->test_verbose
+	  ? (test_verbose => $opt->test_verbose)
+	  : (),
   });
 }
 
@@ -90,7 +94,7 @@ Dist::Zilla::App::Command::test - test your dist
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 

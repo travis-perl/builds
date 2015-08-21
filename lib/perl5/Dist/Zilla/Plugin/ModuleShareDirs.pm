@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::ModuleShareDirs;
 # ABSTRACT: install a directory's contents as module-based "ShareDir" content
-$Dist::Zilla::Plugin::ModuleShareDirs::VERSION = '5.037';
+$Dist::Zilla::Plugin::ModuleShareDirs::VERSION = '5.039';
 use Moose;
 
 use namespace::autoclean;
@@ -44,9 +44,12 @@ sub share_dir_map {
   return { module => $modmap };
 }
 
-sub BUILDARGS {
+around BUILDARGS => sub {
+  my $orig = shift;
   my ($class, @arg) = @_;
-  my %copy = ref $arg[0] ? %{$arg[0]} : @arg;
+
+  my $args = $class->$orig(@arg);
+  my %copy = %{ $args };
 
   my $zilla = delete $copy{zilla};
   my $name  = delete $copy{plugin_name};
@@ -56,7 +59,7 @@ sub BUILDARGS {
     plugin_name => $name,
     _module_map => \%copy,
   }
-}
+};
 
 with 'Dist::Zilla::Role::ShareDir';
 __PACKAGE__->meta->make_immutable;
@@ -74,7 +77,7 @@ Dist::Zilla::Plugin::ModuleShareDirs - install a directory's contents as module-
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::Releaser;
 # ABSTRACT: something that makes a release of the dist
-$Dist::Zilla::Role::Releaser::VERSION = '5.037';
+$Dist::Zilla::Role::Releaser::VERSION = '5.039';
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -29,7 +29,7 @@ Dist::Zilla::Role::Releaser - something that makes a release of the dist
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::License;
 # ABSTRACT: output a LICENSE file
-$Dist::Zilla::Plugin::License::VERSION = '5.037';
+$Dist::Zilla::Plugin::License::VERSION = '5.039';
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
@@ -12,15 +12,25 @@ use namespace::autoclean;
 #pod distribution's license, as produced by the C<fulltext> method of the
 #pod dist's L<Software::License> object.
 #pod
+#pod =attr filename
+#pod
+#pod This attribute can be used to specify a name other than F<LICENSE> to be used.
+#pod
 #pod =cut
 
 use Dist::Zilla::File::InMemory;
+
+has filename => (
+  is  => 'ro',
+  isa => 'Str',
+  default => 'LICENSE',
+);
 
 sub gather_files {
   my ($self, $arg) = @_;
 
   my $file = Dist::Zilla::File::InMemory->new({
-    name    => 'LICENSE',
+    name    => $self->filename,
     content => $self->zilla->license->fulltext,
   });
 
@@ -67,13 +77,19 @@ Dist::Zilla::Plugin::License - output a LICENSE file
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 
 This plugin adds a F<LICENSE> file containing the full text of the
 distribution's license, as produced by the C<fulltext> method of the
 dist's L<Software::License> object.
+
+=head1 ATTRIBUTES
+
+=head2 filename
+
+This attribute can be used to specify a name other than F<LICENSE> to be used.
 
 =head1 SEE ALSO
 

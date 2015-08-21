@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package CPAN::Uploader;
 # ABSTRACT: upload things to the CPAN
-$CPAN::Uploader::VERSION = '0.103009';
+$CPAN::Uploader::VERSION = '0.103010';
 #pod =head1 ORIGIN
 #pod
 #pod This code is mostly derived from C<cpan-upload-http> by Brad Fitzpatrick, which
@@ -280,7 +280,7 @@ CPAN::Uploader - upload things to the CPAN
 
 =head1 VERSION
 
-version 0.103009
+version 0.103010
 
 =head1 METHODS
 
@@ -349,7 +349,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Barbie Christian Walde David Caldwell fREW Schmidt Gabor Szabo Graham Knop Kent Fredric Mark Fowler Mike Doherty Steven Haryanto (on Asus Zenbook) sungo Torsten Raudssus
+=for stopwords Barbie Christian Walde David Caldwell fREW Schmidt Gabor Szabo Graham Knop Kent Fredric Mark Fowler Mike Doherty Steven Haryanto (on Asus Zenbook) sungo Torsten Raudssus Vincent Pit
 
 =over 4
 
@@ -400,6 +400,10 @@ sungo <sungo@sungo.us>
 =item *
 
 Torsten Raudssus <github@raudssus.de>
+
+=item *
+
+Vincent Pit <perl@profvince.com>
 
 =back
 

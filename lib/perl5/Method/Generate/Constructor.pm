@@ -29,8 +29,7 @@ sub register_attribute_specs {
     }
     if ($new_spec->{required}
       && !(
-        exists $new_spec->{default}
-        || $new_spec->{builder}
+        $self->accessor_generator->has_default($name, $new_spec)
         || !exists $new_spec->{init_arg}
         || defined $new_spec->{init_arg}
       )
@@ -228,11 +227,11 @@ sub _check_required {
     map $spec->{$_}{init_arg},
       grep {
         my %s = %{$spec->{$_}}; # ignore required if default or builder set
-        $s{required} and not($s{builder} or $s{default})
+        $s{required} and not($s{builder} or exists $s{default})
       } sort keys %$spec;
   return '' unless @required_init;
-  '    if (my @missing = grep !exists $args->{$_}, qw('
-    .join(' ',@required_init).')) {'."\n"
+  '    if (my @missing = grep !exists $args->{$_}, '
+    .join(', ', map quotify($_), @required_init).') {'."\n"
     .q{      die "Missing required arguments: ".join(', ', sort @missing);}."\n"
     ."    }\n";
 }

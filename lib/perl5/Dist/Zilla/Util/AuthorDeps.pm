@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::Util::AuthorDeps;
 # ABSTRACT: Utils for listing your distribution's author dependencies
-$Dist::Zilla::Util::AuthorDeps::VERSION = '5.037';
+$Dist::Zilla::Util::AuthorDeps::VERSION = '5.039';
 use Dist::Zilla::Util;
 use Path::Tiny;
 use List::MoreUtils ();
@@ -36,6 +36,11 @@ sub extract_author_deps {
   require CPAN::Meta::Requirements;
   my $reqs = CPAN::Meta::Requirements->new;
 
+  if (defined (my $license = $config->{_}->{license})) {
+    $license = 'Software::License::'.$license;
+    $reqs->add_minimum($license => 0);
+  }
+
   for my $section ( sort keys %$config ) {
     next if q[_] eq $section;
     my $pack = $section;
@@ -67,14 +72,14 @@ sub extract_author_deps {
   my @packages;
   while (<$fh>) {
     chomp;
-    next unless /\A\s*;\s*authordep\s*(\S+)\s*(=\s*(\S+))?\s*\z/;
-    my $ver = defined $3 ? $3 : "0";
+    next unless /\A\s*;\s*authordep\s*(\S+)\s*(?:=\s*(.+))?\s*\z/;
+    my $ver = defined $2 ? $2 : "0";
     # Any "; authordep " is inserted at the beginning of the list
     # in the file order so the user can control the order of at least a part of
     # the plugin list
     push @packages, $1;
     # And added to the requirements so we can use it later
-    $reqs->add_minimum($1 => $ver);
+    $reqs->add_string_requirement($1 => $ver);
   }
 
   my $vermap = $reqs->as_string_hash;
@@ -124,7 +129,7 @@ Dist::Zilla::Util::AuthorDeps - Utils for listing your distribution's author dep
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 AUTHOR
 

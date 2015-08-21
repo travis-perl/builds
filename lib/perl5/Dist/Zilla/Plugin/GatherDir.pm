@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GatherDir;
 # ABSTRACT: gather all the files in a directory
-$Dist::Zilla::Plugin::GatherDir::VERSION = '5.037';
+$Dist::Zilla::Plugin::GatherDir::VERSION = '5.039';
 use Moose;
 use MooseX::Types::Path::Class qw(Dir File);
 with 'Dist::Zilla::Role::FileGatherer';
@@ -153,8 +153,11 @@ around dump_config => sub {
   my $config = $self->$orig;
 
   $config->{+__PACKAGE__} = {
-    map { $_ => $self->$_ }
-      qw(root prefix include_dotfiles follow_symlinks exclude_filename exclude_match prune_directory),
+    prefix => $self->prefix,
+    # only report relative to dist root to avoid leaking private info
+    root => path($self->root)->relative($self->zilla->root),
+    (map { $_ => $self->$_ ? 1 : 0 } qw(include_dotfiles follow_symlinks)),
+    (map { $_ => [ sort @{ $self->$_ } ] } qw(exclude_filename exclude_match prune_directory)),
   };
 
   return $config;
@@ -167,8 +170,10 @@ sub gather_files {
   $exclude_regex = qr/(?:$exclude_regex)|$_/
     for @{ $self->exclude_match };
 
+  my $repo_root = $self->zilla->root;
   my $root = "" . $self->root;
   $root =~ s{^~([\\/])}{require File::HomeDir; File::HomeDir::->my_home . $1}e;
+  $root = path($root)->relative($repo_root)->stringify if path($root)->is_relative;
 
   my $prune_regex = qr/\000/;
   $prune_regex = qr/$prune_regex|$_/
@@ -179,7 +184,7 @@ sub gather_files {
   my $rule = File::Find::Rule->new();
   $rule->extras({ follow => $self->follow_symlinks });
 
-  $rule->exec(sub { $self->log_debug('considering ' . path($_[-1])->relative($root)); 1 })
+  $rule->exec(sub { $self->log_debug('considering ' . path($_[-1])->relative($repo_root)); 1 })
     if $self->zilla->logger->get_debug;
 
   $rule->or(
@@ -245,7 +250,7 @@ Dist::Zilla::Plugin::GatherDir - gather all the files in a directory
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 

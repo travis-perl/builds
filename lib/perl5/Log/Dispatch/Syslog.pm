@@ -3,7 +3,7 @@ package Log::Dispatch::Syslog;
 use strict;
 use warnings;
 
-our $VERSION = '2.45';
+our $VERSION = '2.48';
 
 use Log::Dispatch::Output;
 
@@ -30,6 +30,9 @@ sub new {
 }
 
 my ($Ident) = $0 =~ /(.+)/;
+
+my $thread_lock;
+my $threads_loaded;
 
 sub _init {
     my $self = shift;
@@ -61,8 +64,12 @@ sub _init {
 
     $self->{$_} = $p{$_} for qw( ident logopt facility socket lock );
     if ( $self->{lock} ) {
-        require threads;
-        require threads::shared;
+
+        # These need to be loaded with use, not require.
+        eval 'use threads; use threads::shared'
+            unless $threads_loaded;
+        $threads_loaded = 1;
+        threads::shared::share( \$thread_lock );
     }
 
     $self->{priorities} = [
@@ -76,8 +83,6 @@ sub _init {
         'EMERG'
     ];
 }
-
-my $thread_lock : shared = 0;
 
 sub log_message {
     my $self = shift;
@@ -122,7 +127,7 @@ Log::Dispatch::Syslog - Object for logging to system log.
 
 =head1 VERSION
 
-version 2.45
+version 2.48
 
 =head1 SYNOPSIS
 

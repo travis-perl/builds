@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::UploadToCPAN;
 # ABSTRACT: upload the dist to CPAN
-$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.037';
+$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.039';
 use Moose;
 with qw(Dist::Zilla::Role::BeforeRelease Dist::Zilla::Role::Releaser);
 
@@ -175,9 +175,11 @@ has pause_cfg => (
     my $file = $self->pause_cfg_file;
     $file = File::Spec->catfile($self->pause_cfg_dir, $file)
       unless File::Spec->file_name_is_absolute($file);
+    return {} unless -e $file && -r _;
     my $cfg = try {
       CPAN::Uploader->read_config_file($file)
     } catch {
+      $self->log("Couldn't load credentials from '$file': $_");
       {};
     };
     return $cfg;
@@ -274,7 +276,7 @@ Dist::Zilla::Plugin::UploadToCPAN - upload the dist to CPAN
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 

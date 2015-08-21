@@ -1,10 +1,11 @@
 package Class::MOP::Method::Wrapped;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
 
 use Scalar::Util 'blessed';
+use Sub::Name 'subname';
 
 use parent 'Class::MOP::Method';
 
@@ -83,15 +84,20 @@ sub wrap {
         },
     };
     $_build_wrapped_method->($modifier_table);
-    return $class->SUPER::wrap(
-        sub { $modifier_table->{cache}->(@_) },
-        # get these from the original
-        # unless explicitly overridden
-        package_name   => $params{package_name} || $code->package_name,
-        name           => $params{name}         || $code->name,
-        original_method => $code,
 
-        modifier_table => $modifier_table,
+    # get these from the original unless explicitly overridden
+    my $pkg_name    = $params{package_name} || $code->package_name;
+    my $method_name = $params{name}         || $code->name;
+
+    return $class->SUPER::wrap(
+        sub {
+            my $wrapped = subname "${pkg_name}::_wrapped_${method_name}" => $modifier_table->{cache};
+            return $wrapped->(@_) ;
+        },
+        package_name    => $pkg_name,
+        name            => $method_name,
+        original_method => $code,
+        modifier_table  => $modifier_table,
     );
 }
 
@@ -211,7 +217,7 @@ Class::MOP::Method::Wrapped - Method Meta Object for methods with before/after/a
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -220,18 +226,14 @@ after, and around method modifiers.
 
 =head1 METHODS
 
-=head2 Construction
-
-=over 4
-
-=item B<< Class::MOP::Method::Wrapped->wrap($metamethod, %options) >>
+=head2 Class::MOP::Method::Wrapped->wrap($metamethod, %options)
 
 This is the constructor. It accepts a L<Class::MOP::Method> object and
 a hash of options.
 
 The options are:
 
-=over 8
+=over 4
 
 =item * name
 
@@ -250,30 +252,28 @@ method's class.
 
 =back
 
-=item B<< $metamethod->get_original_method >>
+=head2 $metamethod->get_original_method
 
 This returns the L<Class::MOP::Method> object that was passed to the
 constructor.
 
-=item B<< $metamethod->add_before_modifier($code) >>
+=head2 $metamethod->add_before_modifier($code)
 
-=item B<< $metamethod->add_after_modifier($code) >>
+=head2 $metamethod->add_after_modifier($code)
 
-=item B<< $metamethod->add_around_modifier($code) >>
+=head2 $metamethod->add_around_modifier($code)
 
 These methods all take a subroutine reference and apply it as a
 modifier to the original method.
 
-=item B<< $metamethod->before_modifiers >>
+=head2 $metamethod->before_modifiers
 
-=item B<< $metamethod->after_modifiers >>
+=head2 $metamethod->after_modifiers
 
-=item B<< $metamethod->around_modifiers >>
+=head2 $metamethod->around_modifiers
 
 These methods all return a list of subroutine references which are
 acting as the specified type of modifier.
-
-=back
 
 =head1 AUTHORS
 

@@ -3,7 +3,7 @@ package Log::Dispatch::Null;
 use strict;
 use warnings;
 
-our $VERSION = '2.45';
+our $VERSION = '2.48';
 
 use Log::Dispatch::Output;
 
@@ -36,7 +36,7 @@ Log::Dispatch::Null - Object that accepts messages and does nothing
 
 =head1 VERSION
 
-version 2.45
+version 2.48
 
 =head1 SYNOPSIS
 

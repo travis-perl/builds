@@ -1,11 +1,11 @@
-package MooseX::Types;
-# git description: v0.44-8-g4f7d179
-$MooseX::Types::VERSION = '0.45';
+package MooseX::Types; # git description: v0.45-12-g72441cd
 use Moose;
 # ABSTRACT: Organise your Moose types in libraries
 # KEYWORDS: moose types classes objects constraints declare libraries
 
-use Moose::Util::TypeConstraints;
+our $VERSION = '0.46';
+
+use Moose::Util::TypeConstraints      qw( find_type_constraint );
 use MooseX::Types::TypeDecorator;
 use MooseX::Types::Base               ();
 use MooseX::Types::Util               qw( filter_tags );
@@ -13,7 +13,8 @@ use MooseX::Types::UndefinedType;
 use MooseX::Types::CheckedUtilExports ();
 use Carp::Clan                        qw( ^MooseX::Types );
 use Sub::Name;
-use Scalar::Util                      'reftype';
+use Scalar::Util                      qw( blessed reftype );
+use Sub::Exporter::ForMethods 0.100052 'method_installer';  # for 'rebless'
 
 use namespace::autoclean;
 
@@ -368,29 +369,7 @@ sub import {
         $caller->import({
             -full => 1,
             -into => $caller,
-            # just like Sub::Exporter::ForMethods, but with the blessing added
-            installer => sub {
-                my ($arg, $to_export) = @_;
-
-                my $into = $arg->{into};
-
-                for (my $i = 0; $i < @$to_export; $i += 2) {
-                  my ($as, $code) = @$to_export[ $i, $i+1 ];
-
-                  next if ref $as;
-
-                  my $sub = sub { $code->(@_) };
-                  my $subtype = blessed $code;
-                  bless $sub, $subtype if $subtype;
-
-                  $to_export->[ $i + 1 ] = Sub::Name::subname(
-                    join(q{::}, $into, $as),
-                    $sub,
-                  );
-                }
-
-                Sub::Exporter::default_installer($arg, $to_export);
-            },
+            installer => method_installer({ rebless => 1 }),
         }, @to_export);
     }
 
@@ -551,7 +530,7 @@ MooseX::Types - Organise your Moose types in libraries
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 SYNOPSIS
 
@@ -981,26 +960,19 @@ Many thanks to the C<#moose> cabal on C<irc.perl.org>.
 
 Robert "phaylon" Sedlacek <rs@474.at>
 
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2007 by Robert "phaylon" Sedlacek.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =head1 CONTRIBUTORS
 
-=for stopwords Dave Rolsky Karen Etheridge John Napiorkowski Robert 'phaylon' Sedlacek Rafael Kitover Florian Ragwitz Matt S Trout Hans Dieter Pearcey Jesse Luehrs Tomas Doran (t0m) matthewt Justin Hunter Kent Fredric Paul Fenwick Graham Knop
+=for stopwords Karen Etheridge Dave Rolsky John Napiorkowski Robert 'phaylon' Sedlacek Rafael Kitover Florian Ragwitz Matt S Trout Tomas Doran (t0m) Jesse Luehrs Hans Dieter Pearcey Graham Knop Paul Fenwick Kent Fredric Justin Hunter
 
 =over 4
 
 =item *
 
-Dave Rolsky <autarch@urth.org>
+Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Karen Etheridge <ether@cpan.org>
+Dave Rolsky <autarch@urth.org>
 
 =item *
 
@@ -1024,7 +996,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =item *
 
-Hans Dieter Pearcey <hdp@weftsoar.net>
+Tomas Doran (t0m) <bobtfish@bobtfish.net>
 
 =item *
 
@@ -1032,19 +1004,11 @@ Jesse Luehrs <doy@tozt.net>
 
 =item *
 
-Tomas Doran (t0m) <bobtfish@bobtfish.net>
+Hans Dieter Pearcey <hdp@weftsoar.net>
 
 =item *
 
-matthewt <matthewt@3efe9002-19ed-0310-8735-a98156148065>
-
-=item *
-
-Justin Hunter <justin.d.hunter@gmail.com>
-
-=item *
-
-Kent Fredric <kentfredric@gmail.com>
+Graham Knop <haarg@haarg.org>
 
 =item *
 
@@ -1052,8 +1016,19 @@ Paul Fenwick <pjf@perltraining.com.au>
 
 =item *
 
-Graham Knop <haarg@haarg.org>
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Justin Hunter <justin.d.hunter@gmail.com>
 
 =back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2007 by Robert "phaylon" Sedlacek.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

@@ -1,6 +1,6 @@
 package Dist::Zilla;
 # ABSTRACT: distribution builder; installer not included!
-$Dist::Zilla::VERSION = '5.037';
+$Dist::Zilla::VERSION = '5.039';
 use Moose 0.92; # role composition fixes
 with 'Dist::Zilla::Role::ConfigDumper';
 
@@ -422,7 +422,7 @@ has _copyright_holder => (
 
 has _copyright_year => (
   is        => 'ro',
-  isa       => 'Int',
+  isa       => 'Str',
   lazy      => 1,
   init_arg  => 'copyright_year',
   clearer   => '_clear_copyright_year',
@@ -621,6 +621,11 @@ sub _metadata_generator_id { 'Dist::Zilla' }
 #pod This is a L<Dist::Zilla::Prereqs> object, which is a thin layer atop
 #pod L<CPAN::Meta::Prereqs>, and describes the distribution's prerequisites.
 #pod
+#pod =method register_prereqs
+#pod
+#pod Allows registration of prerequisites; delegates to
+#pod L<Dist::Zilla::Prereqs/register_prereqs> via our L</prereqs> attribute.
+#pod
 #pod =cut
 
 has prereqs => (
@@ -799,6 +804,20 @@ sub stash_named {
 __PACKAGE__->meta->make_immutable;
 1;
 
+#pod =head1 STABILITY PROMISE
+#pod
+#pod None.
+#pod
+#pod I will try not to break things within any major release.  Minor releases are
+#pod not extensively tested before release.  In major releases, anything goes,
+#pod although I will try to publish a complete list of known breaking changes in any
+#pod major release.
+#pod
+#pod If Dist::Zilla was a tool, it would have yellow and black stripes and there
+#pod would be no L<UL
+#pod certification|https://en.wikipedia.org/wiki/UL_(safety_organization)> on it.
+#pod It is nasty, brutish, and large.
+#pod
 #pod =head1 SUPPORT
 #pod
 #pod There are usually people on C<irc.perl.org> in C<#distzilla>, even if they're
@@ -869,7 +888,7 @@ Dist::Zilla - distribution builder; installer not included!
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 
@@ -1030,6 +1049,11 @@ log_fatal
 
 =head1 METHODS
 
+=head2 register_prereqs
+
+Allows registration of prerequisites; delegates to
+L<Dist::Zilla::Prereqs/register_prereqs> via our L</prereqs> attribute.
+
 =head2 plugin_named
 
   my $plugin = $zilla->plugin_named( $plugin_name );
@@ -1058,6 +1082,20 @@ found, an exception will be raised.
 This method will return the stash with the given name, or undef if none exists.
 It looks for a local stash (for this dist) first, then falls back to a global
 stash (from the user's global configuration).
+
+=head1 STABILITY PROMISE
+
+None.
+
+I will try not to break things within any major release.  Minor releases are
+not extensively tested before release.  In major releases, anything goes,
+although I will try to publish a complete list of known breaking changes in any
+major release.
+
+If Dist::Zilla was a tool, it would have yellow and black stripes and there
+would be no L<UL
+certification|https://en.wikipedia.org/wiki/UL_(safety_organization)> on it.
+It is nasty, brutish, and large.
 
 =head1 SUPPORT
 
@@ -1123,7 +1161,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Cory G Watson csjewell Curtis Brandt Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David Golden H. Adler Steinbrunner Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Mike Doherty Moritz Onken Neil Bowers Nickolay Platonov nperez Olivier Mengué Pedro Melo Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
+=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Cory G Watson csjewell Curtis Brandt Dagfinn Ilmari Mannsåker Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David E. Wheeler Golden H. Adler Steinbrunner Zurborg Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Michael Jemmeson Mike Doherty Moritz Onken Neil Bowers Nickolay Platonov Nick Tonkin nperez Olivier Mengué Pedro Melo Philippe Bruhat (BooK) Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
 
 =over 4
 
@@ -1181,6 +1219,10 @@ Christopher J. Madsen <cjm@cjmweb.net>
 
 =item *
 
+Chris Weyl <cweyl@alumni.drew.edu>
+
+=item *
+
 Cory G Watson <gphat@onemogin.com>
 
 =item *
@@ -1190,6 +1232,10 @@ csjewell <perl@csjewell.fastmail.us>
 =item *
 
 Curtis Brandt <curtisjbrandt@gmail.com>
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
 
 =item *
 
@@ -1209,6 +1255,10 @@ Dave Rolsky <autarch@urth.org>
 
 =item *
 
+David E. Wheeler <david@justatheory.com>
+
+=item *
+
 David Golden <dagolden@cpan.org>
 
 =item *
@@ -1218,6 +1268,10 @@ David H. Adler <dha@pobox.com>
 =item *
 
 David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+David Zurborg <port@david-zurb.org>
 
 =item *
 
@@ -1262,6 +1316,10 @@ Graham Barr <gbarr@pobox.com>
 =item *
 
 Graham Knop <haarg@haarg.org>
+
+=item *
+
+Graham Ollis <perl@wdlabs.com>
 
 =item *
 
@@ -1353,6 +1411,10 @@ Mateu X Hunter <hunter@missoula.org>
 
 =item *
 
+Michael Jemmeson <mjemmeson@cpan.org>
+
+=item *
+
 Mike Doherty <mike@mikedoherty.ca>
 
 =item *
@@ -1369,6 +1431,10 @@ Nickolay Platonov <nickolay@desktop.(none)>
 
 =item *
 
+Nick Tonkin <1nickt@users.noreply.github.com>
+
+=item *
+
 nperez <nperez@cpan.org>
 
 =item *
@@ -1378,6 +1444,10 @@ Olivier Mengué <dolmen@cpan.org>
 =item *
 
 Pedro Melo <melo@simplicidade.org>
+
+=item *
+
+Philippe Bruhat (BooK) <book@cpan.org>
 
 =item *
 

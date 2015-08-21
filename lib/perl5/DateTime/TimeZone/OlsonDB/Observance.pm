@@ -1,5 +1,5 @@
 package DateTime::TimeZone::OlsonDB::Observance;
-$DateTime::TimeZone::OlsonDB::Observance::VERSION = '1.92';
+$DateTime::TimeZone::OlsonDB::Observance::VERSION = '1.93';
 use strict;
 use warnings;
 
@@ -7,7 +7,7 @@ use DateTime::Duration;
 use DateTime::TimeZone::OlsonDB;
 use DateTime::TimeZone::OlsonDB::Change;
 
-use List::AllUtils qw( any first );
+use List::Util 1.33 qw( any first );
 use Params::Validate qw( validate SCALAR ARRAYREF UNDEF OBJECT );
 
 sub new {

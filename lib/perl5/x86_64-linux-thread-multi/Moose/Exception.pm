@@ -1,5 +1,5 @@
 package Moose::Exception;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use Moose;
 use Devel::StackTrace 1.33;
@@ -106,7 +106,7 @@ Moose::Exception - Superclass for Moose internal exceptions
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -125,15 +125,17 @@ subclass the relevant Moose exceptions - but only then.
 
 =head1 METHODS
 
-This class provides the following methods:
-
 =head2 $exception->message
 
-This methods returns the exception message.
+This attribute contains the exception message.
+
+Every subclass of L<Moose::Exception> is expected to override
+C<_build_message> method in order to construct this value.
 
 =head2 $exception->trace
 
-This method returns the stack trace for the given exception.
+This attribute contains the stack trace for the given exception. It returns a
+L<Devel::StackTrace> object.
 
 =head2 $exception->as_string
 

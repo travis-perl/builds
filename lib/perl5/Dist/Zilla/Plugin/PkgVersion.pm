@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgVersion;
 # ABSTRACT: add a $VERSION to your packages
-$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.037';
+$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.039';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -108,6 +108,11 @@ sub munge_file {
 
   if ($file->is_bytes) {
     $self->log_debug($file->name . " has 'bytes' encoding, skipping...");
+    return;
+  }
+
+  if ($file->name =~ /\.pod$/) {
+    $self->log_debug($file->name . " is a pod file, skipping...");
     return;
   }
 
@@ -287,7 +292,7 @@ Dist::Zilla::Plugin::PkgVersion - add a $VERSION to your packages
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 

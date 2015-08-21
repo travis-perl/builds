@@ -5,12 +5,12 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '2.45';
+our $VERSION = '2.48';
 
 use base qw( Log::Dispatch::Base );
 
 use Module::Runtime qw( use_package_optimistically );
-use Params::Validate 0.15 qw(validate_with ARRAYREF CODEREF);
+use Params::Validate 1.03 qw(validate_with ARRAYREF CODEREF);
 use Carp ();
 
 our %LEVELS;
@@ -300,7 +300,7 @@ Log::Dispatch - Dispatches messages to one or more outputs
 
 =head1 VERSION
 
-version 2.45
+version 2.48
 
 =head1 SYNOPSIS
 
@@ -710,7 +710,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Olaf Alders Olivier Mengué Ross Attrill swartz@jonathan-swartzs-macbook-4.local swartz@pobox.com Whitney Jackson
+=for stopwords Karen Etheridge Olaf Alders Olivier Mengué Rohan Carly Ross Attrill swartz@jonathan-swartzs-macbook-4.local swartz@pobox.com Whitney Jackson
 
 =over 4
 
@@ -725,6 +725,10 @@ Olaf Alders <olaf@wundersolutions.com>
 =item *
 
 Olivier Mengué <dolmen@cpan.org>
+
+=item *
+
+Rohan Carly <se456@rohan.id.au>
 
 =item *
 
