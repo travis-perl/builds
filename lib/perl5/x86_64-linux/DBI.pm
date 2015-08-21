@@ -11,7 +11,7 @@ package DBI;
 require 5.008_001;
 
 BEGIN {
-our $XS_VERSION = our $VERSION = "1.633"; # ==> ALSO update the version in the pod text below!
+our $XS_VERSION = our $VERSION = "1.634"; # ==> ALSO update the version in the pod text below!
 $VERSION = eval $VERSION;
 }
 
@@ -137,6 +137,8 @@ If you think you've found a bug then please read
 "How to Report Bugs Effectively" by Simon Tatham:
 L<http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>.
 
+If you think you've found a memory leak then read L</Memory Leaks>.
+
 Your problem is most likely related to the specific DBD driver module you're
 using. If that's the case then click on the 'Bugs' link on the L<http://metacpan.org>
 page for your driver. Only submit a bug report against the DBI itself if you're
@@ -144,7 +146,7 @@ sure that your issue isn't related to the driver you're using.
 
 =head2 NOTES
 
-This is the DBI specification that corresponds to DBI version 1.633
+This is the DBI specification that corresponds to DBI version 1.634
 (see L<DBI::Changes> for details).
 
 The DBI is evolving at a steady pace, so it's good to check that
@@ -1391,7 +1393,7 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
 	    unless $class =~ /^DBD::(\w+)::(dr|db|st)$/;
 	my ($driver, $subtype) = ($1, $2);
 	Carp::croak("invalid method name '$method'")
-	    unless $method =~ m/^([a-z]+_)\w+$/;
+	    unless $method =~ m/^([a-z][a-z0-9]*_)\w+$/;
 	my $prefix = $1;
 	my $reg_info = $dbd_prefix_registry->{$prefix};
 	Carp::carp("method name prefix '$prefix' is not associated with a registered driver") unless $reg_info;
@@ -1588,9 +1590,13 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
 	my $quoted_id = join '.', grep { defined } @id;
 
 	if ($catalog) {			# add catalog correctly
-	    $quoted_id = ($info->[2] == 2)	# SQL_CL_END
-		    ? $quoted_id . $info->[1] . $catalog
-		    : $catalog   . $info->[1] . $quoted_id;
+        if ($quoted_id) {
+            $quoted_id = ($info->[2] == 2)	# SQL_CL_END
+                ? $quoted_id . $info->[1] . $catalog
+                    : $catalog   . $info->[1] . $quoted_id;
+        } else {
+            $quoted_id = $catalog;
+        }
 	}
 	return $quoted_id;
     }
@@ -1761,7 +1767,11 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
 	my $sth    = $dbh->table_info(@args[0,1,2,3,4]) or return;
 	my $tables = $sth->fetchall_arrayref or return;
 	my @tables;
-	if ($dbh->get_info(29)) { # SQL_IDENTIFIER_QUOTE_CHAR
+	if (defined($args[3]) && $args[3] eq '%' # special case for tables('','','','%')
+	    && grep {defined($_) && $_ eq ''} @args[0,1,2]
+	) {
+	    @tables = map { $_->[3] } @$tables;
+	} elsif ($dbh->get_info(29)) { # SQL_IDENTIFIER_QUOTE_CHAR
 	    @tables = map { $dbh->quote_identifier( @{$_}[0,1,2] ) } @$tables;
 	}
 	else {		# temporary old style hack (yeach)
@@ -2060,8 +2070,7 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
             }
 	}
 	elsif ($mode eq 'HASH') {
-            if (keys %$slice) {
-                keys %$slice; # reset the iterator
+            if (keys %$slice) { # resets the iterator
                 my $name2idx = $sth->FETCH('NAME_lc_hash');
                 while ( my ($name, $unused) = each %$slice ) {
                     my $idx = $name2idx->{lc $name};
@@ -3643,7 +3652,7 @@ Type: array ref
 The ChildHandles attribute contains a reference to an array of all the
 handles created by this handle which are still accessible.  The
 contents of the array are weak-refs and will become undef when the
-handle goes out of scope.
+handle goes out of scope. (They're cleared out occasionally.)
 
 C<ChildHandles> returns undef if your perl version does not support weak
 references (check the L<Scalar::Util|Scalar::Util> module).  The referenced
@@ -4635,7 +4644,7 @@ In which case the array is copied and each value decremented before
 passing to C</fetchall_arrayref>.
 
 You may often want to fetch an array of rows where each row is stored as a
-hash. That can be done simple using:
+hash. That can be done simply using:
 
   my $emps = $dbh->selectall_arrayref(
       "SELECT ename FROM emp ORDER BY ename",
@@ -4731,7 +4740,8 @@ statement, such as C<$sth-E<gt>{NUM_OF_FIELDS}>, until after C<$sth-E<gt>execute
 has been called. Portable applications should take this into account.
 
 In general, DBI drivers do not parse the contents of the statement
-(other than simply counting any L</Placeholders>). The statement is
+(other than simply counting any L<Placeholders|/Placeholders and Bind Values>).
+The statement is
 passed directly to the database engine, sometimes known as pass-thru
 mode. This has advantages and disadvantages. On the plus side, you can
 access all the functionality of the engine being used. On the downside,
@@ -5995,7 +6005,7 @@ mark character (C<?>). For example:
   $sth->execute;
   DBI::dump_results($sth);
 
-See L</"Placeholders and Bind Values"> for more information.
+See L</Placeholders and Bind Values> for more information.
 
 
 B<Data Types for Placeholders>
@@ -6047,7 +6057,7 @@ For example:
 The C<CONVERT> function used here is just an example. The actual function
 and syntax will vary between different databases and is non-portable.
 
-See also L</"Placeholders and Bind Values"> for more information.
+See also L</Placeholders and Bind Values> for more information.
 
 
 =head3 C<bind_param_inout>
@@ -6073,7 +6083,7 @@ pick a generous length, i.e., a length larger than the longest value that would 
 returned.  The only cost of using a larger value than needed is wasted memory.
 
 Undefined values or C<undef> are used to indicate null values.
-See also L</"Placeholders and Bind Values"> for more information.
+See also L</Placeholders and Bind Values> for more information.
 
 
 =head3 C<bind_param_array>
@@ -7662,6 +7672,23 @@ an C<eval> block.
 You can stash private data into DBI handles
 via C<$h-E<gt>{private_..._*}>.  See the entry under L</ATTRIBUTES
 COMMON TO ALL HANDLES> for info and important caveats.
+
+=head2 Memory Leaks
+
+When tracking down memory leaks using tools like L<Devel::Leak>
+you'll find that some DBI internals are reported as 'leaking' memory.
+This is very unlikely to be a real leak.  The DBI has various caches to improve
+performance and the apparrent leaks are simply the normal operation of these
+caches.
+
+The most frequent sources of the apparrent leaks are L</ChildHandles>,
+L</prepare_cached> and L</connect_cached>.
+
+For example http://stackoverflow.com/questions/13338308/perl-dbi-memory-leak
+
+Given how widely the DBI is used, you can rest assured that if a new release of
+the DBI did have a real leak it would be discovered, reported, and fixed
+immediately. The leak you're looking for is probably elsewhere. Good luck!
 
 
 =head1 TRACING

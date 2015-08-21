@@ -1,11 +1,12 @@
+use strict;
 {
     package DBD::NullP;
 
     require DBI;
     require Carp;
 
-    @EXPORT = qw(); # Do NOT @EXPORT anything.
-    $VERSION = "12.014715";
+    our @EXPORT = qw(); # Do NOT @EXPORT anything.
+    our $VERSION = "12.014715";
 
 #   $Id: NullP.pm 14714 2011-02-22 17:27:07Z Tim $
 #
@@ -14,7 +15,7 @@
 #   You may distribute under the terms of either the GNU General Public
 #   License or the Artistic License, as specified in the Perl README file.
 
-    $drh = undef;	# holds driver handle once initialised
+    our $drh = undef;	# holds driver handle once initialised
 
     sub driver{
 	return $drh if $drh;
@@ -35,7 +36,7 @@
 
 
 {   package DBD::NullP::dr; # ====== DRIVER ======
-    $imp_data_size = 0;
+    our $imp_data_size = 0;
     use strict;
 
     sub connect { # normally overridden, but a handy default
@@ -51,9 +52,45 @@
 
 
 {   package DBD::NullP::db; # ====== DATABASE ======
-    $imp_data_size = 0;
+    our $imp_data_size = 0;
     use strict;
     use Carp qw(croak);
+
+    # Added get_info to support tests in 10examp.t
+    sub get_info {
+        my ($dbh, $type) = @_;
+
+        if ($type == 29) {      # identifier quote
+            return '"';
+        }
+        return;
+    }
+
+    # Added table_info to support tests in 10examp.t
+    sub table_info {
+        my ($dbh, $catalog, $schema, $table, $type) = @_;
+
+        my ($outer, $sth) = DBI::_new_sth($dbh, {
+            'Statement'     => 'tables',
+        });
+        if (defined($type) && $type eq '%' && # special case for tables('','','','%')
+                grep {defined($_) && $_ eq ''} ($catalog, $schema, $table)) {
+            $outer->{dbd_nullp_data} = [[undef, undef, undef, 'TABLE', undef],
+                                        [undef, undef, undef, 'VIEW', undef],
+                                        [undef, undef, undef, 'ALIAS', undef]];
+        } elsif (defined($catalog) && $catalog eq '%' && # special case for tables('%','','')
+                grep {defined($_) && $_ eq ''} ($schema, $table)) {
+            $outer->{dbd_nullp_data} = [['catalog1', undef, undef, undef, undef],
+                                        ['catalog2', undef, undef, undef, undef]];
+        } else {
+            $outer->{dbd_nullp_data} = [['catalog', 'schema', 'table1', 'TABLE']];
+            $outer->{dbd_nullp_data} = [['catalog', 'schema', 'table2', 'TABLE']];
+            $outer->{dbd_nullp_data} = [['catalog', 'schema', 'table3', 'TABLE']];
+        }
+        $outer->STORE(NUM_OF_FIELDS => 5);
+        $sth->STORE(Active => 1);
+        return $outer;
+    }
 
     sub prepare {
 	my ($dbh, $statement)= @_;
@@ -99,7 +136,7 @@
 
 
 {   package DBD::NullP::st; # ====== STATEMENT ======
-    $imp_data_size = 0;
+    our $imp_data_size = 0;
     use strict;
 
     sub bind_param {
@@ -141,12 +178,12 @@
 
     sub fetchrow_arrayref {
 	my $sth = shift;
-	my $data = $sth->{dbd_nullp_data};
+	my $data = shift @{$sth->{dbd_nullp_data}};
         if (!$data || !@$data) {
             $sth->finish;     # no more data so finish
             return undef;
 	}
-        return $sth->_set_fbav(shift @$data);
+        return $sth->_set_fbav($data);
     }
     *fetch = \&fetchrow_arrayref; # alias
 

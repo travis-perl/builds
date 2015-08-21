@@ -81,7 +81,7 @@ sub generate_method {
     }
   }
 
-  for my $setting (qw( isa coerce )) {
+  foreach my $setting (qw( isa coerce )) {
     next if !exists $spec->{$setting};
     $self->_validate_codulatable($setting, $spec->{$setting}, "$into->$name");
   }
@@ -98,7 +98,7 @@ sub generate_method {
       $spec->{moosify} = [$spec->{moosify}];
     }
 
-    for my $spec (@{$spec->{moosify}}) {
+    foreach my $spec (@{$spec->{moosify}}) {
       $self->_validate_codulatable('moosify', $spec, "$into->$name");
     }
   }
@@ -106,7 +106,7 @@ sub generate_method {
   my %methods;
   if (my $reader = $spec->{reader}) {
     _die_overwrite($into, $reader, 'a reader')
-      if !$spec->{allow_overwrite} && *{_getglob("${into}::${reader}")}{CODE};
+      if !$spec->{allow_overwrite} && defined &{"${into}::${reader}"};
     if (our $CAN_HAZ_XS && $self->is_simple_get($name, $spec)) {
       $methods{$reader} = $self->_generate_xs(
         getters => $into, $reader, $name, $spec
@@ -123,7 +123,7 @@ sub generate_method {
   }
   if (my $accessor = $spec->{accessor}) {
     _die_overwrite($into, $accessor, 'an accessor')
-      if !$spec->{allow_overwrite} && *{_getglob("${into}::${accessor}")}{CODE};
+      if !$spec->{allow_overwrite} && defined &{"${into}::${accessor}"};
     if (
       our $CAN_HAZ_XS
       && $self->is_simple_get($name, $spec)
@@ -143,7 +143,7 @@ sub generate_method {
   }
   if (my $writer = $spec->{writer}) {
     _die_overwrite($into, $writer, 'a writer')
-      if !$spec->{allow_overwrite} && *{_getglob("${into}::${writer}")}{CODE};
+      if !$spec->{allow_overwrite} && defined &{"${into}::${writer}"};
     if (
       our $CAN_HAZ_XS
       && $self->is_simple_set($name, $spec)
@@ -162,7 +162,7 @@ sub generate_method {
   }
   if (my $pred = $spec->{predicate}) {
     _die_overwrite($into, $pred, 'a predicate')
-      if !$spec->{allow_overwrite} && *{_getglob("${into}::${pred}")}{CODE};
+      if !$spec->{allow_overwrite} && defined &{"${into}::${pred}"};
     if (our $CAN_HAZ_XS && our $CAN_HAZ_XS_PRED) {
       $methods{$pred} = $self->_generate_xs(
         exists_predicates => $into, $pred, $name, $spec
@@ -179,7 +179,7 @@ sub generate_method {
   }
   if (my $cl = $spec->{clearer}) {
     _die_overwrite($into, $cl, 'a clearer')
-      if !$spec->{allow_overwrite} && *{_getglob("${into}::${cl}")}{CODE};
+      if !$spec->{allow_overwrite} && defined &{"${into}::${cl}"};
     $methods{$cl} =
       quote_sub "${into}::${cl}" =>
         $self->_generate_simple_clear('$_[0]', $name, $spec)."\n"
@@ -202,7 +202,7 @@ sub generate_method {
     foreach my $delegation_spec (@specs) {
       my ($proxy, $target, @args) = @$delegation_spec;
       _die_overwrite($into, $proxy, 'a delegation')
-        if !$spec->{allow_overwrite} && *{_getglob("${into}::${proxy}")}{CODE};
+        if !$spec->{allow_overwrite} && defined &{"${into}::${proxy}"};
       $self->{captures} = {};
       $methods{$proxy} =
         quote_sub "${into}::${proxy}" =>
@@ -239,6 +239,11 @@ sub is_simple_get {
 sub is_simple_set {
   my ($self, $name, $spec) = @_;
   !grep $spec->{$_}, qw(coerce isa trigger weak_ref);
+}
+
+sub has_default {
+  my ($self, $name, $spec) = @_;
+  $spec->{builder} or exists $spec->{default} or (($spec->{is}||'') eq 'lazy');
 }
 
 sub has_eager_default {

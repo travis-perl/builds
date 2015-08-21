@@ -1,16 +1,14 @@
 package Text::Diff::Table;
 
-use 5.00503;
+use 5.006;
 use strict;
+use warnings;
 use Carp;
-use vars qw{$VERSION @ISA @EXPORT_OK};
 use Text::Diff::Config;
 
-BEGIN {
-    $VERSION   = '1.41';
-    @ISA       = qw( Text::Diff::Base Exporter );
-    @EXPORT_OK = qw( expand_tabs );
-}
+our $VERSION   = '1.42';
+our @ISA       = qw( Text::Diff::Base Exporter );
+our @EXPORT_OK = qw( expand_tabs );
 
 my %escapes = map {
     my $c =
@@ -324,7 +322,7 @@ __END__
 
   use Text::Diff;
   
-  diff \@a, $b { STYLE => "Table" };
+  diff \@a, $b, { STYLE => "Table" };
 
 =head1 DESCRIPTION
 
