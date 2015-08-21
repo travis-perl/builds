@@ -205,7 +205,7 @@ precedence:
 C<do_not_decode_query>
 
 If true, then do not try to character decode any wide characters in your
-request URL query or keywords.  You will need gto handle this manually in your action code
+request URL query or keywords.  You will need to handle this manually in your action code
 (although if you choose this setting, chances are you already do this).
 
 C<default_query_encoding>
@@ -307,10 +307,16 @@ In this case we've created a POST request but each part specifies its own conten
 character set (and setting a content encoding would also be possible).  Generally one
 would not run into this situation in a web browser context but for completeness sake
 Catalyst will notice if a multipart POST contains parts with complex or extended
-header information and in those cases it will not attempt to apply decoding to the
-form values.  Instead the part will be represented as an instance of an object
-L<Catalyst::Request::PartData> which will contain all the header information needed
-for you to perform custom parser of the data.
+header information.  In these cases we will try to inspect the meta data and do the
+right thing (in the above case we'd use SHIFT_JIS to decode, not UTF-8).  However if
+after inspecting the headers we cannot figure out how to decode the data, in those cases it
+will not attempt to apply decoding to the form values.  Instead the part will be represented as
+an instance of an object L<Catalyst::Request::PartData> which will contain all the header 
+information needed for you to perform custom parser of the data.
+
+Ideally we'd fix L<Catalyst> to be smarter about decoding so please submit your cases of
+this so we can add inteligence to the parser and find a way to extract a valid value out
+of it.
 
 =head1 UTF8 Encoding in Body Response
 
@@ -490,7 +496,7 @@ L<http://www.catalystframework.org/calendar/2013/12>, L<http://www.catalystframe
 L<http://www.catalystframework.org/calendar/2013/14>.
 
 The main difference this year is that previously calling ->write_fh would return the actual
-L<Plack> writer object that was supplied by your plack application handler, whereas now we wrap
+L<Plack> writer object that was supplied by your Plack application handler, whereas now we wrap
 that object in a lightweight decorator object that proxies the C<write> and C<close> methods
 and supplies an additional C<write_encoded> method.  C<write_encoded> does the exact same thing
 as C<write> except that it will first encode the string when necessary.  In general if you are

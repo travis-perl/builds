@@ -1,5 +1,5 @@
 package Class::MOP::Overload;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -141,7 +141,7 @@ Class::MOP::Overload - Overload Meta Object
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 SYNOPSIS
 
@@ -165,8 +165,6 @@ This class provides meta information for overloading in classes and roles.
 C<Class::MOP::Overload> is a subclass of L<Class::MOP::Object>.
 
 =head1 METHODS
-
-This class provides the following methods:
 
 =head2 Class::MOP::Overload->new(%options)
 

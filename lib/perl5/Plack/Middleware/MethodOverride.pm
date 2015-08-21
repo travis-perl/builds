@@ -4,13 +4,13 @@ use warnings;
 use Plack::Request ();
 
 package Plack::Middleware::MethodOverride;
-$Plack::Middleware::MethodOverride::VERSION = '0.14';
+$Plack::Middleware::MethodOverride::VERSION = '0.15';
 # ABSTRACT: Override REST methods to Plack apps via POST
 
 use parent 'Plack::Middleware';
 use Plack::Util::Accessor 'param';
 
-my %allowed_method = map { $_ => undef } qw(GET HEAD PUT DELETE OPTIONS TRACE CONNECT);
+my %allowed_method = map { $_ => undef } qw(GET HEAD PUT DELETE OPTIONS TRACE CONNECT PATCH);
 
 sub new {
     my $class = shift;
@@ -61,7 +61,7 @@ Plack::Middleware::MethodOverride - Override REST methods to Plack apps via POST
 
 =head1 Version
 
-version 0.14
+version 0.15
 
 =head1 Synopsis
 
@@ -114,6 +114,8 @@ what method it actually meant. That is, as long as it meant one of these:
 =item * TRACE
 
 =item * CONNECT
+
+=item * PATCH
 
 =back
 

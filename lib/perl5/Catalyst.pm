@@ -180,7 +180,7 @@ sub composed_stats_class {
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90093';
+our $VERSION = '5.90097';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -521,7 +521,7 @@ L<< detach|/"$c->detach( $action [, \@arguments ] )" >>. Like C<< $c->visit >>,
 C<< $c->go >> will perform a full dispatch on the specified action or method,
 with localized C<< $c->action >> and C<< $c->namespace >>. Like C<detach>,
 C<go> escapes the processing of the current request chain on completion, and
-does not return to its cunless blessed $cunless blessed $caller.
+does not return to its caller.
 
 @arguments are arguments to the final destination of $action. @captures are
 arguments to the intermediate steps, if any, on the way to the final sub of
@@ -640,22 +640,42 @@ sub has_errors { scalar(@{shift->error}) ? 1:0 }
 =head2 $c->last_error
 
 Returns the most recent error in the stack (the one most recently added...)
-or nothing if there are no errors.
+or nothing if there are no errors.  This does not modify the contents of the
+error stack.
 
 =cut
 
-sub last_error { my ($err, @errs) = @{shift->error}; return $err }
+sub last_error {
+  my (@errs) = @{shift->error};
+  return scalar(@errs) ? $errs[-1]: undef;
+}
 
 =head2 shift_errors
 
-shifts the most recently added error off the error stack and returns if.  Returns
+shifts the most recently added error off the error stack and returns it.  Returns
 nothing if there are no more errors.
 
 =cut
 
 sub shift_errors {
     my ($self) = @_;
-    my ($err, @errors) = @{$self->error};
+    my @errors = @{$self->error};
+    my $err = shift(@errors);
+    $self->{error} = \@errors;
+    return $err;
+}
+
+=head2 pop_errors
+
+pops the most recently added error off the error stack and returns it.  Returns
+nothing if there are no more errors.
+
+=cut
+
+sub pop_errors {
+    my ($self) = @_;
+    my @errors = @{$self->error};
+    my $err = pop(@errors);
     $self->{error} = \@errors;
     return $err;
 }
@@ -1464,11 +1484,11 @@ sub setup_finalize {
     $class->setup_finished(1);
 }
 
-=head2 $c->uri_for( $path?, @args?, \%query_values? )
+=head2 $c->uri_for( $path?, @args?, \%query_values?, \$fragment? )
 
-=head2 $c->uri_for( $action, \@captures?, @args?, \%query_values? )
+=head2 $c->uri_for( $action, \@captures?, @args?, \%query_values?, \$fragment? )
 
-=head2 $c->uri_for( $action, [@captures, @args], \%query_values? )
+=head2 $c->uri_for( $action, [@captures, @args], \%query_values?, \$fragment? )
 
 Constructs an absolute L<URI> object based on the application root, the
 provided path, and the additional arguments and query parameters provided.
@@ -1485,6 +1505,15 @@ to C<< $c->namespace >> (if it doesn't begin with a forward slash) or
 relative to the application root (if it does). It is then merged with
 C<< $c->request->base >>; any C<@args> are appended as additional path
 components; and any C<%query_values> are appended as C<?foo=bar> parameters.
+
+B<NOTE> If you are using this 'stringy' first argument, we skip encoding and
+allow you to declare something like:
+
+    $c->uri_for('/foo/bar#baz')
+
+Where 'baz' is a URI fragment.  We consider this first argument string to be
+'expert' mode where you are expected to create a valid URL and we for the most
+part just pass it through without a lot of internal effort to escape and encode.
 
 If the first argument is a L<Catalyst::Action> it represents an action which
 will have its path resolved using C<< $c->dispatcher->uri_for_action >>. The
@@ -1528,10 +1557,23 @@ sub uri_for {
         $path .= '/';
     }
 
-    undef($path) if (defined $path && $path eq '');
+    my $fragment =  ((scalar(@args) && ref($args[-1]) eq 'SCALAR') ? pop @args : undef );
+
+    unless(blessed $path) {
+      if ($path =~ s/#(.+)$//)  {
+        if(defined($1) and $fragment) {
+          carp "Abiguious fragment declaration: You cannot define a fragment in '$path' and as an argument '$fragment'";
+        }
+        if(defined($1)) {
+          $fragment = $1;
+        }
+      }
+    }
 
     my $params =
       ( scalar @args && ref $args[$#args] eq 'HASH' ? pop @args : {} );
+
+    undef($path) if (defined $path && $path eq '');
 
     carp "uri_for called with undef argument" if grep { ! defined $_ } @args;
 
@@ -1611,7 +1653,6 @@ sub uri_for {
     }
 
     my $query = '';
-
     if (my @keys = keys %$params) {
       # somewhat lifted from URI::_query's query_form
       $query = '?'.join('&', map {
@@ -1640,7 +1681,16 @@ sub uri_for {
     $base =~ s/([^$URI::uric])/$URI::Escape::escapes{$1}/go;
     $args = encode_utf8 $args;
     $args =~ s/([^$URI::uric])/$URI::Escape::escapes{$1}/go;
-    
+
+    if(defined $fragment) {
+      if(blessed $path) {
+        $fragment = encode_utf8(${$fragment});
+        $fragment =~ s/([^A-Za-z0-9\-_.!~*'() ])/$URI::Escape::escapes{$1}/go;
+        $fragment =~ s/ /+/g;
+      }
+      $query .= "#$fragment";
+    }
+
     my $res = bless(\"${base}${args}${query}", $class);
     $res;
 }

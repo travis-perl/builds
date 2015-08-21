@@ -1,11 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Role::Application::Summation;
-{
-  $MooseX::MethodAttributes::Role::Meta::Role::Application::Summation::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Role::Application::Summation::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: Role applied to the class responsible for role summation which ensures method attributes propagate from the roles being summed onto the combined role.
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 use Moose::Util qw/does_role/;
@@ -29,16 +25,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Role::Application::Summation - Role applied to the class responsible for role summation which ensures method attributes propagate from the roles being summed onto the combined role.
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 AUTHORS
 

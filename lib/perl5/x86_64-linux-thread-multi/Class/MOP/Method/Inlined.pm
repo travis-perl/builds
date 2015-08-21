@@ -1,5 +1,5 @@
 package Class::MOP::Method::Inlined;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -119,7 +119,7 @@ Class::MOP::Method::Inlined - Method base class for methods which have been inli
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -128,16 +128,12 @@ can be inlined.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< $metamethod->can_be_inlined >>
+=head2 $metamethod->can_be_inlined
 
 This method returns true if the method in question can be inlined in
 the associated metaclass.
 
 If it cannot be inlined, it spits out a warning and returns false.
-
-=back
 
 =head1 AUTHORS
 

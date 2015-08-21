@@ -1,12 +1,15 @@
 package MooseX::MethodAttributes::Role::AttrContainer::Inheritable;
-{
-  $MooseX::MethodAttributes::Role::AttrContainer::Inheritable::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::AttrContainer::Inheritable::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: capture code attributes in the automatically initialized metaclass instance
 
+our $VERSION = '0.30';
+
+#pod =head1 DESCRIPTION
+#pod
+#pod This role extends C<MooseX::MethodAttributes::Role::AttrContainer> with the
+#pod functionality of automatically initializing a metaclass for the caller and
+#pod applying the meta roles relevant for capturing method attributes.
+#pod
+#pod =cut
 
 use Moose::Role;
 use MooseX::MethodAttributes ();
@@ -29,15 +32,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::AttrContainer::Inheritable - capture code attributes in the automatically initialized metaclass instance
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 DESCRIPTION
 

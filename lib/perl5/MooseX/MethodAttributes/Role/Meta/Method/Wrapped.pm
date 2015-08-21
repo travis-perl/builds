@@ -1,16 +1,17 @@
 package MooseX::MethodAttributes::Role::Meta::Method::Wrapped;
-{
-  $MooseX::MethodAttributes::Role::Meta::Method::Wrapped::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Method::Wrapped::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: wrapped metamethod role allowing code attribute introspection
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 
 use namespace::autoclean;
 
+#pod =method attributes
+#pod
+#pod Gets the list of code attributes of the original method this meta method wraps.
+#pod
+#pod =cut
 
 sub attributes {
     my ($self) = @_;
@@ -30,15 +31,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran metamethod
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Method::Wrapped - wrapped metamethod role allowing code attribute introspection
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 METHODS
 

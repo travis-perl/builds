@@ -1,10 +1,10 @@
 use strict;
 use warnings;
 package MooseX::Daemonize::Core;
-BEGIN {
-  $MooseX::Daemonize::Core::AUTHORITY = 'cpan:PERIGRIN';
-}
-$MooseX::Daemonize::Core::VERSION = '0.19';
+# ABSTRACT: A Role with the core daemonization features
+
+our $VERSION = '0.20';
+
 use MooseX::Getopt; # to load the NoGetopt metaclass
 use Moose::Role;
 use POSIX ();
@@ -146,13 +146,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 MooseX::Daemonize::Core - A Role with the core daemonization features
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 SYNOPSIS
 
@@ -246,7 +248,7 @@ it is suggested that you use the attributes listed above instead.
 =item Becomes a session leader
 
 This detaches the program from the controlling terminal, it is
-accomplished by calling POSIX::setsid.
+accomplished by calling C<POSIX::setsid>.
 
 =item Performing the double-fork
 
@@ -266,14 +268,14 @@ change this part of the process.
 
 =item Reopen STDERR, STDOUT & STDIN to /dev/null
 
-This behavior can be controlled slightly though the MX_DAEMON_STDERR
-and MX_DAEMON_STDOUT environment variables. It will look for a filename
-in either of these variables and redirect STDOUT and/or STDERR to those
+This behavior can be controlled slightly though the C<MX_DAEMON_STDERR>
+and C<MX_DAEMON_STDOUT> environment variables. It will look for a filename
+in either of these variables and redirect C<STDOUT> and/or C<STDERR> to those
 files. This is useful for debugging and/or testing purposes.
 
 B<NOTE>
 
-If called from within the parent process (the is_daemon flag is set to
+If called from within the parent process (the C<is_daemon> flag is set to
 false), this method will simply return and do nothing.
 
 =item B<daemonize (?%options)>
@@ -339,18 +341,18 @@ by just setting the I<ignore_zombies> attribute (see above).
 =head1 ENVIRONMENT VARIABLES
 
 These variables are best just used for debugging and/or testing, but
-not used for actual logging. For that, you should reopen STDOUT/ERR on
+not used for actual logging. For that, you should reopen C<STDOUT>/C<STDERR> on
 your own.
 
 =over 4
 
 =item B<MX_DAEMON_STDOUT>
 
-A filename to redirect the daemon STDOUT to.
+A filename to redirect the daemon C<STDOUT> to.
 
 =item B<MX_DAEMON_STDERR>
 
-A filename to redirect the daemon STDERR to.
+A filename to redirect the daemon C<STDERR> to.
 
 =back
 
@@ -360,14 +362,10 @@ L<Moose::Role>, L<POSIX>
 
 =head1 INCOMPATIBILITIES
 
-None reported.
-
 =head1 BUGS AND LIMITATIONS
 
-No bugs have been reported.
-
 Please report any bugs or feature requests to
-C<bug-acme-dahut-call@rt.cpan.org>, or through the web interface at
+C<bug-MooseX-Daemonize@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
 
 =head1 SEE ALSO
@@ -378,11 +376,21 @@ This code is based B<HEAVILY> on L<Proc::Daemon>, we originally
 depended on it, but we needed some more flexibility, so instead
 we just stole the code.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Stevan Little  C<< <stevan.little@iinteractive.com> >>
+=over 4
 
-=head1 LICENCE AND COPYRIGHT
+=item *
+
+Stevan Little <stevan.little@iinteractive.com>
+
+=item *
+
+Chris Prather <chris@prather.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENCE
 
 Copyright (c) 2007-2011, Chris Prather C<< <perigrin@cpan.org> >>. All rights
 reserved.
@@ -391,28 +399,5 @@ Portions heavily borrowed from L<Proc::Daemon> which is copyright Earl Hood.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
-
-=head1 DISCLAIMER OF WARRANTY
-
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
-OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
-YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR, OR CORRECTION.
-
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
-LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
-OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
-THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
 
 =cut

@@ -13,7 +13,7 @@ Moose::Cookbook::Meta::Table_MetaclassTrait - Adding a "table" attribute as a me
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 SYNOPSIS
 
@@ -96,6 +96,7 @@ When the two packages are separate files, this just works.
 
 L<Moose::Cookbook::Meta::Labeled_AttributeTrait> - Labels implemented via
 attribute traits
+=pod
 
 =for testing can_ok( MyApp::User->meta, 'table' );
 is( MyApp::User->meta->table, 'User', 'My::User table is User' );

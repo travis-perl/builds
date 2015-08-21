@@ -1,14 +1,10 @@
 package MooseX::MethodAttributes::Role::Meta::Map;
-{
-  $MooseX::MethodAttributes::Role::Meta::Map::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Map::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: generic role for storing code attributes used by classes and roles with attributes
 
+our $VERSION = '0.30';
+
 use Moose::Role;
-use MooseX::Types::Moose 0.20 qw/HashRef ArrayRef Str Int/;
+use MooseX::Types::Moose 0.21 qw/HashRef ArrayRef Str Int/;
 
 use namespace::autoclean;
 
@@ -26,6 +22,11 @@ has _method_attribute_list => (
     default => sub { [] },
 );
 
+#pod =method register_method_attributes ($code, $attrs)
+#pod
+#pod Register a list of attributes for a code reference.
+#pod
+#pod =cut
 
 sub register_method_attributes {
     my ($self, $code, $attrs) = @_;
@@ -34,6 +35,11 @@ sub register_method_attributes {
     return;
 }
 
+#pod =method get_method_attributes ($code)
+#pod
+#pod Get a list of attributes associated with a coderef.
+#pod
+#pod =cut
 
 sub get_method_attributes {
     my ($self, $code) = @_;
@@ -48,16 +54,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Map - generic role for storing code attributes used by classes and roles with attributes
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 METHODS
 

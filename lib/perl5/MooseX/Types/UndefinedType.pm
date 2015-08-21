@@ -2,7 +2,9 @@ use warnings;
 use strict;
 package MooseX::Types::UndefinedType;
 # ABSTRACT: a fallback type for when a type cannot be found
-$MooseX::Types::UndefinedType::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use Moose::Util::TypeConstraints ();
 use Carp::Clan '^MooseX::Types';
 use namespace::autoclean 0.16;
@@ -129,7 +131,7 @@ MooseX::Types::UndefinedType - a fallback type for when a type cannot be found
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 DESCRIPTION
 

@@ -1,11 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Role::Application;
-{
-  $MooseX::MethodAttributes::Role::Meta::Role::Application::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Role::Application::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: generic role for applying a role with method attributes to something
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 use Moose::Util qw/find_meta/;
@@ -19,6 +15,14 @@ requires qw/
     apply
 /;
 
+#pod =method apply
+#pod
+#pod The apply method is wrapped to ensure that the correct metaclasses to hold and propagate
+#pod method attribute data are present on the target for role application, delegates to
+#pod the original method to actually apply the role, then ensures that any attributes from
+#pod the role are copied to the target class.
+#pod
+#pod =cut
 
 around 'apply' => sub {
     my ($orig, $self, $thing, %opts) = @_;
@@ -58,15 +62,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Role::Application - generic role for applying a role with method attributes to something
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 METHODS
 

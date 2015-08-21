@@ -1,11 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Class;
-{
-  $MooseX::MethodAttributes::Role::Meta::Class::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Class::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: metaclass role for storing code attributes
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 use Moose::Util qw/find_meta does_role/;
@@ -16,6 +12,12 @@ with qw/
     MooseX::MethodAttributes::Role::Meta::Map
 /;
 
+#pod =method get_method_with_attributes_list
+#pod
+#pod Gets the list of meta methods for local methods of this class that have
+#pod attributes in the order they have been registered.
+#pod
+#pod =cut
 
 sub get_method_with_attributes_list {
     my ($self) = @_;
@@ -41,6 +43,13 @@ sub get_method_with_attributes_list {
     } @methods;
 }
 
+#pod =method get_all_methods_with_attributes
+#pod
+#pod Gets the list of meta methods of local and inherited methods of this class,
+#pod that have attributes. Base class methods come before subclass methods. Methods
+#pod of one class have the order they have been declared in.
+#pod
+#pod =cut
 
 sub get_all_methods_with_attributes {
     my ($self) = @_;
@@ -57,6 +66,32 @@ sub get_all_methods_with_attributes {
     } reverse $self->linearized_isa;
 }
 
+#pod =method get_nearest_methods_with_attributes
+#pod
+#pod The same as get_all_methods_with_attributes, except that methods from parent classes
+#pod are not included if there is an attribute-less method in a child class.
+#pod
+#pod For example, given:
+#pod
+#pod     package BaseClass;
+#pod
+#pod     sub foo : Attr {}
+#pod
+#pod     sub bar : Attr {}
+#pod
+#pod     package SubClass;
+#pod     use base qw/BaseClass/;
+#pod
+#pod     sub foo {}
+#pod
+#pod     after bar => sub {}
+#pod
+#pod C<< SubClass->meta->get_all_methods_with_attributes >> will return
+#pod C<< BaseClass->meta->get_method('foo') >> for the above example, but
+#pod this method will not, and will return the wrapped bar method, whereas
+#pod C<< get_all_methods_with_attributes >> will return the original method.
+#pod
+#pod =cut
 
 sub get_nearest_methods_with_attributes {
     my ($self) = @_;
@@ -95,15 +130,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Class - metaclass role for storing code attributes
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 METHODS
 

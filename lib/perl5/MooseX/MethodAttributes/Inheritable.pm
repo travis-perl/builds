@@ -1,12 +1,30 @@
 package MooseX::MethodAttributes::Inheritable;
-{
-  $MooseX::MethodAttributes::Inheritable::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Inheritable::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: inheritable code attribute introspection
 
+our $VERSION = '0.30';
+
+#pod =head1 SYNOPSIS
+#pod
+#pod     package BaseClass;
+#pod     use base qw/MooseX::MethodAttributes::Inheritable/;
+#pod
+#pod     package SubClass;
+#pod     use base qw/BaseClass/;
+#pod
+#pod     sub foo : Bar {}
+#pod
+#pod     my $attrs = SubClass->meta->get_method('foo')->attributes; # ["Bar"]
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod This module does the same as C<MooseX::MethodAttributes>, except that classes
+#pod inheriting from other classes using it don't need to do anything special to get
+#pod their code attributes captured.
+#pod
+#pod Note that instead of inheriting from this module, you can instead simply
+#pod compose (C<with>) the L<MooseX::MethodAttributes::Role::AttrContainer::Inheritable> role.
+#pod
+#pod =cut
 
 # Ensure trait is registered
 use MooseX::MethodAttributes::Role::Meta::Role ();
@@ -26,15 +44,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran
-
 =head1 NAME
 
 MooseX::MethodAttributes::Inheritable - inheritable code attribute introspection
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 SYNOPSIS
 

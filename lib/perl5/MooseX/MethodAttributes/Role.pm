@@ -1,11 +1,7 @@
 package MooseX::MethodAttributes::Role;
-{
-  $MooseX::MethodAttributes::Role::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: code attribute introspection
+
+our $VERSION = '0.30';
 
 use Moose ();
 use Moose::Exporter;
@@ -13,7 +9,29 @@ use Moose::Util::MetaRole;
 use Moose::Util qw/find_meta does_role ensure_all_roles/;
 # Ensure trait is registered
 use MooseX::MethodAttributes::Role::Meta::Role ();
+use namespace::autoclean;
 
+#pod =head1 SYNOPSIS
+#pod
+#pod     package MyRole;
+#pod     use MooseX::MethodAttributes::Role;
+#pod
+#pod     sub foo : Bar Baz('corge') { ... }
+#pod
+#pod     my $attrs = MyRole->meta->get_method('foo')->attributes; # ["Bar", "Baz('corge')"]
+#pod
+#pod =head1 DESCRIPTION
+#pod
+#pod This module allows you to write a Moose Role with code attributes of methods to
+#pod be introspected using Moose meta method objects.
+#pod
+#pod =begin Pod::Coverage
+#pod
+#pod init_meta
+#pod
+#pod =end Pod::Coverage
+#pod
+#pod =cut
 
 Moose::Exporter->setup_import_methods( also => 'Moose::Role' );
 
@@ -51,16 +69,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role - code attribute introspection
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 SYNOPSIS
 

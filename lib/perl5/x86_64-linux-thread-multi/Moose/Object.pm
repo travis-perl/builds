@@ -1,5 +1,5 @@
 package Moose::Object;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -147,7 +147,7 @@ Moose::Object - The base object for Moose
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -164,16 +164,14 @@ but it makes it easier to take advantage of all of Moose's features.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Object->new(%params|$params) >>
+=head2 Moose::Object->new(%params|$params)
 
 This method calls C<< $class->BUILDARGS(@_) >>, and then creates a new
 instance of the appropriate class. Once the instance is created, it
 calls C<< $instance->BUILD($params) >> for each C<BUILD> method in the
 inheritance hierarchy.
 
-=item B<< Moose::Object->BUILDARGS(%params|$params) >>
+=head2 Moose::Object->BUILDARGS(%params|$params)
 
 The default implementation of this method accepts a hash or hash
 reference of named parameters. If it receives a single argument that
@@ -184,11 +182,11 @@ options passed to the constructor.
 
 This method should always return a hash reference of named options.
 
-=item B<< $object->does($role_name) >>
+=head2 $object->does($role_name)
 
 This returns true if the object does the given role.
 
-=item B<< $object->DOES($class_or_role_name) >>
+=head2 $object->DOES($class_or_role_name)
 
 This is a Moose role-aware implementation of L<UNIVERSAL/DOES>.
 
@@ -199,18 +197,16 @@ This is effectively the same as writing:
 This method will work with Perl 5.8, which did not implement
 C<UNIVERSAL::DOES>.
 
-=item B<< $object->dump($maxdepth) >>
+=head2 $object->dump($maxdepth)
 
 This is a handy utility for C<Data::Dumper>ing an object. By default,
 the maximum depth is 1, to avoid making a mess.
 
-=item B<< $object->DESTROY >>
+=head2 $object->DESTROY
 
 A default destructor is provided, which calls
 C<< $instance->DEMOLISH($in_global_destruction) >> for each C<DEMOLISH>
 method in the inheritance hierarchy.
-
-=back
 
 =head1 BUGS
 

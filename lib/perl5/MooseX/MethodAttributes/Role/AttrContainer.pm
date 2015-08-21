@@ -1,17 +1,20 @@
 package MooseX::MethodAttributes::Role::AttrContainer;
-{
-  $MooseX::MethodAttributes::Role::AttrContainer::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::AttrContainer::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: capture code attributes in the class' metaclass
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 use Moose::Util qw/find_meta/;
 
 use namespace::autoclean;
 
+#pod =method MODIFY_CODE_ATTRIBUTES ($code, @attrs)
+#pod
+#pod Accepts a list of attributes for a coderef and stores it the class' metaclass.
+#pod
+#pod See L<attributes>.
+#pod
+#pod =cut
 
 sub MODIFY_CODE_ATTRIBUTES {
     my ($class, $code, @attrs) = @_;
@@ -27,16 +30,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::AttrContainer - capture code attributes in the class' metaclass
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 METHODS
 

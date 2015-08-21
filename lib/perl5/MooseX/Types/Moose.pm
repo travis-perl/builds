@@ -2,7 +2,9 @@ use warnings;
 use strict;
 package MooseX::Types::Moose;
 # ABSTRACT: Type exports that match the types shipped with L<Moose>
-$MooseX::Types::Moose::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use MooseX::Types;
 use Moose::Util::TypeConstraints ();
 
@@ -59,7 +61,6 @@ sub type_storage { \%BuiltIn_Storage }
 
 #pod =head1 SEE ALSO
 #pod
-#pod L<MooseX::Types::Moose>,
 #pod L<Moose>,
 #pod L<Moose::Util::TypeConstraints>
 #pod
@@ -79,7 +80,7 @@ MooseX::Types::Moose - Type exports that match the types shipped with L<Moose>
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 SYNOPSIS
 
@@ -120,7 +121,6 @@ reference containing all built-in L<Moose> types.
 
 =head1 SEE ALSO
 
-L<MooseX::Types::Moose>,
 L<Moose>,
 L<Moose::Util::TypeConstraints>
 

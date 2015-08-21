@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Method::Required;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -37,7 +37,7 @@ Moose::Meta::Role::Method::Required - A Moose metaclass for required methods in 
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -49,13 +49,11 @@ provide an implementation of the method.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Role::Method::Required->new(%options) >>
+=head2 Moose::Meta::Role::Method::Required->new(%options)
 
 This creates a new type constraint based on the provided C<%options>:
 
-=over 8
+=over 4
 
 =item * name
 
@@ -63,11 +61,9 @@ The method name. This is required.
 
 =back
 
-=item B<< $method->name >>
+=head2 $method->name
 
 Returns the required method's name, as provided to the constructor.
-
-=back
 
 =head1 BUGS
 

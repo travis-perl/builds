@@ -1,16 +1,17 @@
 package MooseX::MethodAttributes::Role::Meta::Method;
-{
-  $MooseX::MethodAttributes::Role::Meta::Method::VERSION = '0.29';
-}
-BEGIN {
-  $MooseX::MethodAttributes::Role::Meta::Method::AUTHORITY = 'cpan:FLORA';
-}
 # ABSTRACT: metamethod role allowing code attribute introspection
+
+our $VERSION = '0.30';
 
 use Moose::Role;
 
 use namespace::autoclean;
 
+#pod =attr attributes
+#pod
+#pod Gets the list of code attributes of the method represented by this meta method.
+#pod
+#pod =cut
 
 has attributes => (
     is      => 'ro',
@@ -18,6 +19,12 @@ has attributes => (
     builder => '_build_attributes',
 );
 
+#pod =method _build_attributes
+#pod
+#pod Builds the value of the C<attributes> attribute based on the attributes
+#pod captured in the associated meta class.
+#pod
+#pod =cut
 
 sub _build_attributes {
     my ($self) = @_;
@@ -37,16 +44,13 @@ __END__
 
 =encoding UTF-8
 
-=for :stopwords Florian Ragwitz Tomas Doran Dave Karman (t0m) Rolsky David Steinbrunner
-Karen Etheridge Marcus Ramberg Peter E metamethod
-
 =head1 NAME
 
 MooseX::MethodAttributes::Role::Meta::Method - metamethod role allowing code attribute introspection
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 ATTRIBUTES
 
