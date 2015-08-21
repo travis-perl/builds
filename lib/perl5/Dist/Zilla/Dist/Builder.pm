@@ -1,6 +1,6 @@
 package Dist::Zilla::Dist::Builder;
 # ABSTRACT: dist zilla subclass for building dists
-$Dist::Zilla::Dist::Builder::VERSION = '5.037';
+$Dist::Zilla::Dist::Builder::VERSION = '5.039';
 use Moose 0.92; # role composition fixes
 extends 'Dist::Zilla';
 
@@ -99,6 +99,18 @@ sub _setup_default_plugins {
     push @{ $self->plugins }, $plugin;
   }
 
+  unless ($self->plugin_named(':ExtraTestFiles')) {
+    require Dist::Zilla::Plugin::FinderCode;
+    my $plugin = Dist::Zilla::Plugin::FinderCode->new({
+      plugin_name => ':ExtraTestFiles',
+      zilla       => $self,
+      style       => 'grep',
+      code        => sub { local $_ = $_->name; m{\Axt/} },
+    });
+
+    push @{ $self->plugins }, $plugin;
+  }
+
   unless ($self->plugin_named(':ExecFiles')) {
     require Dist::Zilla::Plugin::FinderCode;
     my $plugin = Dist::Zilla::Plugin::FinderCode->new({
@@ -109,6 +121,25 @@ sub _setup_default_plugins {
         my $plugins = $_[0]->zilla->plugins_with(-ExecFiles);
         my @files = map {; @{ $_->find_files } } @$plugins;
 
+        return \@files;
+      },
+    });
+
+    push @{ $self->plugins }, $plugin;
+  }
+
+  unless ($self->plugin_named(':PerlExecFiles')) {
+    require Dist::Zilla::Plugin::FinderCode;
+    my $plugin = Dist::Zilla::Plugin::FinderCode->new({
+      plugin_name => ':PerlExecFiles',
+      zilla       => $self,
+      style       => 'list',
+      code        => sub {
+        my $parent_plugin = $self->plugin_named(':ExecFiles');
+        my @files = grep {
+          $_->name =~ m{\.pl$}
+              or $_->content =~ m{^\s*\#\!.*perl\b};
+        } @{ $parent_plugin->find_files };
         return \@files;
       },
     });
@@ -525,7 +556,21 @@ sub _prep_build_root {
 
   my $dist_root = $self->root;
 
-  $build_root->rmtree if -d $build_root;
+  return $build_root if !-d $build_root;
+
+  my $res = $build_root->rmtree; # this warns with error details
+  die "unable to delete '$build_root' in preparation of build" if !$res;
+
+  # the following is done only on windows, and only if the deletion failed,
+  # yet rmtree reported success, because currently rmdir is non-blocking as per:
+  # https://rt.perl.org/Ticket/Display.html?id=123958
+  if ( $^O eq 'MSWin32' and -d $build_root ) {
+    $self->log("spinning for at least one second to allow other processes to release locks on $build_root");
+    my $timeout = time + 2;
+    while(time != $timeout and -d $build_root) { }
+    die "unable to delete '$build_root' in preparation of build because some process has a lock on it"
+      if -d $build_root;
+  }
 
   return $build_root;
 }
@@ -744,7 +789,8 @@ sub run_tests_in {
 #pod   $zilla->run_in_build( \@cmd );
 #pod
 #pod This method makes a temporary directory, builds the distribution there,
-#pod executes the dist's first L<BuildRunner|Dist::Zilla::Role::BuildRunner>, and
+#pod executes all the dist's L<BuildRunner|Dist::Zilla::Role::BuildRunner>s
+#pod (unless directed not to, via C<< $arg->{build} = 0 >>), and
 #pod then runs the given command in the build directory.  If the command exits
 #pod non-zero, the directory will be left in place.
 #pod
@@ -753,10 +799,9 @@ sub run_tests_in {
 sub run_in_build {
   my ($self, $cmd, $arg) = @_;
 
-  # The sort below is a cheap hack to get ModuleBuild ahead of
-  # ExtUtils::MakeMaker. -- rjbs, 2010-01-05
   $self->log_fatal("you can't build without any BuildRunner plugins")
-    unless my @builders = reverse sort @{ $self->plugins_with(-BuildRunner) };
+    unless ($arg and exists $arg->{build} and ! $arg->{build})
+        or @{ $self->plugins_with(-BuildRunner) };
 
   require "Config.pm"; # skip autoprereq
 
@@ -772,7 +817,7 @@ sub run_in_build {
       return 1;
     }
 
-    $builders[0]->build;
+    $self->_ensure_blib;
 
     local $ENV{PERL5LIB} = join $Config::Config{path_sep},
       (map { $abstarget->subdir('blib', $_) } qw(arch lib)),
@@ -797,6 +842,21 @@ sub run_in_build {
   }
 }
 
+# Ensures that a F<blib> directory exists in the build, by invoking all
+# C<-BuildRunner> plugins to generate it.  Useful for commands that operate on
+# F<blib>, such as C<test> or C<run>.
+
+sub _ensure_blib {
+  my ($self) = @_;
+
+  unless ( -d 'blib' ) {
+    my @builders = @{ $self->plugins_with( -BuildRunner ) };
+    $self->log_fatal("no BuildRunner plugins specified") unless @builders;
+    $_->build for @builders;
+    $self->log_fatal("no blib; failed to build properly?") unless -d 'blib';
+  }
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
 
@@ -812,7 +872,7 @@ Dist::Zilla::Dist::Builder - dist zilla subclass for building dists
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 ATTRIBUTES
 
@@ -954,7 +1014,8 @@ does it clean up C<$directory> afterwards.
   $zilla->run_in_build( \@cmd );
 
 This method makes a temporary directory, builds the distribution there,
-executes the dist's first L<BuildRunner|Dist::Zilla::Role::BuildRunner>, and
+executes all the dist's L<BuildRunner|Dist::Zilla::Role::BuildRunner>s
+(unless directed not to, via C<< $arg->{build} = 0 >>), and
 then runs the given command in the build directory.  If the command exits
 non-zero, the directory will be left in place.
 

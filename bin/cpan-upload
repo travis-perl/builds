@@ -21,6 +21,8 @@ use Getopt::Long::Descriptive 0.084;
 #pod     -d --directory     a dir in your CPAN space in which to put the file
 #pod     --http-proxy       URL of the http proxy to use in uploading
 #pod     --ignore-errors    instead of aborting, continue to next file on error
+#pod     -c --config        config file to use; defaults to ~/.pause
+#pod     --md5              compute MD5 checksums of the files
 #pod
 #pod =head1 CONFIGURATION
 #pod
@@ -70,6 +72,7 @@ my ($opt, $usage) = describe_options(
   [ "http-proxy=s"  => "URL of the http proxy to use in uploading" ],
   [ "ignore-errors" => "instead of aborting, continue to next file on error" ],
   [ "config|c=s"    => "config file to use; defaults to ~/.pause" ],
+  [ "md5"           => "compute MD5 checksums of the files" ],
 );
 
 if ($opt->help) {
@@ -112,6 +115,8 @@ if (! $arg{password}) {
   print "\n";
 }
 
+my $md5;
+
 foreach my $file (@ARGV) {
   my $ok = eval {
     CPAN::Uploader->upload_file(
@@ -120,7 +125,26 @@ foreach my $file (@ARGV) {
     );
     1;
   };
-  unless ($ok) {
+  if ($ok) {
+    if ($opt->md5) {
+      if ($md5) {
+        $md5->reset;
+      } else {
+        require Digest::MD5;
+        $md5 = Digest::MD5->new;
+      }
+      open my $fh, '<', $file or die "can't open $file for reading: $!";
+      my $digest = do {
+        local $@;
+        eval {
+          $md5->addfile($fh)->hexdigest;
+        };
+      };
+      if (defined $digest) {
+        print "md5: $digest\n";
+      }
+    }
+  } else {
     my $error = $@;
     die $@ unless $opt->ignore_errors;
     warn $@;
@@ -139,7 +163,7 @@ cpan-upload - upload a distribution to the CPAN
 
 =head1 VERSION
 
-version 0.103009
+version 0.103010
 
 =head1 USAGE
 
@@ -153,6 +177,8 @@ version 0.103009
     -d --directory     a dir in your CPAN space in which to put the file
     --http-proxy       URL of the http proxy to use in uploading
     --ignore-errors    instead of aborting, continue to next file on error
+    -c --config        config file to use; defaults to ~/.pause
+    --md5              compute MD5 checksums of the files
 
 =head1 CONFIGURATION
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::PluginBundle::Filter;
 # ABSTRACT: use another bundle, with some plugins removed
-$Dist::Zilla::PluginBundle::Filter::VERSION = '5.037';
+$Dist::Zilla::PluginBundle::Filter::VERSION = '5.039';
 use Moose;
 with 'Dist::Zilla::Role::PluginBundle';
 
@@ -16,6 +16,7 @@ use Dist::Zilla::Util;
 #pod
 #pod   [@Filter]
 #pod   -bundle = @Basic
+#pod   -version = 5.031
 #pod   -remove = ShareDir
 #pod   -remove = UploadToCPAN
 #pod   option = for_basic
@@ -25,6 +26,9 @@ use Dist::Zilla::Util;
 #pod This plugin bundle actually wraps and modifies another plugin bundle.  It
 #pod includes all the configuration for the bundle named in the C<-bundle> attribute,
 #pod but removes all the entries whose package is given in the C<-remove> attributes.
+#pod
+#pod A minimum required version of the bundle can be specified with the C<-version> 
+#pod attribute.
 #pod
 #pod Options not prefixed with C<-> will be passed to the bundle to be filtered.
 #pod
@@ -105,7 +109,7 @@ Dist::Zilla::PluginBundle::Filter - use another bundle, with some plugins remove
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 
@@ -113,6 +117,7 @@ In your F<dist.ini>:
 
   [@Filter]
   -bundle = @Basic
+  -version = 5.031
   -remove = ShareDir
   -remove = UploadToCPAN
   option = for_basic
@@ -122,6 +127,9 @@ In your F<dist.ini>:
 This plugin bundle actually wraps and modifies another plugin bundle.  It
 includes all the configuration for the bundle named in the C<-bundle> attribute,
 but removes all the entries whose package is given in the C<-remove> attributes.
+
+A minimum required version of the bundle can be specified with the C<-version> 
+attribute.
 
 Options not prefixed with C<-> will be passed to the bundle to be filtered.
 

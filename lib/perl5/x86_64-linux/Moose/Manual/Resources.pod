@@ -13,7 +13,7 @@ Moose::Manual::Resources - Links to various tutorials, videos, blogs, presentati
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 Resources
 
@@ -62,6 +62,17 @@ L<https://www.youtube.com/watch?v=kUHI1iRrfF4>
 
 "Moose is Perl" tutorial, OSCON 2014, Ricardo Signes
 L<https://www.youtube.com/watch?v=LKXvG6VKew4>
+
+=back
+
+=head2 Slide Shows
+
+=over 4
+
+=item
+
+Use Moose to create abstractions in the domain, Shawn M. Moore (sartak)
+L<https://speakerdeck.com/sartak/lifting-moose>
 
 =back
 

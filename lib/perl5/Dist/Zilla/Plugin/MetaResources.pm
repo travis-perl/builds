@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MetaResources;
 # ABSTRACT: provide arbitrary "resources" for distribution metadata
-$Dist::Zilla::Plugin::MetaResources::VERSION = '5.037';
+$Dist::Zilla::Plugin::MetaResources::VERSION = '5.039';
 use Moose;
 with 'Dist::Zilla::Role::MetaProvider';
 
@@ -12,8 +12,8 @@ use namespace::autoclean;
 #pod
 #pod   [MetaResources]
 #pod   homepage          = http://example.com/~dude/project.asp
-#pod   bugtracker.web    = http://rt.cpan.org/NoAuth/Bugs.html?Dist=Project
-#pod   bugtracker.mailto = bug-project@rt.cpan.org
+#pod   bugtracker.web    = https://rt.cpan.org/Public/Dist/Display.html?Name=Project
+#pod   bugtracker.mailto = bug-Project@rt.cpan.org
 #pod   repository.url    = git://github.com/dude/project.git
 #pod   repository.web    = http://github.com/dude/project
 #pod   repository.type   = git
@@ -26,9 +26,12 @@ has resources => (
   required => 1,
 );
 
-sub BUILDARGS {
+around BUILDARGS => sub {
+  my $orig = shift;
   my ($class, @arg) = @_;
-  my %copy = ref $arg[0] ? %{ $arg[0] } : @arg;
+
+  my $args = $class->$orig(@arg);
+  my %copy = %{ $args };
 
   my $zilla = delete $copy{zilla};
   my $name  = delete $copy{plugin_name};
@@ -59,7 +62,7 @@ sub BUILDARGS {
     plugin_name => $name,
     resources   => \%copy,
   };
-}
+};
 
 sub metadata {
   my ($self) = @_;
@@ -90,7 +93,7 @@ Dist::Zilla::Plugin::MetaResources - provide arbitrary "resources" for distribut
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 
@@ -98,8 +101,8 @@ This plugin adds resources entries to the distribution's metadata.
 
   [MetaResources]
   homepage          = http://example.com/~dude/project.asp
-  bugtracker.web    = http://rt.cpan.org/NoAuth/Bugs.html?Dist=Project
-  bugtracker.mailto = bug-project@rt.cpan.org
+  bugtracker.web    = https://rt.cpan.org/Public/Dist/Display.html?Name=Project
+  bugtracker.mailto = bug-Project@rt.cpan.org
   repository.url    = git://github.com/dude/project.git
   repository.web    = http://github.com/dude/project
   repository.type   = git

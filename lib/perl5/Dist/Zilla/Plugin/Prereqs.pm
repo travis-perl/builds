@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Prereqs;
 # ABSTRACT: list simple prerequisites
-$Dist::Zilla::Plugin::Prereqs::VERSION = '5.037';
+$Dist::Zilla::Plugin::Prereqs::VERSION = '5.039';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
@@ -122,9 +122,12 @@ has _prereq => (
 
 sub mvp_aliases { return { -relationship => '-type' } }
 
-sub BUILDARGS {
+around BUILDARGS => sub {
+  my $orig = shift;
   my ($class, @arg) = @_;
-  my %copy = ref $arg[0] ? %{$arg[0]} : @arg;
+
+  my $args = $class->$orig(@arg);
+  my %copy = %{ $args };
 
   my $zilla = delete $copy{zilla};
   my $name  = delete $copy{plugin_name};
@@ -166,7 +169,7 @@ sub BUILDARGS {
     _prereq     => \%copy,
     %other,
   }
-}
+};
 
 sub register_prereqs {
   my ($self) = @_;
@@ -213,7 +216,7 @@ Dist::Zilla::Plugin::Prereqs - list simple prerequisites
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 

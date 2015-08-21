@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MakeMaker::Runner;
 # ABSTRACT: Test and build dists with a Makefile.PL
-$Dist::Zilla::Plugin::MakeMaker::Runner::VERSION = '5.037';
+$Dist::Zilla::Plugin::MakeMaker::Runner::VERSION = '5.039';
 use Moose;
 with(
   'Dist::Zilla::Role::BuildRunner',
@@ -52,7 +52,7 @@ sub test {
 
   $self->log_debug(join(' ', "running $make test", ( $self->zilla->logger->get_debug ? 'TEST_VERBOSE=1' : () )));
   system($make, 'test',
-    ( $self->zilla->logger->get_debug ? 'TEST_VERBOSE=1' : () ),
+    ( $self->zilla->logger->get_debug || $arg->{test_verbose} ? 'TEST_VERBOSE=1' : () ),
   ) and die "error running $make test\n";
 
   return;
@@ -73,7 +73,7 @@ Dist::Zilla::Plugin::MakeMaker::Runner - Test and build dists with a Makefile.PL
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 AUTHOR
 

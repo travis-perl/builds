@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::PPI;
 # ABSTRACT: a role for plugins which use PPI
-$Dist::Zilla::Role::PPI::VERSION = '5.037';
+$Dist::Zilla::Role::PPI::VERSION = '5.039';
 use Moose::Role;
 
 use Moose::Util::TypeConstraints;
@@ -40,7 +40,7 @@ sub ppi_document_for_file {
 
   require PPI::Document;
   my $document = PPI::Document->new(\$encoded_content)
-    or Carp::croak(PPI::Document->errstr);
+    or Carp::croak(PPI::Document->errstr . ' while processing file ' . $file->name);
 
   return ($CACHE{$md5} = $document)->clone;
 }
@@ -128,7 +128,7 @@ Dist::Zilla::Role::PPI - a role for plugins which use PPI
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 

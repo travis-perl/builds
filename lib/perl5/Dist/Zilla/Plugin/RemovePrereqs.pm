@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::RemovePrereqs;
 # ABSTRACT: a plugin to remove gathered prereqs
-$Dist::Zilla::Plugin::RemovePrereqs::VERSION = '5.037';
+$Dist::Zilla::Plugin::RemovePrereqs::VERSION = '5.039';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
@@ -45,7 +45,7 @@ around dump_config => sub {
   my $config = $self->$orig;
 
   my $this_config = {
-    modules_to_remove  => $self->modules_to_remove,
+    modules_to_remove  => [ sort @{ $self->modules_to_remove } ],
   };
 
   $config->{'' . __PACKAGE__} = $this_config;
@@ -85,7 +85,7 @@ Dist::Zilla::Plugin::RemovePrereqs - a plugin to remove gathered prereqs
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 

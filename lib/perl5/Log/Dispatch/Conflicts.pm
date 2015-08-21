@@ -16,6 +16,7 @@ use Dist::CheckConflicts
         Devel::GlobalDestruction
         Dist::CheckConflicts
         Fcntl
+        IO::Handle
         Module::Runtime
         Params::Validate
         Scalar::Util

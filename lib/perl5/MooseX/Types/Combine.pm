@@ -2,7 +2,9 @@ use strict;
 use warnings;
 package MooseX::Types::Combine;
 # ABSTRACT: Combine type libraries for exporting
-$MooseX::Types::Combine::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use Module::Runtime 'use_module';
 use namespace::autoclean;
 
@@ -126,7 +128,7 @@ MooseX::Types::Combine - Combine type libraries for exporting
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 SYNOPSIS
 

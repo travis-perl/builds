@@ -1,6 +1,8 @@
 package MooseX::Types::Wrapper;
 # ABSTRACT: Wrap exports from a library
-$MooseX::Types::Wrapper::VERSION = '0.45';
+
+our $VERSION = '0.46';
+
 use Moose;
 use Carp::Clan      qw( ^MooseX::Types );
 use Module::Runtime 'use_module';
@@ -54,7 +56,7 @@ MooseX::Types::Wrapper - Wrap exports from a library
 
 =head1 VERSION
 
-version 0.45
+version 0.46
 
 =head1 DESCRIPTION
 

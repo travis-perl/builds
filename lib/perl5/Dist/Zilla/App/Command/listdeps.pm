@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::listdeps;
 # ABSTRACT: print your distribution's prerequisites
-$Dist::Zilla::App::Command::listdeps::VERSION = '5.037';
+$Dist::Zilla::App::Command::listdeps::VERSION = '5.039';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -18,7 +18,7 @@ use Dist::Zilla::App -command;
 #pod
 #pod =head1 OPTIONS
 #pod
-#pod =head2 --author
+#pod =head2 --author (or --develop)
 #pod
 #pod Include author dependencies (those listed under C<develop_requires>).
 #pod
@@ -48,7 +48,7 @@ use Try::Tiny;
 sub abstract { "print your distribution's prerequisites" }
 
 sub opt_spec {
-  [ 'author', 'include author dependencies' ],
+  [ 'develop|author', 'include author/develop dependencies' ],
   [ 'missing', 'list only the missing dependencies' ],
   [ 'versions', 'include required version numbers in listing' ],
   [ 'json', 'list dependencies by phase, in JSON format' ],
@@ -130,7 +130,7 @@ sub execute {
   $self->app->chrome->logger->mute;
 
   my @phases = qw(build test configure runtime);
-  push @phases, 'develop' if $opt->author;
+  push @phases, 'develop' if $opt->develop;
 
   my $omit_core = $opt->omit_core;
   if($opt->json) {
@@ -168,7 +168,7 @@ Dist::Zilla::App::Command::listdeps - print your distribution's prerequisites
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 
@@ -183,7 +183,7 @@ quick go.
 
 =head1 OPTIONS
 
-=head2 --author
+=head2 --author (or --develop)
 
 Include author dependencies (those listed under C<develop_requires>).
 

@@ -1,7 +1,7 @@
 package Dist::Zilla::Role::FileFinderUser;
 # ABSTRACT: something that uses FileFinder plugins
-$Dist::Zilla::Role::FileFinderUser::VERSION = '5.037';
-use MooseX::Role::Parameterized;
+$Dist::Zilla::Role::FileFinderUser::VERSION = '5.039';
+use MooseX::Role::Parameterized 1.01;
 
 use namespace::autoclean;
 
@@ -67,21 +67,30 @@ parameter finder_arg_names => (
 #pod
 #pod Searches your t/ directory and lists the files in it.
 #pod
+#pod = :ExtraTestFiles
+#pod
+#pod Searches your xt/ directory and lists the files in it.
+#pod
 #pod = :ExecFiles
 #pod
 #pod Searches your distribution for executable files.  Hint: Use the
 #pod L<Dist::Zilla::Plugin::ExecDir> plugin to mark those files as executables.
+#pod
+#pod = :PerlExecFiles
+#pod
+#pod A subset of C<:ExecFiles> limited just to perl scripts (those ending with
+#pod F<.pl>, or with a recognizable perl shebang).
 #pod
 #pod = :ShareFiles
 #pod
 #pod Searches your ShareDir directory and lists the files in it.
 #pod Hint: Use the L<Dist::Zilla::Plugin::ShareDir> plugin to set up the sharedir.
 #pod
-#pod = :All
+#pod = :AllFiles
 #pod
 #pod Returns all files in the distribution.
 #pod
-#pod = :None
+#pod = :NoFiles
 #pod
 #pod Returns nothing.
 #pod
@@ -169,7 +178,7 @@ Dist::Zilla::Role::FileFinderUser - something that uses FileFinder plugins
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 
@@ -226,21 +235,30 @@ Finds the C<main_module> of your dist
 
 Searches your t/ directory and lists the files in it.
 
+=item :ExtraTestFiles
+
+Searches your xt/ directory and lists the files in it.
+
 =item :ExecFiles
 
 Searches your distribution for executable files.  Hint: Use the
 L<Dist::Zilla::Plugin::ExecDir> plugin to mark those files as executables.
+
+=item :PerlExecFiles
+
+A subset of C<:ExecFiles> limited just to perl scripts (those ending with
+F<.pl>, or with a recognizable perl shebang).
 
 =item :ShareFiles
 
 Searches your ShareDir directory and lists the files in it.
 Hint: Use the L<Dist::Zilla::Plugin::ShareDir> plugin to set up the sharedir.
 
-=item :All
+=item :AllFiles
 
 Returns all files in the distribution.
 
-=item :None
+=item :NoFiles
 
 Returns nothing.
 

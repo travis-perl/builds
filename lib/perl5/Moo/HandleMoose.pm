@@ -1,6 +1,6 @@
 package Moo::HandleMoose;
-
 use Moo::_strictures;
+no warnings 'once';
 use Moo::_Utils;
 use Sub::Quote qw(quotify);
 
@@ -11,12 +11,15 @@ our $SETUP_DONE;
 sub import { return if $SETUP_DONE; inject_all(); $SETUP_DONE = 1; }
 
 sub inject_all {
+  die "Can't inflate Moose metaclass with Moo::sification disabled"
+    if $Moo::sification::disabled;
   require Class::MOP;
   inject_fake_metaclass_for($_)
     for grep $_ ne 'Moo::Object', do { no warnings 'once'; keys %Moo::MAKERS };
   inject_fake_metaclass_for($_) for keys %Moo::Role::INFO;
   require Moose::Meta::Method::Constructor;
   @Moo::HandleMoose::FakeConstructor::ISA = 'Moose::Meta::Method::Constructor';
+  @Moo::HandleMoose::FakeMeta::ISA = 'Moose::Meta::Method::Meta';
 }
 
 sub maybe_reinject_fake_metaclass_for {
@@ -75,7 +78,7 @@ sub inject_real_metaclass_for {
     }
   };
 
-  for my $spec (values %$attr_specs) {
+  foreach my $spec (values %$attr_specs) {
     if (my $inflators = delete $spec->{moosify}) {
       $_->($spec) for @$inflators;
     }
@@ -172,7 +175,7 @@ sub inject_real_metaclass_for {
       }
     }
   }
-  for my $meth_name (keys %methods) {
+  foreach my $meth_name (keys %methods) {
     my $meth_code = $methods{$meth_name};
     $meta->add_method($meth_name, $meth_code) if $meth_code;
   }
@@ -196,6 +199,13 @@ sub inject_real_metaclass_for {
       $meta->find_method_by_name('new'),
       'Moo::HandleMoose::FakeConstructor',
     );
+    my $meta_meth;
+    if (
+      $meta_meth = $meta->find_method_by_name('meta')
+      and $meta_meth->body == \&Moo::Object::meta
+    ) {
+      bless($meta_meth, 'Moo::HandleMoose::FakeMeta');
+    }
     # a combination of Moo and Moose may bypass a Moo constructor but still
     # use a Moo DEMOLISHALL.  We need to make sure this is loaded before
     # global destruction.

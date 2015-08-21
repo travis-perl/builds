@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MakeMaker;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.037';
+$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.039';
 use Moose;
 
 use namespace::autoclean;
@@ -226,7 +226,7 @@ sub write_makefile_args {
     ABSTRACT  => $self->zilla->abstract,
     VERSION   => $self->zilla->version,
     LICENSE   => $self->zilla->license->meta_yml_name,
-    EXE_FILES => [ @exe_files ],
+    @exe_files ? ( EXE_FILES => [ sort @exe_files ] ) : (),
 
     CONFIGURE_REQUIRES => $require_prereqs{configure},
     keys %{ $require_prereqs{build} } ? ( BUILD_REQUIRES => $require_prereqs{build} ) : (),
@@ -349,7 +349,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 

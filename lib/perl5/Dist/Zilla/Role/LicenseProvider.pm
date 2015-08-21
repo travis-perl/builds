@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::LicenseProvider;
 # ABSTRACT: something that provides a license for the dist
-$Dist::Zilla::Role::LicenseProvider::VERSION = '5.037';
+$Dist::Zilla::Role::LicenseProvider::VERSION = '5.039';
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -15,7 +15,7 @@ with 'Dist::Zilla::Role::Plugin';
 #pod
 #pod =head1 REQUIRED METHODS
 #pod
-#pod =head2 C<< provide_license($copyright_holder, $copyright_year) >>
+#pod =head2 C<< provide_license({ copyright_holder => $holder, copyright_year => $year }) >>
 #pod
 #pod Generate license object. Returned object should be an instance of
 #pod L<Software::License>.
@@ -42,7 +42,7 @@ Dist::Zilla::Role::LicenseProvider - something that provides a license for the d
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 DESCRIPTION
 
@@ -55,7 +55,7 @@ ignored.
 
 =head1 REQUIRED METHODS
 
-=head2 C<< provide_license($copyright_holder, $copyright_year) >>
+=head2 C<< provide_license({ copyright_holder => $holder, copyright_year => $year }) >>
 
 Generate license object. Returned object should be an instance of
 L<Software::License>.

@@ -1,5 +1,5 @@
 package Class::MOP::Module;
-our $VERSION = '2.1405';
+our $VERSION = '2.1600';
 
 use strict;
 use warnings;
@@ -102,7 +102,7 @@ Class::MOP::Module - Module Meta Object
 
 =head1 VERSION
 
-version 2.1405
+version 2.1600
 
 =head1 DESCRIPTION
 
@@ -115,9 +115,7 @@ B<Class::MOP::Module> is a subclass of L<Class::MOP::Package>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Class::MOP::Module->create($package, %options) >>
+=head2 Class::MOP::Module->create($package, %options)
 
 Overrides C<create> from L<Class::MOP::Package> to provide these additional
 options:
@@ -136,26 +134,24 @@ This is a legacy field and its use is not recommended.
 
 =back
 
-=item B<< $metamodule->version >>
+=head2 $metamodule->version
 
 This is a read-only attribute which returns the C<$VERSION> of the
 package, if one exists.
 
-=item B<< $metamodule->authority >>
+=head2 $metamodule->authority
 
 This is a read-only attribute which returns the C<$AUTHORITY> of the
 package, if one exists.
 
-=item B<< $metamodule->identifier >>
+=head2 $metamodule->identifier
 
 This constructs a string which combines the name, version and
 authority.
 
-=item B<< Class::MOP::Module->meta >>
+=head2 Class::MOP::Module->meta
 
 This will return a L<Class::MOP::Class> instance for this class.
-
-=back
 
 =head1 AUTHORS
 

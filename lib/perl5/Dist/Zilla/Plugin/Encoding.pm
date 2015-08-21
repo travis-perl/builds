@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Encoding;
 # ABSTRACT: set the encoding of arbitrary files
-$Dist::Zilla::Plugin::Encoding::VERSION = '5.037';
+$Dist::Zilla::Plugin::Encoding::VERSION = '5.039';
 use Moose;
 with 'Dist::Zilla::Role::EncodingProvider';
 
@@ -23,7 +23,7 @@ use namespace::autoclean;
 #pod
 #pod =cut
 
-sub mvp_multivalue_args { qw(filenames matches) }
+sub mvp_multivalue_args { qw(filenames matches ignore) }
 sub mvp_aliases { return { filename => 'filenames', match => 'matches' } }
 
 #pod =attr encoding
@@ -64,6 +64,20 @@ has matches => (
   default => sub { [] },
 );
 
+#pod =attr ignore
+#pod
+#pod This is an arrayref of regular expressions.  Any file whose name matches one of
+#pod these regex will B<not> have its encoding set. Useful to ignore a few files
+#pod that would otherwise be selected by C<matches>.
+#pod
+#pod =cut
+
+has ignore => (
+  is   => 'ro',
+  isa  => 'ArrayRef',
+  default => sub { [] },
+);
+
 sub set_file_encodings {
   my ($self) = @_;
 
@@ -75,8 +89,12 @@ sub set_file_encodings {
   # \A\Q$_\E should also handle the `eq` check
   $matches_regex = qr/$matches_regex|\A\Q$_\E/ for @{$self->filenames};
 
+  my( $ignore_regex ) = map { $_ && qr/$_/ } join '|', @{ $self->ignore };
+
   for my $file (@{$self->zilla->files}) {
     next unless $file->name =~ $matches_regex;
+
+    next if $ignore_regex and $file->name =~ $ignore_regex;
 
     $self->log_debug([
       'setting encoding of %s to %s',
@@ -105,7 +123,7 @@ Dist::Zilla::Plugin::Encoding - set the encoding of arbitrary files
 
 =head1 VERSION
 
-version 5.037
+version 5.039
 
 =head1 SYNOPSIS
 
@@ -137,6 +155,12 @@ This is an arrayref of filenames to have their encoding set.
 
 This is an arrayref of regular expressions.  Any file whose name matches one of
 these regex will have its encoding set.
+
+=head2 ignore
+
+This is an arrayref of regular expressions.  Any file whose name matches one of
+these regex will B<not> have its encoding set. Useful to ignore a few files
+that would otherwise be selected by C<matches>.
 
 =head1 AUTHOR
 
