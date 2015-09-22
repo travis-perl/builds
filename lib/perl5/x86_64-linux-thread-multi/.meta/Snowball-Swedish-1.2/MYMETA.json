@@ -1,0 +1,37 @@
+{
+   "abstract" : "Porters stemming algorithm for swedish.",
+   "author" : [
+      "Ask Solem <ASKSH@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4214",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Snowball-Swedish",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : 0.42
+         }
+      }
+   },
+   "provides" : {
+      "Lingua::Stem::Snowball::Se" : {
+         "file" : "lib/Lingua/Stem/Snowball/Se.pm",
+         "version" : "1.2"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "1.2",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
+}
