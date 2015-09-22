@@ -1,12 +1,12 @@
 package Class::MOP::Mixin::HasOverloads;
-our $VERSION = '2.1600';
+our $VERSION = '2.1603';
 
 use strict;
 use warnings;
 
 use Class::MOP::Overload;
 
-use Devel::OverloadInfo 'overload_info';
+use Devel::OverloadInfo 0.004 'overload_info';
 use Scalar::Util 'blessed';
 use Sub::Identify 'sub_name', 'stash_name';
 
@@ -16,7 +16,7 @@ use parent 'Class::MOP::Mixin';
 
 sub is_overloaded {
     my $self = shift;
-    return overload::Overloaded($self->name);
+    Devel::OverloadInfo::is_overloaded($self->name);
 }
 
 sub get_overload_list {
@@ -173,7 +173,7 @@ Class::MOP::Mixin::HasOverloads - Methods for metaclasses which have overloads
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 DESCRIPTION
 

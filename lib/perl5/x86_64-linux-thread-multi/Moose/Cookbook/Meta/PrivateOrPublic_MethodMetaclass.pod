@@ -13,7 +13,7 @@ Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass - A method metaclass for 
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 SYNOPSIS
 
