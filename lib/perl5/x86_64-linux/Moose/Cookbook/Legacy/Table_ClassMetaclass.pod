@@ -13,7 +13,7 @@ Moose::Cookbook::Legacy::Table_ClassMetaclass - Adding a "table" attribute to th
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 SYNOPSIS
 

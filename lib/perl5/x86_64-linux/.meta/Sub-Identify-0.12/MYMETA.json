@@ -4,7 +4,7 @@
       "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.59, CPAN::Meta::Converter version 2.112150, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 6.57_05, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -44,5 +44,5 @@
          "web" : "https://github.com/rgs/Sub-Identify"
       }
    },
-   "version" : "0.10"
+   "version" : "0.12"
 }

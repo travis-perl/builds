@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Application::ToInstance;
-our $VERSION = '2.1600';
+our $VERSION = '2.1603';
 
 use strict;
 use warnings;
@@ -7,6 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 use List::Util 1.33 'all';
+use Devel::OverloadInfo 0.004 'is_overloaded';
 
 use parent 'Moose::Meta::Role::Application';
 
@@ -38,7 +39,7 @@ sub apply {
     $class->rebless_instance( $object, %{ $self->rebless_params } );
 
     if ( _NEED_OVERLOAD_HACK_FOR_OBJECTS
-        && overload::Overloaded( ref $object ) ) {
+        && is_overloaded( ref $object ) ) {
 
         # need to use $_[2] here to apply to the object in the caller
         _reset_amagic($_[2]);
@@ -63,7 +64,7 @@ Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 DESCRIPTION
 

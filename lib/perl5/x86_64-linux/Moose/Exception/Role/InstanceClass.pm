@@ -1,5 +1,5 @@
 package Moose::Exception::Role::InstanceClass;
-our $VERSION = '2.1600';
+our $VERSION = '2.1603';
 
 use Moose::Role;
 
