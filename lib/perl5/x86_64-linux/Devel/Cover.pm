@@ -10,7 +10,7 @@ package Devel::Cover;
 use strict;
 use warnings;
 
-our $VERSION = '1.20'; # VERSION
+our $VERSION = '1.21'; # VERSION
 our $LVERSION = do { no warnings; eval '$VERSION' || "0.001" };  # for dev
 
 use DynaLoader ();
@@ -502,6 +502,9 @@ sub normalised_file {
 sub get_location {
     my ($op) = @_;
 
+    # print STDERR "get_location ", $op, "\n";
+    # use Carp "cluck"; cluck("from here");
+    return unless $op->can("file");  # How does this happen?
     $File = $op->file;
     $Line = $op->line;
     # print STDERR "$File:$Line\n";
@@ -1228,7 +1231,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
@@ -1466,6 +1469,11 @@ would find some way of exercising all your code.  But if you have analysed
 your code and determined that you are not going to be able to exercise it, it
 may be better to record that fact in some formal fashion and stop Devel::Cover
 complaining about it, so that real problems are not lost in the noise.
+
+If you have uncoverable criteria I suggest not using the default HTML report
+(with uses html_minimal at the moment) because this sometimes shows uncoverable
+points as uncovered.  Instead, you should use the html_basic report for HTML
+output which should behave correctly in this regard.
 
 There are two ways to specify a construct as uncoverable, one invasive and one
 non-invasive.
