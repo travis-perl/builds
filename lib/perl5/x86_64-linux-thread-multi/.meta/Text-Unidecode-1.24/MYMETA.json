@@ -1,10 +1,10 @@
 {
-   "abstract" : "Perform diffs on files and record sets",
+   "abstract" : "Provide plain ASCII transliterations of Unicode text",
    "author" : [
-      "Adam Kennedy <adamk@cpan.org>"
+      "Sean Burke <sburke@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.02, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Text-Diff",
+   "name" : "Text-Unidecode",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,18 +32,10 @@
       },
       "runtime" : {
          "requires" : {
-            "Algorithm::Diff" : "1.19",
-            "Exporter" : "0",
-            "perl" : "5.006"
+            "perl" : "5.008"
          }
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "repository" : {
-         "url" : "https://github.com/Ovid/Text-Diff"
-      }
-   },
-   "version" : "1.42",
-   "x_serialization_backend" : "JSON::PP version 2.27203"
+   "version" : "1.24"
 }
