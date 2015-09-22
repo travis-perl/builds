@@ -9,8 +9,8 @@ use Config;
 use strict;
 
 "$Config{'archname'}-$Config{'osvers'}" eq
-"x86_64-linux-thread-multi-2.6.32-042stab108.8" or
-	die "Errno architecture (x86_64-linux-thread-multi-2.6.32-042stab108.8) does not match executable architecture ($Config{'archname'}-$Config{'osvers'})";
+"x86_64-linux-thread-multi-2.6.32-042stab108.6" or
+	die "Errno architecture (x86_64-linux-thread-multi-2.6.32-042stab108.6) does not match executable architecture ($Config{'archname'}-$Config{'osvers'})";
 
 our $VERSION = "1.23";
 $VERSION = eval $VERSION;

@@ -98,7 +98,7 @@ tie %Config, 'Config', {
     ldlibpthname => 'LD_LIBRARY_PATH',
     libpth => '/usr/local/lib /usr/lib/gcc/x86_64-linux-gnu/4.6/include-fixed /usr/include/x86_64-linux-gnu /usr/lib /lib/x86_64-linux-gnu /lib/../lib /usr/lib/x86_64-linux-gnu /usr/lib/../lib /lib',
     osname => 'linux',
-    osvers => '2.6.32-042stab108.8',
+    osvers => '2.6.32-042stab108.6',
     path_sep => ':',
     privlibexp => '/home/travis/perl5/perlbrew/perls/5.22.0-thr/lib/5.22.0',
     scriptdir => '/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin',
