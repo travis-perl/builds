@@ -10,7 +10,7 @@ package Devel::Cover::Collection;
 use 5.16.0;
 use warnings;
 
-our $VERSION = '1.20'; # VERSION
+our $VERSION = '1.21'; # VERSION
 
 use Devel::Cover::DB;
 use Devel::Cover::DB::IO::JSON;
@@ -444,11 +444,14 @@ sub cover_modules {
 
     $self->process_module_file;
 
+    # say "modules: ", Dumper $self->modules;
+
     my @command = qw( utils/dc cpancover-docker-module );
     $self->_set_local_timeout(0);
     my @res = iterate_as_array(
         { workers => $self->workers },
         sub {
+            # say "mod ", Dumper \@_;
             my (undef, $module) = @_;
             my $dir = $module =~ s|.*/||r
                               =~ s/\.(?:zip|tgz|(?:tar\.(?:gz|bz2)))$//r;
@@ -611,7 +614,7 @@ package Devel::Cover::Collection::Template::Provider;
 use strict;
 use warnings;
 
-our $VERSION = '1.20'; # VERSION
+our $VERSION = '1.21'; # VERSION
 
 use base "Template::Provider";
 
@@ -766,7 +769,7 @@ Devel::Cover::Collection - Code coverage for a collection of modules
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 

@@ -10,7 +10,7 @@ package Devel::Cover::Pod;
 use strict;
 use warnings;
 
-our $VERSION = '1.20'; # VERSION
+our $VERSION = '1.21'; # VERSION
 
 use base "Devel::Cover::Criterion";
 
@@ -47,7 +47,7 @@ Devel::Cover::Pod - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
