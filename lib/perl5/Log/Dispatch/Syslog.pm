@@ -3,7 +3,7 @@ package Log::Dispatch::Syslog;
 use strict;
 use warnings;
 
-our $VERSION = '2.48';
+our $VERSION = '2.51';
 
 use Log::Dispatch::Output;
 
@@ -127,7 +127,7 @@ Log::Dispatch::Syslog - Object for logging to system log.
 
 =head1 VERSION
 
-version 2.48
+version 2.51
 
 =head1 SYNOPSIS
 

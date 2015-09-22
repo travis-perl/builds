@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::version;
-$App::Cmd::Command::version::VERSION = '0.327';
+$App::Cmd::Command::version::VERSION = '0.328';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
@@ -10,8 +10,7 @@ BEGIN { our @ISA = 'App::Cmd::Command'; }
 
 #pod =head1 DESCRIPTION
 #pod
-#pod This plugin implements the C<version> command, often invoked by its switch-like
-#pod name, C<--version>. On execution it shows the program name, its base class
+#pod This command will display the program name, its base class
 #pod with version number, and the full program name.
 #pod
 #pod =cut
@@ -48,12 +47,11 @@ App::Cmd::Command::version - display an app's version
 
 =head1 VERSION
 
-version 0.327
+version 0.328
 
 =head1 DESCRIPTION
 
-This plugin implements the C<version> command, often invoked by its switch-like
-name, C<--version>. On execution it shows the program name, its base class
+This command will display the program name, its base class
 with version number, and the full program name.
 
 =head1 AUTHOR

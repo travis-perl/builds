@@ -1,5 +1,5 @@
 package Class::MOP::Class;
-our $VERSION = '2.1600';
+our $VERSION = '2.1603';
 
 use strict;
 use warnings;
@@ -1527,7 +1527,7 @@ Class::MOP::Class - Class Meta Object
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 SYNOPSIS
 
@@ -2003,7 +2003,7 @@ These methods provide an API to the core L<overload> functionality.
 =item B<< $metaclass->is_overloaded >>
 
 Returns true if overloading is enabled for this class. Corresponds to
-L<overload::Overloaded|overload/Public Functions>.
+L<Devel::OverloadInfo/is_overloaded>.
 
 =item B<< $metaclass->get_overloaded_operator($op) >>
 

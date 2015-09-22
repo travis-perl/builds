@@ -3,7 +3,7 @@ use warnings;
 use 5.006;
 
 package App::Cmd;
-$App::Cmd::VERSION = '0.327';
+$App::Cmd::VERSION = '0.328';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: write command line apps with less suffering
@@ -79,6 +79,10 @@ sub _plugin_plugins { return }
 #pod   use YourApp -command;
 #pod   use strict; use warnings;
 #pod
+#pod   sub abstract { "blortex algorithm" }
+#pod
+#pod   sub description { "Long description on blortex algorithm" }
+#pod
 #pod   sub opt_spec {
 #pod     return (
 #pod       [ "blortex|X",  "use the blortex algorithm" ],
@@ -131,6 +135,9 @@ sub _plugin_plugins { return }
 #pod
 #pod   no_version_plugin  - if true, the version plugin is not added
 #pod
+#pod   show_version_cmd -   if true, the version command will be shown in the
+#pod                        command list
+#pod
 #pod   plugin_search_path - The path to search for commands in. Defaults to
 #pod                        results of plugin_search_path method
 #pod
@@ -145,8 +152,9 @@ sub _plugin_plugins { return }
 #pod C<default_command> method.
 #pod
 #pod If C<no_version_plugin> is not given, L<App::Cmd::Command::version> will be
-#pod required to show the application's version with command C<--version>. The
-#pod version command is not included in the command list.
+#pod required to show the application's version with command C<--version>. By
+#pod default, the version command is not included in the command list. Pass
+#pod C<show_version_cmd> to include the version command in the list.
 #pod
 #pod =cut
 
@@ -157,9 +165,10 @@ sub new {
   my $base = File::Basename::basename $arg0;
 
   my $self = {
-    command   => $class->_command($arg),
-    arg0      => $base,
-    full_arg0 => $arg0,
+    command      => $class->_command($arg),
+    arg0         => $base,
+    full_arg0    => $arg0,
+    show_version => $arg->{show_version_cmd} || 0,
   };
 
   bless $self => $class;
@@ -336,6 +345,20 @@ sub prepare_args {
 
 use constant default_args => [];
 
+#pod =method abstract 
+#pod
+#pod    sub abstract { "command description" }
+#pod
+#pod Defines the command abstract: a short description that will be printed in the
+#pod main command options list.
+#pod
+#pod =method description
+#pod
+#pod    sub description { "Long description" }
+#pod
+#pod Defines a longer command description that will be shown when the user asks for
+#pod help on a specific command.
+#pod
 #pod =method arg0
 #pod
 #pod =method full_arg0
@@ -543,6 +566,20 @@ sub command_names {
   keys %{ $self->_command };
 }
 
+#pod =method command_groups
+#pod
+#pod   my @groups = $cmd->commands_groups;
+#pod
+#pod This method can be implemented to return a grouped list of command names with
+#pod optional headers. Each group is given as arrayref and each header as string.
+#pod If an empty list is returned, the commands plugin will show two groups without
+#pod headers: the first group is for the "help" and "commands" commands, and all
+#pod other commands are in the second group.
+#pod
+#pod =cut
+
+sub command_groups { }
+
 #pod =method command_plugins
 #pod
 #pod   my @plugins = $cmd->command_plugins;
@@ -588,6 +625,12 @@ sub get_command {
 
   my ($opt, $args, %fields)
     = $self->_process_args(\@args, $self->_global_option_processing_params);
+
+  # map --help to help command
+  if ($opt->{help}) {
+      unshift @$args, 'help';
+      delete $opt->{help};
+  }
 
   my ($command, $rest) = $self->_cmd_from_args($args);
 
@@ -638,14 +681,20 @@ sub usage_desc {
 
 #pod =method global_opt_spec
 #pod
-#pod Returns an empty list. Can be overridden for pre-dispatch option processing.
-#pod This is useful for flags like --verbose.
+#pod Returns a list with help command unless C<no_help_plugin> has been specified or
+#pod an empty list. Can be overridden for pre-dispatch option processing.  This is
+#pod useful for flags like --verbose.
 #pod
 #pod =cut
 
 sub global_opt_spec {
-  # my ($self) = @_; # no point in creating these ops, just to toss $self
-  return;
+  my ($self) = @_;
+
+  my $cmd = $self->{command};
+  my @help = reverse sort map { s/^--?//; $_ }
+             grep { $cmd->{$_} eq 'App::Cmd::Command::help' } keys %$cmd;
+
+  return (@help ? [ join('|', @help) => "show help" ] : ());
 }
 
 #pod =method usage_error
@@ -691,7 +740,7 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.327
+version 0.328
 
 =head1 SYNOPSIS
 
@@ -711,6 +760,10 @@ in F<YourApp/Command/blort.pm>:
   package YourApp::Command::blort;
   use YourApp -command;
   use strict; use warnings;
+
+  sub abstract { "blortex algorithm" }
+
+  sub description { "Long description on blortex algorithm" }
 
   sub opt_spec {
     return (
@@ -766,6 +819,9 @@ Valid arguments are:
 
   no_version_plugin  - if true, the version plugin is not added
 
+  show_version_cmd -   if true, the version command will be shown in the
+                       command list
+
   plugin_search_path - The path to search for commands in. Defaults to
                        results of plugin_search_path method
 
@@ -780,8 +836,9 @@ the default help plugin, you should provide your own or override the
 C<default_command> method.
 
 If C<no_version_plugin> is not given, L<App::Cmd::Command::version> will be
-required to show the application's version with command C<--version>. The
-version command is not included in the command list.
+required to show the application's version with command C<--version>. By
+default, the version command is not included in the command list. Pass
+C<show_version_cmd> to include the version command in the list.
 
 =head2 run
 
@@ -807,6 +864,20 @@ this method to change that behavior for testing or otherwise.
 If C<L</prepare_args>> is not changed and there are no arguments in C<@ARGV>,
 this method is called and should return an arrayref to be used as the arguments
 to the program.  By default, it returns an empty arrayref.
+
+=head2 abstract 
+
+   sub abstract { "command description" }
+
+Defines the command abstract: a short description that will be printed in the
+main command options list.
+
+=head2 description
+
+   sub description { "Long description" }
+
+Defines a longer command description that will be shown when the user asks for
+help on a specific command.
 
 =head2 arg0
 
@@ -893,6 +964,16 @@ This method sets the global options.
 
 This returns the commands names which the App::Cmd object will handle.
 
+=head2 command_groups
+
+  my @groups = $cmd->commands_groups;
+
+This method can be implemented to return a grouped list of command names with
+optional headers. Each group is given as arrayref and each header as string.
+If an empty list is returned, the commands plugin will show two groups without
+headers: the first group is for the "help" and "commands" commands, and all
+other commands are in the second group.
+
 =head2 command_plugins
 
   my @plugins = $cmd->command_plugins;
@@ -927,8 +1008,9 @@ The top level usage line. Looks something like
 
 =head2 global_opt_spec
 
-Returns an empty list. Can be overridden for pre-dispatch option processing.
-This is useful for flags like --verbose.
+Returns a list with help command unless C<no_help_plugin> has been specified or
+an empty list. Can be overridden for pre-dispatch option processing.  This is
+useful for flags like --verbose.
 
 =head2 usage_error
 
@@ -957,6 +1039,114 @@ publish and use our improved simple input routines
 =head1 AUTHOR
 
 Ricardo Signes <rjbs@cpan.org>
+
+=head1 CONTRIBUTORS
+
+=for stopwords Adam Prime ambs Andreas Hernitscheck A. Sinan Unur Chris 'BinGOs' Williams David Golden Steinbrunner Denis Ibaev Diab Jerius Glenn Fowler Ingy dot Net Jakob Voss Jérôme Quelin John SJ Anderson Karen Etheridge Kent Fredric Matthew Astley mokko Olivier Mengué Ricardo SIGNES Ryan C. Thompson Sergey Romanov Stephen Caldwell Yuval Kogman
+
+=over 4
+
+=item *
+
+Adam Prime <aprime@oanda.com>
+
+=item *
+
+ambs <ambs@cpan.org>
+
+=item *
+
+Andreas Hernitscheck <andreash@lxhe.(none)>
+
+=item *
+
+A. Sinan Unur <nanis@cpan.org>
+
+=item *
+
+Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+
+=item *
+
+David Golden <dagolden@cpan.org>
+
+=item *
+
+David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+Denis Ibaev <dionys@gmail.com>
+
+=item *
+
+Diab Jerius <djerius@cfa.harvard.edu>
+
+=item *
+
+Glenn Fowler <cebjyre@cpan.org>
+
+=item *
+
+Ingy dot Net <ingy@ingy.net>
+
+=item *
+
+Jakob Voss <jakob@nichtich.de>
+
+=item *
+
+Jakob Voss <voss@gbv.de>
+
+=item *
+
+Jérôme Quelin <jquelin@gmail.com>
+
+=item *
+
+John SJ Anderson <genehack@genehack.org>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Matthew Astley <mca@sanger.ac.uk>
+
+=item *
+
+mokko <mauricemengel@gmail.com>
+
+=item *
+
+Olivier Mengué <dolmen@cpan.org>
+
+=item *
+
+Ricardo SIGNES <rjbs@codesimply.com>
+
+=item *
+
+Ryan C. Thompson <rct@thompsonclan.org>
+
+=item *
+
+Sergey Romanov <sromanov-dev@yandex.ru>
+
+=item *
+
+Stephen Caldwell <steve@campusexplorer.com>
+
+=item *
+
+Yuval Kogman <nuffin@cpan.org>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

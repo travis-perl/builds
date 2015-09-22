@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package App::Cmd::Tester;
-$App::Cmd::Tester::VERSION = '0.327';
+$App::Cmd::Tester::VERSION = '0.328';
 # ABSTRACT: for capturing the result of running an app
 
 #pod =head1 SYNOPSIS
@@ -65,8 +65,9 @@ use Sub::Exporter -setup => {
 our $TEST_IN_PROGRESS;
 BEGIN {
   *CORE::GLOBAL::exit = sub {
-    return CORE::exit(@_) unless $TEST_IN_PROGRESS;
-    App::Cmd::Tester::Exited->throw($_[0]);
+    my ($rc) = @_;
+    return CORE::exit($rc) unless $TEST_IN_PROGRESS;
+    App::Cmd::Tester::Exited->throw($rc);
   };
 }
 
@@ -133,7 +134,7 @@ sub _run_with_capture {
 
 {
   package App::Cmd::Tester::Result;
-$App::Cmd::Tester::Result::VERSION = '0.327';
+$App::Cmd::Tester::Result::VERSION = '0.328';
 sub new {
     my ($class, $arg) = @_;
     bless $arg => $class;
@@ -149,7 +150,7 @@ sub new {
 
 {
   package App::Cmd::Tester::Exited;
-$App::Cmd::Tester::Exited::VERSION = '0.327';
+$App::Cmd::Tester::Exited::VERSION = '0.328';
 sub throw {
     my ($class, $code) = @_;
     $code = 0 unless defined $code;
@@ -172,7 +173,7 @@ App::Cmd::Tester - for capturing the result of running an app
 
 =head1 VERSION
 
-version 0.327
+version 0.328
 
 =head1 SYNOPSIS
 

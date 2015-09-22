@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::commands;
-$App::Cmd::Command::commands::VERSION = '0.327';
+$App::Cmd::Command::commands::VERSION = '0.328';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' };
 
@@ -10,8 +10,8 @@ BEGIN { our @ISA = 'App::Cmd::Command' };
 
 #pod =head1 DESCRIPTION
 #pod
-#pod This command plugin implements a "commands" command.  This command will list
-#pod all of an App::Cmd's commands and their abstracts.
+#pod This command will list all of the application commands available and their
+#pod abstracts.
 #pod
 #pod =method execute
 #pod
@@ -28,19 +28,28 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   my $target = $opt->stderr ? *STDERR : *STDOUT;
+ 
+  my @cmd_groups = $self->app->command_groups;
+  my @primary_commands = map { @$_ if ref $_ } @cmd_groups;
 
-  my @primary_commands =
-    grep { $_ ne 'version' }
-    map { ($_->command_names)[0] }
-    $self->app->command_plugins;
+  if (!@cmd_groups) {
+    @primary_commands =
+      grep { $_ ne 'version' or $self->app->{show_version} }
+      map { ($_->command_names)[0] }
+      $self->app->command_plugins;
 
-  my @cmd_groups = $self->sort_commands(@primary_commands);
+    @cmd_groups = $self->sort_commands(@primary_commands);
+  }
 
   my $fmt_width = 0;
   for (@primary_commands) { $fmt_width = length if length > $fmt_width }
   $fmt_width += 2; # pretty
 
   foreach my $cmd_set (@cmd_groups) {
+    if (!ref $cmd_set) {
+      print { $target } "$cmd_set:\n";
+      next;
+    }
     for my $command (@$cmd_set) {
       my $abstract = $self->app->plugin_for($command)->abstract;
       printf { $target } "%${fmt_width}s: %s\n", $command, $abstract;
@@ -53,11 +62,14 @@ sub execute {
 #pod
 #pod   my @sorted = $cmd->sort_commands(@unsorted);
 #pod
-#pod This method orders the list of commands into sets which it returns as a list of
-#pod arrayrefs.
+#pod This method orders the list of commands into groups which it returns as a list of
+#pod arrayrefs, and optional group header strings.
 #pod
 #pod By default, the first group is for the "help" and "commands" commands, and all
 #pod other commands are in the second group.
+#pod
+#pod This method can be overriden by implementing the C<commands_groups> method in
+#pod your application base clase.
 #pod
 #pod =cut
 
@@ -78,11 +90,6 @@ sub opt_spec {
   );
 }
 
-sub description {
-  "This command will list all of commands available and their abstracts.\n";
-}
-
-
 1;
 
 __END__
@@ -97,12 +104,12 @@ App::Cmd::Command::commands - list the application's commands
 
 =head1 VERSION
 
-version 0.327
+version 0.328
 
 =head1 DESCRIPTION
 
-This command plugin implements a "commands" command.  This command will list
-all of an App::Cmd's commands and their abstracts.
+This command will list all of the application commands available and their
+abstracts.
 
 =head1 METHODS
 
@@ -119,11 +126,14 @@ group is set off by blank lines.
 
   my @sorted = $cmd->sort_commands(@unsorted);
 
-This method orders the list of commands into sets which it returns as a list of
-arrayrefs.
+This method orders the list of commands into groups which it returns as a list of
+arrayrefs, and optional group header strings.
 
 By default, the first group is for the "help" and "commands" commands, and all
 other commands are in the second group.
+
+This method can be overriden by implementing the C<commands_groups> method in
+your application base clase.
 
 =head1 AUTHOR
 

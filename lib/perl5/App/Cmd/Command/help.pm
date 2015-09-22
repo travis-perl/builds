@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::help;
-$App::Cmd::Command::help::VERSION = '0.327';
+$App::Cmd::Command::help::VERSION = '0.328';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
@@ -10,9 +10,9 @@ BEGIN { our @ISA = 'App::Cmd::Command'; }
 
 #pod =head1 DESCRIPTION
 #pod
-#pod This command plugin implements a "help" command.  This command will either list
-#pod all of an App::Cmd's commands and their abstracts, or display the usage screen
-#pod for a subcommand with its description.
+#pod This command will either list all of the application commands and their
+#pod abstracts, or display the usage screen for a subcommand with its
+#pod description.
 #pod
 #pod =head1 USAGE
 #pod
@@ -76,12 +76,6 @@ sub usage_desc { '%c help [subcommand]' }
 
 sub command_names { qw/help --help -h -?/ }
 
-sub description {
-"This command will either list all of the application commands and their
-abstracts, or display the usage screen for a subcommand with its
-description.\n"
-}
-
 sub execute {
   my ($self, $opts, $args) = @_;
 
@@ -121,13 +115,13 @@ App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
-version 0.327
+version 0.328
 
 =head1 DESCRIPTION
 
-This command plugin implements a "help" command.  This command will either list
-all of an App::Cmd's commands and their abstracts, or display the usage screen
-for a subcommand with its description.
+This command will either list all of the application commands and their
+abstracts, or display the usage screen for a subcommand with its
+description.
 
 =head1 USAGE
 
