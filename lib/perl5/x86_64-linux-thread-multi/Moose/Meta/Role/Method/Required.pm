@@ -1,12 +1,14 @@
 package Moose::Meta::Role::Method::Required;
-our $VERSION = '2.1600';
+our $VERSION = '2.1603';
 
 use strict;
 use warnings;
 use metaclass;
 
-use overload '""'     => sub { shift->name },   # stringify to method name
-             fallback => 1;
+use overload
+    '""' => sub { shift->name },   # stringify to method name
+    'bool' => sub { 1 },
+    fallback => 1;
 
 use parent 'Class::MOP::Object';
 
@@ -37,7 +39,7 @@ Moose::Meta::Role::Method::Required - A Moose metaclass for required methods in 
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 DESCRIPTION
 

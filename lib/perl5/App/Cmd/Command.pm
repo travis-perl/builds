@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command;
-$App::Cmd::Command::VERSION = '0.327';
+$App::Cmd::Command::VERSION = '0.328';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 
@@ -237,14 +237,41 @@ sub abstract {
 
 #pod =method description
 #pod
-#pod This method should be overridden to provide full option description. It
+#pod This method can be overridden to provide full option description. It
 #pod is used by the built-in L<help|App::Cmd::Command::help> command.
 #pod
-#pod If not overridden, it returns an empty string.
+#pod If not overridden, it uses L<Pod::Usage> to extract the description
+#pod from the module's Pod DESCRIPTION section or the empty string.
 #pod
 #pod =cut
 
-sub description { '' }
+sub description {
+    my ($class) = @_;
+    $class = ref $class if ref $class;
+
+    # classname to filename
+    (my $pm_file = $class) =~ s!::!/!g;
+    $pm_file .= '.pm';
+    $pm_file = $INC{$pm_file} or return '';
+
+    open my $input, "<", $pm_file or return '';
+
+    my $descr = "";
+    open my $output, ">", \$descr;
+
+    require Pod::Usage;
+    Pod::Usage::pod2usage( -input => $input,
+               -output => $output,
+               -exit => "NOEXIT", 
+               -verbose => 99,
+               -sections => "DESCRIPTION",
+               indent => 0
+    );
+    $descr =~ s/Description:\n//m;
+    chomp $descr;
+
+    return $descr;
+}
 
 1;
 
@@ -260,7 +287,7 @@ App::Cmd::Command - a base class for App::Cmd commands
 
 =head1 VERSION
 
-version 0.327
+version 0.328
 
 =head1 METHODS
 
@@ -355,10 +382,11 @@ If it can't find the abstract, it will look for a comment starting with
 
 =head2 description
 
-This method should be overridden to provide full option description. It
+This method can be overridden to provide full option description. It
 is used by the built-in L<help|App::Cmd::Command::help> command.
 
-If not overridden, it returns an empty string.
+If not overridden, it uses L<Pod::Usage> to extract the description
+from the module's Pod DESCRIPTION section or the empty string.
 
 =head1 AUTHOR
 

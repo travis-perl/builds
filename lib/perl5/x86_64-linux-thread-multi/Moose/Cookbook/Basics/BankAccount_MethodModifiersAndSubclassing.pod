@@ -13,7 +13,7 @@ Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing - Demonstrate
 
 =head1 VERSION
 
-version 2.1600
+version 2.1603
 
 =head1 SYNOPSIS
 

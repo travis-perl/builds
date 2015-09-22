@@ -3,7 +3,7 @@ package Log::Dispatch::File;
 use strict;
 use warnings;
 
-our $VERSION = '2.48';
+our $VERSION = '2.51';
 
 use Log::Dispatch::Output;
 
@@ -41,7 +41,7 @@ sub _basic_init {
     my %p = validate(
         @_, {
             filename => { type => SCALAR },
-            mode     => {
+            mode => {
                 type    => SCALAR,
                 default => '>'
             },
@@ -180,7 +180,7 @@ Log::Dispatch::File - Object for logging to files
 
 =head1 VERSION
 
-version 2.48
+version 2.51
 
 =head1 SYNOPSIS
 

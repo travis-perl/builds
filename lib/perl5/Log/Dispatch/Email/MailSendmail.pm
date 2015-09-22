@@ -3,7 +3,7 @@ package Log::Dispatch::Email::MailSendmail;
 use strict;
 use warnings;
 
-our $VERSION = '2.48';
+our $VERSION = '2.51';
 
 use Log::Dispatch::Email;
 
@@ -16,7 +16,7 @@ sub send_email {
     my %p    = @_;
 
     my %mail = (
-        To      => ( join ',', @{ $self->{to} } ),
+        To => ( join ',', @{ $self->{to} } ),
         Subject => $self->{subject},
         Message => $p{message},
 
@@ -44,7 +44,7 @@ Log::Dispatch::Email::MailSendmail - Subclass of Log::Dispatch::Email that uses 
 
 =head1 VERSION
 
-version 2.48
+version 2.51
 
 =head1 SYNOPSIS
 
