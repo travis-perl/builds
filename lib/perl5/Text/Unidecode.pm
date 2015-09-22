@@ -2,12 +2,13 @@
 
 require 5;
 use 5.8.0;
-package Text::Unidecode;  # Time-stamp: "2014-12-07 05:15:04 MST sburke@cpan.org"
+package Text::Unidecode;
+$Last_Modified =' Time-stamp: "2015-08-28 04:31:40 MDT sburke@cpan.org"';
 use utf8;
 use strict;
 use integer; # vroom vroom!
-use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE);
-$VERSION = '1.23';
+use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE $Last_Modified);
+$VERSION = '1.24';
 require Exporter;
 @ISA = ('Exporter');
 @EXPORT = ('unidecode');
@@ -198,7 +199,7 @@ sub load_bank {
   my($banknum) = @_;  # just as an integer value
 
   DEBUG and printf
-      "# Eval-loading %s::x%02x ...\n",
+      "# Eval-loading %s::x%02x ...\n";
 
   $eval_loaded_okay = 0;
   my $code = 
@@ -399,7 +400,7 @@ be better transliterated as "D", I I<may> well make that change.
 
 Unfortunately, there are many characters that Unidecode doesn't know a
 transliteration for.  This is generally because the character has been
-added since I last revised the Unidecode data tables.  I'm always
+added since I last revised the Unidecode data tables.  I'm I<always>
 catching up!
 
 =back
@@ -526,6 +527,10 @@ lot like: KAK BAC 3OBYT
 =item *
 
 "丫二十一" is four Chinese characters that should look like: C<Y=+->
+
+=item *
+
+"Ｈｅｌｌｏ" is five characters that should look like: Hello
 
 =back
 
@@ -697,8 +702,45 @@ Abhijit Menon-Sen, Mark-Jason Dominus, Joe Johnston,
 Conrad Heiney, fileformat.info,
 Philip Newton, 唐鳳, Tomaž Šolc, Mike Doherty, JT Smith and the
 MadMongers, Arden Ogg, Craig Copris,
-and I<many> other pals in Unicode's behind-the-scenes F5
-tornado underlying its code.
+David Cusimano, Brendan Byrd,
+and
+I<many>
+other pals who helped with the ideas or values for Unidecode's
+transliterations, or in the secret F5 tornado in its Perl code.
+
+
+
+=head1 PORTS
+
+Some wonderful people have ported Unidecode to other languages!
+
+=over
+
+=item *
+
+Python: L<https://pypi.python.org/pypi/Unidecode>
+
+=item *
+
+PHP: L<https://github.com/silverstripe-labs/silverstripe-unidecode>
+
+=item *
+
+Ruby: L<http://www.rubydoc.info/gems/unidecode/1.0.0/frames>
+
+=item *
+
+JavaScript: L<https://www.npmjs.org/package/unidecode>
+
+=item *
+
+Java: L<https://github.com/xuender/unidecode>
+
+=back
+
+I can't vouch for the details of each port, but these are clever
+people, so I'm sure they did a fine job.
+
 
 =head1 SEE ALSO
 
@@ -729,7 +771,7 @@ Books).>  ISBN: 0658009109
 
 =head1 LICENSE
 
-Copyright (c) 2001, 2014 Sean M. Burke.
+Copyright (c) 2001, 2014, 2015 Sean M. Burke.
 
 Unidecode is distributed under the Perl Artistic License
 ( L<perlartistic> ), namely:
@@ -753,7 +795,7 @@ Unicode Consortium.
 
 =head1 AUTHOR
 
-Sean M. Burke C<sburke@cpan.org>
+Your pal, Sean M. Burke C<sburke@cpan.org>
 
 =cut
 
