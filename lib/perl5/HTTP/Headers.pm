@@ -5,7 +5,7 @@ use warnings;
 
 use Carp ();
 
-our $VERSION = "6.10";
+our $VERSION = "6.11";
 
 # The $TRANSLATE_UNDERSCORE variable controls whether '_' can be used
 # as a replacement for '-' in header field names.
@@ -263,6 +263,7 @@ sub as_string
 	my $vals = $self->{$key};
 	if ( ref($vals) eq 'ARRAY' ) {
 	    for my $val (@$vals) {
+		$val = '' if not defined $val;
 		my $field = $standard_case{$key} || $self->{'::std_case'}{$key} || $key;
 		$field =~ s/^://;
 		if ( index($val, "\n") >= 0 ) {
@@ -272,6 +273,7 @@ sub as_string
 	    }
 	}
 	else {
+	    $vals = '' if not defined $vals;
 	    my $field = $standard_case{$key} || $self->{'::std_case'}{$key} || $key;
 	    $field =~ s/^://;
 	    if ( index($vals, "\n") >= 0 ) {
