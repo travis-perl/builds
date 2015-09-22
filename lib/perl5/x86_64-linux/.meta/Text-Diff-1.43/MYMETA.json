@@ -41,9 +41,9 @@
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "https://github.com/Ovid/Text-Diff"
+         "url" : "https://github.com/neilbowers/Text-Diff"
       }
    },
-   "version" : "1.42",
+   "version" : "1.43",
    "x_serialization_backend" : "JSON::PP version 2.27203"
 }
