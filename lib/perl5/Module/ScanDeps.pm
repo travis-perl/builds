@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @EXPORT @EXPORT_OK @ISA $CurrentPackage @IncludeLibs $ScanFileRE );
 
-$VERSION   = '1.19';
+$VERSION   = '1.20';
 @EXPORT    = qw( scan_deps scan_deps_runtime );
 @EXPORT_OK = qw( scan_line scan_chunk add_deps scan_deps_runtime path_to_inc_name );
 
@@ -222,8 +222,7 @@ my $SeenTk;
 my %SeenRuntimeLoader;
 
 # Pre-loaded module dependencies {{{
-my %Preload;
-%Preload = (
+my %Preload = (
     'AnyDBM_File.pm'  => [qw( SDBM_File.pm )],
     'AnyEvent.pm'     => 'sub',
     'Authen/SASL.pm'  => 'sub',
@@ -331,6 +330,7 @@ my %Preload;
         grep /\bMM_/, _glob_in_inc('ExtUtils', 1);
     },
     'File/Basename.pm' => [qw( re.pm )],
+    'File/BOM.pm'      => [qw( Encode/Unicode.pm )],
     'File/HomeDir.pm' => 'sub',
     'File/Spec.pm'     => sub {
         require File::Spec;
@@ -376,10 +376,7 @@ my %Preload;
             LWP/RobotPUA.pm         LWP/RobotUA.pm
         ),
     },
-    'LWP/Parallel/UserAgent.pm' => sub {
-        qw( LWP/Parallel.pm ),
-        @{ _get_preload('LWP/Parallel.pm') }
-    },
+    'LWP/Parallel/UserAgent.pm' => [qw( LWP/Parallel.pm )],
     'LWP/UserAgent.pm'          => sub {
         return( 
           qw( URI/URL.pm URI/http.pm LWP/Protocol/http.pm ),
@@ -430,6 +427,7 @@ my %Preload;
         _glob_in_inc('PDF/API2/Basic/TTF', 1);
     },
     'PDF/Writer.pm'                 => 'sub',
+    'PDL/NiceSlice.pm'              => 'sub',
     'Perl/Critic.pm'                => 'sub', #not only Perl/Critic/Policy
     'PerlIO.pm'                     => [ 'PerlIO/scalar.pm' ],
     'Pod/Usage.pm'                  => sub {  # from Pod::Usage (as of 1.61)
@@ -460,9 +458,8 @@ my %Preload;
         termios.ph asm/termios.ph sys/termiox.ph sys/termios.ph sys/ttycom.ph
     ) ],
     'SOAP/Lite.pm'                  => sub {
-        ($] >= 5.008 ? ('utf8.pm') : ()), 
         _glob_in_inc('SOAP/Transport', 1),
-        _glob_in_inc('SOAP/Lite/Deserializer', 1),
+        _glob_in_inc('SOAP/Lite', 1),
     },
     'Socket/GetAddrInfo.pm'         => 'sub',
     'SQL/Parser.pm' => sub {
@@ -498,13 +495,9 @@ my %Preload;
     'Tk/FBox.pm'        => [qw( Tk/folder.xpm Tk/file.xpm )],
     'Tk/Getopt.pm'      => [qw( Tk/openfolder.xpm Tk/win.xbm )],
     'Tk/Toplevel.pm'    => [qw( Tk/Wm.pm )],
-    'Unicode/UCD.pm'    => sub { @{ _get_preload('utf8.pm') } },
+    'Unicode/UCD.pm'    => [qw( utf8_heavy.pl )],
     'URI.pm'            => sub { grep !/urn/, _glob_in_inc('URI', 1) },
-    'utf8.pm' => sub {
-        # Perl 5.6.x: "unicode", Perl 5.8.x and up: "unicore"
-        my $unicore = _find_in_inc('unicore/Name.pl') ? 'unicore' : 'unicode';
-        return ('utf8_heavy.pl', map $_->{name}, _glob_in_inc($unicore, 0));
-    },
+    'utf8_heavy.pl'     => \&_unicore,
     'Win32/EventLog.pm'    => [qw( Win32/IPC.pm )],
     'Win32/Exe.pm'         => 'sub',
     'Win32/TieRegistry.pm' => [qw( Win32API/Registry.pm )],
@@ -513,9 +506,6 @@ my %Preload;
     'XML/Parser.pm'        => sub {
         _glob_in_inc('XML/Parser/Style', 1),
         _glob_in_inc('XML/Parser/Encodings', 1),
-    },
-    'XML/Parser/Expat.pm' => sub {
-        ($] >= 5.008) ? ('utf8.pm') : ();
     },
     'XML/SAX.pm' => [qw( XML/SAX/ParserDetails.ini ) ],
     'XMLRPC/Lite.pm' => sub {
@@ -687,12 +677,12 @@ sub scan_deps_static {
                      warn_missing => $args->{warn_missing},
                  );
 
-            my $preload = _get_preload($pm) or next;
+            my @preload = _get_preload($pm) or next;
 
             add_deps(
                      used_by => $key,
                      rv      => $args->{rv},
-                     modules => $preload,
+                     modules => \@preload,
                      skip    => $args->{skip},
                      warn_missing => $args->{warn_missing},
                  );
@@ -700,6 +690,9 @@ sub scan_deps_static {
     }
 
     # Top-level recursion handling {{{
+
+    # prevent utf8.pm from being scanned
+    $_skip->{$rv->{"utf8.pm"}{file}}++ if $rv->{"utf8.pm"};
    
     while ($recurse) {
         my $count = keys %$rv;
@@ -712,7 +705,7 @@ sub scan_deps_static {
             recurse  => 0,
             cache_cb => $cache_cb,
             _skip    => $_skip,
-        }) or ($args->{_deep} and return);
+        });
         last if $count == keys %$rv;
     }
 
@@ -784,7 +777,7 @@ sub scan_file{
                 next if $file =~ /(?:^|${pathsep})Term${pathsep}ReadLine\.pm$/;
                 next if $file =~ /(?:^|${pathsep})Tcl${pathsep}Tk\W/;
             }
-            $SeenTk || do{$SeenTk = 1 if $pm =~ /Tk\.pm$/;};
+            $SeenTk ||= $pm =~ /Tk\.pm$/;
 
             $found{$pm}++;
         }
@@ -958,12 +951,16 @@ sub scan_chunk {
         # check for stuff like
         #   decode("klingon", ...)
         #   open FH, "<:encoding(klingon)", ...
-        if (my ($io_layer, $encoding) = /(?:(:encoding)|\b(?:en|de)code)\(\s*['"]?([-\w]+)/) {
-            my @mods = qw( Encode.pm );
-            my $ext = _find_encoding($encoding); # "external" Encode module
-            push @mods, $ext if $ext;
-            push @mods, qw( PerlIO.pm PerlIO/encoding.pm ) if $io_layer;
-            return \@mods;
+        if (my ($args) = /\b(?:open|binmode)\b(.*)/) {
+            my @mods;
+            push @mods, qw( PerlIO.pm PerlIO/encoding.pm Encode.pm ), _find_encoding($1)
+                if $args =~ /:encoding\((.*?)\)/;
+            push @mods, qw( PerlIO.pm PerlIO/via.pm )
+                if $args =~ /:via\(/;
+            return \@mods if @mods;
+        }
+        if (/\b(?:en|de)code\(\s*['"]?([-\w]+)/) {
+            return [qw( Encode.pm ), _find_encoding($1)]; 
         }
 
         return $1 if /\b do \s+ ([\w:\.\-\\\/\"\']*)/x;
@@ -1184,6 +1181,12 @@ sub _glob_in_inc {
     return @files;
 }
 
+my $unicore_stuff;
+sub _unicore {
+    $unicore_stuff ||= [ map $_->{name}, _glob_in_inc('unicore', 0) ];
+    return @$unicore_stuff;
+}
+
 # App::Packer compatibility functions
 
 sub new {
@@ -1281,6 +1284,12 @@ sub get_files {
     return $self->{info};
 }
 
+sub add_preload_rule {
+    my ($pm, $rule) = @_;
+    die qq[a preload rule for "$pm" already exists] if $Preload{$pm};
+    $Preload{$pm} = $rule;
+}
+
 # scan_deps_runtime utility functions
 
 # compile $file if $execute is undef,
@@ -1288,66 +1297,128 @@ sub get_files {
 sub _compile_or_execute {
     my ($perl, $file, $execute, $inchash, $dl_shared_objects, $incarray) = @_;
 
-    require Module::ScanDeps::DataFeed; 
-    # ... so we can find it's full pathname in %INC
-
-    my ($feed_fh, $feed_file) = File::Temp::tempfile();
-    my $dump_file = "$feed_file.out";
-
-    require Data::Dumper;
+    my ($fh, $instrumented_file) = File::Temp::tempfile();
 
     # spoof $0 (to $file) so that FindBin works as expected
     # NOTE: We don't directly assign to $0 as it has magic (i.e.
     # assigning has side effects and may actually fail, cf. perlvar(1)).
     # Instead we alias *0 to a package variable holding the correct value.
-    print $feed_fh "BEGIN {\n", 
-                   Data::Dumper->Dump([ $file ], [ "Module::ScanDeps::DataFeed::_0" ]),
-                   "*0 = \\\$Module::ScanDeps::DataFeed::_0;\n",
-                   "}\n";
+    local $ENV{MSD_ORIGINAL_FILE} = $file;
+    print $fh <<'...';
+BEGIN { my $_0 = $ENV{MSD_ORIGINAL_FILE}; *0 = \$_0; }
+...
 
-    print $feed_fh $execute ? "END {\n" : "CHECK {\n" ;
+    my (undef, $data_file) = File::Temp::tempfile();
+    local $ENV{MSD_DATA_FILE} = $data_file;
+
     # NOTE: When compiling the block will run as the last CHECK block;
     # when executing the block will run as the first END block and 
     # the programs continues.
+    print $fh $execute ? "END\n" : "CHECK\n", <<'...';
+{
+    # save %INC etc so that requires below don't pollute them
+    my %_INC = %INC;
+    my @_INC = @INC;
+    my @_dl_shared_objects = @DynaLoader::dl_shared_objects;
+    my @_dl_modules = @DynaLoader::dl_modules;
 
-    # correctly escape strings containing filenames
-    print $feed_fh map { "my $_" } Data::Dumper->Dump(
-                       [ $INC{"Module/ScanDeps/DataFeed.pm"}, $dump_file ],
-                       [ qw( datafeedpm dump_file ) ]);
+    require Cwd;
+    require DynaLoader;
+    require Data::Dumper;
+    require B; 
+    require Config;
 
-    # save %INC etc so that further requires don't pollute them
-    print $feed_fh <<'...';
-    %Module::ScanDeps::DataFeed::_INC = %INC;
-    @Module::ScanDeps::DataFeed::_INC = @INC;
-    @Module::ScanDeps::DataFeed::_dl_shared_objects = @DynaLoader::dl_shared_objects;
-    @Module::ScanDeps::DataFeed::_dl_modules = @DynaLoader::dl_modules;
+    while (my ($k, $v) = each %_INC)
+    {
+        # NOTES:
+        # (1) An unsuccessful "require" may store an undefined value into %INC.
+        # (2) If a key in %INC was located via a CODE or ARRAY ref or
+        #     blessed object in @INC the corresponding value in %INC contains
+        #     the ref from @INC.
+        # (3) Some modules (e.g. Moose) fake entries in %INC, e.g.
+        #     "Class/MOP/Class/Immutable/Moose/Meta/Class.pm" => "(set by Moose)"
+        #     On some architectures (e.g. Windows) Cwd::abs_path() will throw
+        #     an exception for such a pathname.
+        if (defined $v && !ref $v && -e $v)
+        {
+            $_INC{$k} = Cwd::abs_path($v);
+        }
+        else
+        {
+            delete $_INC{$k};
+        }
+    }
 
-    require $datafeedpm;
+    # drop refs from @_INC
+    @_INC = grep { !ref $_ } @_INC;
 
-    Module::ScanDeps::DataFeed::_dump_info($dump_file);
-}
+    my $dlext = $Config::Config{dlext};
+    my @so = grep { defined $_ && -e $_ } Module::ScanDeps::DataFeed::_dl_shared_objects();
+    my @bs = @so;
+    my @shared_objects = ( @so, grep { s/\Q.$dlext\E$/\.bs/ && -e $_ } @bs );
+
+    my $data_file = $ENV{MSD_DATA_FILE};
+    open my $fh, ">", $data_file 
+        or die "Couldn't open $data_file: $!\n";
+    print $fh Data::Dumper->Dump(
+                  [    \%_INC,  \@_INC,   \@shared_objects    ], 
+                  [qw( *inchash *incarray *dl_shared_objects )]);
+    print $fh "1;\n";
+    close $fh;
+
+    sub Module::ScanDeps::DataFeed::_dl_shared_objects {
+        if (@_dl_shared_objects) {
+            return @_dl_shared_objects;
+        }
+        elsif (@_dl_modules) {
+            return map { Module::ScanDeps::DataFeed::_dl_mod2filename($_) } @_dl_modules;
+        }
+        return;
+    }
+
+    sub Module::ScanDeps::DataFeed::_dl_mod2filename {
+        my $mod = shift;
+
+        return if $mod eq 'B';
+        return unless defined &{"$mod\::bootstrap"};
+
+        my $dl_ext = $Config::Config{dlext};
+
+        # cf. DynaLoader.pm
+        my @modparts = split(/::/, $mod);
+        my $modfname = defined &DynaLoader::mod2fname ? DynaLoader::mod2fname(\@modparts) : $modparts[-1];
+        my $modpname = join('/', @modparts);
+
+        foreach my $dir (@_INC) {
+            my $file = "$dir/auto/$modpname/$modfname.$dl_ext";
+            return $file if -r $file;
+        }
+        return;
+    }
+} # END or CHECK
 ...
 
     # append the file to compile or execute
     {
-        open my $fhin, "<", $file or die "Couldn't open $file: $!";
-        print $feed_fh qq[#line 1 "$file"\n], <$fhin>;
-        close $fhin;
+        open my $in, "<", $file or die "Couldn't open $file: $!";
+        print $fh qq[#line 1 "$file"\n], <$in>;
+        close $in;
     }
-    close $feed_fh;
+    close $fh;
 
-    File::Path::rmtree( ['_Inline'], 0, 1); # XXX hack
-    
+    # run the instrumented file
     my @cmd = ($perl);
     push @cmd, "-c" unless $execute;
     push @cmd, map { "-I$_" } @IncludeLibs;
-    push @cmd, $feed_file;
+    push @cmd, $instrumented_file;
     push @cmd, @$execute if $execute;
     my $rc = system(@cmd);
 
-    _extract_info($dump_file, $inchash, $dl_shared_objects, $incarray) 
+    _extract_info($data_file, $inchash, $dl_shared_objects, $incarray) 
         if $rc == 0;
-    unlink($feed_file, $dump_file);
+
+    unlink($instrumented_file, $data_file);
+
     die $execute
         ? "SYSTEM ERROR in executing $file @$execute: $rc" 
         : "SYSTEM ERROR in compiling $file: $rc" 
@@ -1495,17 +1566,32 @@ sub _warn_of_missing_module {
       if not -f $module;
 }
 
-sub _get_preload {
+sub _get_preload1 {
     my $pm = shift;
     my $preload = $Preload{$pm} or return();
     if ($preload eq 'sub') {
         $pm =~ s/\.p[mh]$//i;
-        $preload = [ _glob_in_inc($pm, 1) ];
+        return  _glob_in_inc($pm, 1);
     }
     elsif (UNIVERSAL::isa($preload, 'CODE')) {
-        $preload = [ $preload->($pm) ];
+        return $preload->($pm);
     }
-    return $preload;
+    return @$preload;
+}
+
+sub _get_preload {
+    my ($pm, $seen) = @_;
+    $seen ||= {};
+    $seen->{$pm}++;
+    my @preload;
+
+    foreach $pm (_get_preload1($pm))
+    {
+        next if $seen->{$pm};
+        $seen->{$pm}++;
+        push @preload, $pm, _get_preload($pm, $seen);
+    }
+    return @preload;
 }
 
 1;

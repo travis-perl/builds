@@ -4,7 +4,7 @@
       "Sebastian Riedel <sri@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.0526, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.1, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -34,6 +34,7 @@
          "requires" : {
             "Catalyst" : "5.7",
             "Class::Accessor" : "0",
+            "Data::Dump" : "0",
             "MRO::Compat" : "0",
             "Path::Class" : "0",
             "Template" : "0",
@@ -62,6 +63,6 @@
       "x_IRC" : "irc://irc.perl.org/#catalyst",
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/catalyst"
    },
-   "version" : "0.43",
+   "version" : "0.44",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }
