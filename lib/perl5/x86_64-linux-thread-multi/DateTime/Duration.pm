@@ -3,7 +3,7 @@ package DateTime::Duration;
 use strict;
 use warnings;
 
-our $VERSION = '1.20';
+our $VERSION = '1.21';
 
 use Carp ();
 use DateTime;
@@ -29,14 +29,14 @@ sub new {
     my $class = shift;
     my %p     = validate(
         @_, {
-            years        => { type => SCALAR, default => 0 },
-            months       => { type => SCALAR, default => 0 },
-            weeks        => { type => SCALAR, default => 0 },
-            days         => { type => SCALAR, default => 0 },
-            hours        => { type => SCALAR, default => 0 },
-            minutes      => { type => SCALAR, default => 0 },
-            seconds      => { type => SCALAR, default => 0 },
-            nanoseconds  => { type => SCALAR, default => 0 },
+            years       => { type => SCALAR, default => 0 },
+            months      => { type => SCALAR, default => 0 },
+            weeks       => { type => SCALAR, default => 0 },
+            days        => { type => SCALAR, default => 0 },
+            hours       => { type => SCALAR, default => 0 },
+            minutes     => { type => SCALAR, default => 0 },
+            seconds     => { type => SCALAR, default => 0 },
+            nanoseconds => { type => SCALAR, default => 0 },
             end_of_month => {
                 type  => SCALAR, default => undef,
                 regex => qr/^(?:wrap|limit|preserve)$/
@@ -319,7 +319,7 @@ DateTime::Duration - Duration objects for date math
 
 =head1 VERSION
 
-version 1.20
+version 1.21
 
 =head1 SYNOPSIS
 
