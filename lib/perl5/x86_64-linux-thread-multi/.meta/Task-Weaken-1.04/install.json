@@ -1,1 +1,1 @@
-{"name":"Task::Weaken","target":"Task::Weaken","version":"1.04","dist":"Task-Weaken-1.04","provides":{"Task::Weaken":{"version":"1.04","file":"lib/Task/Weaken.pm"}},"pathname":"A/AD/ADAMK/Task-Weaken-1.04.tar.gz"}
+{"pathname":"A/AD/ADAMK/Task-Weaken-1.04.tar.gz","dist":"Task-Weaken-1.04","provides":{"Task::Weaken":{"file":"lib/Task/Weaken.pm","version":"1.04"}},"name":"Task::Weaken","version":"1.04","target":"Task::Weaken"}
