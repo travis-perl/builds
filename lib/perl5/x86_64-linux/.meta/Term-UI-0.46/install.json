@@ -1,0 +1,1 @@
+{"name":"Term::UI","dist":"Term-UI-0.46","target":"Term::UI","pathname":"B/BI/BINGOS/Term-UI-0.46.tar.gz","provides":{"Term::UI":{"version":"0.46","file":"lib/Term/UI.pm"},"Term::UI::History":{"file":"lib/Term/UI/History.pm","version":"0.46"}},"version":"0.46"}
