@@ -1,7 +1,7 @@
 package MooseX::MethodAttributes::Role;
 # ABSTRACT: code attribute introspection
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Moose ();
 use Moose::Exporter;
@@ -75,7 +75,7 @@ MooseX::MethodAttributes::Role - code attribute introspection
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 SYNOPSIS
 
@@ -93,6 +93,17 @@ be introspected using Moose meta method objects.
 
 =for Pod::Coverage init_meta
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-MethodAttributes>
+(or L<bug-MooseX-MethodAttributes@rt.cpan.org|mailto:bug-MooseX-MethodAttributes@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#moose.
+
 =head1 AUTHORS
 
 =over 4
@@ -107,7 +118,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Florian Ragwitz.
 
