@@ -1,0 +1,32 @@
+{
+   "abstract" : "Convert singular to plural. Select \"a\" or \"an\".",
+   "author" : [
+      "Damian Conway <DCONWAY@CPAN.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4214",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Lingua-EN-Inflect",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "runtime" : {
+         "requires" : {
+            "Test::More" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "version" : "1.899",
+   "x_serialization_backend" : "JSON::PP version 2.27203"
+}
