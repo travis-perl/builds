@@ -3,7 +3,7 @@ package DateTime::Locale::Base;
 use strict;
 use warnings;
 
-our $VERSION = '0.46';
+our $VERSION = '0.92';
 
 use Carp qw( carp );
 use DateTime::Locale;
@@ -485,7 +485,7 @@ DateTime::Locale::Base - Base class for individual locale objects
 
 =head1 VERSION
 
-version 0.46
+version 0.92
 
 =head1 SYNOPSIS
 

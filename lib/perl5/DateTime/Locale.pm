@@ -3,7 +3,7 @@ package DateTime::Locale;
 use strict;
 use warnings;
 
-our $VERSION = '0.46';
+our $VERSION = '0.92';
 
 
 use 5.006;
@@ -321,7 +321,7 @@ DateTime::Locale - Localization support for DateTime.pm
 
 =head1 VERSION
 
-version 0.46
+version 0.92
 
 =head1 SYNOPSIS
 

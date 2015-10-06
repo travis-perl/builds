@@ -17,7 +17,7 @@ package DateTime::Locale::Catalog;
 use strict;
 use warnings;
 
-our $VERSION = '0.46';
+our $VERSION = '0.92';
 
 use utf8;
 
@@ -3411,7 +3411,7 @@ DateTime::Locale::Catalog - Provides a list of all valid locale names
 
 =head1 VERSION
 
-version 0.46
+version 0.92
 
 =head1 SYNOPSIS
 
