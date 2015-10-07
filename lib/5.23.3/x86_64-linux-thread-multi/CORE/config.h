@@ -9,9 +9,9 @@
 
 /* Package name      : perl5
  * Source directory  : .
- * Configuration time: Tue Sep 22 00:01:41 UTC 2015
+ * Configuration time: Wed Oct  7 00:01:32 UTC 2015
  * Configured by     : travis
- * Target system     : linux testing-worker-linux-5590757e-2-10991-linux-5-81499194 2.6.32-042stab108.8 #1 smp wed jul 22 17:23:23 msk 2015 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux testing-worker-linux-968a87ce-1-16023-linux-7-84003286 2.6.32-042stab105.14 #1 smp fri mar 13 20:06:37 msk 2015 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
@@ -883,7 +883,7 @@
  *	feature tests from Configure are generally more reliable.
  */
 #define OSNAME "linux"		/**/
-#define OSVERS "2.6.32-042stab108.8"		/**/
+#define OSVERS "2.6.32-042stab105.14"		/**/
 
 /* MULTIARCH:
  *	This symbol, if defined, signifies that the build
