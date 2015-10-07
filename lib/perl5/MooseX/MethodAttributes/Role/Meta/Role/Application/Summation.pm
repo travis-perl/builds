@@ -1,7 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Role::Application::Summation;
 # ABSTRACT: Role applied to the class responsible for role summation which ensures method attributes propagate from the roles being summed onto the combined role.
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Moose::Role;
 use Moose::Util qw/does_role/;
@@ -31,7 +31,18 @@ MooseX::MethodAttributes::Role::Meta::Role::Application::Summation - Role applie
 
 =head1 VERSION
 
-version 0.30
+version 0.31
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-MethodAttributes>
+(or L<bug-MooseX-MethodAttributes@rt.cpan.org|mailto:bug-MooseX-MethodAttributes@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#moose.
 
 =head1 AUTHORS
 
@@ -47,7 +58,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Florian Ragwitz.
 

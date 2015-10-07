@@ -1,7 +1,7 @@
 package MooseX::MethodAttributes::Role::AttrContainer::Inheritable;
 # ABSTRACT: capture code attributes in the automatically initialized metaclass instance
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 #pod =head1 DESCRIPTION
 #pod
@@ -38,13 +38,24 @@ MooseX::MethodAttributes::Role::AttrContainer::Inheritable - capture code attrib
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 DESCRIPTION
 
 This role extends C<MooseX::MethodAttributes::Role::AttrContainer> with the
 functionality of automatically initializing a metaclass for the caller and
 applying the meta roles relevant for capturing method attributes.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-MethodAttributes>
+(or L<bug-MooseX-MethodAttributes@rt.cpan.org|mailto:bug-MooseX-MethodAttributes@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#moose.
 
 =head1 AUTHORS
 
@@ -60,7 +71,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Florian Ragwitz.
 
