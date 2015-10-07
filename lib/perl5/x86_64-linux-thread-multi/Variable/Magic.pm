@@ -11,13 +11,13 @@ Variable::Magic - Associate user-defined magic to variables from Perl.
 
 =head1 VERSION
 
-Version 0.58
+Version 0.59
 
 =cut
 
 our $VERSION;
 BEGIN {
- $VERSION = '0.58';
+ $VERSION = '0.59';
 }
 
 =head1 SYNOPSIS
@@ -748,8 +748,6 @@ I will be notified, and then you'll automatically be notified of progress on you
 You can find documentation for this module with the perldoc command.
 
     perldoc Variable::Magic
-
-Tests code coverage report is available at L<http://www.profvince.com/perl/cover/Variable-Magic>.
 
 =head1 COPYRIGHT & LICENSE
 
