@@ -1,7 +1,7 @@
 package MooseX::MethodAttributes::Role::Meta::Role::Application;
 # ABSTRACT: generic role for applying a role with method attributes to something
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Moose::Role;
 use Moose::Util qw/find_meta/;
@@ -68,7 +68,7 @@ MooseX::MethodAttributes::Role::Meta::Role::Application - generic role for apply
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 METHODS
 
@@ -78,6 +78,17 @@ The apply method is wrapped to ensure that the correct metaclasses to hold and p
 method attribute data are present on the target for role application, delegates to
 the original method to actually apply the role, then ensures that any attributes from
 the role are copied to the target class.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-MethodAttributes>
+(or L<bug-MooseX-MethodAttributes@rt.cpan.org|mailto:bug-MooseX-MethodAttributes@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#moose.
 
 =head1 AUTHORS
 
@@ -93,7 +104,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Florian Ragwitz.
 
