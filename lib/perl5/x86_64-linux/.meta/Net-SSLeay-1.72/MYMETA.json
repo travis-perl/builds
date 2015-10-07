@@ -51,6 +51,6 @@
          "url" : "svn://svn.debian.org/svn/net-ssleay"
       }
    },
-   "version" : "1.71",
+   "version" : "1.72",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }

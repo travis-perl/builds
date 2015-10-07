@@ -1,1 +1,0 @@
-{"pathname":"M/MI/MIKEM/Net-SSLeay-1.71.tar.gz","provides":{"Net::SSLeay":{"file":"lib/Net/SSLeay.pm","version":"1.71"},"Net::SSLeay::Handle":{"file":"lib/Net/SSLeay/Handle.pm","version":"0.61"}},"target":"Net::SSLeay","name":"Net::SSLeay","version":"1.71","dist":"Net-SSLeay-1.71"}
