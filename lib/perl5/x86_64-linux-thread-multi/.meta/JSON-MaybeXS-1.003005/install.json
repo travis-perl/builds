@@ -1,1 +1,1 @@
-{"provides":{"JSON::MaybeXS":{"version":"1.003005","file":"lib/JSON/MaybeXS.pm"}},"dist":"JSON-MaybeXS-1.003005","target":"JSON::MaybeXS","name":"JSON::MaybeXS","pathname":"E/ET/ETHER/JSON-MaybeXS-1.003005.tar.gz","version":"1.003005"}
+{"name":"JSON::MaybeXS","pathname":"E/ET/ETHER/JSON-MaybeXS-1.003005.tar.gz","version":"1.003005","dist":"JSON-MaybeXS-1.003005","target":"JSON::MaybeXS","provides":{"JSON::MaybeXS":{"file":"lib/JSON/MaybeXS.pm","version":"1.003005"}}}
