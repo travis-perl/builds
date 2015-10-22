@@ -1,26 +1,4 @@
-=head2 Tue Oct  6 00:24:38 2015: C<Module> L<Test::Deep|Test::Deep>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.119>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Oct  6 00:24:39 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Thu Oct 22 00:15:44 2015: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -42,7 +20,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Oct  6 00:24:39 2015: C<Module> L<Test::Exception|Test::Exception>
+=head2 Thu Oct 22 00:15:44 2015: C<Module> L<Test::Warn|Test::Warn>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:15:45 2015: C<Module> L<Test::Deep|Test::Deep>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.119>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:15:47 2015: C<Module> L<Test::Exception|Test::Exception>
 
 =over 4
 
@@ -64,117 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Oct  6 00:24:41 2015: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.08>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Oct  6 00:24:42 2015: C<Module> L<Devel::StackTrace|Devel::StackTrace>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.00>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Oct  6 00:24:43 2015: C<Module> L<Exception::Class|Exception::Class>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.39>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Oct  6 00:24:44 2015: C<Module> L<Test::Warn|Test::Warn>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.30>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Oct  6 00:24:45 2015: C<Module> L<Capture::Tiny|Capture::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.30>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Tue Oct  6 00:24:46 2015: C<Module> L<Algorithm::Diff|Algorithm::Diff>
+=head2 Thu Oct 22 00:15:49 2015: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -196,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Oct  6 00:24:47 2015: C<Module> L<Text::Diff|Text::Diff>
+=head2 Thu Oct 22 00:15:49 2015: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -218,7 +130,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Oct  6 00:24:47 2015: C<Module> L<Test::Differences|Test::Differences>
+=head2 Thu Oct 22 00:15:51 2015: C<Module> L<Capture::Tiny|Capture::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:15:51 2015: C<Module> L<Test::Differences|Test::Differences>
 
 =over 4
 
@@ -240,7 +174,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Oct  6 00:24:47 2015: C<Module> L<Test::Most|Test::Most>
+=head2 Thu Oct 22 00:15:53 2015: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.00>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:15:54 2015: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.08>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:15:55 2015: C<Module> L<Exception::Class|Exception::Class>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.39>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:15:55 2015: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
