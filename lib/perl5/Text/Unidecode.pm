@@ -3,12 +3,12 @@
 require 5;
 use 5.8.0;
 package Text::Unidecode;
-$Last_Modified =' Time-stamp: "2015-08-28 04:31:40 MDT sburke@cpan.org"';
+$Last_Modified =' Time-stamp: "2015-10-21 06:43:24 MDT sburke@cpan.org"';
 use utf8;
 use strict;
 use integer; # vroom vroom!
 use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE $Last_Modified);
-$VERSION = '1.24';
+$VERSION = '1.27';
 require Exporter;
 @ISA = ('Exporter');
 @EXPORT = ('unidecode');
@@ -370,7 +370,7 @@ characters-- i.e., characters 0x0000 - 0x007F.
 
 All Unicode characters translate to a sequence of (any number of)
 characters that are newline ("\n") or in the range 0x0020-0x007E.  That
-is, no Unicode character translates to "\x01", for example.  (Altho if
+is, no Unicode character translates to "\x01", for example.  (Although if
 you have a "\x01" on input, you'll get a "\x01" in output.)
 
 =item *
@@ -558,10 +558,11 @@ transliterate as just "Dao", or should I put in the tone number:
 "Dao4"?  It would be pretty jarring to have digits appear where
 previously there was just alphabetic stuff-- But tone numbers
 make Chinese more readable.
+(I have a clever idea about doing this, for Unidecode v2 or v3.)
 
-* Start dealing with characters over U+FFFF.
+* Start dealing with characters over U+FFFF.  Cuneiform! Emojis! Whatever!
 
-* Fill in all the little characters that've crept into the Misc Symbols
+* Fill in all the little characters that have crept into the Misc Symbols
 Etc blocks.
 
 * More things that need tending to are detailed in the TODO.txt file,
@@ -688,6 +689,16 @@ you can call Unidecode on the output from that-- it is useful
 for, for example, turning ｆｕｌｌｗｉｄｔｈ characters into
 their normal (ASCII) forms.
 
+(Note, as of October 2015: I have titanic but tentative plans for
+making the value of Unihan characters be something you could set
+parameters for at runtime, in changing the order of "Mandarin else
+Cantonese else..." in the value retrieval.  Currently that preference
+list is hardwired on my end, at module-build time.  Other options I'm
+considering allowing for: whether the Mandarin and Cantonese values
+should have the tone numbers on them; whether every Unihan value
+should have a terminal space; and maybe other clever stuff I haven't
+thought of yet.)
+
 =head1 CAVEATS
 
 If you get really implausible nonsense out of C<unidecode(...)>, make
@@ -702,12 +713,19 @@ Abhijit Menon-Sen, Mark-Jason Dominus, Joe Johnston,
 Conrad Heiney, fileformat.info,
 Philip Newton, 唐鳳, Tomaž Šolc, Mike Doherty, JT Smith and the
 MadMongers, Arden Ogg, Craig Copris,
-David Cusimano, Brendan Byrd,
+David Cusimano, Brendan Byrd, Hex Martin,
 and
 I<many>
-other pals who helped with the ideas or values for Unidecode's
-transliterations, or in the secret F5 tornado in its Perl code.
+other pals who have helped with the ideas or values for Unidecode's
+transliterations, or whose help has been in the
+secret F5 tornado that constitutes the internals of Unidecode's
+implementation.
 
+And thank you to the many people who have encouraged me to plug away
+at this project.  A decade went by before I had any idea that more
+than about four or five people were using or getting any value
+out of Unidecode.  I am told that in reality, that
+my figure was missing some zeroes on the end!
 
 
 =head1 PORTS
@@ -786,12 +804,15 @@ merchantability or fitness for a particular purpose.
 =head1 DISCLAIMER
 
 Much of Text::Unidecode's internal data is based on data from The
-Unicode Consortium, with which I am unaffiliated.
+Unicode Consortium, with which I am unaffiliated.  A good deal of the
+internal data comes from suggestions that have been contributed by
+people other than myself.
 
-The views and conclusions contained in the software and documentation
-are those of the authors/contributors and should not be interpreted as
-representing official policies, either expressed or implied, of The
-Unicode Consortium.
+The views and conclusions contained in my software and documentation
+are my own-- they should not be interpreted as representing official
+policies, either expressed or implied, of The Unicode Consortium; nor
+should they be interepreted as necessarily the views or conclusions of
+people who have contributed to this project.
 
 =head1 AUTHOR
 
