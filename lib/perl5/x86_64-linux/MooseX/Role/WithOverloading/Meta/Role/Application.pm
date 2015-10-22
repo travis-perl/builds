@@ -1,6 +1,8 @@
 package MooseX::Role::WithOverloading::Meta::Role::Application;
-# ABSTRACT: Role application role for Roles which support overloading
-$MooseX::Role::WithOverloading::Meta::Role::Application::VERSION = '0.16';
+# ABSTRACT: (DEPRECATED) Role application role for Roles which support overloading
+
+our $VERSION = '0.17';
+
 use Moose::Role 1.15;
 use overload ();
 use namespace::autoclean;
@@ -95,11 +97,11 @@ __END__
 
 =head1 NAME
 
-MooseX::Role::WithOverloading::Meta::Role::Application - Role application role for Roles which support overloading
+MooseX::Role::WithOverloading::Meta::Role::Application - (DEPRECATED) Role application role for Roles which support overloading
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 METHODS
 
@@ -117,6 +119,17 @@ method.
 Does the heavy lifting of applying overload operations to
 a class or role which the role is applied to.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-WithOverloading>
+(or L<bug-MooseX-Role-WithOverloading@rt.cpan.org|mailto:bug-MooseX-Role-WithOverloading@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#moose.
+
 =head1 AUTHORS
 
 =over 4
@@ -131,7 +144,7 @@ Tomas Doran <bobtfish@bobtfish.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Florian Ragwitz.
 

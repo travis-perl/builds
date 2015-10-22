@@ -1,8 +1,8 @@
-package MooseX::Role::WithOverloading;
-# git description: v0.15-7-ga377afc
-$MooseX::Role::WithOverloading::VERSION = '0.16';
-# ABSTRACT: Roles which support overloading
-# KEYWORDS: moose extension role operator overload overloading
+package MooseX::Role::WithOverloading; # git description: v0.16-18-g8c1d6d0
+# ABSTRACT: (DEPRECATED) Roles which support overloading
+# KEYWORDS: moose extension role operator overload overloading deprecated
+
+our $VERSION = '0.17';
 
 use Moose::Role ();
 use Moose::Exporter;
@@ -11,7 +11,7 @@ use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToClass';
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToRole';
 use aliased 'MooseX::Role::WithOverloading::Meta::Role::Application::ToInstance';
 
-use namespace::clean;
+use namespace::clean 0.19;
 
 # this functionality is built-in, starting with Moose 2.1300
 my $has_core_support = eval { Moose->VERSION('2.1300'); 1 };
@@ -25,9 +25,7 @@ else
     require XSLoader;
     XSLoader::load(
         __PACKAGE__,
-        $MooseX::Role::WithOverloading::{VERSION}
-            ? ${ $MooseX::Role::WithOverloading::{VERSION} }
-            : ()
+        $VERSION,
     );
 
     Moose::Exporter->setup_import_methods(
@@ -51,11 +49,11 @@ __END__
 
 =head1 NAME
 
-MooseX::Role::WithOverloading - Roles which support overloading
+MooseX::Role::WithOverloading - (DEPRECATED) Roles which support overloading
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 SYNOPSIS
 
@@ -97,6 +95,23 @@ C<use MooseX::Role::WithOverloading> behaves identically to C<use Moose::Role>.
 
 =for stopwords metaclasses
 
+=head1 DEPRECATION NOTICE
+
+This module is marked as deprecated, as starting with L<Moose> version 2.1300,
+the functionality provided here is now built-in to Moose. You only need to use
+this module if you are using an older L<Moose> (but please upgrade!).
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-WithOverloading>
+(or L<bug-MooseX-Role-WithOverloading@rt.cpan.org|mailto:bug-MooseX-Role-WithOverloading@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+irc://irc.perl.org/#moose.
+
 =head1 AUTHORS
 
 =over 4
@@ -110,13 +125,6 @@ Florian Ragwitz <rafl@debian.org>
 Tomas Doran <bobtfish@bobtfish.net>
 
 =back
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2009 by Florian Ragwitz.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
 
 =head1 CONTRIBUTORS
 
@@ -141,5 +149,12 @@ Jesse Luehrs <doy@tozt.net>
 Tomas Doran (t0m) <t0m@state51.co.uk>
 
 =back
+
+=head1 COPYRIGHT AND LICENCE
+
+This software is copyright (c) 2009 by Florian Ragwitz.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
