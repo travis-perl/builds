@@ -1,4 +1,4 @@
-=head2 Wed Oct  7 00:06:50 2015: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Thu Oct 22 00:06:24 2015: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Oct  7 00:06:53 2015: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Thu Oct 22 00:06:26 2015: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Oct  7 00:06:55 2015: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Thu Oct 22 00:06:29 2015: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -64,51 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Wed Oct  7 00:06:58 2015: C<Module> L<Mozilla::CA|Mozilla::CA>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 20150826>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Oct  7 00:06:59 2015: C<Module> L<YAML|YAML>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.15>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Oct  7 00:07:16 2015: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Thu Oct 22 00:06:45 2015: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -130,7 +86,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Oct  7 00:07:16 2015: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Thu Oct 22 00:06:46 2015: C<Module> L<Mozilla::CA|Mozilla::CA>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 20150826>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:06:47 2015: C<Module> L<YAML|YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.15>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:06:48 2015: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 

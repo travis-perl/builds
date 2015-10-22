@@ -1,1 +1,1 @@
-{"provides":{"Mozilla::CA":{"file":"lib/Mozilla/CA.pm","version":"20150826"}},"name":"Mozilla::CA","dist":"Mozilla-CA-20150826","target":"Mozilla::CA","pathname":"A/AB/ABH/Mozilla-CA-20150826.tar.gz","version":"20150826"}
+{"dist":"Mozilla-CA-20150826","pathname":"A/AB/ABH/Mozilla-CA-20150826.tar.gz","target":"Mozilla::CA","version":"20150826","provides":{"Mozilla::CA":{"version":"20150826","file":"lib/Mozilla/CA.pm"}},"name":"Mozilla::CA"}
