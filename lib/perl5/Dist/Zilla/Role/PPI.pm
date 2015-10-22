@@ -1,18 +1,13 @@
 package Dist::Zilla::Role::PPI;
 # ABSTRACT: a role for plugins which use PPI
-$Dist::Zilla::Role::PPI::VERSION = '5.039';
+$Dist::Zilla::Role::PPI::VERSION = '5.040';
 use Moose::Role;
-
-use Moose::Util::TypeConstraints;
-
-use namespace::autoclean;
-
 use Digest::MD5 qw(md5);
-use Storable qw(dclone);
+use namespace::autoclean;
 
 #pod =head1 DESCRIPTION
 #pod
-#pod This role provides some common utilities for plugins which use PPI
+#pod This role provides some common utilities for plugins which use L<PPI>.
 #pod
 #pod =method ppi_document_for_file
 #pod
@@ -34,7 +29,7 @@ sub ppi_document_for_file {
   my $encoded_content = $file->encoded_content;
 
   # We cache on the MD5 checksum to detect if the document has been modified
-  # by some other plugin since it was last parsed, our document is invalid.
+  # by some other plugin since it was last parsed, making our document invalid.
   my $md5 = md5($encoded_content);
   return $CACHE{$md5}->clone if $CACHE{$md5};
 
@@ -128,11 +123,11 @@ Dist::Zilla::Role::PPI - a role for plugins which use PPI
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 
-This role provides some common utilities for plugins which use PPI
+This role provides some common utilities for plugins which use L<PPI>.
 
 =head1 METHODS
 

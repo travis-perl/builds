@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MetaResources;
 # ABSTRACT: provide arbitrary "resources" for distribution metadata
-$Dist::Zilla::Plugin::MetaResources::VERSION = '5.039';
+$Dist::Zilla::Plugin::MetaResources::VERSION = '5.040';
 use Moose;
 with 'Dist::Zilla::Role::MetaProvider';
 
@@ -93,7 +93,7 @@ Dist::Zilla::Plugin::MetaResources - provide arbitrary "resources" for distribut
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 

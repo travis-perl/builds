@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::FileFinder;
 # ABSTRACT: something that finds files within the distribution
-$Dist::Zilla::Role::FileFinder::VERSION = '5.039';
+$Dist::Zilla::Role::FileFinder::VERSION = '5.040';
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -54,7 +54,7 @@ Dist::Zilla::Role::FileFinder - something that finds files within the distributi
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 

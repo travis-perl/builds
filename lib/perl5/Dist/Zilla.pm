@@ -1,6 +1,6 @@
 package Dist::Zilla;
 # ABSTRACT: distribution builder; installer not included!
-$Dist::Zilla::VERSION = '5.039';
+$Dist::Zilla::VERSION = '5.040';
 use Moose 0.92; # role composition fixes
 with 'Dist::Zilla::Role::ConfigDumper';
 
@@ -124,7 +124,7 @@ sub _build_version {
 #pod =attr release_status
 #pod
 #pod This attribute sets the release status to one of the
-#pod L<CPAN::META::Spec/https://metacpan.org/pod/CPAN::Meta::Spec#release_status>
+#pod L<CPAN::META::Spec|https://metacpan.org/pod/CPAN::Meta::Spec#release_status>
 #pod values: 'stable', 'testing' or 'unstable'.
 #pod
 #pod If the C<$ENV{RELEASE_STATUS}> environment variable exists, its value will
@@ -523,8 +523,7 @@ has root => (
 #pod =attr is_trial
 #pod
 #pod This attribute tells us whether or not the dist will be a trial release,
-#pod i.e. whether it has C<release_status> 'testing' or 'unstable' and will
-#pod have '-TRIAL' in the tarball name.
+#pod i.e. whether it has C<release_status> 'testing' or 'unstable'.
 #pod
 #pod Do not set this directly, it will be derived from C<release_status>.
 #pod
@@ -888,7 +887,7 @@ Dist::Zilla - distribution builder; installer not included!
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 
@@ -919,7 +918,7 @@ This is the version of the distribution to be created.
 =head2 release_status
 
 This attribute sets the release status to one of the
-L<CPAN::META::Spec/https://metacpan.org/pod/CPAN::Meta::Spec#release_status>
+L<CPAN::META::Spec|https://metacpan.org/pod/CPAN::Meta::Spec#release_status>
 values: 'stable', 'testing' or 'unstable'.
 
 If the C<$ENV{RELEASE_STATUS}> environment variable exists, its value will
@@ -999,8 +998,7 @@ nearly always be the current working directory in which C<dzil> was run.
 =head2 is_trial
 
 This attribute tells us whether or not the dist will be a trial release,
-i.e. whether it has C<release_status> 'testing' or 'unstable' and will
-have '-TRIAL' in the tarball name.
+i.e. whether it has C<release_status> 'testing' or 'unstable'.
 
 Do not set this directly, it will be derived from C<release_status>.
 
@@ -1161,7 +1159,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Cory G Watson csjewell Curtis Brandt Dagfinn Ilmari Mannsåker Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David E. Wheeler Golden H. Adler Steinbrunner Zurborg Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Michael Jemmeson Mike Doherty Moritz Onken Neil Bowers Nickolay Platonov Nick Tonkin nperez Olivier Mengué Pedro Melo Philippe Bruhat (BooK) Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
+=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Cory G Watson csjewell Curtis Brandt Dagfinn Ilmari Mannsåker Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David E. Wheeler Golden H. Adler Steinbrunner Zurborg Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Michael Jemmeson Mike Doherty Mohammad S Anwar Moritz Onken Neil Bowers Nickolay Platonov Nick Tonkin nperez Olivier Mengué Pedro Melo Philippe Bruhat (BooK) Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
 
 =over 4
 
@@ -1416,6 +1414,10 @@ Michael Jemmeson <mjemmeson@cpan.org>
 =item *
 
 Mike Doherty <mike@mikedoherty.ca>
+
+=item *
+
+Mohammad S Anwar <mohammad.anwar@yahoo.com>
 
 =item *
 

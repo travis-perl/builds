@@ -3,7 +3,7 @@ use warnings;
 use 5.006;
 
 package App::Cmd;
-$App::Cmd::VERSION = '0.328';
+$App::Cmd::VERSION = '0.329';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: write command line apps with less suffering
@@ -740,7 +740,7 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.328
+version 0.329
 
 =head1 SYNOPSIS
 
@@ -1042,7 +1042,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Adam Prime ambs Andreas Hernitscheck A. Sinan Unur Chris 'BinGOs' Williams David Golden Steinbrunner Denis Ibaev Diab Jerius Glenn Fowler Ingy dot Net Jakob Voss Jérôme Quelin John SJ Anderson Karen Etheridge Kent Fredric Matthew Astley mokko Olivier Mengué Ricardo SIGNES Ryan C. Thompson Sergey Romanov Stephen Caldwell Yuval Kogman
+=for stopwords Adam Prime ambs Andreas Hernitscheck A. Sinan Unur Chris 'BinGOs' Williams David Golden Steinbrunner Denis Ibaev Diab Jerius Glenn Fowler Ingy dot Net Jakob Voss Jérôme Quelin John SJ Anderson Karen Etheridge Kent Fredric Matthew Astley mokko Olivier Mengué Ricardo SIGNES Ryan C. Thompson Salvatore Bonaccorso Sergey Romanov Stephen Caldwell Yuval Kogman
 
 =over 4
 
@@ -1133,6 +1133,10 @@ Ricardo SIGNES <rjbs@codesimply.com>
 =item *
 
 Ryan C. Thompson <rct@thompsonclan.org>
+
+=item *
+
+Salvatore Bonaccorso <carnil@debian.org>
 
 =item *
 

@@ -1,1 +1,1 @@
-{"pathname":"C/CJ/CJM/IO-HTML-1.001.tar.gz","dist":"IO-HTML-1.001","target":"IO::HTML","version":"1.001","name":"IO::HTML","provides":{"IO::HTML":{"version":"1.001","file":"lib/IO/HTML.pm"}}}
+{"pathname":"C/CJ/CJM/IO-HTML-1.001.tar.gz","target":"IO::HTML","dist":"IO-HTML-1.001","provides":{"IO::HTML":{"file":"lib/IO/HTML.pm","version":"1.001"}},"name":"IO::HTML","version":"1.001"}

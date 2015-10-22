@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::AutoPrereqs;
 # ABSTRACT: automatically extract prereqs from your modules
-$Dist::Zilla::Plugin::AutoPrereqs::VERSION = '5.039';
+$Dist::Zilla::Plugin::AutoPrereqs::VERSION = '5.040';
 use Moose;
 with(
   'Dist::Zilla::Role::PrereqSource',
@@ -81,14 +81,14 @@ use namespace::autoclean;
 #pod
 #pod =attr extra_scanners
 #pod
-#pod This is an arrayref of scanner names (as expected by Perl::PrereqScanner).
-#pod It will be passed as the C<extra_scanners> parameter to Perl::PrereqScanner.
+#pod This is an arrayref of scanner names (as expected by L<Perl::PrereqScanner>).
+#pod It will be passed as the C<extra_scanners> parameter to L<Perl::PrereqScanner>.
 #pod
 #pod =attr scanners
 #pod
-#pod This is an arrayref of scanner names (as expected by Perl::PrereqScanner).
+#pod This is an arrayref of scanner names (as expected by L<Perl::PrereqScanner>).
 #pod If present, it will be passed as the C<scanners> parameter to
-#pod Perl::PrereqScanner, which means that it will replace the default list
+#pod L<Perl::PrereqScanner>, which means that it will replace the default list
 #pod of scanners.
 #pod
 #pod =attr skips
@@ -242,7 +242,7 @@ Dist::Zilla::Plugin::AutoPrereqs - automatically extract prereqs from your modul
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 SYNOPSIS
 
@@ -298,14 +298,14 @@ is C<:ExtraTestFiles>.
 
 =head2 extra_scanners
 
-This is an arrayref of scanner names (as expected by Perl::PrereqScanner).
-It will be passed as the C<extra_scanners> parameter to Perl::PrereqScanner.
+This is an arrayref of scanner names (as expected by L<Perl::PrereqScanner>).
+It will be passed as the C<extra_scanners> parameter to L<Perl::PrereqScanner>.
 
 =head2 scanners
 
-This is an arrayref of scanner names (as expected by Perl::PrereqScanner).
+This is an arrayref of scanner names (as expected by L<Perl::PrereqScanner>).
 If present, it will be passed as the C<scanners> parameter to
-Perl::PrereqScanner, which means that it will replace the default list
+L<Perl::PrereqScanner>, which means that it will replace the default list
 of scanners.
 
 =head2 skips
