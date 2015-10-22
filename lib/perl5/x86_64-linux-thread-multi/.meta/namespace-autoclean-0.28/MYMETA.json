@@ -42,7 +42,7 @@
       },
       "develop" : {
          "recommends" : {
-            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.103"
+            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.106"
          },
          "requires" : {
             "Class::MOP" : "0",
@@ -73,7 +73,7 @@
             "Dist::Zilla::Plugin::Git::Tag" : "0",
             "Dist::Zilla::Plugin::GitHub::Update" : "0.40",
             "Dist::Zilla::Plugin::GithubMeta" : "0.54",
-            "Dist::Zilla::Plugin::InstallGuide" : "0",
+            "Dist::Zilla::Plugin::InstallGuide" : "1.200005",
             "Dist::Zilla::Plugin::Keywords" : "0.004",
             "Dist::Zilla::Plugin::License" : "5.038",
             "Dist::Zilla::Plugin::MakeMaker" : "0",
@@ -106,11 +106,11 @@
             "Dist::Zilla::Plugin::Test::CleanNamespaces" : "0.006",
             "Dist::Zilla::Plugin::Test::Compile" : "2.039",
             "Dist::Zilla::Plugin::Test::EOL" : "0.17",
-            "Dist::Zilla::Plugin::Test::Kwalitee" : "2.06",
+            "Dist::Zilla::Plugin::Test::Kwalitee" : "2.10",
             "Dist::Zilla::Plugin::Test::MinimumVersion" : "2.000003",
             "Dist::Zilla::Plugin::Test::NoTabs" : "0.08",
             "Dist::Zilla::Plugin::Test::Pod::No404s" : "1.002",
-            "Dist::Zilla::Plugin::Test::PodSpelling" : "2.006001",
+            "Dist::Zilla::Plugin::Test::PodSpelling" : "2.006003",
             "Dist::Zilla::Plugin::Test::Portability" : "0",
             "Dist::Zilla::Plugin::Test::ReportPrereqs" : "0.019",
             "Dist::Zilla::Plugin::TestRelease" : "0",
@@ -178,6 +178,7 @@
             "ExtUtils::MakeMaker" : "0",
             "File::Basename" : "0",
             "File::Spec" : "0",
+            "FindBin" : "0",
             "Scalar::Util" : "0",
             "Test::More" : "0.88",
             "Test::Requires" : "0",
@@ -190,7 +191,7 @@
    "provides" : {
       "namespace::autoclean" : {
          "file" : "lib/namespace/autoclean.pm",
-         "version" : "0.27"
+         "version" : "0.28"
       }
    },
    "release_status" : "stable",
@@ -208,7 +209,7 @@
       "x_IRC" : "irc://irc.perl.org/#moose",
       "x_MailingList" : "http://lists.perl.org/list/moose.html"
    },
-   "version" : "0.27",
+   "version" : "0.28",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.022000"
@@ -279,6 +280,7 @@
                "Dist::Zilla::Plugin::GatherDir" : {
                   "exclude_filename" : [
                      "CONTRIBUTING",
+                     "INSTALL",
                      "LICENSE",
                      "README.pod"
                   ],
@@ -448,7 +450,7 @@
                }
             },
             "name" : "@Author::ETHER/Test::Kwalitee",
-            "version" : "2.11"
+            "version" : "2.12"
          },
          {
             "class" : "Dist::Zilla::Plugin::MojibakeTests",
@@ -669,6 +671,7 @@
                   ]
                },
                "Dist::Zilla::Role::MetaProvider::Provider" : {
+                  "Dist::Zilla::Role::MetaProvider::Provider::VERSION" : "2.001010",
                   "inherit_missing" : "0",
                   "inherit_version" : "0",
                   "meta_noindex" : "1"
@@ -896,12 +899,26 @@
          {
             "class" : "Dist::Zilla::Plugin::CheckIssues",
             "name" : "@Author::ETHER/CheckIssues",
-            "version" : "0.008"
+            "version" : "0.009"
          },
          {
             "class" : "Dist::Zilla::Plugin::UploadToCPAN",
             "name" : "@Author::ETHER/UploadToCPAN",
             "version" : "5.039"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Run::AfterRelease",
+            "config" : {
+               "Dist::Zilla::Plugin::Run::Role::Runner" : {
+                  "eval" : [
+                     "unlink 'LICENSE'"
+                  ],
+                  "fatal_errors" : 1,
+                  "quiet" : 1
+               }
+            },
+            "name" : "@Author::ETHER/remove old LICENSE",
+            "version" : "0.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::CopyFilesFromRelease",
@@ -911,6 +928,7 @@
                      "CONTRIBUTING",
                      "Changes",
                      "INSTALL",
+                     "LICENCE",
                      "LICENSE",
                      "ppport.h"
                   ],
@@ -938,6 +956,7 @@
                   "allow_dirty" : [
                      "CONTRIBUTING",
                      "Changes",
+                     "INSTALL",
                      "LICENSE",
                      "README.pod"
                   ],
@@ -961,7 +980,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.27",
+                  "tag" : "0.28",
                   "tag_format" : "%v%t",
                   "tag_message" : "v%v%t"
                },
