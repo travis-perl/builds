@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::commands;
-$App::Cmd::Command::commands::VERSION = '0.328';
+$App::Cmd::Command::commands::VERSION = '0.329';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' };
 
@@ -68,7 +68,7 @@ sub execute {
 #pod By default, the first group is for the "help" and "commands" commands, and all
 #pod other commands are in the second group.
 #pod
-#pod This method can be overriden by implementing the C<commands_groups> method in
+#pod This method can be overridden by implementing the C<commands_groups> method in
 #pod your application base clase.
 #pod
 #pod =cut
@@ -104,7 +104,7 @@ App::Cmd::Command::commands - list the application's commands
 
 =head1 VERSION
 
-version 0.328
+version 0.329
 
 =head1 DESCRIPTION
 
@@ -132,7 +132,7 @@ arrayrefs, and optional group header strings.
 By default, the first group is for the "help" and "commands" commands, and all
 other commands are in the second group.
 
-This method can be overriden by implementing the C<commands_groups> method in
+This method can be overridden by implementing the C<commands_groups> method in
 your application base clase.
 
 =head1 AUTHOR

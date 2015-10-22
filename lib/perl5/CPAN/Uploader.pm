@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package CPAN::Uploader;
 # ABSTRACT: upload things to the CPAN
-$CPAN::Uploader::VERSION = '0.103010';
+$CPAN::Uploader::VERSION = '0.103011';
 #pod =head1 ORIGIN
 #pod
 #pod This code is mostly derived from C<cpan-upload-http> by Brad Fitzpatrick, which
@@ -221,6 +221,11 @@ sub read_config_file {
 
     while (<$pauserc>) {
       chomp;
+      if (/BEGIN PGP MESSAGE/ ) {
+        Carp::croak "$filename seems to be encrypted. "
+          . "Maybe you need to install Config::Identity?"
+      }
+
       next unless $_ and $_ !~ /^\s*#/;
 
       my ($k, $v) = /^\s*(\w+)\s+(.+)$/;
@@ -280,7 +285,7 @@ CPAN::Uploader - upload things to the CPAN
 
 =head1 VERSION
 
-version 0.103010
+version 0.103011
 
 =head1 METHODS
 
@@ -349,7 +354,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Barbie Christian Walde David Caldwell fREW Schmidt Gabor Szabo Graham Knop Kent Fredric Mark Fowler Mike Doherty Steven Haryanto (on Asus Zenbook) sungo Torsten Raudssus Vincent Pit
+=for stopwords Barbie Christian Walde David Caldwell Golden fREW Schmidt Gabor Szabo Graham Knop Kent Fredric Mark Fowler Mike Doherty Steven Haryanto (on Asus Zenbook) sungo Torsten Raudssus Vincent Pit
 
 =over 4
 
@@ -364,6 +369,10 @@ Christian Walde <walde.christian@googlemail.com>
 =item *
 
 David Caldwell <david@porkrind.org>
+
+=item *
+
+David Golden <dagolden@cpan.org>
 
 =item *
 

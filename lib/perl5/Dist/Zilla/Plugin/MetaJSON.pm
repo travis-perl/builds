@@ -1,12 +1,10 @@
 package Dist::Zilla::Plugin::MetaJSON;
 # ABSTRACT: produce a META.json
-$Dist::Zilla::Plugin::MetaJSON::VERSION = '5.039';
+$Dist::Zilla::Plugin::MetaJSON::VERSION = '5.040';
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
 use namespace::autoclean;
-
-use Dist::Zilla::File::FromCode;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -50,6 +48,7 @@ sub gather_files {
   my $zilla = $self->zilla;
 
   require JSON::MaybeXS;
+  require Dist::Zilla::File::FromCode;
   require CPAN::Meta::Converter;
   CPAN::Meta::Converter->VERSION(2.101550); # improved downconversion
   require CPAN::Meta::Validator;
@@ -114,7 +113,7 @@ Dist::Zilla::Plugin::MetaJSON - produce a META.json
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 

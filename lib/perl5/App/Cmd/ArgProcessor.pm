@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::ArgProcessor;
-$App::Cmd::ArgProcessor::VERSION = '0.328';
+$App::Cmd::ArgProcessor::VERSION = '0.329';
 # ABSTRACT: App::Cmd-specific wrapper for Getopt::Long::Descriptive
 
 sub _process_args {
@@ -35,7 +35,7 @@ App::Cmd::ArgProcessor - App::Cmd-specific wrapper for Getopt::Long::Descriptive
 
 =head1 VERSION
 
-version 0.328
+version 0.329
 
 =head1 AUTHOR
 

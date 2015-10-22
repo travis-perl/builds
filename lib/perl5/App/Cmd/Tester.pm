@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package App::Cmd::Tester;
-$App::Cmd::Tester::VERSION = '0.328';
+$App::Cmd::Tester::VERSION = '0.329';
 # ABSTRACT: for capturing the result of running an app
 
 #pod =head1 SYNOPSIS
@@ -134,7 +134,7 @@ sub _run_with_capture {
 
 {
   package App::Cmd::Tester::Result;
-$App::Cmd::Tester::Result::VERSION = '0.328';
+$App::Cmd::Tester::Result::VERSION = '0.329';
 sub new {
     my ($class, $arg) = @_;
     bless $arg => $class;
@@ -150,7 +150,7 @@ sub new {
 
 {
   package App::Cmd::Tester::Exited;
-$App::Cmd::Tester::Exited::VERSION = '0.328';
+$App::Cmd::Tester::Exited::VERSION = '0.329';
 sub throw {
     my ($class, $code) = @_;
     $code = 0 unless defined $code;
@@ -173,7 +173,7 @@ App::Cmd::Tester - for capturing the result of running an app
 
 =head1 VERSION
 
-version 0.328
+version 0.329
 
 =head1 SYNOPSIS
 

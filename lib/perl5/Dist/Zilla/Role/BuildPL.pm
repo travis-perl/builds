@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::BuildPL;
 # ABSTRACT: Common ground for Build.PL based builders
-$Dist::Zilla::Role::BuildPL::VERSION = '5.039';
+$Dist::Zilla::Role::BuildPL::VERSION = '5.040';
 use Moose::Role;
 
 with qw(
@@ -69,7 +69,7 @@ Dist::Zilla::Role::BuildPL - Common ground for Build.PL based builders
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 

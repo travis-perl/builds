@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GenerateFile;
 # ABSTRACT: build a custom file from only the plugin configuration
-$Dist::Zilla::Plugin::GenerateFile::VERSION = '5.039';
+$Dist::Zilla::Plugin::GenerateFile::VERSION = '5.040';
 use Moose;
 with (
   'Dist::Zilla::Role::FileGatherer',
@@ -30,19 +30,19 @@ use Dist::Zilla::File::InMemory;
 #pod This plugin adds a file to the distribution.
 #pod
 #pod You can specify the content, as a sequence of lines, in your configuration.
-#pod The specified filename and content might be literals or might be Text::Template
+#pod The specified filename and content might be literals or might be L<Text::Template>
 #pod templates.
 #pod
 #pod =head2 Templating of the content
 #pod
-#pod If you provide C<content_is_template> (or C<is_template>) parameter of "1", the
-#pod content will be run through Text::Template.  The variables C<$plugin> and
-#pod C<$dist> will be provided, set to the GenerateFile plugin and the Dist::Zilla
+#pod If you provide C<content_is_template> (or C<is_template>) parameter of C<"1">, the
+#pod content will be run through L<Text::Template>.  The variables C<$plugin> and
+#pod C<$dist> will be provided, set to the [GenerateFile] plugin and the L<Dist::Zilla>
 #pod object respectively.
 #pod
 #pod If you provide a C<name_is_template> parameter of "1", the filename will be run
-#pod through Text::Template.  The variables C<$plugin> and C<$dist> will be
-#pod provided, set to the GenerateFile plugin and the Dist::Zilla object
+#pod through L<Text::Template>.  The variables C<$plugin> and C<$dist> will be
+#pod provided, set to the [GenerateFile] plugin and the L<Dist::Zilla> object
 #pod respectively.
 #pod
 #pod =cut
@@ -167,7 +167,7 @@ Dist::Zilla::Plugin::GenerateFile - build a custom file from only the plugin con
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 SYNOPSIS
 
@@ -188,19 +188,19 @@ In your F<dist.ini>:
 This plugin adds a file to the distribution.
 
 You can specify the content, as a sequence of lines, in your configuration.
-The specified filename and content might be literals or might be Text::Template
+The specified filename and content might be literals or might be L<Text::Template>
 templates.
 
 =head2 Templating of the content
 
-If you provide C<content_is_template> (or C<is_template>) parameter of "1", the
-content will be run through Text::Template.  The variables C<$plugin> and
-C<$dist> will be provided, set to the GenerateFile plugin and the Dist::Zilla
+If you provide C<content_is_template> (or C<is_template>) parameter of C<"1">, the
+content will be run through L<Text::Template>.  The variables C<$plugin> and
+C<$dist> will be provided, set to the [GenerateFile] plugin and the L<Dist::Zilla>
 object respectively.
 
 If you provide a C<name_is_template> parameter of "1", the filename will be run
-through Text::Template.  The variables C<$plugin> and C<$dist> will be
-provided, set to the GenerateFile plugin and the Dist::Zilla object
+through L<Text::Template>.  The variables C<$plugin> and C<$dist> will be
+provided, set to the [GenerateFile] plugin and the L<Dist::Zilla> object
 respectively.
 
 =head1 ATTRIBUTES

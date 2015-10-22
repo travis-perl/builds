@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GatherDir;
 # ABSTRACT: gather all the files in a directory
-$Dist::Zilla::Plugin::GatherDir::VERSION = '5.039';
+$Dist::Zilla::Plugin::GatherDir::VERSION = '5.040';
 use Moose;
 use MooseX::Types::Path::Class qw(Dir File);
 with 'Dist::Zilla::Role::FileGatherer';
@@ -173,7 +173,7 @@ sub gather_files {
   my $repo_root = $self->zilla->root;
   my $root = "" . $self->root;
   $root =~ s{^~([\\/])}{require File::HomeDir; File::HomeDir::->my_home . $1}e;
-  $root = path($root)->relative($repo_root)->stringify if path($root)->is_relative;
+  $root = path($repo_root)->child($root)->stringify if path($root)->is_relative;
 
   my $prune_regex = qr/\000/;
   $prune_regex = qr/$prune_regex|$_/
@@ -250,7 +250,7 @@ Dist::Zilla::Plugin::GatherDir - gather all the files in a directory
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 DESCRIPTION
 

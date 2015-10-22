@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MetaNoIndex;
 # ABSTRACT: Stop CPAN from indexing stuff
-$Dist::Zilla::Plugin::MetaNoIndex::VERSION = '5.039';
+$Dist::Zilla::Plugin::MetaNoIndex::VERSION = '5.040';
 use Moose;
 with 'Dist::Zilla::Role::MetaProvider';
 
@@ -102,7 +102,7 @@ sub metadata {
   my $self = shift;
   return {
     no_index => {
-      map  {; my $reader = $_->[0];  ($_->[1] => $self->$reader) }
+      map  {; my $reader = $_->[0];  ($_->[1] => [ sort @{ $self->$reader } ]) }
       grep {; my $pred   = "_has_$_->[0]"; $self->$pred }
       map  {; [ $_ => $ATTR_ALIAS{$_}[0] ] }
       keys %ATTR_ALIAS
@@ -131,7 +131,7 @@ Dist::Zilla::Plugin::MetaNoIndex - Stop CPAN from indexing stuff
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 SYNOPSIS
 

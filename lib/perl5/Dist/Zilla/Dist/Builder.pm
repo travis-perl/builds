@@ -1,6 +1,6 @@
 package Dist::Zilla::Dist::Builder;
 # ABSTRACT: dist zilla subclass for building dists
-$Dist::Zilla::Dist::Builder::VERSION = '5.039';
+$Dist::Zilla::Dist::Builder::VERSION = '5.040';
 use Moose 0.92; # role composition fixes
 extends 'Dist::Zilla';
 
@@ -444,8 +444,9 @@ sub dist_basename {
 #pod   my $tarball = $zilla->archive_filename;
 #pod
 #pod This method will return the filename (e.g. C<Dist-Name-1.01.tar.gz>)
-#pod of the tarball of this dist.  It will include C<-TRIAL> if building a
-#pod trial dist.  The tarball might not exist.
+#pod of the tarball of this distribution.  It will include C<-TRIAL> if building a
+#pod trial distribution, unless the version contains an underscore.  The tarball
+#pod might not exist.
 #pod
 #pod =cut
 
@@ -453,7 +454,7 @@ sub archive_filename {
   my ($self) = @_;
   return join(q{},
     $self->dist_basename,
-    ( $self->is_trial ? '-TRIAL' : '' ),
+    ( $self->is_trial && $self->version !~ /_/ ? '-TRIAL' : '' ),
     '.tar.gz'
   );
 }
@@ -872,7 +873,7 @@ Dist::Zilla::Dist::Builder - dist zilla subclass for building dists
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 ATTRIBUTES
 
@@ -937,8 +938,9 @@ does not include C<-TRIAL>, even if building a trial dist.
   my $tarball = $zilla->archive_filename;
 
 This method will return the filename (e.g. C<Dist-Name-1.01.tar.gz>)
-of the tarball of this dist.  It will include C<-TRIAL> if building a
-trial dist.  The tarball might not exist.
+of the tarball of this distribution.  It will include C<-TRIAL> if building a
+trial distribution, unless the version contains an underscore.  The tarball
+might not exist.
 
 =head2 build_archive
 

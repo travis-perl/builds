@@ -2,18 +2,21 @@ use strict;
 use warnings;
 package Dist::Zilla::App;
 # ABSTRACT: Dist::Zilla's App::Cmd
-$Dist::Zilla::App::VERSION = '5.039';
-use App::Cmd::Setup 0.309 -app; # better compilation error detection
+$Dist::Zilla::App::VERSION = '5.040';
+use App::Cmd::Setup 0.327 -app; # better compilation error detection
 
 use Carp ();
 use Try::Tiny;
 
 sub global_opt_spec {
+  my ($self) = @_;
+
   return (
     [ "verbose|v:s@", "log additional output" ],
     [ "lib-inc|I=s@",     "additional \@INC dirs", {
         callbacks => { 'always fine' => sub { unshift @INC, @{$_[0]}; } }
-    } ]
+    } ],
+    $self->SUPER::global_opt_spec,
   );
 }
 
@@ -169,7 +172,7 @@ Dist::Zilla::App - Dist::Zilla's App::Cmd
 
 =head1 VERSION
 
-version 5.039
+version 5.040
 
 =head1 METHODS
 

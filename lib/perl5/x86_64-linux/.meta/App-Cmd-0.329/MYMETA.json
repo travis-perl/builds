@@ -1,7 +1,7 @@
 {
-   "abstract" : "upload things to the CPAN",
+   "abstract" : "write command line apps with less suffering",
    "author" : [
-      "Ricardo SIGNES <rjbs@cpan.org>"
+      "Ricardo Signes <rjbs@cpan.org>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Dist::Zilla version 5.039, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "CPAN-Uploader",
+   "name" : "App-Cmd",
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -32,18 +32,24 @@
       },
       "runtime" : {
          "requires" : {
+            "Capture::Tiny" : "0.13",
             "Carp" : "0",
-            "Data::Dumper" : "0",
-            "Digest::MD5" : "0",
+            "Class::Load" : "0.06",
+            "Data::OptList" : "0",
             "File::Basename" : "0",
-            "File::HomeDir" : "0",
-            "File::Spec" : "0",
+            "Getopt::Long" : "2.39",
             "Getopt::Long::Descriptive" : "0.084",
-            "HTTP::Request::Common" : "0",
-            "HTTP::Status" : "0",
-            "LWP::Protocol::https" : "1",
-            "LWP::UserAgent" : "0",
-            "Term::ReadKey" : "0",
+            "IO::TieCombine" : "0",
+            "Module::Pluggable::Object" : "0",
+            "Pod::Usage" : "1.61",
+            "String::RewritePrefix" : "0",
+            "Sub::Exporter" : "0",
+            "Sub::Exporter::Util" : "0",
+            "Sub::Install" : "0",
+            "Text::Abbrev" : "0",
+            "constant" : "0",
+            "parent" : "0",
+            "perl" : "5.006",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -53,28 +59,33 @@
             "CPAN::Meta" : "2.120900"
          },
          "requires" : {
+            "Data::Dumper" : "0",
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
-            "Test::More" : "0.96"
+            "IPC::Cmd" : "0",
+            "Test::Fatal" : "0",
+            "Test::More" : "0.96",
+            "base" : "0",
+            "lib" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/rjbs/CPAN-Uploader/issues"
+         "web" : "https://github.com/rjbs/App-Cmd/issues"
       },
-      "homepage" : "https://github.com/rjbs/CPAN-Uploader",
+      "homepage" : "https://github.com/rjbs/App-Cmd",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/rjbs/CPAN-Uploader.git",
-         "web" : "https://github.com/rjbs/CPAN-Uploader"
+         "url" : "https://github.com/rjbs/App-Cmd.git",
+         "web" : "https://github.com/rjbs/App-Cmd"
       }
    },
-   "version" : "0.103010",
+   "version" : "0.329",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.023000"
+         "version" : "5.023003"
       },
       "plugins" : [
          {
@@ -120,13 +131,13 @@
                }
             },
             "name" : "@RJBS/RJBS-Outdated",
-            "version" : "0.045"
+            "version" : "0.047"
          },
          {
             "class" : "Dist::Zilla::Plugin::PromptIfStale",
             "config" : {
                "Dist::Zilla::Plugin::PromptIfStale" : {
-                  "check_all_plugins" : "1",
+                  "check_all_plugins" : 1,
                   "check_all_prereqs" : 0,
                   "modules" : [],
                   "phase" : "release",
@@ -134,7 +145,7 @@
                }
             },
             "name" : "@RJBS/CPAN-Outdated",
-            "version" : "0.045"
+            "version" : "0.047"
          },
          {
             "class" : "Dist::Zilla::Plugin::PruneCruft",
@@ -438,7 +449,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.103010",
+                  "tag" : "0.329",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },
@@ -493,18 +504,6 @@
                }
             },
             "name" : "Prereqs",
-            "version" : "5.039"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::RemovePrereqs",
-            "config" : {
-               "Dist::Zilla::Plugin::RemovePrereqs" : {
-                  "modules_to_remove" : [
-                     "Config::Identity"
-                  ]
-               }
-            },
-            "name" : "RemovePrereqs",
             "version" : "5.039"
          },
          {
@@ -567,18 +566,31 @@
       }
    },
    "x_contributors" : [
-      "Barbie <barbie@missbarbell.co.uk>",
-      "Christian Walde <walde.christian@googlemail.com>",
-      "David Caldwell <david@porkrind.org>",
-      "fREW Schmidt <frioux@gmail.com>",
-      "Gabor Szabo <szabgab@gmail.com>",
-      "Graham Knop <haarg@haarg.org>",
+      "Adam Prime <aprime@oanda.com>",
+      "ambs <ambs@cpan.org>",
+      "Andreas Hernitscheck <andreash@lxhe.(none)>",
+      "A. Sinan Unur <nanis@cpan.org>",
+      "Chris 'BinGOs' Williams <chris@bingosnet.co.uk>",
+      "David Golden <dagolden@cpan.org>",
+      "David Steinbrunner <dsteinbrunner@pobox.com>",
+      "Denis Ibaev <dionys@gmail.com>",
+      "Diab Jerius <djerius@cfa.harvard.edu>",
+      "Glenn Fowler <cebjyre@cpan.org>",
+      "Ingy dot Net <ingy@ingy.net>",
+      "Jakob Voss <jakob@nichtich.de>",
+      "Jakob Voss <voss@gbv.de>",
+      "Jérôme Quelin <jquelin@gmail.com>",
+      "John SJ Anderson <genehack@genehack.org>",
+      "Karen Etheridge <ether@cpan.org>",
       "Kent Fredric <kentfredric@gmail.com>",
-      "Mark Fowler <mark@twoshortplanks.com>",
-      "Mike Doherty <doherty@cs.dal.ca>",
-      "Steven Haryanto (on Asus Zenbook) <stevenharyanto@gmail.com>",
-      "sungo <sungo@sungo.us>",
-      "Torsten Raudssus <github@raudssus.de>",
-      "Vincent Pit <perl@profvince.com>"
+      "Matthew Astley <mca@sanger.ac.uk>",
+      "mokko <mauricemengel@gmail.com>",
+      "Olivier Mengué <dolmen@cpan.org>",
+      "Ricardo SIGNES <rjbs@codesimply.com>",
+      "Ryan C. Thompson <rct@thompsonclan.org>",
+      "Salvatore Bonaccorso <carnil@debian.org>",
+      "Sergey Romanov <sromanov-dev@yandex.ru>",
+      "Stephen Caldwell <steve@campusexplorer.com>",
+      "Yuval Kogman <nuffin@cpan.org>"
    ]
 }
