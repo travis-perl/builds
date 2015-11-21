@@ -1,5 +1,5 @@
 package Class::MOP::Method;
-our $VERSION = '2.1603';
+our $VERSION = '2.1604';
 
 use strict;
 use warnings;
@@ -159,7 +159,7 @@ Class::MOP::Method - Method Meta Object
 
 =head1 VERSION
 
-version 2.1603
+version 2.1604
 
 =head1 DESCRIPTION
 

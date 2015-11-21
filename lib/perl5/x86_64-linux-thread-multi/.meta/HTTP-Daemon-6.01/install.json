@@ -1,1 +1,1 @@
-{"dist":"HTTP-Daemon-6.01","provides":{"HTTP::Daemon":{"file":"lib/HTTP/Daemon.pm","version":"6.01"},"HTTP::Daemon::ClientConn":{"version":"6.01","file":"lib/HTTP/Daemon.pm"}},"pathname":"G/GA/GAAS/HTTP-Daemon-6.01.tar.gz","version":"6.01","name":"HTTP::Daemon","target":"HTTP::Daemon"}
+{"pathname":"G/GA/GAAS/HTTP-Daemon-6.01.tar.gz","dist":"HTTP-Daemon-6.01","version":"6.01","provides":{"HTTP::Daemon::ClientConn":{"file":"lib/HTTP/Daemon.pm","version":"6.01"},"HTTP::Daemon":{"file":"lib/HTTP/Daemon.pm","version":"6.01"}},"target":"HTTP::Daemon","name":"HTTP::Daemon"}

@@ -581,7 +581,7 @@ at the bottom if it exists.  You can also search partway down the tree
 and ->find should return where you left off.
 
 For example, given the values B<find (qw (A B C))> and the following
-tree (</end> tags ommitted for brevity):
+tree (</end> tags omitted for brevity):
 
  <A>
         <FOO>

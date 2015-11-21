@@ -4,15 +4,15 @@
       "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.130880, CPAN::Meta::Converter version 2.150001",
    "license" : [
-      "unknown"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "PadWalker",
+   "name" : "Config-General",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,10 +32,18 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008001"
+            "File::Glob" : "0",
+            "File::Spec::Functions" : "0",
+            "FileHandle" : "0",
+            "IO::File" : "0"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "2.1"
+   "resources" : {
+      "repository" : {
+         "url" : "http://dev.catalyst.perl.org/repos/Config-General/trunk/"
+      }
+   },
+   "version" : "2.60"
 }

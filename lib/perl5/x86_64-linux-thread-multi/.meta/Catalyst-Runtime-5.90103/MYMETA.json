@@ -101,7 +101,7 @@
             "Try::Tiny" : "0.17",
             "URI" : "1.65",
             "URI::ws" : "0.03",
-            "namespace::autoclean" : "0.09",
+            "namespace::autoclean" : "0.28",
             "namespace::clean" : "0.23",
             "perl" : "5.008003"
          }
@@ -120,6 +120,6 @@
       "x_IRC" : "irc://irc.perl.org/#catalyst",
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/catalyst"
    },
-   "version" : "5.90101",
+   "version" : "5.90103",
    "x_authority" : "cpan:MSTROUT"
 }

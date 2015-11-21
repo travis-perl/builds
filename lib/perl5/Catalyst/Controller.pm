@@ -143,17 +143,27 @@ sub _BEGIN : Private {
     my $begin = ( $c->get_actions( 'begin', $c->namespace ) )[-1];
     return 1 unless $begin;
     $begin->dispatch( $c );
-    return !@{ $c->error };
+    #If there is an error, all bets off
+    if( @{ $c->error }) {
+      return !@{ $c->error };
+    } else {
+      return $c->state || 1;
+    }
 }
 
 sub _AUTO : Private {
     my ( $self, $c ) = @_;
     my @auto = $c->get_actions( 'auto', $c->namespace );
     foreach my $auto (@auto) {
+        # We FORCE the auto action user to explicitly return
+        # true.  We need to do this since there's some auto
+        # users (Catalyst::Authentication::Credential::HTTP) that
+        # actually do a detach instead.  
+        $c->state(0);
         $auto->dispatch( $c );
         return 0 unless $c->state;
     }
-    return 1;
+    return $c->state || 1;
 }
 
 sub _ACTION : Private {
@@ -164,7 +174,12 @@ sub _ACTION : Private {
     {
         $c->action->dispatch( $c );
     }
-    return !@{ $c->error };
+    #If there is an error, all bets off
+    if( @{ $c->error }) {
+      return !@{ $c->error };
+    } else {
+      return $c->state || 1;
+    }
 }
 
 sub _END : Private {
@@ -389,7 +404,7 @@ sub _parse_attrs {
 
         # Parse out :Foo(bar) into Foo => bar etc (and arrayify)
 
-        if ( my ( $key, $value ) = ( $attr =~ /^(.*?)(?:\(\s*(.+?)\s*\))?$/ ) )
+        if ( my ( $key, $value ) = ( $attr =~ /^(.*?)(?:\(\s*(.+?)?\s*\))?$/ ) )
         {
 
             if ( defined $value ) {
@@ -900,7 +915,7 @@ declared attributes you must quote them:
 
 If you use 'reference' type constraints (such as ArrayRef[Int]) that have an unknown
 number of allowed matches, we set this the same way "Args" is.  Please keep in mind
-that actions with an undetermined number of args match at lower precidence than those
+that actions with an undetermined number of args match at lower precedence than those
 with a fixed number.  You may use reference types such as Tuple from L<Types::Standard>
 that allows you to fix the number of allowed args.  For example Args(Tuple[Int,Int])
 would be determined to be two args (or really the same as Args(Int,Int).)  You may
