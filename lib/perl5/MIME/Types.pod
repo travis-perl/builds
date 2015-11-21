@@ -254,8 +254,8 @@ missing, please contact the maintainer for inclusion.
 
 =head1 SEE ALSO
 
-This module is part of MIME-Types distribution version 2.11,
-built on June 16, 2015. Website: F<http://perl.overmeer.net/mimetypes/>
+This module is part of MIME-Types distribution version 2.12,
+built on November 11, 2015. Website: F<http://perl.overmeer.net/mimetypes/>
 
 =head1 LICENSE
 

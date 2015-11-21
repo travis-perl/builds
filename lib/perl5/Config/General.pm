@@ -32,7 +32,7 @@ use Carp::Heavy;
 use Carp;
 use Exporter;
 
-$Config::General::VERSION = "2.58";
+$Config::General::VERSION = "2.60";
 
 use vars  qw(@ISA @EXPORT_OK);
 use base qw(Exporter);
@@ -432,13 +432,13 @@ sub _open {
 
     # applied patch by AlexK fixing rt.cpan.org#41030
     if ( !@include && defined $this->{ConfigPath} ) {
-    	foreach my $dir (@{$this->{ConfigPath}}) {
-		my ($volume, $path, undef) = splitpath($basefile);
-		if ( -d catfile( $dir, $path )  ) {
-	    		push @include, grep { -f $_ } bsd_glob(catfile($dir, $basefile), GLOB_BRACE | GLOB_QUOTE);
-			last;
-		}
-    	}
+      foreach my $dir (@{$this->{ConfigPath}}) {
+	my ($volume, $path, undef) = splitpath($basefile);
+	if ( -d catfile( $dir, $path )  ) {
+	  push @include, grep { -f $_ } bsd_glob(catfile($dir, $basefile), GLOB_BRACE | GLOB_QUOTE);
+	  last;
+	}
+      }
     }
 
     if (@include == 1) {
@@ -722,12 +722,29 @@ sub _read {
 
       # bugfix rt.cpan.org#38635: support quoted filenames
       if ($this->{UseApacheInclude}) {
-         if (/^\s*include\s*(["'])(.*?)(?<!\\)\1$/i) {
-           $incl_file = $2;
-         }
-         elsif (/^\s*include\s+(.+?)\s*$/i) {
-           $incl_file = $1;
-         }
+	my $opt = '';
+	if (/^\s*(include|includeoptional)\s*(["'])(.*?)(?<!\\)\2$/i) {
+	  $incl_file = $3;
+	  $opt = $1;
+	}
+	elsif (/^\s*(include|includeoptional)\s+(.+?)\s*$/i) {
+	  $incl_file = $2;
+	  $opt = $1;
+	}
+	if ($incl_file) {
+	  if ($this->{IncludeGlob} && $opt =~ /opt/i && $incl_file !~ /[*?\[\{\\]/) {
+	    # fix rt#107108
+	    # glob enabled && optional include && file is not already a glob:
+	    # turn it into a singular matching glob, like:
+	    # "file" => "[f][i][l][e]"  and:
+	    # "dir/file" => "dir/[f][i][l][e]"
+	    # which IS a glob but only matches that particular file. if it
+	    # doesn't exist, it will be ignored by _open(), just what
+	    # we'd like to have when using IncludeOptional.
+	    my ($vol,$dirs,$file) = splitpath( $incl_file );
+	    $incl_file = catpath($vol, $dirs, join '', map { "[$_]" } split //, $file);
+	  }
+	}
       }
       else {
 	if (/^\s*<<include\s+(["'])(.+?)>>\\s*$/i) {
@@ -1583,7 +1600,8 @@ values of the options will B<not> lowercased.
 If set to a true value, the parser will consider "include ..." as valid include
 statement (just like the well known Apache include statement).
 
-
+It also supports apache's "IncludeOptional" statement with the same behavior,
+that is, if the include file doesn't exist no error will be thrown.
 
 =item B<-IncludeRelative>
 
@@ -1613,6 +1631,7 @@ include all matching files (e.g. <<include conf.d/*.conf>>).  Also note that as
 with standard file patterns, * will not match dot-files, so <<include dir/*>>
 is often more desirable than including a directory with B<-IncludeDirectories>.
 
+An include option will not cause a parser error if the glob didn't return anything.
 
 =item B<-IncludeAgain>
 
@@ -1876,6 +1895,8 @@ splitting. B<-SplitPolicy> must be set to 'custom' to make this work.
 You can use this parameter to specify a custom delimiter to use when saving
 configs to a file or string. You only need to set it if you want to store
 the config back to disk and if you have B<-SplitPolicy> set to 'custom'.
+
+However, this parameter takes precedence over whatever is set for B<-SplitPolicy>.
 
 Be very careful with this parameter.
 
@@ -2724,7 +2745,7 @@ I recommend you to read the following documents, which are supplied with Perl:
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2000-2014 Thomas Linden
+Copyright (c) 2000-2015 Thomas Linden
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -2753,7 +2774,7 @@ Thomas Linden <tlinden |AT| cpan.org>
 
 =head1 VERSION
 
-2.58
+2.60
 
 =cut
 
