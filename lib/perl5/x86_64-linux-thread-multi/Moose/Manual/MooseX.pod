@@ -13,7 +13,7 @@ Moose::Manual::MooseX - Recommended Moose extensions
 
 =head1 VERSION
 
-version 2.1603
+version 2.1604
 
 =head1 MooseX?
 

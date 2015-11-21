@@ -13,7 +13,7 @@ Moose::Cookbook::Roles::ApplicationToInstance - Applying a role to an object ins
 
 =head1 VERSION
 
-version 2.1603
+version 2.1604
 
 =head1 SYNOPSIS
 

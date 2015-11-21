@@ -1,5 +1,5 @@
 package Moose::Exception;
-our $VERSION = '2.1603';
+our $VERSION = '2.1604';
 
 use Moose;
 use Devel::StackTrace 1.33;
@@ -106,7 +106,7 @@ Moose::Exception - Superclass for Moose internal exceptions
 
 =head1 VERSION
 
-version 2.1603
+version 2.1604
 
 =head1 DESCRIPTION
 
