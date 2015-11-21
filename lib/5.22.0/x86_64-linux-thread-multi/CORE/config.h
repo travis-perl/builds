@@ -9,9 +9,9 @@
 
 /* Package name      : perl5
  * Source directory  : .
- * Configuration time: Thu Oct 22 00:01:25 UTC 2015
+ * Configuration time: Sat Nov 21 00:01:46 UTC 2015
  * Configured by     : travis
- * Target system     : linux testing-worker-linux-f25aadab-1-523-linux-7-86738851 2.6.32-042stab108.8 #1 smp wed jul 22 17:23:23 msk 2015 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux testing-worker-linux-027f0490-2-21320-linux-7-92375388 2.6.32-042stab108.8 #1 smp wed jul 22 17:23:23 msk 2015 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
