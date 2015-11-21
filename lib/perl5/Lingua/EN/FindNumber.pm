@@ -1,5 +1,5 @@
 package Lingua::EN::FindNumber;
-$Lingua::EN::FindNumber::VERSION = '1.31';
+$Lingua::EN::FindNumber::VERSION = '1.32';
 use 5.006;
 use strict;
 use warnings;
@@ -49,7 +49,7 @@ Lingua::EN::FindNumber - Locate (written) numbers in English text
   @numbers = extract_numbers($text); # "Fourscore and seven", "four"
 
   while ($text =~ /$number_re/g) { # Build your own iterator
-  
+
 
 =head1 DESCRIPTION
 
@@ -66,31 +66,31 @@ numbers.
   @numbers = extract_numbers($text); # "Fourscore and seven", "four"
 
   while ($text =~ /$number_re/g) { # Build your own iterator
-  
+
 
 =head1 SEE ALSO
 
 This module was written for the Natural Languages chapter of the second
-edition of Advanced Perl Programming. If you liked the module, why not
-buy the book?
-
-  http://www.amazon.co.uk/exec/obidos/ASIN/0596004567/tmtm-20
+edition of Advanced Perl Programming.
 
 This module works rather well in conjunction with
-L<Lingua::EN::Words2Nums>, which is a very cool module anyway. (And I
-stole some of this module's code from it. Thanks, Joey!) It may also
-be involved with L<Lingua::EN::NamedEntity> in the future, so check that
-one out too.
+L<Lingua::EN::Words2Nums>, which is a very cool module anyway.
+(And Simon stole some of this module's code from it. Thanks, Joey!)
+It may also be involved with L<Lingua::EN::NamedEntity> in the future,
+so check that one out too.
+
 
 =head1 REPOSITORY
 
-L<https://github.com/neilbowers/Lingua-EN-FindNumber>
+L<https://github.com/neilb/Lingua-EN-FindNumber>
+
 
 =head1 AUTHOR
 
-Current maintainer: Tony Bowden
+This module was originally written by Simon Cozens.
+It was then maintained from 2004 to 2005 by Tony Bowden.
+Since 2014 it has been maintained by Neil Bowers.
 
-Original author: Simon Cozens
 
 =head1 BUGS and QUERIES
 

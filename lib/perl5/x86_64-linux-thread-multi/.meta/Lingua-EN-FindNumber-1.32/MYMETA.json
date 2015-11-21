@@ -5,7 +5,7 @@
       "Tony Bowden <tmtm@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.032, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 5.037, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -43,12 +43,12 @@
    },
    "release_status" : "stable",
    "resources" : {
-      "homepage" : "https://github.com/neilbowers/Lingua-EN-FindNumber",
+      "homepage" : "https://github.com/neilb/Lingua-EN-FindNumber",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/neilbowers/Lingua-EN-FindNumber.git",
-         "web" : "https://github.com/neilbowers/Lingua-EN-FindNumber"
+         "url" : "https://github.com/neilb/Lingua-EN-FindNumber.git",
+         "web" : "https://github.com/neilb/Lingua-EN-FindNumber"
       }
    },
-   "version" : "1.31"
+   "version" : "1.32"
 }
