@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::commands;
-$App::Cmd::Command::commands::VERSION = '0.329';
+$App::Cmd::Command::commands::VERSION = '0.330';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' };
 
@@ -104,7 +104,7 @@ App::Cmd::Command::commands - list the application's commands
 
 =head1 VERSION
 
-version 0.329
+version 0.330
 
 =head1 DESCRIPTION
 

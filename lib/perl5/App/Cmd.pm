@@ -3,7 +3,7 @@ use warnings;
 use 5.006;
 
 package App::Cmd;
-$App::Cmd::VERSION = '0.329';
+$App::Cmd::VERSION = '0.330';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: write command line apps with less suffering
@@ -186,7 +186,7 @@ sub _command {
   #
   #  my $want_isa = $self->_default_command_base;
   # -- kentnl, 2010-12
-   my $want_isa = 'App::Cmd::Command';
+  my $want_isa = 'App::Cmd::Command';
 
   my %plugin;
   for my $plugin ($self->_plugins) {
@@ -691,7 +691,9 @@ sub global_opt_spec {
   my ($self) = @_;
 
   my $cmd = $self->{command};
-  my @help = reverse sort map { s/^--?//; $_ }
+  my %seen;
+  my @help = grep { ! $seen{$_}++ }
+             reverse sort map { s/^--?//; $_ }
              grep { $cmd->{$_} eq 'App::Cmd::Command::help' } keys %$cmd;
 
   return (@help ? [ join('|', @help) => "show help" ] : ());
@@ -740,7 +742,7 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.329
+version 0.330
 
 =head1 SYNOPSIS
 

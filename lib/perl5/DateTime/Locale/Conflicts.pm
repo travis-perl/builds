@@ -14,11 +14,10 @@ use Dist::CheckConflicts
     -also => [ qw(
         Carp
         Dist::CheckConflicts
+        Exporter
         List::MoreUtils
         Params::Validate
-        base
         strict
-        utf8
         warnings
     ) ],
 

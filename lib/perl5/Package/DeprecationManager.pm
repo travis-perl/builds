@@ -3,10 +3,11 @@ package Package::DeprecationManager;
 use strict;
 use warnings;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 use Carp qw( croak );
 use List::Util 1.33 qw( any );
+use Package::Stash;
 use Params::Util qw( _HASH0 );
 use Sub::Install;
 
@@ -20,11 +21,18 @@ sub import {
 
     my %registry;
 
-    my $import = _build_import( \%registry );
+    my $caller = caller();
+
+    my $orig_import = $caller->can('import');
+
+    my $import = _build_import( \%registry, $orig_import );
     my $warn
         = _build_warn( \%registry, $args{-deprecations}, $args{-ignore} );
 
-    my $caller = caller();
+    # We need to remove this to prevent a 'subroutine redefined' warning.
+    if ($orig_import) {
+        Package::Stash->new($caller)->remove_symbol('&import');
+    }
 
     Sub::Install::install_sub(
         {
@@ -46,16 +54,34 @@ sub import {
 }
 
 sub _build_import {
-    my $registry = shift;
+    my $registry    = shift;
+    my $orig_import = shift;
 
     return sub {
         my $class = shift;
-        my %args  = @_;
 
-        $args{-api_version} ||= delete $args{-compatible};
+        my @args;
 
-        $registry->{ caller() } = $args{-api_version}
-            if $args{-api_version};
+        my $api_version;
+        ## no critic (ControlStructures::ProhibitCStyleForLoops)
+        for ( my $i = 0; $i < @_; $i++ ) {
+            if ( $_[$i] eq '-api_version' || $_[$i] eq '-compatible' ) {
+                $api_version = $_[ ++$i ];
+            }
+            else {
+                push @args, $_[$i];
+            }
+        }
+        ## use critic
+
+        my $caller = caller();
+        $registry->{$caller} = $api_version
+            if defined $api_version;
+
+        if ($orig_import) {
+            @_ = ( $class, @args );
+            goto &{$orig_import};
+        }
 
         return;
     };
@@ -137,7 +163,7 @@ Package::DeprecationManager - Manage deprecation warnings for your distribution
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -226,6 +252,24 @@ A given deprecation warning is only issued once for a given package. This
 module tracks this based on both the feature name I<and> the error message
 itself. This means that if you provide several different error messages for
 the same feature, all of those errors will appear.
+
+=head2 Other import() subs
+
+This module works by installing an C<import> sub in any package that uses
+it. If that package I<already> has an C<import> sub, then that C<import> will
+be called after any arguments passed for C<Package::DeprecationManager> are
+stripped out. You need to define your C<import> sub before you C<use
+Package::DeprecationManager> to make this work:
+
+  package HasExporter;
+
+  use Exporter qw( import );
+
+  use Package::DeprecationManager -deprecations => {
+      'HasExporter::foo' => '0.02',
+  };
+
+  our @EXPORT_OK = qw( some_sub another_sub );
 
 =head1 BUGS
 

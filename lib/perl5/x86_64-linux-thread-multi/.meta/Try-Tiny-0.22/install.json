@@ -1,1 +1,1 @@
-{"dist":"Try-Tiny-0.22","pathname":"D/DO/DOY/Try-Tiny-0.22.tar.gz","target":"Try::Tiny","version":"0.22","provides":{"Try::Tiny":{"file":"lib/Try/Tiny.pm","version":"0.22"}},"name":"Try::Tiny"}
+{"name":"Try::Tiny","provides":{"Try::Tiny":{"version":"0.22","file":"lib/Try/Tiny.pm"}},"dist":"Try-Tiny-0.22","target":"Try::Tiny","version":"0.22","pathname":"D/DO/DOY/Try-Tiny-0.22.tar.gz"}

@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.072'; # from Path-Tiny-0.072.tar.gz
+our $VERSION = '0.076';
 
 # Dependencies
 use Config;
@@ -237,6 +237,7 @@ sub path {
     if ( $path =~ m{^(~[^/]*).*} ) {
         require File::Glob;
         my ($homedir) = File::Glob::bsd_glob($1);
+        $homedir =~ tr[\\][/] if IS_WIN32();
         $path =~ s{^(~[^/]*)}{$homedir};
     }
 
@@ -1499,15 +1500,17 @@ sub spew {
     my $binmode = $args->{binmode};
     # get default binmode from caller's lexical scope (see "perldoc open")
     $binmode = ( ( caller(0) )[10] || {} )->{'open>'} unless defined $binmode;
-    my $temp = path( $self->[PATH] . $$ . int( rand( 2**31 ) ) );
+
+    # spewing need to follow the link
+    # and create the tempfile in the same dir
+    my $resolved_path = $self->[PATH];
+    $resolved_path = readlink $resolved_path while -l $resolved_path;
+
+    my $temp = path( $resolved_path . $$ . int( rand( 2**31 ) ) );
     my $fh = $temp->filehandle( { exclusive => 1, locked => 1 }, ">", $binmode );
     print {$fh} map { ref eq 'ARRAY' ? @$_ : $_ } @data;
     close $fh or $self->_throw( 'close', $temp->[PATH] );
 
-    # spewing need to follow the link
-    # and replace the destination instead
-    my $resolved_path = $self->[PATH];
-    $resolved_path = readlink $resolved_path while -l $resolved_path;
     return $temp->move($resolved_path);
 }
 
@@ -1785,7 +1788,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.072
+version 0.076
 
 =head1 SYNOPSIS
 
@@ -1829,10 +1832,10 @@ version 0.072
 
 =head1 DESCRIPTION
 
-This module provide a small, fast utility for working with file paths.  It is
+This module provides a small, fast utility for working with file paths.  It is
 friendlier to use than L<File::Spec> and provides easy access to functions from
 several other core file handling modules.  It aims to be smaller and faster
-than many alternatives on CPAN while helping people do many common things in
+than many alternatives on CPAN, while helping people do many common things in
 consistent and less error-prone ways.
 
 Path::Tiny does not try to work for anything except Unix-like and Win32
@@ -1850,6 +1853,9 @@ The C<*_utf8> methods (C<slurp_utf8>, C<lines_utf8>, etc.) operate in raw mode.
 On Windows, that means they will not have CRLF translation from the C<:crlf> IO
 layer.  Installing L<Unicode::UTF8> 0.58 or later will speed up C<*_utf8>
 situations in many cases and is highly recommended.
+
+This module depends heavily on PerlIO layers for correct operation and thus
+requires Perl 5.008001 or later.
 
 =head1 CONSTRUCTORS
 
@@ -2788,7 +2794,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Efros Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt Karen Etheridge Martin Kjeldsen Michael G. Schwern Philippe Bruhat (BooK) Regina Verbae regina-verbae Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
+=for stopwords Alex Efros Chris Williams David Golden Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
 
 =over 4
 
@@ -2799,6 +2805,10 @@ Alex Efros <powerman@powerman.name>
 =item *
 
 Chris Williams <bingos@cpan.org>
+
+=item *
+
+David Golden <xdg@xdg.me>
 
 =item *
 
@@ -2842,6 +2852,10 @@ Karen Etheridge <ether@cpan.org>
 
 =item *
 
+Mark Ellis <mark.ellis@cartridgesave.co.uk>
+
+=item *
+
 Martin Kjeldsen <mk@bluepipe.dk>
 
 =item *
@@ -2858,7 +2872,11 @@ Regina Verbae <regina-verbae@users.noreply.github.com>
 
 =item *
 
-regina-verbae <regina-verbae@users.noreply.github.com>
+Roy Ivy III <RIVY.dev@gmail.com>
+
+=item *
+
+Shlomi Fish <shlomif@shlomifish.org>
 
 =item *
 
