@@ -1,0 +1,1 @@
+{"target":"Plack::Middleware::MethodOverride","dist":"Plack-Middleware-MethodOverride-0.15","version":"0.15","name":"Plack::Middleware::MethodOverride","pathname":"D/DW/DWHEELER/Plack-Middleware-MethodOverride-0.15.tar.gz","provides":{"Plack::Middleware::MethodOverride":{"file":"lib/Plack/Middleware/MethodOverride.pm","version":"0.15"}}}

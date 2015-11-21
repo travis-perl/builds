@@ -1,0 +1,1 @@
+{"name":"Config::General","dist":"Config-General-2.60","provides":{"Config::General::Extended":{"version":"2.07","file":"General/Extended.pm"},"Config::General":{"file":"General.pm","version":"2.60"},"Config::General::Interpolated":{"file":"General/Interpolated.pm","version":"2.15"}},"target":"Config::General","pathname":"T/TL/TLINDEN/Config-General-2.60.tar.gz","version":"2.60"}
