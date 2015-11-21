@@ -1,0 +1,33 @@
+{
+   "abstract" : "A Simple totally OO CGI interface that is CGI.pm compliant",
+   "author" : [
+      "Andy Armstrong <andy@hexten.net>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4214",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "CGI-Simple",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "runtime" : {
+         "requires" : {
+            "IO::Scalar" : "0",
+            "Test::More" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "version" : "1.115",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
+}
