@@ -1,7 +1,7 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "cPanel fork of JSON::XS, fast and correct serializing",
    "author" : [
-      "Fergal Daly <fergal@esatclear.ie>"
+      "Reini Urban <rurban@cpanel.net>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "ExtUtils::MakeMaker version 7.1, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Test-Deep",
+   "name" : "Cpanel-JSON-XS",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,32 +32,24 @@
       },
       "runtime" : {
          "requires" : {
-            "List::Util" : "1.09",
-            "Scalar::Util" : "1.09",
-            "Test::Builder" : "0"
-         }
-      },
-      "test" : {
-         "requires" : {
-            "Test::More" : "0.88",
-            "Test::Tester" : "0.04"
+            "Pod::Text" : "2.08",
+            "Pod::Usage" : "1.33"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "http://github.com/rjbs/Test-Deep/issues"
+         "web" : "https://github.com/rurban/Cpanel-JSON-XS/issues"
       },
-      "homepage" : "http://github.com/rjbs/Test-Deep/",
+      "homepage" : "http://software.schmorp.de/pkg/JSON-XS.html",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
       "repository" : {
-         "type" : "git",
-         "url" : "https://github.com/rjbs/Test-Deep.git",
-         "web" : "https://github.com/rjbs/Test-Deep"
-      },
-      "x_IRC" : "irc://irc.perl.org/#perl-qa",
-      "x_MailingList" : "http://lists.perl.org/list/perl-qa.html"
+         "url" : "https://github.com/rurban/Cpanel-JSON-XS"
+      }
    },
-   "version" : "0.119",
+   "version" : "3.0210",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }
