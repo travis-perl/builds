@@ -1,5 +1,5 @@
 package Sort::Versions;
-$Sort::Versions::VERSION = '1.61';
+$Sort::Versions::VERSION = '1.62';
 # Copyright (c) 1996, Kenneth J. Albanowski. All rights reserved.  This
 # program is free software; you can redistribute it and/or modify it under
 # the same terms as Perl itself.
@@ -140,13 +140,13 @@ L<version>, L<CPAN::Version> which is part of the L<CPAN> distribution.
 
 =head1 REPOSITORY
 
-L<https://github.com/neilbowers/Sort-Versions>
+L<https://github.com/neilb/Sort-Versions>
 
 =head1 AUTHOR
 
 Ed Avis <ed@membled.com> and Matt Johnson <mwj99@doc.ic.ac.uk> for
 recent releases; the original author is Kenneth J. Albanowski
-<kjahds@kjahds.com>.  Thanks to Hack KampbjØrn and Slaven Rezic for
+<kjahds@kjahds.com>.  Thanks to Hack Kampbjørn and Slaven Rezic for
 patches and bug reports.
 
 =head1 COPYRIGHT AND LICENSE

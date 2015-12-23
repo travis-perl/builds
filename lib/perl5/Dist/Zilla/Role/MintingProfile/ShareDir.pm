@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::MintingProfile::ShareDir;
 # ABSTRACT: something that keeps its minting profile in a sharedir
-$Dist::Zilla::Role::MintingProfile::ShareDir::VERSION = '5.041';
+$Dist::Zilla::Role::MintingProfile::ShareDir::VERSION = '5.042';
 use Moose::Role;
 with 'Dist::Zilla::Role::MintingProfile';
 
@@ -41,7 +41,7 @@ Dist::Zilla::Role::MintingProfile::ShareDir - something that keeps its minting p
 
 =head1 VERSION
 
-version 5.041
+version 5.042
 
 =head1 DESCRIPTION
 

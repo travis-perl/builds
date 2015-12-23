@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgVersion;
 # ABSTRACT: add a $VERSION to your packages
-$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.041';
+$Dist::Zilla::Plugin::PkgVersion::VERSION = '5.042';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -50,7 +50,7 @@ use namespace::autoclean;
 #pod
 #pod =attr die_on_line_insertion
 #pod
-#pod By default, PkgVersion look for a blank line after each C<package> statement.
+#pod By default, PkgVersion looks for a blank line after each C<package> statement.
 #pod If it finds one, it inserts the C<$VERSION> assignment on that line.  If it
 #pod doesn't, it will insert a new line, which means the shipped copy of the module
 #pod will have different line numbers (off by one) than the source.  If
@@ -299,7 +299,7 @@ Dist::Zilla::Plugin::PkgVersion - add a $VERSION to your packages
 
 =head1 VERSION
 
-version 5.041
+version 5.042
 
 =head1 SYNOPSIS
 
@@ -341,7 +341,7 @@ false.
 
 =head2 die_on_line_insertion
 
-By default, PkgVersion look for a blank line after each C<package> statement.
+By default, PkgVersion looks for a blank line after each C<package> statement.
 If it finds one, it inserts the C<$VERSION> assignment on that line.  If it
 doesn't, it will insert a new line, which means the shipped copy of the module
 will have different line numbers (off by one) than the source.  If

@@ -1,10 +1,8 @@
-package Try::Tiny;
-BEGIN {
-  $Try::Tiny::AUTHORITY = 'cpan:NUFFIN';
-}
-$Try::Tiny::VERSION = '0.22';
+package Try::Tiny; # git description: v0.23-3-g5ee27f1
 use 5.006;
 # ABSTRACT: minimal try/catch with proper preservation of $@
+
+our $VERSION = '0.24';
 
 use strict;
 use warnings;
@@ -15,7 +13,21 @@ our @EXPORT = our @EXPORT_OK = qw(try catch finally);
 use Carp;
 $Carp::Internal{+__PACKAGE__}++;
 
-BEGIN { eval "use Sub::Name; 1" or *{subname} = sub {1} }
+BEGIN {
+  my $su = $INC{'Sub/Util.pm'} && defined &Sub::Util::set_subname;
+  my $sn = $INC{'Sub/Name.pm'} && eval { Sub::Name->VERSION(0.08) };
+  unless ($su || $sn) {
+    $su = eval { require Sub::Util; } && defined &Sub::Util::set_subname;
+    unless ($su) {
+      $sn = eval { require Sub::Name; Sub::Name->VERSION(0.08) };
+    }
+  }
+
+  *_subname = $su ? \&Sub::Util::set_subname
+            : $sn ? \&Sub::Name::subname
+            : sub { $_[1] };
+  *_HAS_SUBNAME = ($su || $sn) ? sub(){1} : sub(){0};
+}
 
 # Need to prototype as @ not $$ because of the way Perl evaluates the prototype.
 # Keeping it at $$ means you only ever get 1 sub because we need to eval in a list
@@ -57,9 +69,8 @@ sub try (&;@) {
 
   # name the blocks if we have Sub::Name installed
   my $caller = caller;
-  subname("${caller}::try {...} " => $try);
-  subname("${caller}::catch {...} " => $catch) if $catch;
-  subname("${caller}::finally {...} " => $_) foreach @finally;
+  _subname("${caller}::try {...} " => $try)
+    if _HAS_SUBNAME;
 
   # save the value of $@ so we can set $@ back to it in the beginning of the eval
   # and restore $@ after the eval finishes
@@ -81,7 +92,7 @@ sub try (&;@) {
       $try->();
     };
 
-    return 1; # properly set $fail to false
+    return 1; # properly set $failed to false
   };
 
   # preserve the current error and reset the original value of $@
@@ -120,6 +131,9 @@ sub catch (&;@) {
 
   croak 'Useless bare catch()' unless wantarray;
 
+  my $caller = caller;
+  _subname("${caller}::catch {...} " => $block)
+    if _HAS_SUBNAME;
   return (
     bless(\$block, 'Try::Tiny::Catch'),
     @rest,
@@ -131,6 +145,9 @@ sub finally (&;@) {
 
   croak 'Useless bare finally()' unless wantarray;
 
+  my $caller = caller;
+  _subname("${caller}::finally {...} " => $block)
+    if _HAS_SUBNAME;
   return (
     bless(\$block, 'Try::Tiny::Finally'),
     @rest,
@@ -182,7 +199,7 @@ Try::Tiny - minimal try/catch with proper preservation of $@
 
 =head1 VERSION
 
-version 0.22
+version 0.24
 
 =head1 SYNOPSIS
 
@@ -231,8 +248,8 @@ context or the empty list in list context. The following examples all
 assign C<"bar"> to C<$x>:
 
   my $x = try { die "foo" } catch { "bar" };
-  my $x = try { die "foo" } || { "bar" };
-  my $x = (try { die "foo" }) // { "bar" };
+  my $x = try { die "foo" } || "bar";
+  my $x = (try { die "foo" }) // "bar";
 
   my $x = eval { die "foo" } || "bar";
 
@@ -457,6 +474,8 @@ value.
 
 Using Perl 5.10 you can use L<perlsyn/"Switch statements">.
 
+=for stopwords topicalizer
+
 The C<catch> block is invoked in a topicalizer context (like a C<given> block),
 but note that you can't return a useful value from C<catch> using the C<when>
 blocks without an explicit C<return>.
@@ -478,7 +497,7 @@ concisely match errors:
 =item *
 
 C<@_> is not available within the C<try> block, so you need to copy your
-arglist. In case you want to work with argument values directly via C<@_>
+argument list. In case you want to work with argument values directly via C<@_>
 aliasing (i.e. allow C<$_[1] = "foo">), you need to pass C<@_> by reference:
 
   sub foo {
@@ -546,11 +565,13 @@ C<try> introduces another caller stack frame. L<Sub::Uplevel> is not used. L<Car
 will not report this when using full stack traces, though, because
 C<%Carp::Internal> is used. This lack of magic is considered a feature.
 
+=for stopwords unhygienically
+
 =item *
 
 The value of C<$_> in the C<catch> block is not guaranteed to be the value of
 the exception thrown (C<$@>) in the C<try> block.  There is no safe way to
-ensure this, since C<eval> may be used unhygenically in destructors.  The only
+ensure this, since C<eval> may be used unhygienically in destructors.  The only
 guarantee is that the C<catch> will be called if an exception is thrown.
 
 =item *
@@ -598,7 +619,7 @@ confusing behavior:
 
 Note that this behavior was changed once again in L<Perl5 version 18
 |https://metacpan.org/module/perldelta#given-now-aliases-the-global-_>.
-However, since the entirety of lexical C<$_> is now L<considired experimental
+However, since the entirety of lexical C<$_> is now L<considered experimental
 |https://metacpan.org/module/perldelta#Lexical-_-is-now-experimental>, it
 is unclear whether the new version 18 behavior is final.
 
@@ -652,13 +673,18 @@ L<http://web.archive.org/web/20100305133605/http://nothingmuch.woobling.org/talk
 
 L<http://github.com/doy/try-tiny/>
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Try-Tiny>
+(or L<bug-Try-Tiny@rt.cpan.org|mailto:bug-Try-Tiny@rt.cpan.org>).
+
 =head1 AUTHORS
 
 =over 4
 
 =item *
 
-Yuval Kogman <nothingmuch@woobling.org>
+יובל קוג'מן (Yuval Kogman) <nothingmuch@woobling.org>
 
 =item *
 
@@ -666,9 +692,97 @@ Jesse Luehrs <doy@tozt.net>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 CONTRIBUTORS
 
-This software is Copyright (c) 2014 by Yuval Kogman.
+=for stopwords Karen Etheridge Peter Rabbitson Ricardo Signes Mark Fowler Graham Knop Dagfinn Ilmari Mannsåker Paul Howarth Rudolf Leermakers anaxagoras awalker chromatic Alex cm-perl Andrew Yates David Lowe Glenn Hans Dieter Pearcey Jonathan Yu Marc Mims Stosberg
+
+=over 4
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Peter Rabbitson <ribasushi@cpan.org>
+
+=item *
+
+Ricardo Signes <rjbs@cpan.org>
+
+=item *
+
+Mark Fowler <mark@twoshortplanks.com>
+
+=item *
+
+Graham Knop <haarg@haarg.org>
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+Paul Howarth <paul@city-fan.org>
+
+=item *
+
+Rudolf Leermakers <rudolf@hatsuseno.org>
+
+=item *
+
+anaxagoras <walkeraj@gmail.com>
+
+=item *
+
+awalker <awalker@sourcefire.com>
+
+=item *
+
+chromatic <chromatic@wgz.org>
+
+=item *
+
+Alex <alex@koban.(none)>
+
+=item *
+
+cm-perl <cm-perl@users.noreply.github.com>
+
+=item *
+
+Andrew Yates <ayates@haddock.local>
+
+=item *
+
+David Lowe <davidl@lokku.com>
+
+=item *
+
+Glenn Fowler <cebjyre@cpan.org>
+
+=item *
+
+Hans Dieter Pearcey <hdp@weftsoar.net>
+
+=item *
+
+Jonathan Yu <JAWNSY@cpan.org>
+
+=item *
+
+Marc Mims <marc@questright.com>
+
+=item *
+
+Mark Stosberg <mark@stosberg.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENCE
+
+This software is Copyright (c) 2009 by יובל קוג'מן (Yuval Kogman).
 
 This is free software, licensed under:
 

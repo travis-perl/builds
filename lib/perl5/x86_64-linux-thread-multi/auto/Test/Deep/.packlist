@@ -24,6 +24,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/MM.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/Methods.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/NoTest.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/None.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/Number.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/Obj.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Deep/Ref.pm

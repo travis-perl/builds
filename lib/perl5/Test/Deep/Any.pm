@@ -31,24 +31,32 @@ sub descend
 	return 0;
 }
 
+sub renderExp
+{
+	my $self = shift;
+
+	my $expect = $self->{val};
+	my $things = join(", ", map {$_->renderExp} @$expect);
+
+	return "Any of ( $things )";
+}
+
 sub diagnostics
 {
 	my $self = shift;
 	my ($where, $last) = @_;
 
-	my $expect = $self->{val};
-
 	my $got = $self->renderGot($last->{got});
-	my $things = join(", ", map {$_->renderExp} @$expect);
+  my $exp = $self->renderExp;
 
 	my $diag = <<EOM;
 Comparing $where with Any
 got      : $got
-expected : Any of ( $things )
+expected : $exp
 EOM
 
 	$diag =~ s/\n+$/\n/;
 	return $diag;
 }
 
-1;
+4;

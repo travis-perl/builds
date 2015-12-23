@@ -6,7 +6,7 @@ use warnings;
 use DateTime::Locale::Util qw( parse_locale_code );
 use Params::Validate qw( validate_pos );
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 my @FormatLengths;
 
@@ -196,26 +196,26 @@ sub prefers_24_hour_time {
 
 sub language_code {
     my $self = shift;
-    return ( $self->{parsed_code} ||= [ parse_locale_code( $self->code ) ] )
-        ->[0];
+    return ( $self->{parsed_code} ||= { parse_locale_code( $self->code ) } )
+        ->{language};
 }
 
 sub script_code {
     my $self = shift;
-    return ( $self->{parsed_code} ||= [ parse_locale_code( $self->code ) ] )
-        ->[1];
+    return ( $self->{parsed_code} ||= { parse_locale_code( $self->code ) } )
+        ->{script};
 }
 
 sub territory_code {
     my $self = shift;
-    return ( $self->{parsed_code} ||= [ parse_locale_code( $self->code ) ] )
-        ->[2];
+    return ( $self->{parsed_code} ||= { parse_locale_code( $self->code ) } )
+        ->{territory};
 }
 
 sub variant_code {
     my $self = shift;
-    return ( $self->{parsed_code} ||= [ parse_locale_code( $self->code ) ] )
-        ->[3];
+    return ( $self->{parsed_code} ||= { parse_locale_code( $self->code ) } )
+        ->{variant};
 }
 
 sub id {
@@ -273,7 +273,7 @@ DateTime::Locale::FromData - Class for locale objects instantiated from pre-defi
 
 =head1 VERSION
 
-version 1.01
+version 1.02
 
 =head1 SYNOPSIS
 
