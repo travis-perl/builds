@@ -4,7 +4,7 @@
       "David Cantrell <david@cantrell.org.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.0401, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "unknown"
    ],
@@ -34,12 +34,19 @@
          "requires" : {
             "Capture::Tiny" : "0.24",
             "Data::Dumper" : "2.126",
-            "Test::More" : "0",
-            "Text::Diff" : "0.35"
+            "Test::More" : "0.88",
+            "Text::Diff" : "1.43"
          }
       }
    },
    "release_status" : "stable",
-   "resources" : {},
-   "version" : "0.63"
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Ovid/Test-Differences/issues"
+      },
+      "repository" : {
+         "url" : "https://github.com/Ovid/Test-Differences"
+      }
+   },
+   "version" : "0.64"
 }
