@@ -1,0 +1,1 @@
+{"pathname":"M/MA/MARKOV/MIME-Types-2.12.tar.gz","name":"MIME::Types","provides":{"MIME::Type":{"file":"lib/MIME/Type.pm","version":"2.12"},"MojoX::MIME::Types":{"file":"lib/MojoX/MIME/Types.pm","version":"2.12"},"MIME::Types":{"version":"2.12","file":"lib/MIME/Types.pm"}},"dist":"MIME-Types-2.12","target":"MIME::Types","version":"2.12"}
