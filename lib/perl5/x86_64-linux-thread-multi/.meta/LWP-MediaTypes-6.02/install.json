@@ -1,1 +1,1 @@
-{"target":"LWP::MediaTypes","provides":{"LWP::MediaTypes":{"file":"lib/LWP/MediaTypes.pm","version":"6.02"}},"pathname":"G/GA/GAAS/LWP-MediaTypes-6.02.tar.gz","name":"LWP::MediaTypes","dist":"LWP-MediaTypes-6.02","version":"6.02"}
+{"dist":"LWP-MediaTypes-6.02","version":"6.02","name":"LWP::MediaTypes","provides":{"LWP::MediaTypes":{"file":"lib/LWP/MediaTypes.pm","version":"6.02"}},"pathname":"G/GA/GAAS/LWP-MediaTypes-6.02.tar.gz","target":"LWP::MediaTypes"}
