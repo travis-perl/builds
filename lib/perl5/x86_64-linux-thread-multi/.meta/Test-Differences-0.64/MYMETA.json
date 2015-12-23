@@ -24,12 +24,19 @@
          "requires" : {
             "Capture::Tiny" : 0.24,
             "Data::Dumper" : 2.126,
-            "Test::More" : "0",
+            "Test::More" : "0.88",
             "Text::Diff" : 0.35
          }
       }
    },
    "release_status" : "stable",
-   "resources" : {},
-   "version" : "0.63"
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Ovid/Test-Differences/issues"
+      },
+      "repository" : {
+         "url" : "https://github.com/Ovid/Test-Differences"
+      }
+   },
+   "version" : "0.64"
 }

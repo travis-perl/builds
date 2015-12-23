@@ -1,1 +1,1 @@
-{"dist":"Lingua-Stem-Ru-0.01","version":"0.01","target":"Lingua::Stem::Ru","pathname":"A/AL/ALGDR/Lingua-Stem-Ru-0.01.tar.gz","provides":{"Lingua::Stem::Ru":{"version":"0.01","file":"Ru.pm"}},"name":"Lingua::Stem::Ru"}
+{"name":"Lingua::Stem::Ru","pathname":"A/AL/ALGDR/Lingua-Stem-Ru-0.01.tar.gz","provides":{"Lingua::Stem::Ru":{"version":"0.01","file":"Ru.pm"}},"dist":"Lingua-Stem-Ru-0.01","target":"Lingua::Stem::Ru","version":"0.01"}
