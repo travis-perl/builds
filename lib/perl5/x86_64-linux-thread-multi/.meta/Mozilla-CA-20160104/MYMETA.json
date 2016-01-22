@@ -1,18 +1,18 @@
 {
-   "abstract" : "HTML parser class",
+   "abstract" : "Mozilla's CA cert bundle in PEM format",
    "author" : [
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.02, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.150001",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "HTML-Parser",
+   "name" : "Mozilla-CA",
    "no_index" : {
       "directory" : [
          "t",
@@ -22,7 +22,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Test" : "0"
          }
       },
       "configure" : {
@@ -31,22 +31,16 @@
          }
       },
       "runtime" : {
-         "recommends" : {
-            "HTTP::Headers" : "0"
-         },
          "requires" : {
-            "HTML::Tagset" : "3",
-            "XSLoader" : "0",
-            "perl" : "5.008"
+            "perl" : "5.006"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "http://github.com/gisle/html-parser"
-      },
-      "x_MailingList" : "mailto:libwww@perl.org"
+         "url" : "http://github.com/gisle/mozilla-ca"
+      }
    },
-   "version" : "3.71"
+   "version" : "20160104"
 }

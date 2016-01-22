@@ -6,7 +6,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.4214';
+our $VERSION = '0.4216';
 $VERSION = eval $VERSION;
 
 use Carp;
@@ -961,6 +961,7 @@ __PACKAGE__->add_property($_) for qw(
   base_dir
   bindoc_dirs
   c_source
+  cover
   create_license
   create_makefile_pl
   create_readme
@@ -1900,7 +1901,7 @@ sub create_mymeta {
   }
 
   # Try loading META.json or META.yml
-  if ( $self->try_require("CPAN::Meta", "2.110420") ) {
+  if ( $self->try_require("CPAN::Meta", "2.142060") ) {
     for my $file ( @metafiles ) {
       next unless -f $file;
       $meta_obj = eval { CPAN::Meta->load_file($file, { lazy_validation => 0 }) };
@@ -2718,11 +2719,11 @@ sub do_tests {
 sub run_tap_harness {
   my ($self, $tests) = @_;
 
-  require TAP::Harness;
+  require TAP::Harness::Env;
 
   # TODO allow the test @INC to be set via our API?
 
-  my $aggregate = TAP::Harness->new({
+  my $aggregate = TAP::Harness::Env->create({
     lib => [@INC],
     verbosity => $self->{properties}{verbose},
     switches  => [ $self->harness_switches ],
@@ -2751,7 +2752,11 @@ sub run_visual_script {
 }
 
 sub harness_switches {
-    shift->{properties}{debugger} ? qw(-w -d) : ();
+    my $self = shift;
+    my @res;
+    push @res, qw(-w -d) if $self->{properties}{debugger};
+    push @res, '-MDevel::Cover' if $self->{properties}{cover};
+    return @res;
 }
 
 sub test_files {
@@ -2802,10 +2807,7 @@ sub ACTION_testcover {
           && $self->up_to_date($self->test_files, $cover_files);
   }
 
-  local $Test::Harness::switches    =
-  local $Test::Harness::Switches    =
-  local $ENV{HARNESS_PERL_SWITCHES} = "-MDevel::Cover";
-
+  local $self->{properties}{cover} = 1;
   $self->depends_on('test');
   $self->do_system('cover');
 }
@@ -3076,13 +3078,6 @@ sub fix_shebang_line { # Adapted from fixin() in ExtUtils::MM_Unix 1.35
     $self->log_verbose("Changing sharpbang in $file to $interpreter\n");
     my $shb = '';
     $shb .= $c->get('sharpbang')."$interpreter $arg\n" if $does_shbang;
-
-    # I'm not smart enough to know the ramifications of changing the
-    # embedded newlines here to \n, so I leave 'em in.
-    $shb .= qq{
-eval 'exec $interpreter $arg -S \$0 \${1+"\$\@"}'
-    if 0; # not running under some shell
-} unless $self->is_windowsish; # this won't work on win32, so don't
 
     open(my $FIXOUT, '>', "$file.new")
       or die "Can't create new $file: $!\n";
@@ -4546,7 +4541,7 @@ sub _write_meta_files {
 sub _get_meta_object {
   my $self = shift;
   my %args = @_;
-  return unless $self->try_require("CPAN::Meta", "2.110420");
+  return unless $self->try_require("CPAN::Meta", "2.142060");
 
   my $meta;
   eval {
