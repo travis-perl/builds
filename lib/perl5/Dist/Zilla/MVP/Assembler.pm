@@ -1,6 +1,6 @@
 package Dist::Zilla::MVP::Assembler;
 # ABSTRACT: Dist::Zilla-specific subclass of Config::MVP::Assembler
-$Dist::Zilla::MVP::Assembler::VERSION = '5.042';
+$Dist::Zilla::MVP::Assembler::VERSION = '5.043';
 use Moose;
 extends 'Config::MVP::Assembler';
 with 'Config::MVP::Assembler::WithBundles' => { -version => '2.200010' };
@@ -84,7 +84,7 @@ Dist::Zilla::MVP::Assembler - Dist::Zilla-specific subclass of Config::MVP::Asse
 
 =head1 VERSION
 
-version 5.042
+version 5.043
 
 =head1 DESCRIPTION
 
@@ -112,7 +112,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

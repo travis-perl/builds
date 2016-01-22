@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package CPAN::Uploader;
 # ABSTRACT: upload things to the CPAN
-$CPAN::Uploader::VERSION = '0.103011';
+$CPAN::Uploader::VERSION = '0.103012';
 #pod =head1 ORIGIN
 #pod
 #pod This code is mostly derived from C<cpan-upload-http> by Brad Fitzpatrick, which
@@ -285,7 +285,7 @@ CPAN::Uploader - upload things to the CPAN
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 METHODS
 

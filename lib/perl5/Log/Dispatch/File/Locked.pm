@@ -5,14 +5,17 @@ use warnings;
 
 use base qw( Log::Dispatch::File );
 
-our $VERSION = '2.51';
+our $VERSION = '2.54';
 
 use Fcntl qw(:DEFAULT :flock);
 
-sub _open_file {
+sub log_message {
     my $self = shift;
+    my %p    = @_;
 
-    $self->SUPER::_open_file();
+    if ( $self->{close} ) {
+        $self->_open_file;
+    }
 
     my $fh = $self->{fh};
 
@@ -22,6 +25,22 @@ sub _open_file {
     # just in case there was an append while we waited for the lock
     seek( $fh, 0, 2 )
         or die "Cannot seek to end of '$self->{filename}': $!";
+
+    if ( $self->{syswrite} ) {
+        defined syswrite( $fh, $p{message} )
+            or die "Cannot write to '$self->{filename}': $!";
+    }
+    else {
+        print $fh $p{message}
+            or die "Cannot write to '$self->{filename}': $!";
+    }
+
+    flock( $fh, LOCK_UN ) or die "Cannot unlock '$self->{filename}'";
+    if ( $self->{close} ) {
+        close $fh
+            or die "Cannot close '$self->{filename}': $!";
+        delete $self->{fh};
+    }
 }
 
 1;
@@ -38,7 +57,7 @@ Log::Dispatch::File::Locked - Subclass of Log::Dispatch::File to facilitate lock
 
 =head1 VERSION
 
-version 2.51
+version 2.54
 
 =head1 SYNOPSIS
 
@@ -63,19 +82,10 @@ version 2.51
 This module acts exactly like L<Log::Dispatch::File> except that it
 obtains an exclusive lock on the file while opening it.
 
-=head1 CAVEATS
-
-B<DANGER!> Use very carefully in multi-process environments. Because the lock
-is obtained at file open time, not at write time, you may experience deadlocks
-in your system.
-
-You can partially work around this by using the C<close_after_write> option,
-which causes the file to be re-opened every time a log message is written.
-
-Alternatively, the C<syswrite> option does atomic writes, which may mean that
-you don't need locking at all.
-
-See  L<Log::Dispatch::File>) for details on these options.
+Note that if you are using this output because you want to write to a file
+from multiple processes, you should open the file with the append C<mode>
+(C<<< >> >>>), or else it's quite likely that one process will overwrite
+another.
 
 =head1 SEE ALSO
 
@@ -87,7 +97,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

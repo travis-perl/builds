@@ -3,9 +3,8 @@ use warnings;
 use 5.006; # warnings
 package Software::License;
 # ABSTRACT: packages that provide templated software licenses
-$Software::License::VERSION = '0.103010';
+$Software::License::VERSION = '0.103011';
 use Data::Section -setup => { header_re => qr/\A__([^_]+)__\Z/ };
-use Sub::Install ();
 use Text::Template ();
 
 #pod =head1 SYNOPSIS
@@ -46,6 +45,12 @@ sub new {
 
 sub year   { defined $_[0]->{year} ? $_[0]->{year} : (localtime)[5]+1900 }
 sub holder { $_[0]->{holder}     }
+
+sub _dotless_holder {
+    my $holder = $_[0]->holder;
+    $holder =~ s/\.$//;
+    return $holder;
+}
 
 #pod =method name
 #pod
@@ -174,9 +179,11 @@ sub _fill_in {
 #pod * L<Software::License::Artistic_1_0>
 #pod * L<Software::License::Artistic_2_0>
 #pod * L<Software::License::BSD>
-#pod * L<Software::License::CC0>
+#pod * L<Software::License::CC0_1_0>
+#pod * L<Software::License::Custom>
 #pod * L<Software::License::FreeBSD>
 #pod * L<Software::License::GFDL_1_2>
+#pod * L<Software::License::GFDL_1_3>
 #pod * L<Software::License::GPL_1>
 #pod * L<Software::License::GPL_2>
 #pod * L<Software::License::GPL_3>
@@ -189,6 +196,7 @@ sub _fill_in {
 #pod * L<Software::License::None>
 #pod * L<Software::License::OpenSSL>
 #pod * L<Software::License::Perl_5>
+#pod * L<Software::License::PostgreSQL>
 #pod * L<Software::License::QPL_1_0>
 #pod * L<Software::License::SSLeay>
 #pod * L<Software::License::Sun>
@@ -208,7 +216,7 @@ Software::License - packages that provide templated software licenses
 
 =head1 VERSION
 
-version 0.103010
+version 0.103011
 
 =head1 SYNOPSIS
 
@@ -331,7 +339,11 @@ L<Software::License::BSD>
 
 =item *
 
-L<Software::License::CC0>
+L<Software::License::CC0_1_0>
+
+=item *
+
+L<Software::License::Custom>
 
 =item *
 
@@ -340,6 +352,10 @@ L<Software::License::FreeBSD>
 =item *
 
 L<Software::License::GFDL_1_2>
+
+=item *
+
+L<Software::License::GFDL_1_3>
 
 =item *
 
@@ -391,6 +407,10 @@ L<Software::License::Perl_5>
 
 =item *
 
+L<Software::License::PostgreSQL>
+
+=item *
+
 L<Software::License::QPL_1_0>
 
 =item *
@@ -411,9 +431,93 @@ L<Software::License::Zlib>
 
 Ricardo Signes <rjbs@cpan.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Bernardo Rechea Bernhard Amann bowtie Brian Cassidy Phillips Craig Scrivner Dave Rolsky David E. Wheeler Golden Dominique Dumont Dylan William Hardison Flavio Poletti Florian Ragwitz Graham Knop Kenichi Ishigaki magnolia mikegrb Shlomi Fish Syohei YOSHIDA
+
+=over 4
+
+=item *
+
+Bernardo Rechea <brbpub@gmail.com>
+
+=item *
+
+Bernhard Amann <bernhard@icsi.berkeley.edu>
+
+=item *
+
+bowtie <bowtie@cpan.org>
+
+=item *
+
+Brian Cassidy <bricas@cpan.org>
+
+=item *
+
+Brian Phillips <bphillips@digitalriver.com>
+
+=item *
+
+Craig Scrivner <scrivner@geology.cwu.edu>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+David E. Wheeler <david@justatheory.com>
+
+=item *
+
+David Golden <dagolden@cpan.org>
+
+=item *
+
+Dominique Dumont <dod@debian.org>
+
+=item *
+
+Dylan William Hardison <dylan@hardison.net>
+
+=item *
+
+Flavio Poletti <flavio@polettix.it>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Graham Knop <haarg@haarg.org>
+
+=item *
+
+Kenichi Ishigaki <ishigaki@cpan.org>
+
+=item *
+
+magnolia <magnolia.k@me.com>
+
+=item *
+
+mikegrb <mgreb@linode.com>
+
+=item *
+
+Shlomi Fish <shlomif@iglu.org.il>
+
+=item *
+
+Syohei YOSHIDA <syohex@gmail.com>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
@@ -422,7 +526,7 @@ the same terms as the Perl 5 programming language system itself.
 
 __DATA__
 __NOTICE__
-This software is Copyright (c) {{$self->year}} by {{$self->holder}}.
+This software is Copyright (c) {{$self->year}} by {{$self->_dotless_holder}}.
 
 This is free software, licensed under:
 

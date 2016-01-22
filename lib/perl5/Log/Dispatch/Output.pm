@@ -3,27 +3,17 @@ package Log::Dispatch::Output;
 use strict;
 use warnings;
 
-our $VERSION = '2.51';
+our $VERSION = '2.54';
 
 use Log::Dispatch;
 
 use base qw( Log::Dispatch::Base );
 
+use Log::Dispatch::Vars qw( %LevelNamesToNumbers @OrderedLevels );
 use Params::Validate qw(validate SCALAR ARRAYREF CODEREF BOOLEAN);
 Params::Validate::validation_options( allow_extra => 1 );
 
 use Carp ();
-
-my $level_names
-    = [qw( debug info notice warning error critical alert emergency )];
-my $ln            = 0;
-my $level_numbers = {
-    ( map { $_ => $ln++ } @{$level_names} ),
-    warn  => 3,
-    err   => 4,
-    crit  => 5,
-    emerg => 7
-};
 
 sub new {
     my $proto = shift;
@@ -69,8 +59,8 @@ sub _basic_init {
         }
     );
 
-    $self->{level_names}   = $level_names;
-    $self->{level_numbers} = $level_numbers;
+    $self->{level_names}   = \@OrderedLevels;
+    $self->{level_numbers} = \%LevelNamesToNumbers;
 
     $self->{name} = $p{name} || $self->_unique_name();
 
@@ -188,7 +178,7 @@ Log::Dispatch::Output - Base class for all Log::Dispatch::* objects
 
 =head1 VERSION
 
-version 2.51
+version 2.54
 
 =head1 SYNOPSIS
 
@@ -306,7 +296,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::ExecFiles;
 # ABSTRACT: something that finds files to install as executables
-$Dist::Zilla::Role::ExecFiles::VERSION = '5.042';
+$Dist::Zilla::Role::ExecFiles::VERSION = '5.043';
 use Moose::Role;
 with 'Dist::Zilla::Role::FileFinder';
 
@@ -32,7 +32,7 @@ Dist::Zilla::Role::ExecFiles - something that finds files to install as executab
 
 =head1 VERSION
 
-version 5.042
+version 5.043
 
 =head1 AUTHOR
 
@@ -40,7 +40,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

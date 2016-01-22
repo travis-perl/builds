@@ -16,8 +16,10 @@ use Dist::CheckConflicts
         Devel::GlobalDestruction
         Dist::CheckConflicts
         Encode
+        Exporter
         Fcntl
         IO::Handle
+        JSON::PP
         Module::Runtime
         Params::Validate
         Scalar::Util

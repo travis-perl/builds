@@ -3,7 +3,7 @@ package Log::Dispatch::Base;
 use strict;
 use warnings;
 
-our $VERSION = '2.51';
+our $VERSION = '2.54';
 
 sub _get_callbacks {
     shift;
@@ -59,7 +59,7 @@ Log::Dispatch::Base - Code shared by dispatch and output objects.
 
 =head1 VERSION
 
-version 2.51
+version 2.54
 
 =head1 SYNOPSIS
 
@@ -82,7 +82,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

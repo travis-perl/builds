@@ -4,7 +4,7 @@ use Carp;
 
 package Software::LicenseUtils;
 # ABSTRACT: little useful bits of code for licensey things
-$Software::LicenseUtils::VERSION = '0.103010';
+$Software::LicenseUtils::VERSION = '0.103011';
 use File::Spec;
 use IO::Dir;
 use Module::Load;
@@ -227,7 +227,7 @@ Software::LicenseUtils - little useful bits of code for licensey things
 
 =head1 VERSION
 
-version 0.103010
+version 0.103011
 
 =head1 METHODS
 
@@ -274,7 +274,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

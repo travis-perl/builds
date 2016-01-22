@@ -5,47 +5,24 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '2.51';
+our $VERSION = '2.54';
 
 use base qw( Log::Dispatch::Base );
 
+use Log::Dispatch::Vars qw( %CanonicalLevelNames @OrderedLevels );
 use Module::Runtime qw( use_package_optimistically );
 use Params::Validate 1.03 qw(validate_with ARRAYREF CODEREF);
 use Carp ();
 
-our %LEVELS;
-
 BEGIN {
-    my %level_map = (
-        (
-            map { $_ => $_ }
-                qw(
-                debug
-                info
-                notice
-                warning
-                error
-                critical
-                alert
-                emergency
-                )
-        ),
-        warn  => 'warning',
-        err   => 'error',
-        crit  => 'critical',
-        emerg => 'emergency',
-    );
-
-    foreach my $l ( keys %level_map ) {
+    foreach my $l ( keys %CanonicalLevelNames ) {
         my $sub = sub {
             my $self = shift;
             $self->log(
-                level => $level_map{$l},
+                level => $CanonicalLevelNames{$l},
                 message => @_ > 1 ? "@_" : $_[0],
             );
         };
-
-        $LEVELS{$l} = 1;
 
         no strict 'refs';
         *{$l} = $sub;
@@ -163,6 +140,10 @@ sub log {
     my $self = shift;
     my %p    = @_;
 
+    if ( exists $p{level} && $p{level} =~ /\A[0-7]\z/ ) {
+        $p{level} = $OrderedLevels[ $p{level} ];
+    }
+
     return unless $self->would_log( $p{level} );
 
     $self->_log_to_outputs( $self->_prepare_message(%p) );
@@ -254,10 +235,13 @@ sub output {
 
 sub level_is_valid {
     shift;
-    my $level = shift
-        or Carp::croak('Logging level was not provided');
+    my $level = shift;
 
-    return $LEVELS{$level};
+    if ( !defined $level ) {
+        Carp::croak('Logging level was not provided');
+    }
+
+    return $CanonicalLevelNames{$level};
 }
 
 sub would_log {
@@ -300,7 +284,7 @@ Log::Dispatch - Dispatches messages to one or more outputs
 
 =head1 VERSION
 
-version 2.51
+version 2.54
 
 =head1 SYNOPSIS
 
@@ -411,9 +395,11 @@ made to the outputs or callbacks that the object contains are not shared.
 
 =head2 $dispatch->log( level => $, message => $ or \& )
 
-Sends the message (at the appropriate level) to all the
-output objects that the dispatcher contains (by calling the
-C<log_to> method repeatedly).
+Sends the message (at the appropriate level) to all the output objects that
+the dispatcher contains (by calling the C<log_to> method repeatedly).
+
+The level can be specified by name or by an integer from 0 (debug) to 7
+(critical).
 
 This method also accepts a subroutine reference as the message
 argument. This reference will be called only if there is an output
@@ -710,13 +696,21 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Olaf Alders Olivier Mengué Rohan Carly Ross Attrill swartz@jonathan-swartzs-macbook-4.local swartz@pobox.com Whitney Jackson
+=for stopwords Gregory Oschwald Karen Etheridge Konrad Bucheli Olaf Alders Olivier Mengué Rohan Carly Ross Attrill Steve Bertrand swartz@jonathan-swartzs-macbook-4.local swartz@pobox.com Whitney Jackson
 
 =over 4
 
 =item *
 
+Gregory Oschwald <goschwald@maxmind.com>
+
+=item *
+
 Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Konrad Bucheli <kb@open.ch>
 
 =item *
 
@@ -736,6 +730,10 @@ Ross Attrill <ross.attrill@gmail.com>
 
 =item *
 
+Steve Bertrand <steveb@cpan.org>
+
+=item *
+
 swartz@jonathan-swartzs-macbook-4.local <swartz@jonathan-swartzs-macbook-4.local>
 
 =item *
@@ -750,7 +748,7 @@ Whitney Jackson <whitney.jackson@baml.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

@@ -3,7 +3,7 @@ package Log::Dispatch::Syslog;
 use strict;
 use warnings;
 
-our $VERSION = '2.51';
+our $VERSION = '2.54';
 
 use Log::Dispatch::Output;
 
@@ -69,7 +69,7 @@ sub _init {
         eval 'use threads; use threads::shared'
             unless $threads_loaded;
         $threads_loaded = 1;
-        threads::shared::share( \$thread_lock );
+        &threads::shared::share( \$thread_lock );
     }
 
     $self->{priorities} = [
@@ -127,7 +127,7 @@ Log::Dispatch::Syslog - Object for logging to system log.
 
 =head1 VERSION
 
-version 2.51
+version 2.54
 
 =head1 SYNOPSIS
 
@@ -216,7 +216,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

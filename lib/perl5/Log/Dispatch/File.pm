@@ -3,7 +3,7 @@ package Log::Dispatch::File;
 use strict;
 use warnings;
 
-our $VERSION = '2.51';
+our $VERSION = '2.54';
 
 use Log::Dispatch::Output;
 
@@ -92,7 +92,6 @@ sub _basic_init {
     else {
         $self->{mode} = '>';
     }
-
 }
 
 sub _make_handle {
@@ -154,6 +153,7 @@ sub log_message {
     if ( $self->{close} ) {
         close $fh
             or die "Cannot close '$self->{filename}': $!";
+        delete $self->{fh};
     }
 }
 
@@ -180,7 +180,7 @@ Log::Dispatch::File - Object for logging to files
 
 =head1 VERSION
 
-version 2.51
+version 2.54
 
 =head1 SYNOPSIS
 
@@ -276,7 +276,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

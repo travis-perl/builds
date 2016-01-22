@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Software::License::Perl_5;
-$Software::License::Perl_5::VERSION = '0.103010';
+$Software::License::Perl_5::VERSION = '0.103011';
 use parent 'Software::License';
 # ABSTRACT: The Perl 5 License (Artistic 1 & GPL 1)
 
@@ -41,7 +41,7 @@ Software::License::Perl_5 - The Perl 5 License (Artistic 1 & GPL 1)
 
 =head1 VERSION
 
-version 0.103010
+version 0.103011
 
 =head1 AUTHOR
 
@@ -49,7 +49,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
@@ -58,7 +58,7 @@ the same terms as the Perl 5 programming language system itself.
 
 __DATA__
 __NOTICE__
-This software is copyright (c) {{$self->year}} by {{$self->holder}}.
+This software is copyright (c) {{$self->year}} by {{$self->_dotless_holder}}.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

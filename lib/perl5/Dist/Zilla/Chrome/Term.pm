@@ -1,6 +1,6 @@
 package Dist::Zilla::Chrome::Term;
 # ABSTRACT: chrome used for terminal-based interaction
-$Dist::Zilla::Chrome::Term::VERSION = '5.042';
+$Dist::Zilla::Chrome::Term::VERSION = '5.043';
 use Moose;
 
 #pod =head1 OVERVIEW
@@ -11,6 +11,7 @@ use Moose;
 #pod =cut
 
 use Dist::Zilla::Types qw(OneZero);
+use Encode ();
 use Log::Dispatchouli 1.102220;
 
 use namespace::autoclean;
@@ -26,11 +27,13 @@ has logger => (
 sub _build_logger {
   my $self = shift;
   my $enc = $self->term_enc;
-  if ( $enc ) {
+
+  if ($enc && Encode::resolve_alias($enc)) {
     my $layer = sprintf(":encoding(%s)", $enc);
     binmode( STDOUT, $layer );
     binmode( STDERR, $layer );
   }
+
   return Log::Dispatchouli->new({
       ident     => 'Dist::Zilla',
       to_stdout => 1,
@@ -149,7 +152,7 @@ Dist::Zilla::Chrome::Term - chrome used for terminal-based interaction
 
 =head1 VERSION
 
-version 5.042
+version 5.043
 
 =head1 OVERVIEW
 
@@ -162,7 +165,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

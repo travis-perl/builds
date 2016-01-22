@@ -1,6 +1,6 @@
 package Dist::Zilla::MVP::Reader::Perl;
 # ABSTRACT: the reader for dist.pl files
-$Dist::Zilla::MVP::Reader::Perl::VERSION = '5.042';
+$Dist::Zilla::MVP::Reader::Perl::VERSION = '5.043';
 use Moose;
 extends 'Config::MVP::Reader';
 with qw(Config::MVP::Reader::Findable::ByExtension);
@@ -63,7 +63,7 @@ Dist::Zilla::MVP::Reader::Perl - the reader for dist.pl files
 
 =head1 VERSION
 
-version 5.042
+version 5.043
 
 =head1 DESCRIPTION
 
@@ -75,7 +75,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
