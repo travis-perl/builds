@@ -1,48 +1,4 @@
-=head2 Wed Dec 23 00:09:29 2015: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.001011>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Dec 23 00:09:29 2015: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Dec 23 00:09:29 2015: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Fri Jan 22 00:11:49 2016: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -64,7 +20,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Dec 23 00:09:31 2015: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Fri Jan 22 00:11:50 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.001011>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 00:11:50 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 00:11:52 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Dec 23 00:09:32 2015: C<Module> L<Moo|Moo>
+=head2 Fri Jan 22 00:11:54 2016: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Dec 23 00:09:33 2015: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Fri Jan 22 00:11:55 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Dec 23 00:09:33 2015: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Fri Jan 22 00:11:56 2016: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
