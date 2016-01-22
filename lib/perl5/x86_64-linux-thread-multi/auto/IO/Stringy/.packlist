@@ -1,0 +1,8 @@
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/AtomicFile.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/InnerFile.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/Lines.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/Scalar.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/ScalarArray.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/Stringy.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/Wrap.pm
+/home/travis/.perlbrew/libs/5.23.7-thr@cat/lib/perl5/IO/WrapTie.pm
