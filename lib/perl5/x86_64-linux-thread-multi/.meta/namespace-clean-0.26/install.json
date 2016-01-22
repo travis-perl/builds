@@ -1,1 +1,1 @@
-{"pathname":"R/RI/RIBASUSHI/namespace-clean-0.26.tar.gz","provides":{"namespace::clean":{"file":"lib/namespace/clean.pm","version":"0.26"}},"dist":"namespace-clean-0.26","name":"namespace::clean","target":"namespace::clean","version":"0.26"}
+{"target":"namespace::clean","version":"0.26","name":"namespace::clean","provides":{"namespace::clean":{"file":"lib/namespace/clean.pm","version":"0.26"}},"dist":"namespace-clean-0.26","pathname":"R/RI/RIBASUSHI/namespace-clean-0.26.tar.gz"}

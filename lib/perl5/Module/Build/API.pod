@@ -1974,6 +1974,8 @@ accessor methods for the following properties:
 
 =item conflicts()
 
+=item cover()
+
 =item cpan_client()
 
 =item create_license()

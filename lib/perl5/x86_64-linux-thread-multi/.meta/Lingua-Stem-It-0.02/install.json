@@ -1,1 +1,1 @@
-{"name":"Lingua::Stem::It","version":"0.02","dist":"Lingua-Stem-It-0.02","provides":{"Lingua::Stem::It":{"file":"It.pm","version":"0.02"}},"target":"Lingua::Stem::It","pathname":"A/AC/ACALPINI/Lingua-Stem-It-0.02.tar.gz"}
+{"provides":{"Lingua::Stem::It":{"file":"It.pm","version":"0.02"}},"target":"Lingua::Stem::It","version":"0.02","pathname":"A/AC/ACALPINI/Lingua-Stem-It-0.02.tar.gz","name":"Lingua::Stem::It","dist":"Lingua-Stem-It-0.02"}
