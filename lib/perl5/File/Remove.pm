@@ -6,7 +6,7 @@ use strict;
 use vars qw{ $VERSION @ISA @EXPORT_OK };
 use vars qw{ $DEBUG $unlink $rmdir    };
 BEGIN {
-	$VERSION   = '1.52';
+	$VERSION   = '1.55';
 	# $VERSION   = eval $VERSION;
 	@ISA       = qw{ Exporter };
 	@EXPORT_OK = qw{ remove rm clear trash };
@@ -74,7 +74,8 @@ END {
 # default
 sub remove (@) {
 	my $recursive = (ref $_[0] eq 'SCALAR') ? shift : \0;
-	my @files     = expand(@_);
+    my $opts = (ref $_[0] eq 'HASH') ? shift : { glob => 1 };
+	my @files     = _expand_with_opts ($opts, @_);
 
 	# Iterate over the files
 	my @removes;
@@ -223,6 +224,11 @@ sub undelete (@) {
 ######################################################################
 # Support Functions
 
+sub _expand_with_opts {
+    my $opts = shift;
+    return ($opts->{glob} ? expand(@_) : @_);
+}
+
 sub expand (@) {
 	map { -e $_ ? $_ : File::Glob::bsd_glob($_) } @_;
 }
@@ -273,6 +279,10 @@ __END__
 
 File::Remove - Remove files and directories
 
+=head1 VERSION
+
+version 1.55
+
 =head1 SYNOPSIS
 
     use File::Remove 'remove';
@@ -281,10 +291,13 @@ File::Remove - Remove files and directories
     remove( '*.c', '*.pl' );
 
     # removes (with recursion) several directories
-    remove( \1, qw{directory1 directory2} ); 
+    remove( \1, qw{directory1 directory2} );
 
     # removes (with recursion) several files and directories
     remove( \1, qw{file1 file2 directory1 *~} );
+
+    # removes without globbing:
+    remove( \1, {glob => 0}, '*');
 
     # trashes (with support for undeleting later) several files
     trash( '*~' );
@@ -306,9 +319,18 @@ hashref.
 
 Removes files and directories.  Directories are removed recursively like
 in B<rm -rf> if the first argument is a reference to a scalar that
-evaluates to true.  If the first arguemnt is a reference to a scalar
+evaluates to true.  If the first argument is a reference to a scalar,
 then it is used as the value of the recursive flag.  By default it's
 false so only pass \1 to it.
+
+If the next argument is a hash reference then it is a key/values of options.
+Currently, there is one supported option of C<<< 'glob' => 0 >>> which prevents
+globbing. E.g:
+
+    remove(\1, {glob => 0}, '*');
+
+Will not remove files globbed by '*' and will only remove the file
+called asterisk if it exists.
 
 In list context it returns a list of files/directories removed, in
 scalar context it returns the number of files/directories removed.  The
@@ -354,6 +376,14 @@ will be called with the filenames that are to be deleted.
 
 =back
 
+=head2 expand
+
+B<DO NOT USE.> Kept for legacy.
+
+=head2 undelete
+
+B<DO NOT USE.> Kept for legacy.
+
 =head1 SUPPORT
 
 Bugs should always be submitted via the CPAN bug tracker
@@ -382,5 +412,141 @@ Original copyright: 1998 by Gabor Egressy, E<lt>gabor@vmunix.comE<gt>.
 
 This program is free software; you can redistribute and/or modify it under
 the same terms as Perl itself.
+
+=head1 AUTHOR
+
+Shlomi Fish <shlomif@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2016 by Shlomi Fish.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website
+http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-Remove or by email to
+bug-file-remove@rt.cpan.org.
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Perldoc
+
+You can find documentation for this module with the perldoc command.
+
+  perldoc File::Remove
+
+=head2 Websites
+
+The following websites have more information about this module, and may be of help to you. As always,
+in addition to those websites please use your favorite search engine to discover more resources.
+
+=over 4
+
+=item *
+
+MetaCPAN
+
+A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
+L<http://metacpan.org/release/File-Remove>
+
+=item *
+
+Search CPAN
+
+The default CPAN search engine, useful to view POD in HTML format.
+
+L<http://search.cpan.org/dist/File-Remove>
+
+=item *
+
+RT: CPAN's Bug Tracker
+
+The RT ( Request Tracker ) website is the default bug/issue tracking system for CPAN.
+
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=File-Remove>
+
+=item *
+
+AnnoCPAN
+
+The AnnoCPAN is a website that allows community annotations of Perl module documentation.
+
+L<http://annocpan.org/dist/File-Remove>
+
+=item *
+
+CPAN Ratings
+
+The CPAN Ratings is a website that allows community ratings and reviews of Perl modules.
+
+L<http://cpanratings.perl.org/d/File-Remove>
+
+=item *
+
+CPAN Forum
+
+The CPAN Forum is a web forum for discussing Perl modules.
+
+L<http://cpanforum.com/dist/File-Remove>
+
+=item *
+
+CPANTS
+
+The CPANTS is a website that analyzes the Kwalitee ( code metrics ) of a distribution.
+
+L<http://cpants.cpanauthors.org/dist/File-Remove>
+
+=item *
+
+CPAN Testers
+
+The CPAN Testers is a network of smokers who run automated tests on uploaded CPAN distributions.
+
+L<http://www.cpantesters.org/distro/F/File-Remove>
+
+=item *
+
+CPAN Testers Matrix
+
+The CPAN Testers Matrix is a website that provides a visual overview of the test results for a distribution on various Perls/platforms.
+
+L<http://matrix.cpantesters.org/?dist=File-Remove>
+
+=item *
+
+CPAN Testers Dependencies
+
+The CPAN Testers Dependencies is a website that shows a chart of the test results of all dependencies for a distribution.
+
+L<http://deps.cpantesters.org/?module=File::Remove>
+
+=back
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests by email to C<bug-file-remove at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/Public/Bug/Report.html?Queue=File-Remove>. You will be automatically notified of any
+progress on the request by the system.
+
+=head2 Source Code
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
+
+L<https://github.com/shlomif/File-Remove>
+
+  git clone git://github.com/shlomif/File-Remove.git
 
 =cut

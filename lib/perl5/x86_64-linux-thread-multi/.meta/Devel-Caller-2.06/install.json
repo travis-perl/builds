@@ -1,1 +1,1 @@
-{"dist":"Devel-Caller-2.06","provides":{"Devel::Caller":{"version":"2.06","file":"lib/Devel/Caller.pm"}},"pathname":"R/RC/RCLAMP/Devel-Caller-2.06.tar.gz","target":"Devel::Caller","version":"2.06","name":"Devel::Caller"}
+{"target":"Devel::Caller","provides":{"Devel::Caller":{"version":"2.06","file":"lib/Devel/Caller.pm"}},"dist":"Devel-Caller-2.06","pathname":"R/RC/RCLAMP/Devel-Caller-2.06.tar.gz","version":"2.06","name":"Devel::Caller"}
