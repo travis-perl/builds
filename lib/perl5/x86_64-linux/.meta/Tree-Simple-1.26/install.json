@@ -1,0 +1,1 @@
+{"pathname":"R/RS/RSAVAGE/Tree-Simple-1.26.tgz","version":"1.26","dist":"Tree-Simple-1.26","provides":{"Tree::Simple::Visitor":{"version":"1.26","file":"lib/Tree/Simple/Visitor.pm"},"Tree::Simple":{"version":"1.26","file":"lib/Tree/Simple.pm"}},"target":"Tree::Simple::Visitor","name":"Tree::Simple"}
