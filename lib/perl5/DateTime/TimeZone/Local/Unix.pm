@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Local::Unix;
-$DateTime::TimeZone::Local::Unix::VERSION = '1.94';
+$DateTime::TimeZone::Local::Unix::VERSION = '1.95';
 use strict;
 use warnings;
 
@@ -251,7 +251,7 @@ DateTime::TimeZone::Local::Unix - Determine the local system's time zone on Unix
 
 =head1 VERSION
 
-version 1.94
+version 1.95
 
 =head1 SYNOPSIS
 
@@ -317,7 +317,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Dave Rolsky.
+This software is copyright (c) 2016 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

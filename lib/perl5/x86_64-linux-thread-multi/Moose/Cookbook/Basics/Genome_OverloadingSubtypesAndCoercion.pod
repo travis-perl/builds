@@ -13,7 +13,7 @@ Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion - Operator overlo
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 SYNOPSIS
 
@@ -243,7 +243,7 @@ If you'd like to learn more about overloading, please read the
 documentation for the L<overload> pragma.
 
 To see all the code we created together, take a look at
-F<t/recipes/basics_recipe9.t>.
+F<t/recipes/basics_genome_overloadingsubtypesandcoercion.t>.
 
 =head1 NEXT STEPS
 
@@ -317,7 +317,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

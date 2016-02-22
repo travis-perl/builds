@@ -13,7 +13,7 @@ Moose::Manual::Roles - Roles, an alternative to deep hierarchies and base classe
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 WHAT IS A ROLE?
 
@@ -30,7 +30,9 @@ consumes the role. These attributes and methods then appear as if they
 were defined in the class itself. A subclass of the consuming class
 will inherit all of these methods and attributes.
 
-Moose roles are similar to mixins or interfaces in other languages.
+Moose roles are similar to mixins or interfaces in other languages and are
+based on the L<original concept of Traits|http://scg.unibe.ch/research/traits/>
+for the Smalltalk-80 dialect Squeak.
 
 Besides defining their own methods and attributes, roles can also
 require that the consuming class define certain methods of its
@@ -367,6 +369,47 @@ normal Moose role combination system. We recommend using this function to
 apply roles to an object. This is what Moose uses internally when you call
 C<with>.
 
+=head2 Handling required attributes for roles.
+
+Application of some roles will require additional parameters being specified to
+satisfy them, for example:
+
+    {
+        package Car;
+        use Moose;
+    }
+    {
+        package Breakable;
+        use Moose::Role;
+
+        has 'breakable_parts' => ( is => 'ro', required => 1 );
+    }
+
+    my $car = Car->new;
+
+    # next line dies with: Attribute (breakable_parts) is required
+    apply_all_roles( $car, 'Breakable' );
+
+This will require passing the additional parameters at application time as
+follows:
+
+    apply_all_roles( $car, 'Breakable' => {
+            rebless_params => {
+                # Parameters to 'Breakable'
+                breakable_parts => [qw( tires wheels windscreen )],
+            }
+    });
+
+Obviously, this interface is better simplified as a method on C<Car>:
+
+    sub make_breakable {
+        my ( $self, %params ) = @_;
+        apply_all_roles($self, 'Breakable', { rebless_params => \%params });
+    }
+
+    my $car = Car->new();
+    $car->make_breakable( breakable_parts => [qw( tires wheels windscreen )] );
+
 =head1 AUTHORS
 
 =over 4
@@ -415,7 +458,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

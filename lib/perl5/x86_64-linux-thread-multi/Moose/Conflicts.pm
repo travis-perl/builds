@@ -85,6 +85,7 @@ use Dist::CheckConflicts
         Devel::StackTrace
         Dist::CheckConflicts
         Eval::Closure
+        JSON::PP
         List::MoreUtils
         List::Util
         MRO::Compat

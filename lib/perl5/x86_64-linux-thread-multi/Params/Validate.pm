@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.21';
+our $VERSION = '1.22';
 
 use Exporter;
 use Module::Implementation;
@@ -75,7 +75,7 @@ Params::Validate - Validate method/function parameters
 
 =head1 VERSION
 
-version 1.21
+version 1.22
 
 =head1 SYNOPSIS
 
@@ -800,6 +800,15 @@ expect validation to be on when they execute. For example:
 But if you want to shoot yourself in the foot and just turn it off, go
 ahead!
 
+=head1 SPECIFYING AN IMPLEMENTATION
+
+This module ships with two equivalent implementations, one in XS and one in
+pure Perl. By default, it will try to load the XS version and fall back to the
+pure Perl implementation as needed. If you want to request a specific version,
+you can set the C<PARAMS_VALIDATE_IMPLEMENTATION> environment variable to
+either C<XS> or C<PP>. If the implementation you ask for cannot be loaded,
+then this module will die when loaded.
+
 =head1 TAINT MODE
 
 The XS implementation of this module has some problems Under taint mode with
@@ -891,7 +900,7 @@ Vincent Pit <perl@profvince.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2001 - 2015 by Dave Rolsky and Ilya Martynov.
+This software is Copyright (c) 2001 - 2016 by Dave Rolsky and Ilya Martynov.
 
 This is free software, licensed under:
 

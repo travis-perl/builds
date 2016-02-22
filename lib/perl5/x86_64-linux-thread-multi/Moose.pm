@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-package Moose; # git description: 2.1603-10-g5280cac
-our $VERSION = '2.1604';
+package Moose; # git description: 2.1604-21-g729a32b
+our $VERSION = '2.1605';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use 5.008003;
@@ -300,7 +300,7 @@ Moose - A postmodern object system for Perl 5
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 SYNOPSIS
 
@@ -507,7 +507,7 @@ is expected to have consumed.
 
 This marks the attribute as being required. This means a value must be
 supplied during class construction, I<or> the attribute must be lazy
-and have either a default or a builder. Note that c<required> does not
+and have either a default or a builder. Note that C<required> does not
 say anything about the attribute's value, which can be C<undef>.
 
 =item I<weak_ref =E<gt> (1|0)>
@@ -1259,7 +1259,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,1 +1,1 @@
-{"version":"1.5","pathname":"S/SH/SHAY/Class-Singleton-1.5.tar.gz","provides":{"Class::Singleton":{"version":"1.5","file":"lib/Class/Singleton.pm"}},"target":"Class::Singleton","dist":"Class-Singleton-1.5","name":"Class::Singleton"}
+{"name":"Class::Singleton","version":"1.5","pathname":"S/SH/SHAY/Class-Singleton-1.5.tar.gz","target":"Class::Singleton","provides":{"Class::Singleton":{"version":"1.5","file":"lib/Class/Singleton.pm"}},"dist":"Class-Singleton-1.5"}

@@ -48,7 +48,6 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Cancun.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Caracas.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Cayenne.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Cayman.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Chicago.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Chihuahua.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Costa_Rica.pm
@@ -129,7 +128,6 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Regina.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Resolute.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Rio_Branco.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Santa_Isabel.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Santarem.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Santiago.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/America/Santo_Domingo.pm

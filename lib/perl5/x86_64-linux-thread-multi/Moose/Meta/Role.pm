@@ -1,5 +1,5 @@
 package Moose::Meta::Role;
-our $VERSION = '2.1604';
+our $VERSION = '2.1605';
 
 use strict;
 use warnings;
@@ -753,7 +753,7 @@ Moose::Meta::Role - The Moose Role metaclass
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 DESCRIPTION
 
@@ -1051,7 +1051,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

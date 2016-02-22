@@ -2,7 +2,7 @@ use strict;
 
 package Path::Class::Dir;
 {
-  $Path::Class::Dir::VERSION = '0.35';
+  $Path::Class::Dir::VERSION = '0.36';
 }
 
 use Path::Class::File;
@@ -31,7 +31,7 @@ sub new {
   my $s = $self->_spec;
   
   my $first = (@_ == 0     ? $s->curdir :
-	       $_[0] eq '' ? (shift, $s->rootdir) :
+	       !ref($_[0]) && $_[0] eq '' ? (shift, $s->rootdir) :
 	       shift()
 	      );
   
@@ -48,7 +48,7 @@ sub new {
   push @{$self->{dirs}}, map {
     Scalar::Util::blessed($_) && $_->isa("Path::Class::Dir")
       ? @{$_->{dirs}}
-      : $s->splitdir($_)
+      : $s->splitdir( $s->canonpath($_) )
   } @_;
 
 
@@ -270,12 +270,13 @@ sub next {
 }
 
 sub subsumes {
+  Carp::croak "Too many arguments given to subsumes()" if $#_ > 2;
   my ($self, $other) = @_;
-  die "No second entity given to subsumes()" unless $other;
-  
-  $other = $self->new($other) unless UNIVERSAL::isa($other, "Path::Class::Entity");
+  Carp::croak( "No second entity given to subsumes()" ) unless $other;
+
+  $other = $self->new($other) unless eval{$other->isa( "Path::Class::Entity")} ;
   $other = $other->dir unless $other->is_dir;
-  
+
   if ($self->is_absolute) {
     $other = $other->absolute;
   } elsif ($other->is_absolute) {
@@ -285,14 +286,19 @@ sub subsumes {
   $self = $self->cleanup;
   $other = $other->cleanup;
 
-  if ($self->volume) {
+  if ($self->volume || $other->volume) {
     return 0 unless $other->volume eq $self->volume;
   }
 
   # The root dir subsumes everything (but ignore the volume because
   # we've already checked that)
   return 1 if "@{$self->{dirs}}" eq "@{$self->new('')->{dirs}}";
-  
+
+  # The current dir subsumes every relative path (unless starting with updir)
+  if ($self eq $self->_spec->curdir) {
+    return $other->{dirs}[0] ne $self->_spec->updir;
+  }
+
   my $i = 0;
   while ($i <= $#{ $self->{dirs} }) {
     return 0 if $i > $#{ $other->{dirs} };
@@ -303,8 +309,14 @@ sub subsumes {
 }
 
 sub contains {
+  Carp::croak "Too many arguments given to contains()" if $#_ > 2;
   my ($self, $other) = @_;
-  return !!(-d $self and (-e $other or -l $other) and $self->subsumes($other));
+  Carp::croak "No second entity given to contains()" unless $other;
+  return unless -d $self and (-e $other or -l $other);
+
+  $other = $self->new($other) unless eval{$other->isa("Path::Class::Entity")};
+  $other->resolve;
+  return $self->subsumes($other);
 }
 
 sub tempfile {
@@ -321,7 +333,7 @@ Path::Class::Dir - Objects representing directories
 
 =head1 VERSION
 
-version 0.35
+version 0.36
 
 =head1 SYNOPSIS
 
@@ -631,7 +643,7 @@ the final element that would have been returned in a list context.
 
 =item $dir->components
 
-Identical to c<dir_list()>.  It exists because there's an analogous
+Identical to C<dir_list()>.  It exists because there's an analogous
 method C<dir_list()> in the C<Path::Class::File> class that also
 returns the basename string, so this method lets someone call
 C<components()> without caring whether the object is a file or a
@@ -796,7 +808,7 @@ are supported I<except> C<< depthfirst => 0, preorder => 0 >>.
 
 C<callback> is normally not required to return any value. If it
 returns special constant C<Path::Class::Entity::PRUNE()> (more easily
-available as C<$item->PRUNE>),  no children of analyzed
+available as C<< $item->PRUNE >>),  no children of analyzed
 item will be analyzed (mostly as if you set C<$File::Find::prune=1>). Of course
 pruning is available only in C<preorder>, in postorder return value
 has no effect.
