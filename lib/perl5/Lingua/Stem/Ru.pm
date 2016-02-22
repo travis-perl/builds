@@ -1,19 +1,14 @@
 package Lingua::Stem::Ru;
-
+$Lingua::Stem::Ru::VERSION = '0.04';
+use 5.006;
 use strict;
-
-
-use strict;
-use Exporter;
+use warnings;
+use Exporter 5.57 'import';
 use Carp;
-use vars qw (@ISA @EXPORT_OK @EXPORT %EXPORT_TAGS $VERSION);
-BEGIN {
-    @ISA         = qw (Exporter);
-    @EXPORT      = ();
-    @EXPORT_OK   = qw (stem stem_word clear_stem_cache stem_caching);
-    %EXPORT_TAGS = ();
-}
-$VERSION = "0.01";
+
+our @EXPORT      = ();
+our @EXPORT_OK   = qw (stem stem_word clear_stem_cache stem_caching);
+our %EXPORT_TAGS = ();
 
 my $Stem_Caching  = 0;
 my $Stem_Cache    = {};
@@ -163,7 +158,7 @@ returning the stemmed words.
 
 The algorithm is implemented exactly as described in:
 
-    http://snowball.tartarus.org/russian/stemmer.html
+    http://snowball.tartarus.org/algorithms/russian/stemmer.html
 
 The code is carefully crafted to work in conjunction with the L<Lingua::Stem>
 module by Benjamin Franz. This stemmer is also based 
@@ -217,33 +212,36 @@ Clears the cache of stemmed words
 
 None by default.
 
-=head1 HISTORY
-
-=over 8
-
-=item *
-
-0.01 (2004-05-21)
-
-=back
-
 =head1 AUTHOR
 
 Aleksandr Guidrevitch <pillgrim@mail.ru>
 
+=head1 REPOSITORY
+
+L<https://github.com/neilb/Lingua-Stem-Ru>
+
 =head1 SEE ALSO
 
- Lingua::Stem
+=over
 
-=head1 COPYRIGHT
+=item L<Lingua::Stem> 
+
+provides an interface for some other pure Perl stemmers available
+on CPAN, including L<Lingua::Stem::Ru>
+
+=item L<Lingua::Stem::Snowball>
+
+=item L<Lingua::Stem::Any>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
 
 Copyright (C) 2003 by Aldo Calpini <dada@perl.it>
 
 Copyright (C) 2004 by Aleksandr Guidrevitch <pillgrim@mail.ru>
 
-This software may be freely copied and distributed under the same
-terms and conditions as Perl itself, either Perl version 5.8.3
-or, at your option, any later version of Perl 5 you may
-have available..
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

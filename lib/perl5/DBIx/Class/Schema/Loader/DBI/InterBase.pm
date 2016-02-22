@@ -9,7 +9,7 @@ use List::Util 'first';
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 sub _supports_db_schema { 0 }
 
@@ -25,7 +25,7 @@ See L<DBIx::Class::Schema::Loader> and L<DBIx::Class::Schema::Loader::Base>.
 =head1 COLUMN NAME CASE ISSUES
 
 By default column names from unquoted DDL will be generated in lowercase, for
-consistency with other backends. 
+consistency with other backends.
 
 Set the L<preserve_case|DBIx::Class::Schema::Loader::Base/preserve_case> option
 to true if you would like to have column names in the internal case, which is
@@ -315,9 +315,9 @@ EOF
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

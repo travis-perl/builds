@@ -5,7 +5,7 @@ use warnings;
 use base 'DBIx::Class::Schema::Loader::RelBuilder::Compat::v0_05';
 use mro 'c3';
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 sub _relnames_and_method {
     my ( $self, $local_moniker, $rel, $cond, $uniqs, $counters ) = @_;
@@ -48,9 +48,9 @@ compatibility with DBIx::Class::Schema::Loader version 0.04006
 See L<DBIx::Class::Schema::Loader::Base/naming> and
 L<DBIx::Class::Schema::Loader::RelBuilder>.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

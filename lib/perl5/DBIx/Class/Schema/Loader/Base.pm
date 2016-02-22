@@ -20,6 +20,7 @@ use File::Temp ();
 use Class::Unload;
 use Class::Inspector ();
 use Scalar::Util 'looks_like_number';
+use DBIx::Class::Schema::Loader::Column;
 use DBIx::Class::Schema::Loader::Utils qw/split_name dumper_squashed eval_package_without_redefine_warnings class_path slurp_file sigwarn_silencer firstidx uniq/;
 use DBIx::Class::Schema::Loader::Optional::Dependencies ();
 use Try::Tiny;
@@ -29,7 +30,7 @@ use List::Util qw/all any none/;
 use File::Temp 'tempfile';
 use namespace::clean;
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 __PACKAGE__->mk_group_ro_accessors('simple', qw/
                                 schema
@@ -400,10 +401,10 @@ override the introspected attributes of the foreign key if any.
 
 For example:
 
-  relationship_attrs => {
-    has_many   => { cascade_delete => 1, cascade_copy => 1 },
-    might_have => { cascade_delete => 1, cascade_copy => 1 },
-  },
+    relationship_attrs => {
+        has_many   => { cascade_delete => 1, cascade_copy => 1 },
+        might_have => { cascade_delete => 1, cascade_copy => 1 },
+    },
 
 use this to turn L<DBIx::Class> cascades to on on your
 L<has_many|DBIx::Class::Relationship/has_many> and
@@ -657,23 +658,26 @@ L</moniker_map> takes precedence over this.
 
 =head2 col_accessor_map
 
-Same as moniker_map, but for column accessor names.  If a coderef is
+Same as moniker_map, but for column accessor names.  The nested
+hashref form is traversed according to L</moniker_parts>, with an
+extra level at the bottom for the column name.  If a coderef is
 passed, the code is called with arguments of
 
-   the name of the column in the underlying database,
-   default accessor name that DBICSL would ordinarily give this column,
-   {
-      table_class     => name of the DBIC class we are building,
-      table_moniker   => calculated moniker for this table (after moniker_map if present),
-      table           => table object of interface DBIx::Class::Schema::Loader::Table,
-      full_table_name => schema-qualified name of the database table (RDBMS specific),
-      schema_class    => name of the schema class we are building,
-      column_info     => hashref of column info (data_type, is_nullable, etc),
-   }
-   coderef ref that can be called with a hashref map
+    the DBIx::Class::Schema::Loader::Column object for the column,
+    default accessor name that DBICSL would ordinarily give this column,
+    {
+        table_class     => name of the DBIC class we are building,
+        table_moniker   => calculated moniker for this table (after moniker_map if present),
+        table           => table object of interface DBIx::Class::Schema::Loader::Table,
+        full_table_name => schema-qualified name of the database table (RDBMS specific),
+        schema_class    => name of the schema class we are building,
+        column_info     => hashref of column info (data_type, is_nullable, etc),
+    }
+    coderef ref that can be called with a hashref map
 
-the L<table object|DBIx::Class::Schema::Loader::Table> stringifies to the
-unqualified table name.
+The L<column|DBIx::Class::Schema::Loader::Column> and
+L<table|DBIx::Class::Schema::Loader::Table> objects stringify to their
+unqualified names.
 
 =head2 rel_name_map
 
@@ -768,13 +772,13 @@ A hashref of moniker keys and component values.  Unlike L</components>, which
 loads the given components into every Result class, this option allows you to
 load certain components for specified Result classes. For example:
 
-  result_components_map => {
-      StationVisited => '+YourApp::Schema::Component::StationVisited',
-      RouteChange    => [
-                            '+YourApp::Schema::Component::RouteChange',
-                            'InflateColumn::DateTime',
-                        ],
-  }
+    result_components_map => {
+        StationVisited => '+YourApp::Schema::Component::StationVisited',
+        RouteChange    => [
+                              '+YourApp::Schema::Component::RouteChange',
+                              'InflateColumn::DateTime',
+                          ],
+    }
 
 You may use this in conjunction with L</components>.
 
@@ -788,13 +792,13 @@ A hashref of moniker keys and role values.  Unlike L</result_roles>, which
 applies the given roles to every Result class, this option allows you to apply
 certain roles for specified Result classes. For example:
 
-  result_roles_map => {
-      StationVisited => [
-                            'YourApp::Role::Building',
-                            'YourApp::Role::Destination',
-                        ],
-      RouteChange    => 'YourApp::Role::TripEvent',
-  }
+    result_roles_map => {
+        StationVisited => [
+                              'YourApp::Role::Building',
+                              'YourApp::Role::Destination',
+                          ],
+        RouteChange    => 'YourApp::Role::TripEvent',
+    }
 
 You may use this in conjunction with L</result_roles>.
 
@@ -883,13 +887,13 @@ stringifies to the unqualified table name), column name and column_info.
 
 For example:
 
-  custom_column_info => sub {
-      my ($table, $column_name, $column_info) = @_;
+    custom_column_info => sub {
+        my ($table, $column_name, $column_info) = @_;
 
-      if ($column_name eq 'dog' && $column_info->{default_value} eq 'snoopy') {
-          return { is_snoopy => 1 };
-      }
-  },
+        if ($column_name eq 'dog' && $column_info->{default_value} eq 'snoopy') {
+            return { is_snoopy => 1 };
+        }
+    },
 
 This attribute can also be used to set C<inflate_datetime> on a non-datetime
 column so it also receives the L</datetime_timezone> and/or L</datetime_locale>.
@@ -1352,7 +1356,7 @@ EOF
     return unless -e $filename;
 
     my ($old_gen, $old_md5, $old_ver, $old_ts, $old_custom) =
-      $self->_parse_generated_file($filename);
+        $self->_parse_generated_file($filename);
 
     return unless $old_ver;
 
@@ -1566,18 +1570,18 @@ sub _load_external {
         }
 
         $self->_ext_stmt($class,
-          qq|# These lines were loaded from '$real_inc_path' found in \@INC.\n|
-         .qq|# They are now part of the custom portion of this file\n|
-         .qq|# for you to hand-edit.  If you do not either delete\n|
-         .qq|# this section or remove that file from \@INC, this section\n|
-         .qq|# will be repeated redundantly when you re-create this\n|
-         .qq|# file again via Loader!  See skip_load_external to disable\n|
-         .qq|# this feature.\n|
+            qq|# These lines were loaded from '$real_inc_path' found in \@INC.\n|
+           .qq|# They are now part of the custom portion of this file\n|
+           .qq|# for you to hand-edit.  If you do not either delete\n|
+           .qq|# this section or remove that file from \@INC, this section\n|
+           .qq|# will be repeated redundantly when you re-create this\n|
+           .qq|# file again via Loader!  See skip_load_external to disable\n|
+           .qq|# this feature.\n|
         );
         chomp $code;
         $self->_ext_stmt($class, $code);
         $self->_ext_stmt($class,
-            qq|# End of lines loaded from '$real_inc_path' |
+            qq|# End of lines loaded from '$real_inc_path'|
         );
     }
 
@@ -1609,7 +1613,7 @@ EOF
         chomp $code;
         $self->_ext_stmt($class, $code);
         $self->_ext_stmt($class,
-            qq|# End of lines loaded from '$old_real_inc_path' |
+            qq|# End of lines loaded from '$old_real_inc_path'|
         );
     }
 }
@@ -1623,9 +1627,7 @@ Does the actual schema-construction work.
 sub load {
     my $self = shift;
 
-    $self->_load_tables(
-        $self->_tables_list({ constraint => $self->constraint, exclude => $self->exclude })
-    );
+    $self->_load_tables($self->_tables_list);
 }
 
 =head2 rescan
@@ -1647,7 +1649,7 @@ sub rescan {
     $self->_relbuilder->{schema} = $schema;
 
     my @created;
-    my @current = $self->_tables_list({ constraint => $self->constraint, exclude => $self->exclude });
+    my @current = $self->_tables_list;
 
     foreach my $table (@current) {
         if(!exists $self->_tables->{$table->sql_name}) {
@@ -1869,14 +1871,14 @@ sub _reload_classes {
 }
 
 sub _moose_metaclass {
-  return undef unless $INC{'Class/MOP.pm'};   # if CMOP is not loaded the class could not have loaded in the 1st place
+    return undef unless $INC{'Class/MOP.pm'}; # if CMOP is not loaded the class could not have loaded in the 1st place
 
-  my $class = $_[1];
+    my $class = $_[1];
 
-  my $mc = try { Class::MOP::class_of($class) }
-    or return undef;
+    my $mc = try { Class::MOP::class_of($class) }
+        or return undef;
 
-  return $mc->isa('Moose::Meta::Class') ? $mc : undef;
+    return $mc->isa('Moose::Meta::Class') ? $mc : undef;
 }
 
 # We use this instead of ensure_class_loaded when there are package symbols we
@@ -2031,7 +2033,7 @@ sub _dump_to_dir {
             }
         }
         else {
-             $src_text .= qq|use base '$result_base_class';\n|;
+            $src_text .= qq|use base '$result_base_class';\n|;
         }
 
         $self->_write_classfile($src_class, $src_text);
@@ -2172,10 +2174,10 @@ sub _write_classfile {
 
     my $compare_to;
     if ($old_md5) {
-      $compare_to = $text . $self->_sig_comment($old_ver, $old_ts);
-      if (Digest::MD5::md5_base64(encode 'UTF-8', $compare_to) eq $old_md5) {
-        return unless $self->_upgrading_from && $is_schema;
-      }
+        $compare_to = $text . $self->_sig_comment($old_ver, $old_ts);
+        if (Digest::MD5::md5_base64(encode 'UTF-8', $compare_to) eq $old_md5) {
+            return unless $self->_upgrading_from && $is_schema;
+        }
     }
 
     push @{$self->generated_classes}, $class;
@@ -2183,8 +2185,8 @@ sub _write_classfile {
     return if $self->dry_run;
 
     $text .= $self->_sig_comment(
-      $self->omit_version ? undef : $self->version_to_dump,
-      $self->omit_timestamp ? undef : POSIX::strftime('%Y-%m-%d %H:%M:%S', localtime)
+        $self->omit_version ? undef : $self->version_to_dump,
+        $self->omit_timestamp ? undef : POSIX::strftime('%Y-%m-%d %H:%M:%S', localtime)
     );
 
     open(my $fh, '>:raw:encoding(UTF-8)', $filename)
@@ -2433,8 +2435,10 @@ sub _is_result_class_method {
         push @roles, @{ $self->result_roles_map->{$table_moniker} }
             if exists $self->result_roles_map->{$table_moniker};
 
-        for my $class ($base, @components,
-                       ($self->use_moose ? 'Moose::Object' : ()), @roles) {
+        for my $class (
+            $base, @components, @roles,
+            ($self->use_moose ? 'Moose::Object' : ()),
+        ) {
             $self->ensure_class_loaded($class);
 
             push @methods, @{ Class::Inspector->methods($class) || [] };
@@ -2489,7 +2493,7 @@ sub _run_user_map {
     my $default_ident = $default_code->( $ident, @extra );
     my $new_ident;
     if( $map && ref $map eq 'HASH' ) {
-        if (my @parts = try{ @{ $ident } }) {
+        if (my @parts = try { @{ $ident } }) {
             my $part_map = $map;
             while (@parts) {
                 my $part = shift @parts;
@@ -2556,7 +2560,7 @@ sub _make_column_accessor_name {
         sub { $self->_default_column_accessor_name( shift ) },
         $column_name,
         $column_context_info,
-       );
+    );
 
     return $accessor;
 }
@@ -2597,8 +2601,12 @@ sub _setup_src_meta {
             schema_class    => $schema_class,
             column_info     => $info,
         };
+        my $col_obj = DBIx::Class::Schema::Loader::Column->new(
+            table => $table,
+            name  => $col,
+        );
 
-        $info->{accessor} = $self->_make_column_accessor_name( $col, $context );
+        $info->{accessor} = $self->_make_column_accessor_name( $col_obj, $context );
     }
 
     $self->_resolve_col_accessor_collisions($table, $col_info);
@@ -2796,7 +2804,7 @@ sub _table2moniker {
         $self->moniker_map,
         sub { $self->_default_table2moniker( shift ) },
         $table
-       );
+    );
 }
 
 sub _load_relationships {
@@ -2955,7 +2963,7 @@ sub _make_pod {
                         looks_like_number($s) ? $s                  : qq{'$s'};
 
                     "  $_: $s"
-                 } sort keys %$attrs,
+                } sort keys %$attrs,
             );
             if (my $comment = $self->__column_comment($self->class_to_table->{$class}, $col_counter, $name)) {
                 $self->_pod( $class, $comment );
@@ -3202,9 +3210,9 @@ You can also control the renaming with the L</rel_collision_map> option.
 
 L<DBIx::Class::Schema::Loader>, L<dbicdump>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

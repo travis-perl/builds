@@ -8,7 +8,7 @@ use base qw/
 /;
 use mro 'c3';
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -36,7 +36,7 @@ sub _dbh_type_info_type_name {
     my $type_info = $dbh->type_info($type_num);
 
     return undef if not $type_info;
-    
+
     my $type_name = $type_info->{TYPE_NAME};
 
     # fix up truncated type names
@@ -56,9 +56,9 @@ L<DBIx::Class::Schema::Loader::DBI::InterBase>,
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

@@ -1,0 +1,1 @@
+{"version":"0.02","target":"Lingua::GL::Stemmer","pathname":"N/NE/NEILB/Lingua-PT-Stemmer-0.02.tar.gz","name":"Lingua::PT::Stemmer","provides":{"Lingua::PT::Stemmer":{"file":"lib/Lingua/PT/Stemmer.pm","version":"0.02"},"Lingua::GL::Stemmer":{"version":"0.02","file":"lib/Lingua/GL/Stemmer.pm"}},"dist":"Lingua-PT-Stemmer-0.02"}

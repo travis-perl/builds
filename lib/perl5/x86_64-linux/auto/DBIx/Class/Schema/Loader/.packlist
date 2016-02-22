@@ -1,6 +1,7 @@
 /home/travis/.perlbrew/libs/5.22.0@dbic/bin/dbicdump
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/Base.pm
+/home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/Column.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/DBI.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/DBI/ADO.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/DBI/ADO/MS_Jet.pm
@@ -30,7 +31,6 @@
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/DBObject/Sybase.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/Manual/UpgradingFromV4.pod
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/Optional/Dependencies.pm
-/home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/Optional/Dependencies.pod
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/RelBuilder.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/RelBuilder/Compat/v0_040.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/DBIx/Class/Schema/Loader/RelBuilder/Compat/v0_05.pm

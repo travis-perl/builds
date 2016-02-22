@@ -12,7 +12,7 @@ use DBIx::Class::Schema::Loader::Utils qw/sigwarn_silencer/;
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -105,7 +105,7 @@ sub _table_fk_info {
             local $self->{db_schema} = [ $f_schema ] if $f_schema;
 
             first {
-                   lc($_->name) eq lc($f_table)
+                lc($_->name) eq lc($f_table)
                 && ((not $f_schema) || lc($_->schema) eq lc($f_schema))
             } $self->_tables_list;
         };
@@ -368,9 +368,9 @@ sub _column_comment {
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

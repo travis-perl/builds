@@ -10,7 +10,7 @@ use Try::Tiny;
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table::Informix ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -179,7 +179,7 @@ EOF
 }
 
 sub _tables_list {
-    my ($self, $opts) = @_;
+    my ($self) = @_;
 
     my @tables;
 
@@ -204,7 +204,7 @@ EOF
         }
     }
 
-    return $self->_filter_tables(\@tables, $opts);
+    return $self->_filter_tables(\@tables);
 }
 
 sub _constraints_for {
@@ -463,7 +463,7 @@ EOF
 #        if (lc($data_type) eq 'varchar') {
 #            $result->{$col}{size}[1] = $info->{colmin};
 #        }
-       
+
         my ($default_type, $default) = @{$info}{qw/deflt_type deflt/};
 
         next unless $default_type;
@@ -497,9 +497,9 @@ EOF
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

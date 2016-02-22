@@ -8,7 +8,7 @@ use List::Util 'any';
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -48,7 +48,7 @@ sub _setup {
 }
 
 sub _tables_list {
-    my ($self, $opts) = @_;
+    my ($self) = @_;
 
     my @tables;
 
@@ -73,7 +73,7 @@ EOF
         }
     }
 
-    return $self->_filter_tables(\@tables, $opts);
+    return $self->_filter_tables(\@tables);
 }
 
 sub _columns_info_for {
@@ -193,9 +193,9 @@ JOIN systab    fkt
     ON fk.foreign_table_id = fkt.table_id
 JOIN sysuser   fku
     ON fkt.creator = fku.user_id
-JOIN sysidx    pki 
+JOIN sysidx    pki
     ON fk.primary_table_id = pki.table_id  AND fk.primary_index_id    = pki.index_id
-JOIN sysidx    fki 
+JOIN sysidx    fki
     ON fk.foreign_table_id = fki.table_id  AND fk.foreign_index_id    = fki.index_id
 JOIN sysidxcol fkic
     ON fkt.table_id        = fkic.table_id AND fki.index_id           = fkic.index_id
@@ -282,9 +282,9 @@ EOF
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

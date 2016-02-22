@@ -10,7 +10,7 @@ use namespace::clean;
 
 use DBIx::Class::Schema::Loader::Table::Sybase ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -234,7 +234,7 @@ EOF
 }
 
 sub _tables_list {
-    my ($self, $opts) = @_;
+    my ($self) = @_;
 
     my @tables;
 
@@ -259,7 +259,7 @@ EOF
         }
     }
 
-    return $self->_filter_tables(\@tables, $opts);
+    return $self->_filter_tables(\@tables);
 }
 
 sub _table_pk_info {
@@ -300,7 +300,7 @@ JOIN [$db].INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
 JOIN [$db].INFORMATION_SCHEMA.KEY_COLUMN_USAGE fk_kcu
     ON fk_kcu.constraint_name = fk_tc.constraint_name
         AND fk_kcu.table_name = fk_tc.table_name
-        AND fk_kcu.table_schema = fk_tc.table_schema 
+        AND fk_kcu.table_schema = fk_tc.table_schema
 JOIN [$db].INFORMATION_SCHEMA.TABLE_CONSTRAINTS uk_tc
     ON uk_tc.constraint_name = rc.unique_constraint_name
         AND uk_tc.table_schema = rc.unique_constraint_schema
@@ -322,7 +322,7 @@ EOF
                $delete_rule, $update_rule) = $sth->fetchrow_array) {
         push @{ $rels{$fk}{local_columns}  }, $self->_lc($col);
         push @{ $rels{$fk}{remote_columns} }, $self->_lc($remote_col);
-        
+
         $rels{$fk}{remote_table} = DBIx::Class::Schema::Loader::Table::Sybase->new(
             loader   => $self,
             name     => $remote_table,
@@ -497,9 +497,9 @@ L<DBIx::Class::Schema::Loader::DBI::ODBC::Microsoft_SQL_Server>,
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

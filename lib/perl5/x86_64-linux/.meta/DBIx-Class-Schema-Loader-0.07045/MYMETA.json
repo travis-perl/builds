@@ -1,10 +1,10 @@
 {
    "abstract" : "Create a DBIx::Class::Schema based on a database",
    "author" : [
-      "blblack: Brandon Black <blblack@gmail.com>"
+      "Caelum: Rafael Kitover <rkitover@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.14, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -16,7 +16,8 @@
    "no_index" : {
       "directory" : [
          "inc",
-         "t"
+         "t",
+         "xt"
       ]
    },
    "prereqs" : {
@@ -86,5 +87,5 @@
       "x_IRC" : "irc://irc.perl.org/#dbix-class",
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbix-class"
    },
-   "version" : "0.07043"
+   "version" : "0.07045"
 }

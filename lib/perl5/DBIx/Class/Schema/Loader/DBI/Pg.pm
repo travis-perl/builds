@@ -5,7 +5,7 @@ use warnings;
 use base 'DBIx::Class::Schema::Loader::DBI::Component::QuotedDefault';
 use mro 'c3';
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -184,13 +184,11 @@ sub _column_comment {
 
     return $column_comment if $column_comment;
 
-    my ($table_oid) = $self->dbh->selectrow_array(<<'EOF', {}, $table->name, $table->schema);
-SELECT oid
+    return $self->dbh->selectrow_array(<<'EOF', {}, $column_number, $table->name, $table->schema);
+SELECT pg_catalog.col_description(oid, ?)
 FROM pg_catalog.pg_class
 WHERE relname=? AND relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname=?)
 EOF
-
-    return $self->dbh->selectrow_array('SELECT pg_catalog.col_description(?,?)', {}, $table_oid, $column_number);
 }
 
 # Make sure data_type's that don't need it don't have a 'size' column_info, and
@@ -227,7 +225,7 @@ WHERE table_name = ? and column_name = ?
 EOF
 
             if ($data_type =~ /^time\b/i) {
-                if ((not $precision) || $precision !~ /^\d/) {
+                if ((not defined $precision) || $precision !~ /^\d/) {
                     delete $info->{size};
                 }
                 else {
@@ -245,7 +243,7 @@ EOF
                     }
                 }
             }
-            elsif ((not $precision) || $precision !~ /^\d/ || $precision == 6) {
+            elsif ((not defined $precision) || $precision !~ /^\d/ || $precision == 6) {
                 delete $info->{size};
             }
             else {
@@ -291,19 +289,16 @@ FROM pg_catalog.pg_type
 WHERE typname = ?
 EOF
             if ($typetype && $typetype eq 'e') {
-                # The following will extract a list of allowed values for the
-                # enum.
+                # The following will extract a list of allowed values for the enum.
                 my $order_column = $self->dbh->{pg_server_version} >= 90100 ? 'enumsortorder' : 'oid';
-                my $typevalues = $self->dbh
-                    ->selectall_arrayref(<<EOF, {}, $info->{data_type});
+                $info->{extra}{list} = $self->dbh
+                    ->selectcol_arrayref(<<EOF, {}, $info->{data_type});
 SELECT e.enumlabel
 FROM pg_catalog.pg_enum e
 JOIN pg_catalog.pg_type t ON t.oid = e.enumtypid
 WHERE t.typname = ?
 ORDER BY e.$order_column
 EOF
-
-                $info->{extra}{list} = [ map { $_->[0] } @$typevalues ];
 
                 # Store its original name in extra for SQLT to pick up.
                 $info->{extra}{custom_type_name} = $info->{data_type};
@@ -352,9 +347,9 @@ EOF
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

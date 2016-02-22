@@ -10,7 +10,7 @@ use Carp::Clan qw/^DBIx::Class/;
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 __PACKAGE__->mk_group_accessors('simple', qw/
     _disable_pk_detection
@@ -74,8 +74,8 @@ sub _build_quote_char {
     my $self = shift;
 
     my $quote_char = $self->dbh->get_info(29)
-           || $self->schema->storage->sql_maker->quote_char
-           || q{"};
+        || $self->schema->storage->sql_maker->quote_char
+        || q{"};
 
     # For our usage as regex matches, concatenating multiple quote_char
     # values works fine (e.g. s/[\Q<>\E]// if quote_char was [ '<', '>' ])
@@ -89,8 +89,8 @@ sub _build_quote_char {
 sub _build_name_sep {
     my $self = shift;
     return $self->dbh->get_info(41)
-           || $self->schema->storage->sql_maker->name_sep
-           || '.';
+        || $self->schema->storage->sql_maker->name_sep
+        || '.';
 }
 
 # Override this in vendor modules to do things at the end of ->new()
@@ -118,7 +118,7 @@ sub _supports_db_schema { 1 }
 
 # Returns an array of table objects
 sub _tables_list {
-    my ($self, $opts) = (shift, shift);
+    my ($self) = @_;
 
     my @tables;
 
@@ -128,7 +128,7 @@ sub _tables_list {
     my $nns = qr/[^\Q$self->{name_sep}\E]/;
 
     foreach my $schema (@{ $self->db_schema || [undef] }) {
-        my @raw_table_names = $self->_dbh_tables($schema, @_);
+        my @raw_table_names = $self->_dbh_tables($schema);
 
         TABLE: foreach my $raw_table_name (@raw_table_names) {
             my $quoted = $raw_table_name =~ /^$qt/;
@@ -149,7 +149,7 @@ sub _tables_list {
                     if (ref $system_schema) {
                         $matches = 1
                             if $schema_name =~ $system_schema
-                                 && $schema !~ $system_schema;
+                                && $schema  !~ $system_schema;
                     }
                     else {
                         $matches = 1
@@ -189,7 +189,7 @@ sub _tables_list {
         }
     }
 
-    return $self->_filter_tables(\@tables, $opts);
+    return $self->_filter_tables(\@tables);
 }
 
 sub _recurse_constraint {
@@ -228,14 +228,13 @@ sub _check_constraint {
 
 # apply constraint/exclude and ignore bad tables and views
 sub _filter_tables {
-    my ($self, $tables, $opts) = @_;
+    my ($self, $tables) = @_;
 
     my @tables = @$tables;
     my @filtered_tables;
 
-    $opts ||= {};
-    @tables = _check_constraint(1, $opts->{constraint}, @tables);
-    @tables = _check_constraint(0, $opts->{exclude}, @tables);
+    @tables = _check_constraint(1, $self->constraint, @tables);
+    @tables = _check_constraint(0, $self->exclude, @tables);
 
     TABLE: for my $table (@tables) {
         try {
@@ -689,9 +688,9 @@ sub _table_is_view {
 
 L<DBIx::Class::Schema::Loader>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 
