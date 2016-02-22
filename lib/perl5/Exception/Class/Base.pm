@@ -1,7 +1,9 @@
 package Exception::Class::Base;
-$Exception::Class::Base::VERSION = '1.39';
+
 use strict;
 use warnings;
+
+our $VERSION = '1.40';
 
 use Class::Data::Inheritable 0.02;
 use Devel::StackTrace 2.00;
@@ -26,7 +28,7 @@ BEGIN {
         my $self = shift;
         if (@_) {
             my $val = shift;
-            return $self->UnsafeRefCapture(!$val);
+            return $self->UnsafeRefCapture( !$val );
         }
         else {
             return $self->UnsafeRefCapture();
@@ -39,7 +41,7 @@ BEGIN {
 use overload
 
     # an exception is always true
-    bool => sub { 1 }, '""' => 'as_string', fallback => 1;
+    bool => sub {1}, '""' => 'as_string', fallback => 1;
 
 # Create accessor routines
 BEGIN {
@@ -260,7 +262,7 @@ Exception::Class::Base - A base class for exception objects
 
 =head1 VERSION
 
-version 1.39
+version 1.40
 
 =head1 SYNOPSIS
 
@@ -575,7 +577,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by David Rolsky.
+This software is copyright (c) 2016 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

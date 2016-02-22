@@ -1,10 +1,11 @@
 package Exception::Class;
-# git description: v1.38-8-gbef365d
 
-$Exception::Class::VERSION = '1.39';
 use 5.008001;
 
 use strict;
+use warnings;
+
+our $VERSION = '1.40';
 
 use Exception::Class::Base;
 use Scalar::Util qw(blessed);
@@ -56,7 +57,7 @@ MAKE_CLASSES:
 
         $class->_make_subclass(
             subclass => $subclass,
-            def      => $def || {},
+            def => $def || {},
         );
     }
 
@@ -152,7 +153,7 @@ EOPERL
 
         $code
             .= "sub Fields { return (\$_[0]->SUPER::Fields, "
-            . join( ", ", map { "'$_'" } @fields )
+            . join( ", ", map {"'$_'"} @fields )
             . ") }\n\n";
 
         foreach my $field (@fields) {
@@ -208,7 +209,7 @@ Exception::Class - A module that allows you to declare real exception classes in
 
 =head1 VERSION
 
-version 1.39
+version 1.40
 
 =head1 SYNOPSIS
 
@@ -257,7 +258,6 @@ version 1.39
   };
 
   # without Try::Tiny
-
   eval { ... };
   if ( my $e = Exception::Class->caught() ) { ... }
 
@@ -545,7 +545,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by David Rolsky.
+This software is copyright (c) 2016 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
