@@ -1,5 +1,5 @@
 package Class::MOP::MiniTrait;
-our $VERSION = '2.1604';
+our $VERSION = '2.1605';
 
 use strict;
 use warnings;
@@ -28,9 +28,9 @@ sub apply {
 }
 
 # We can't load this with use, since it may be loaded and used from Class::MOP
-# (via CMOP::Class, etc). However, if for some reason this module is loaded
+# (via Class::MOP::Class, etc). However, if for some reason this module is loaded
 # _without_ first loading Class::MOP we need to require Class::MOP so we can
-# use it and CMOP::Class.
+# use it and Class::MOP::Class.
 require Class::MOP;
 
 1;
@@ -49,7 +49,7 @@ Class::MOP::MiniTrait - Extremely limited trait application
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 DESCRIPTION
 
@@ -105,7 +105,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

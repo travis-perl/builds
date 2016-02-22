@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint::Union;
-our $VERSION = '2.1604';
+our $VERSION = '2.1605';
 
 use strict;
 use warnings;
@@ -208,7 +208,7 @@ Moose::Meta::TypeConstraint::Union - A union of Moose type constraints
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 DESCRIPTION
 
@@ -279,7 +279,7 @@ for the C<is_a_type_of> method.
 =head2 $constraint->is_subtype_of
 
 This returns true if all of the member type constraints return true
-for the C<is_a_subtype_of> method.
+for the C<is_subtype_of> method.
 
 =head2 $constraint->create_child_type(%options)
 
@@ -338,7 +338,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
