@@ -3,7 +3,7 @@ use warnings;
 package MooseX::Daemonize::Pid;
 # ABSTRACT: PID management for MooseX::Daemonize
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 use Moose;
 use Moose::Util::TypeConstraints qw(coerce from via);
@@ -39,14 +39,12 @@ MooseX::Daemonize::Pid - PID management for MooseX::Daemonize
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 DESCRIPTION
 
 This is a very basic Pid management object, it doesn't do all that
 much, and mostly just serves as a base class for L<MooseX::Daemonize::Pid::File>.
-
-=head1 NAME
 
 =head1 ATTRIBUTES
 
@@ -80,15 +78,16 @@ The C<meta()> method from L<Class::MOP::Class>
 
 =back
 
-=head1 DEPENDENCIES
+=head1 SUPPORT
 
-Obviously L<Moose>
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Daemonize>
+(or L<bug-MooseX-Daemonize@rt.cpan.org|mailto:bug-MooseX-Daemonize@rt.cpan.org>).
 
-=head1 BUGS AND LIMITATIONS
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
 
-Please report any bugs or feature requests to
-C<bug-MooseX-Daemonize@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHORS
 

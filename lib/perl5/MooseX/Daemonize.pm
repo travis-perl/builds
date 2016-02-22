@@ -1,9 +1,9 @@
 use strict;
 use warnings;
-package MooseX::Daemonize; # git description: v0.19-17-gf6822c0
+package MooseX::Daemonize; # git description: v0.20-8-g6d23389
 # ABSTRACT: Role for daemonizing your Moose based application
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 use Moose::Role;
 use MooseX::Types::Path::Class;
@@ -326,7 +326,7 @@ MooseX::Daemonize - Role for daemonizing your Moose based application
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 SYNOPSIS
 
@@ -576,12 +576,6 @@ L<Moose>, L<MooseX::Getopt>, L<MooseX::Types::Path::Class> and L<POSIX>
 
 Obviously this will not work on Windows.
 
-=head1 BUGS AND LIMITATIONS
-
-Please report any bugs or feature requests to
-C<bug-MooseX-Daemonize@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
 =head1 SEE ALSO
 
 L<Daemon::Control>, L<Proc::Daemon>, L<Daemon::Generic>
@@ -592,6 +586,17 @@ Mike Boyko, Matt S. Trout, Stevan Little, Brandon Black, Ash Berlin and the
 #moose denizens
 
 Some bug fixes sponsored by Takkle Inc.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Daemonize>
+(or L<bug-MooseX-Daemonize@rt.cpan.org|mailto:bug-MooseX-Daemonize@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHORS
 

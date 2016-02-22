@@ -3,7 +3,7 @@ use warnings;
 package Test::MooseX::Daemonize;
 # ABSTRACT: Tool to help test MooseX::Daemonize applications
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 # BEGIN CARGO CULTING
 use Sub::Exporter -setup => {
@@ -56,7 +56,8 @@ sub check_test_output {
     }
 }
 
-package Test::MooseX::Daemonize::Testable;
+package # hide from PAUSE
+    Test::MooseX::Daemonize::Testable;
 
 use Moose::Role;
 
@@ -96,7 +97,7 @@ Test::MooseX::Daemonize - Tool to help test MooseX::Daemonize applications
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 SYNOPSIS
 
@@ -130,7 +131,7 @@ success and not ok on failure.
 =item B<check_test_output ( $daemon )>
 
 This is expected to be used with a C<$daemon> which does the
-B<Test::MooseX::Daemonize::Testable> role (included in this package
+B<Test::MooseX::Daemonize::Testable> role (included in this package --
 see the source for more info). It will collect the test output
 from your daemon and apply it in the parent process by mucking
 around with L<Test::Builder> stuff, again, read the source for
@@ -138,15 +139,20 @@ more info. If we get time we will document this more thoroughly.
 
 =back
 
-=head1 BUGS AND LIMITATIONS
-
-Please report any bugs or feature requests to
-C<bug-MooseX-Daemonize@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
 =head1 SEE ALSO
 
 L<MooseX::Daemonize>
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Daemonize>
+(or L<bug-MooseX-Daemonize@rt.cpan.org|mailto:bug-MooseX-Daemonize@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHORS
 
