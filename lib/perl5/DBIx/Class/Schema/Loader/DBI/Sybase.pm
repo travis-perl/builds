@@ -9,7 +9,7 @@ use namespace::clean;
 
 use DBIx::Class::Schema::Loader::Table::Sybase ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 =head1 NAME
 
@@ -35,7 +35,7 @@ sub _rebless {
         if ($self->load_optional_class($subclass) && !$self->isa($subclass)) {
             bless $self, $subclass;
             $self->_rebless;
-      }
+        }
     }
 }
 
@@ -140,7 +140,7 @@ EOF
 }
 
 sub _tables_list {
-    my ($self, $opts) = @_;
+    my ($self) = @_;
 
     my @tables;
 
@@ -168,7 +168,7 @@ EOF
         }
     }
 
-    return $self->_filter_tables(\@tables, $opts);
+    return $self->_filter_tables(\@tables);
 }
 
 sub _uid {
@@ -215,7 +215,7 @@ sub _table_pk_info {
     local $self->dbh->{FetchHashKeyName} = 'NAME_lc';
 
     my $sth = $self->dbh->prepare(<<"EOF");
-sp_pkeys @{[ $self->dbh->quote($table->name) ]}, 
+sp_pkeys @{[ $self->dbh->quote($table->name) ]},
     @{[ $self->dbh->quote($table->schema) ]},
     @{[ $self->dbh->quote($db) ]}
 EOF
@@ -482,9 +482,9 @@ L<DBIx::Class::Schema::Loader::DBI::Sybase::Common>,
 L<DBIx::Class::Schema::Loader>, L<DBIx::Class::Schema::Loader::Base>,
 L<DBIx::Class::Schema::Loader::DBI>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

@@ -6,6 +6,7 @@ package DBD::SQLite::Constants;
 use strict;
 use warnings;
 use base 'Exporter';
+use DBD::SQLite;
 our @EXPORT_OK = (
     # authorizer_action_codes
     qw/
@@ -51,6 +52,11 @@ our @EXPORT_OK = (
       SQLITE_IGNORE
     /,
 
+    # compile_time_library_version_numbers
+    qw/
+      SQLITE_VERSION_NUMBER
+    /,
+
     # extended_result_codes
     qw/
       SQLITE_ABORT_ROLLBACK
@@ -73,6 +79,7 @@ our @EXPORT_OK = (
       SQLITE_CONSTRAINT_VTAB
       SQLITE_CORRUPT_VTAB
       SQLITE_IOERR_ACCESS
+      SQLITE_IOERR_AUTH
       SQLITE_IOERR_BLOCKED
       SQLITE_IOERR_CHECKRESERVEDLOCK
       SQLITE_IOERR_CLOSE
@@ -97,6 +104,7 @@ our @EXPORT_OK = (
       SQLITE_IOERR_SHORT_READ
       SQLITE_IOERR_TRUNCATE
       SQLITE_IOERR_UNLOCK
+      SQLITE_IOERR_VNODE
       SQLITE_IOERR_WRITE
       SQLITE_LOCKED_SHAREDCACHE
       SQLITE_NOTICE_RECOVER_ROLLBACK
@@ -239,6 +247,7 @@ our %EXPORT_TAGS = (
       SQLITE_INTERRUPT
       SQLITE_IOERR
       SQLITE_IOERR_ACCESS
+      SQLITE_IOERR_AUTH
       SQLITE_IOERR_BLOCKED
       SQLITE_IOERR_CHECKRESERVEDLOCK
       SQLITE_IOERR_CLOSE
@@ -263,6 +272,7 @@ our %EXPORT_TAGS = (
       SQLITE_IOERR_SHORT_READ
       SQLITE_IOERR_TRUNCATE
       SQLITE_IOERR_UNLOCK
+      SQLITE_IOERR_VNODE
       SQLITE_IOERR_WRITE
       SQLITE_LOCKED
       SQLITE_LOCKED_SHAREDCACHE
@@ -305,6 +315,7 @@ our %EXPORT_TAGS = (
       SQLITE_TOOBIG
       SQLITE_TRANSACTION
       SQLITE_UPDATE
+      SQLITE_VERSION_NUMBER
       SQLITE_WARNING
       SQLITE_WARNING_AUTOINDEX
     /],
@@ -351,6 +362,10 @@ our %EXPORT_TAGS = (
       SQLITE_IGNORE
     /],
 
+    compile_time_library_version_numbers => [qw/
+      SQLITE_VERSION_NUMBER
+    /],
+
     extended_result_codes => [qw/
       SQLITE_ABORT_ROLLBACK
       SQLITE_AUTH_USER
@@ -372,6 +387,7 @@ our %EXPORT_TAGS = (
       SQLITE_CONSTRAINT_VTAB
       SQLITE_CORRUPT_VTAB
       SQLITE_IOERR_ACCESS
+      SQLITE_IOERR_AUTH
       SQLITE_IOERR_BLOCKED
       SQLITE_IOERR_CHECKRESERVEDLOCK
       SQLITE_IOERR_CLOSE
@@ -396,6 +412,7 @@ our %EXPORT_TAGS = (
       SQLITE_IOERR_SHORT_READ
       SQLITE_IOERR_TRUNCATE
       SQLITE_IOERR_UNLOCK
+      SQLITE_IOERR_VNODE
       SQLITE_IOERR_WRITE
       SQLITE_LOCKED_SHAREDCACHE
       SQLITE_NOTICE_RECOVER_ROLLBACK
@@ -465,6 +482,9 @@ our %EXPORT_TAGS = (
     /],
 
 );
+$EXPORT_TAGS{version} = $EXPORT_TAGS{compile_time_library_version_numbers};
+$EXPORT_TAGS{file_open} = $EXPORT_TAGS{flags_for_file_open_operations};
+$EXPORT_TAGS{datatypes} = $EXPORT_TAGS{fundamental_datatypes};
 
 1;
 
@@ -482,7 +502,331 @@ DBD::SQLite::Constants
 
 =head1 DESCRIPTION
 
-You can import necessary SQLite constants from this module. Available tags are C<all>, C<authorizer_action_codes>, C<authorizer_return_codes>, C<extended_result_codes>, C<flags_for_file_open_operations>, C<function_flags>, C<fundamental_datatypes>, C<result_codes>. See L<http://sqlite.org/c3ref/constlist.html> for the complete list of constants.
+You can import necessary SQLite constants from this module. Available tags are C<all>, C<authorizer_action_codes>, C<authorizer_return_codes>, C<version> (C<compile_time_library_version_numbers>), C<extended_result_codes>, C<file_open> (C<flags_for_file_open_operations>), C<function_flags>, C<datatypes> (C<fundamental_datatypes>), C<result_codes>. See L<http://sqlite.org/c3ref/constlist.html> for the complete list of constants.
 
 This module does not export anything by default.
+
+=head1 CONSTANTS
+
+=head2 authorizer_action_codes
+
+=over 4
+
+=item SQLITE_CREATE_INDEX
+
+=item SQLITE_CREATE_TABLE
+
+=item SQLITE_CREATE_TEMP_INDEX
+
+=item SQLITE_CREATE_TEMP_TABLE
+
+=item SQLITE_CREATE_TEMP_TRIGGER
+
+=item SQLITE_CREATE_TEMP_VIEW
+
+=item SQLITE_CREATE_TRIGGER
+
+=item SQLITE_CREATE_VIEW
+
+=item SQLITE_DELETE
+
+=item SQLITE_DROP_INDEX
+
+=item SQLITE_DROP_TABLE
+
+=item SQLITE_DROP_TEMP_INDEX
+
+=item SQLITE_DROP_TEMP_TABLE
+
+=item SQLITE_DROP_TEMP_TRIGGER
+
+=item SQLITE_DROP_TEMP_VIEW
+
+=item SQLITE_DROP_TRIGGER
+
+=item SQLITE_DROP_VIEW
+
+=item SQLITE_INSERT
+
+=item SQLITE_PRAGMA
+
+=item SQLITE_READ
+
+=item SQLITE_SELECT
+
+=item SQLITE_TRANSACTION
+
+=item SQLITE_UPDATE
+
+=item SQLITE_ATTACH
+
+=item SQLITE_DETACH
+
+=item SQLITE_ALTER_TABLE
+
+=item SQLITE_REINDEX
+
+=item SQLITE_ANALYZE
+
+=item SQLITE_CREATE_VTABLE
+
+=item SQLITE_DROP_VTABLE
+
+=item SQLITE_FUNCTION
+
+=item SQLITE_COPY
+
+=item SQLITE_SAVEPOINT
+
+=item SQLITE_RECURSIVE
+
+=back
+
+=head2 authorizer_return_codes
+
+=over 4
+
+=item SQLITE_DENY
+
+=item SQLITE_IGNORE
+
+=back
+
+=head2 version (compile_time_library_version_numbers)
+
+=over 4
+
+=item SQLITE_VERSION_NUMBER
+
+=back
+
+=head2 extended_result_codes
+
+=over 4
+
+=item SQLITE_IOERR_LOCK
+
+=item SQLITE_IOERR_READ
+
+=item SQLITE_IOERR_SHORT_READ
+
+=item SQLITE_IOERR_WRITE
+
+=item SQLITE_IOERR_FSYNC
+
+=item SQLITE_IOERR_DIR_FSYNC
+
+=item SQLITE_IOERR_TRUNCATE
+
+=item SQLITE_IOERR_FSTAT
+
+=item SQLITE_IOERR_UNLOCK
+
+=item SQLITE_IOERR_RDLOCK
+
+=item SQLITE_IOERR_DELETE
+
+=item SQLITE_IOERR_BLOCKED
+
+=item SQLITE_IOERR_NOMEM
+
+=item SQLITE_IOERR_ACCESS
+
+=item SQLITE_IOERR_CHECKRESERVEDLOCK
+
+=item SQLITE_IOERR_CLOSE
+
+=item SQLITE_IOERR_DIR_CLOSE
+
+=item SQLITE_LOCKED_SHAREDCACHE
+
+=item SQLITE_IOERR_SHMOPEN
+
+=item SQLITE_IOERR_SHMSIZE
+
+=item SQLITE_IOERR_SHMLOCK
+
+=item SQLITE_BUSY_RECOVERY
+
+=item SQLITE_CANTOPEN_NOTEMPDIR
+
+=item SQLITE_IOERR_SHMMAP
+
+=item SQLITE_IOERR_SEEK
+
+=item SQLITE_CORRUPT_VTAB
+
+=item SQLITE_READONLY_RECOVERY
+
+=item SQLITE_READONLY_CANTLOCK
+
+=item SQLITE_ABORT_ROLLBACK
+
+=item SQLITE_CANTOPEN_ISDIR
+
+=item SQLITE_IOERR_DELETE_NOENT
+
+=item SQLITE_CANTOPEN_FULLPATH
+
+=item SQLITE_READONLY_ROLLBACK
+
+=item SQLITE_CONSTRAINT_CHECK
+
+=item SQLITE_CONSTRAINT_COMMITHOOK
+
+=item SQLITE_CONSTRAINT_FOREIGNKEY
+
+=item SQLITE_CONSTRAINT_FUNCTION
+
+=item SQLITE_CONSTRAINT_NOTNULL
+
+=item SQLITE_CONSTRAINT_PRIMARYKEY
+
+=item SQLITE_CONSTRAINT_TRIGGER
+
+=item SQLITE_CONSTRAINT_UNIQUE
+
+=item SQLITE_CONSTRAINT_VTAB
+
+=item SQLITE_IOERR_MMAP
+
+=item SQLITE_NOTICE_RECOVER_WAL
+
+=item SQLITE_NOTICE_RECOVER_ROLLBACK
+
+=item SQLITE_IOERR_GETTEMPPATH
+
+=item SQLITE_BUSY_SNAPSHOT
+
+=item SQLITE_WARNING_AUTOINDEX
+
+=item SQLITE_IOERR_CONVPATH
+
+=item SQLITE_CANTOPEN_CONVPATH
+
+=item SQLITE_CONSTRAINT_ROWID
+
+=item SQLITE_READONLY_DBMOVED
+
+=item SQLITE_AUTH_USER
+
+=item SQLITE_IOERR_VNODE
+
+=item SQLITE_IOERR_AUTH
+
+=back
+
+=head2 file_open (flags_for_file_open_operations)
+
+=over 4
+
+=item SQLITE_OPEN_READONLY
+
+=item SQLITE_OPEN_READWRITE
+
+=item SQLITE_OPEN_CREATE
+
+=item SQLITE_OPEN_NOMUTEX
+
+=item SQLITE_OPEN_FULLMUTEX
+
+=item SQLITE_OPEN_SHAREDCACHE
+
+=item SQLITE_OPEN_PRIVATECACHE
+
+=item SQLITE_OPEN_URI
+
+=item SQLITE_OPEN_MEMORY
+
+=back
+
+=head2 function_flags
+
+=over 4
+
+=item SQLITE_DETERMINISTIC
+
+=back
+
+=head2 datatypes (fundamental_datatypes)
+
+=over 4
+
+=item SQLITE_INTEGER
+
+=item SQLITE_FLOAT
+
+=item SQLITE_BLOB
+
+=item SQLITE_NULL
+
+=back
+
+=head2 result_codes
+
+=over 4
+
+=item SQLITE_OK
+
+=item SQLITE_ERROR
+
+=item SQLITE_INTERNAL
+
+=item SQLITE_PERM
+
+=item SQLITE_ABORT
+
+=item SQLITE_BUSY
+
+=item SQLITE_LOCKED
+
+=item SQLITE_NOMEM
+
+=item SQLITE_READONLY
+
+=item SQLITE_INTERRUPT
+
+=item SQLITE_IOERR
+
+=item SQLITE_CORRUPT
+
+=item SQLITE_NOTFOUND
+
+=item SQLITE_FULL
+
+=item SQLITE_CANTOPEN
+
+=item SQLITE_PROTOCOL
+
+=item SQLITE_EMPTY
+
+=item SQLITE_SCHEMA
+
+=item SQLITE_TOOBIG
+
+=item SQLITE_CONSTRAINT
+
+=item SQLITE_MISMATCH
+
+=item SQLITE_MISUSE
+
+=item SQLITE_NOLFS
+
+=item SQLITE_AUTH
+
+=item SQLITE_FORMAT
+
+=item SQLITE_RANGE
+
+=item SQLITE_NOTADB
+
+=item SQLITE_ROW
+
+=item SQLITE_DONE
+
+=item SQLITE_NOTICE
+
+=item SQLITE_WARNING
+
+=back
 

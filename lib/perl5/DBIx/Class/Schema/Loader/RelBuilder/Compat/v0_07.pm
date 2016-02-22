@@ -17,7 +17,7 @@ L<DBIx::Class::Schema::Loader::RelBuilder>.
 
 =cut
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 sub _strip_id_postfix {
     my ($self, $name) = @_;
@@ -27,9 +27,9 @@ sub _strip_id_postfix {
     return $name;
 }
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

@@ -2,7 +2,7 @@ use strict;
 
 package Path::Class::File;
 {
-  $Path::Class::File::VERSION = '0.35';
+  $Path::Class::File::VERSION = '0.36';
 }
 
 use Path::Class::Dir;
@@ -10,8 +10,6 @@ use parent qw(Path::Class::Entity);
 use Carp;
 
 use IO::File ();
-use Perl::OSType ();
-use File::Copy ();
 
 sub new {
   my $self = shift->SUPER::new;
@@ -62,7 +60,7 @@ sub volume {
 
 sub components {
   my $self = shift;
-  die "Arguments are not currently supported by File->components()" if @_;
+  croak "Arguments are not currently supported by File->components()" if @_;
   return ($self->dir->components, $self->basename);
 }
 
@@ -123,12 +121,17 @@ sub spew {
     if (ref($_[0]) eq 'ARRAY') {
         # Use old-school for loop to avoid copying.
         for (my $i = 0; $i < @{ $_[0] }; $i++) {
-            print $fh $_[0]->[$i];
+            print $fh $_[0]->[$i]
+                or croak "Can't write to $self: $!";
         }
     }
     else {
-        print $fh $_[0];
+        print $fh $_[0]
+            or croak "Can't write to $self: $!";
     }
+
+    close $fh
+        or croak "Can't write to $self: $!";
 
     return;
 }
@@ -159,19 +162,21 @@ sub remove {
 
 sub copy_to {
   my ($self, $dest) = @_;
-  if ( UNIVERSAL::isa($dest, Path::Class::File::) ) {
+  if ( eval{ $dest->isa("Path::Class::File")} ) { 
     $dest = $dest->stringify;
-    die "Can't copy to file $dest: it is a directory" if -d $dest;
-  } elsif ( UNIVERSAL::isa($dest, Path::Class::Dir::) ) {
+    croak "Can't copy to file $dest: it is a directory" if -d $dest;
+  } elsif ( eval{ $dest->isa("Path::Class::Dir") } ) {
     $dest = $dest->stringify;
-    die "Can't copy to directory $dest: it is a file" if -f $dest;
-    die "Can't copy to directory $dest: no such directory" unless -d $dest;
+    croak "Can't copy to directory $dest: it is a file" if -f $dest;
+    croak "Can't copy to directory $dest: no such directory" unless -d $dest;
   } elsif ( ref $dest ) {
-    die "Don't know how to copy files to objects of type '".ref($self)."'";
+    croak "Don't know how to copy files to objects of type '".ref($self)."'";
   }
 
+  require Perl::OSType;
   if ( !Perl::OSType::is_os_type('Unix') ) {
 
+      require File::Copy;
       return unless File::Copy::cp($self->stringify, "${dest}");
 
   } else {
@@ -185,6 +190,7 @@ sub copy_to {
 
 sub move_to {
   my ($self, $dest) = @_;
+  require File::Copy;
   if (File::Copy::move($self->stringify, "${dest}")) {
 
       my $new = $self->new($dest);
@@ -221,7 +227,7 @@ Path::Class::File - Objects representing files
 
 =head1 VERSION
 
-version 0.35
+version 0.36
 
 =head1 SYNOPSIS
 

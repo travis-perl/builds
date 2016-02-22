@@ -17,7 +17,7 @@ use String::ToIdentifier::EN::Unicode ();
 use Class::Unload ();
 use Class::Inspector ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 # Glossary:
 #
@@ -94,16 +94,18 @@ This method will return the generated relationships as a hashref keyed on the
 class names.  The values are arrayrefs of hashes containing method name and
 arguments, like so:
 
-  {
-      'Some::Source::Class' => [
-          { method => 'belongs_to', arguments => [ 'col1', 'Another::Source::Class' ],
-          { method => 'has_many', arguments => [ 'anothers', 'Yet::Another::Source::Class', 'col15' ],
-      ],
-      'Another::Source::Class' => [
-          # ...
-      ],
-      # ...
-  }
+    {
+        'Some::Source::Class' => [
+            { method => 'belongs_to', arguments => [
+              'col1', 'Another::Source::Class' ] },
+            { method => 'has_many', arguments => [
+              'anothers', 'Yet::Another::Source::Class', 'col15' ] },
+        ],
+        'Another::Source::Class' => [
+            # ...
+        ],
+        # ...
+    }
 
 =cut
 
@@ -967,9 +969,9 @@ sub _cleanup {
     $self->_temp_classes([]);
 }
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

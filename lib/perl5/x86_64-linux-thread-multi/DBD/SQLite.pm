@@ -5,7 +5,7 @@ use strict;
 use DBI   1.57 ();
 use DynaLoader ();
 
-our $VERSION = '1.48';
+our $VERSION = '1.50';
 our @ISA     = 'DynaLoader';
 
 # sqlite_version cache (set in the XS bootstrap)
@@ -208,11 +208,12 @@ sub do {
     my ($dbh, $statement, $attr, @bind_values) = @_;
 
     # shortcut
+    my $allow_multiple_statements = $dbh->FETCH('sqlite_allow_multiple_statements');
     if  (defined $statement && !defined $attr && !@bind_values) {
         # _do() (i.e. sqlite3_exec()) runs semicolon-separate SQL
         # statements, which is handy but insecure sometimes.
         # Use this only when it's safe or explicitly allowed.
-        if (index($statement, ';') == -1 or $dbh->FETCH('sqlite_allow_multiple_statements')) {
+        if (index($statement, ';') == -1 or $allow_multiple_statements) {
             return DBD::SQLite::db::_do($dbh, $statement);
         }
     }
@@ -225,7 +226,7 @@ sub do {
         $sth->execute(splice @copy, 0, $sth->{NUM_OF_PARAMS}) or return undef;
         $rows += $sth->rows;
         # XXX: not sure why but $dbh->{sqlite...} wouldn't work here
-        last unless $dbh->FETCH('sqlite_allow_multiple_statements');
+        last unless $allow_multiple_statements;
         $statement = $sth->{sqlite_unprepared_statements};
     }
 
@@ -265,8 +266,8 @@ sub _attached_database_list {
     my $dbh = shift;
     my @attached;
 
-    my $sth_databases = $dbh->prepare( 'PRAGMA database_list' );
-    $sth_databases->execute;
+    my $sth_databases = $dbh->prepare( 'PRAGMA database_list' ) or return;
+    $sth_databases->execute or return;
     while ( my $db_info = $sth_databases->fetchrow_hashref ) {
         push @attached, $db_info->{name} if $db_info->{seq} >= 2;
     }
@@ -410,15 +411,15 @@ sub primary_key_info {
             ($dbname eq 'temp') ? 'sqlite_temp_master' :
             $quoted_dbname.'.sqlite_master';
 
-        my $sth = $dbh->prepare("SELECT name, sql FROM $master_table WHERE type = ?");
-        $sth->execute("table");
+        my $sth = $dbh->prepare("SELECT name, sql FROM $master_table WHERE type = ?") or return;
+        $sth->execute("table") or return;
         while(my $row = $sth->fetchrow_hashref) {
             my $tbname = $row->{name};
             next if defined $table && $table ne '%' && $table ne $tbname;
 
             my $quoted_tbname = $dbh->quote_identifier($tbname);
-            my $t_sth = $dbh->prepare("PRAGMA $quoted_dbname.table_info($quoted_tbname)");
-            $t_sth->execute;
+            my $t_sth = $dbh->prepare("PRAGMA $quoted_dbname.table_info($quoted_tbname)") or return;
+            $t_sth->execute or return;
             my @pk;
             while(my $col = $t_sth->fetchrow_hashref) {
                 push @pk, $col->{name} if $col->{pk};
@@ -555,7 +556,7 @@ my @FOREIGN_KEY_INFO_SQL_CLI = qw(
 sub foreign_key_info {
     my ($dbh, $pk_catalog, $pk_schema, $pk_table, $fk_catalog, $fk_schema, $fk_table) = @_;
 
-    my $databases = $dbh->selectall_arrayref("PRAGMA database_list", {Slice => {}});
+    my $databases = $dbh->selectall_arrayref("PRAGMA database_list", {Slice => {}}) or return;
 
     my @fk_info;
     my %table_info;
@@ -569,14 +570,14 @@ sub foreign_key_info {
             ($dbname eq 'temp') ? 'sqlite_temp_master' :
             $quoted_dbname.'.sqlite_master';
 
-        my $tables = $dbh->selectall_arrayref("SELECT name FROM $master_table WHERE type = ?", undef, "table");
+        my $tables = $dbh->selectall_arrayref("SELECT name FROM $master_table WHERE type = ?", undef, "table") or return;
         for my $table (@$tables) {
             my $tbname = $table->[0];
             next if defined $fk_table && $fk_table ne '%' && $fk_table ne $tbname;
 
             my $quoted_tbname = $dbh->quote_identifier($tbname);
-            my $sth = $dbh->prepare("PRAGMA $quoted_dbname.foreign_key_list($quoted_tbname)");
-            $sth->execute;
+            my $sth = $dbh->prepare("PRAGMA $quoted_dbname.foreign_key_list($quoted_tbname)") or return;
+            $sth->execute or return;
             while(my $row = $sth->fetchrow_hashref) {
                 next if defined $pk_table && $pk_table ne '%' && $pk_table ne $row->{table};
 
@@ -584,8 +585,8 @@ sub foreign_key_info {
                     my $quoted_tb = $dbh->quote_identifier($row->{table});
                     for my $db (@$databases) {
                         my $quoted_db = $dbh->quote_identifier($db->{name});
-                        my $t_sth = $dbh->prepare("PRAGMA $quoted_db.table_info($quoted_tb)");
-                        $t_sth->execute;
+                        my $t_sth = $dbh->prepare("PRAGMA $quoted_db.table_info($quoted_tb)") or return;
+                        $t_sth->execute or return;
                         my $cols = {};
                         while(my $r = $t_sth->fetchrow_hashref) {
                             $cols->{$r->{name}} = $r->{pk};
@@ -655,7 +656,7 @@ my @STATISTICS_INFO_ODBC = (
 sub statistics_info {
     my ($dbh, $catalog, $schema, $table, $unique_only, $quick) = @_;
 
-    my $databases = $dbh->selectall_arrayref("PRAGMA database_list", {Slice => {}});
+    my $databases = $dbh->selectall_arrayref("PRAGMA database_list", {Slice => {}}) or return;
 
     my @statistics_info;
     for my $database (@$databases) {
@@ -668,22 +669,22 @@ sub statistics_info {
             ($dbname eq 'temp') ? 'sqlite_temp_master' :
             $quoted_dbname.'.sqlite_master';
 
-        my $tables = $dbh->selectall_arrayref("SELECT name FROM $master_table WHERE type = ?", undef, "table");
+        my $tables = $dbh->selectall_arrayref("SELECT name FROM $master_table WHERE type = ?", undef, "table") or return;
         for my $table_ref (@$tables) {
             my $tbname = $table_ref->[0];
             next if defined $table && $table ne '%' && $table ne $tbname;
 
             my $quoted_tbname = $dbh->quote_identifier($tbname);
-            my $sth = $dbh->prepare("PRAGMA $quoted_dbname.index_list($quoted_tbname)");
-            $sth->execute;
+            my $sth = $dbh->prepare("PRAGMA $quoted_dbname.index_list($quoted_tbname)") or return;
+            $sth->execute or return;
             while(my $row = $sth->fetchrow_hashref) {
 
                 next if defined $unique_only && $unique_only && $row->{unique};
                 my $quoted_idx = $dbh->quote_identifier($row->{name});
                 for my $db (@$databases) {
                     my $quoted_db = $dbh->quote_identifier($db->{name});
-                    my $i_sth = $dbh->prepare("PRAGMA $quoted_db.index_info($quoted_idx)");
-                    $i_sth->execute;
+                    my $i_sth = $dbh->prepare("PRAGMA $quoted_db.index_info($quoted_idx)") or return;
+                    $i_sth->execute or return;
                     my $cols = {};
                     while(my $info = $i_sth->fetchrow_hashref) {
                         push @statistics_info, {
@@ -834,8 +835,8 @@ END_SQL
     # Taken from Fey::Loader::SQLite
     my @cols;
     while ( my ($schema, $table) = $sth_tables->fetchrow_array ) {
-        my $sth_columns = $dbh->prepare(qq{PRAGMA "$schema".table_info("$table")});
-        $sth_columns->execute;
+        my $sth_columns = $dbh->prepare(qq{PRAGMA "$schema".table_info("$table")}) or return;
+        $sth_columns->execute or return;
 
         for ( my $position = 1; my $col_info = $sth_columns->fetchrow_hashref; $position++ ) {
             if ( defined $col_val ) {
@@ -973,6 +974,21 @@ on how to use DBI itself. The API works like every DBI module does.
 However, currently many statement attributes are not implemented or
 are limited by the typeless nature of the SQLite database.
 
+=head1 SQLITE VERSION
+
+DBD::SQLite is usually compiled with a bundled SQLite library
+(SQLite version S<3.10.2> as of this release) for consistency.
+However, a different version of SQLite may sometimes be used for
+some reasons like security, or some new experimental features.
+
+You can look at C<$DBD::SQLite::sqlite_version> (C<3.x.y> format) or
+C<$DBD::SQLite::sqlite_version_number> (C<3xxxyyy> format)
+to find which version of SQLite is actually used. You can also
+check C<DBD::SQLite::Constants::SQLITE_VERSION_NUMBER()>.
+
+You can also find how the library is compiled by calling
+C<DBD::SQLite::compile_options()> (see below).
+
 =head1 NOTABLE DIFFERENCES FROM OTHER DRIVERS
 
 =head2 Database Name Is A File Name
@@ -1010,17 +1026,25 @@ as well for finer control:
 
   my $dbh = DBI->connect("dbi:SQLite:uri=file:$path_to_dbfile?mode=rwc");
 
-Note that this is not for remote SQLite database connection. You only can
-connect to a local database.
+Note that this is not for remote SQLite database connection. You can
+only connect to a local database.
 
-You can also set sqlite_open_flags (only) when you connect to a database:
+=head2 Read-Only Database
 
-  use DBD::SQLite;
+You can set sqlite_open_flags (only) when you connect to a database:
+
+  use DBD::SQLite::Constants qw/:file_open/;
   my $dbh = DBI->connect("dbi:SQLite:$dbfile", undef, undef, {
-    sqlite_open_flags => DBD::SQLite::OPEN_READONLY,
+    sqlite_open_flags => SQLITE_OPEN_READONLY,
   });
 
 See L<http://www.sqlite.org/c3ref/open.html> for details.
+
+As of 1.49_05, you can also make a database read-only by setting
+C<ReadOnly> attribute to true (only) when you connect to a database.
+Actually you can set it after you connect, but in that case, it
+can't make the database read-only, and you'll see a warning (which
+you can hide by turning C<PrintWarn> off).
 
 =head2 DBD::SQLite And File::Temp
 
@@ -1217,39 +1241,6 @@ named) placeholders to avoid confusion.
   );
   $sth->execute(1, 2); 
 
-=head2 Foreign Keys
-
-B<BE PREPARED! WOLVES APPROACH!!>
-
-SQLite has started supporting foreign key constraints since 3.6.19
-(released on Oct 14, 2009; bundled in DBD::SQLite 1.26_05).
-To be exact, SQLite has long been able to parse a schema with foreign
-keys, but the constraints has not been enforced. Now you can issue
-a pragma actually to enable this feature and enforce the constraints.
-
-To do this, issue the following pragma (see below), preferably as
-soon as you connect to a database and you're not in a transaction:
-
-  $dbh->do("PRAGMA foreign_keys = ON");
-
-And you can explicitly disable the feature whenever you like by
-turning the pragma off:
-
-  $dbh->do("PRAGMA foreign_keys = OFF");
-
-As of this writing, this feature is disabled by default by the
-SQLite team, and by us, to secure backward compatibility, as
-this feature may break your applications, and actually broke
-some for us. If you have used a schema with foreign key constraints
-but haven't cared them much and supposed they're always ignored for
-SQLite, be prepared, and B<please do extensive testing to ensure
-that your applications will continue to work when the foreign keys
-support is enabled by default>. It is very likely that the SQLite
-team will turn it default-on in the future, and we plan to do it
-NO LATER THAN they do so.
-
-See L<http://www.sqlite.org/foreignkeys.html> for details.
-
 =head2 Pragma
 
 SQLite has a set of "Pragma"s to modify its operation or to query
@@ -1310,6 +1301,34 @@ in the worst case. See also L</"Performance"> section below.
 =back
 
 See L<http://www.sqlite.org/pragma.html> for more details.
+
+=head2 Foreign Keys
+
+SQLite has started supporting foreign key constraints since 3.6.19
+(released on Oct 14, 2009; bundled in DBD::SQLite 1.26_05).
+To be exact, SQLite has long been able to parse a schema with foreign
+keys, but the constraints has not been enforced. Now you can issue
+a C<foreign_keys> pragma to enable this feature and enforce the
+constraints, preferably as soon as you connect to a database and
+you're not in a transaction:
+
+  $dbh->do("PRAGMA foreign_keys = ON");
+
+And you can explicitly disable the feature whenever you like by
+turning the pragma off:
+
+  $dbh->do("PRAGMA foreign_keys = OFF");
+
+As of this writing, this feature is disabled by default by the
+SQLite team, and by us, to secure backward compatibility, as
+this feature may break your applications, and actually broke
+some for us. If you have used a schema with foreign key constraints
+but haven't cared them much and supposed they're always ignored for
+SQLite, be prepared, and please do extensive testing to ensure
+that your applications will continue to work when the foreign keys
+support is enabled by default.
+
+See L<http://www.sqlite.org/foreignkeys.html> for details.
 
 =head2 Transactions
 
@@ -1425,15 +1444,15 @@ statements (a C<dump>) to a statement handle (via C<prepare> or C<do>),
 L<DBD::SQLite> only processes the first statement, and discards the
 rest.
 
-Since 1.30_01, you can retrieve those ignored (unprepared) statements
-via C<< $sth->{sqlite_unprepared_statements} >>. It usually contains
-nothing but white spaces, but if you really care, you can check this
-attribute to see if there's anything left undone. Also, if you set
+If you need to process multiple statements at a time, set 
 a C<sqlite_allow_multiple_statements> attribute of a database handle
-to true when you connect to a database, C<do> method automatically
-checks the C<sqlite_unprepared_statements> attribute, and if it finds
-anything undone (even if what's left is just a single white space),
-it repeats the process again, to the end.
+to true when you connect to a database, and C<do> method takes care
+of the rest (since 1.30_01, and without creating DBI's statement
+handles internally since 1.47_01). If you do need to use C<prepare>
+or C<prepare_cached> (which I don't recommend in this case, because
+typically there's no placeholder nor reusable part in a dump),
+you can look at << $sth->{sqlite_unprepared_statements} >> to retrieve
+what's left, though it usually contains nothing but white spaces.
 
 =head2 Performance
 
@@ -2151,6 +2170,28 @@ See also L<DBI::Profile> for better profiling options.
 
 is for internal use only.
 
+=head2 $dbh->sqlite_db_status()
+
+Returns a hash reference that holds a set of status information of database connection such as cache usage. See L<http://www.sqlite.org/c3ref/c_dbstatus_options.html> for details. You may also pass 0 as an argument to reset the status.
+
+=head2 $sth->sqlite_st_status()
+
+Returns a hash reference that holds a set of status information of SQLite statement handle such as full table scan count. See L<http://www.sqlite.org/c3ref/c_stmtstatus_counter.html> for details. Statement status only holds the current value.
+
+  my $status = $sth->sqlite_st_status();
+  my $cur = $status->{fullscan_step};
+
+You may also pass 0 as an argument to reset the status.
+
+=head2 $dbh->sqlite_create_module()
+
+Registers a name for a I<virtual table module>. Module names must be
+registered before creating a new virtual table using the module and
+before using a preexisting virtual table for the module.
+Virtual tables are explained in L<DBD::SQLite::VirtualTable>.
+
+=head1 DRIVER FUNCTIONS
+
 =head2 DBD::SQLite::compile_options()
 
 Returns an array of compile options (available since SQLite 3.6.23,
@@ -2167,25 +2208,13 @@ Returns a hash reference that holds a set of status information of SQLite runtim
 
 You may also pass 0 as an argument to reset the status.
 
-=head2 $dbh->sqlite_db_status()
+=head2 DBD::SQLite::strlike($pattern, $string, $escape_char), DBD::SQLite::strglob($pattern, $string)
 
-Returns a hash reference that holds a set of status information of database connection such as cache usage. See L<http://www.sqlite.org/c3ref/c_dbstatus_options.html> for details. You may also pass 0 as an argument to reset the status.
-
-=head2 $sth->sqlite_st_status()
-
-Returns a hash reference that holds a set of status information of SQLite statement handle such as full table scan count. See L<http://www.sqlite.org/c3ref/c_stmtstatus_counter.html> for details. Statement status only holds the current value.
-
-  my $status = $sth->sqlite_st_status();
-  my $cur = $status->{fullscan_step};
-
-You may also pass 0 as an argument to reset the status.
-
-=head2 $sth->sqlite_create_module()
-
-Registers a name for a I<virtual table module>. Module names must be
-registered before creating a new virtual table using the module and
-before using a preexisting virtual table for the module.
-Virtual tables are explained in L<DBD::SQLite::VirtualTable>.
+As of 1.49_05 (SQLite 3.10.0), you can use these two functions to
+see if a string matches a pattern. These may be useful when you
+create a virtual table or a custom function.
+See L<http://sqlite.org/c3ref/strlike.html> and
+L<http://sqlite.org/c3ref/strglob.html> for details.
 
 =head1 DRIVER CONSTANTS
 

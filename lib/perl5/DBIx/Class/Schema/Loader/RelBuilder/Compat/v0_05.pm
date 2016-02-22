@@ -8,7 +8,7 @@ use DBIx::Class::Schema::Loader::Utils 'array_eq';
 use namespace::clean;
 use Lingua::EN::Inflect::Number ();
 
-our $VERSION = '0.07043';
+our $VERSION = '0.07045';
 
 sub _to_PL {
     my ($self, $name) = @_;
@@ -74,9 +74,9 @@ compatibility with DBIx::Class::Schema::Loader version 0.05003
 See L<DBIx::Class::Schema::Loader::Base/naming> and
 L<DBIx::Class::Schema::Loader::RelBuilder>.
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-See L<DBIx::Class::Schema::Loader/AUTHOR> and L<DBIx::Class::Schema::Loader/CONTRIBUTORS>.
+See L<DBIx::Class::Schema::Loader/AUTHORS>.
 
 =head1 LICENSE
 

@@ -226,7 +226,7 @@ contribution, but deserve acknowledgement just the same. Time and time again
 the seemingly most insignificant questions and suggestions have been shown
 to catalyze monumental improvements in consistency, accuracy and performance.
 
-List of the awesome contributors who made DBIC v0.082820 possible
+List of the awesome contributors who made DBIC v0.082821 possible
 
 =encoding utf8
 
@@ -354,6 +354,8 @@ B<frew>: Arthur Axel "fREW" Schmidt <frioux@gmail.com>
 
 B<gbjk>: Gareth Kirwan <gbjk@thermeon.com>
 
+B<geotheve>: Georgina Thevenet <geotheve@gmail.com>
+
 B<Getty>: Torsten Raudssus <torsten@raudss.us>
 
 B<goraxe>: Gordon Irving <goraxe@cpan.org>
@@ -419,6 +421,8 @@ B<jshirley>: J. Shirley <jshirley@gmail.com>
 B<kaare>: Kaare Rasmussen
 
 B<kd>: Kieren Diment <diment@gmail.com>
+
+B<kentnl>: Kent Fredric <kentnl@cpan.org>
 
 B<kkane>: Kevin L. Kane <kevin.kane@gmail.com>
 

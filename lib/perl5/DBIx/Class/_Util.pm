@@ -4,7 +4,11 @@ package # hide from PAUSE
 use warnings;
 use strict;
 
-use constant SPURIOUS_VERSION_CHECK_WARNINGS => ($] < 5.010 ? 1 : 0);
+use constant SPURIOUS_VERSION_CHECK_WARNINGS => (
+  ( $ENV{DBICTEST_VERSION_WARNS_INDISCRIMINATELY} or $] < 5.010 )
+    ? 1
+    : 0
+);
 
 BEGIN {
   package # hide from pause
@@ -21,8 +25,7 @@ BEGIN {
 
     HAS_ITHREADS => $Config{useithreads} ? 1 : 0,
 
-    # ::Runmode would only be loaded by DBICTest, which in turn implies t/
-    DBICTEST => eval { DBICTest::RunMode->is_author } ? 1 : 0,
+    DBICTEST => $INC{"DBICTest/Util.pm"} ? 1 : 0,
 
     # During 5.13 dev cycle HELEMs started to leak on copy
     # add an escape for these perls ON SMOKERS - a user will still get death
