@@ -13,7 +13,7 @@ Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing - Demonstrate
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 SYNOPSIS
 
@@ -167,7 +167,7 @@ method, which accepts named parameters.
   );
 
 And as with the first recipe, a more in-depth example can be found in
-the F<t/recipes/moose_cookbook_basics_recipe2.t> test file.
+the F<t/recipes/basics_bankaccount_methodmodifiersandsubclassing.t> test file.
 
 =head1 CONCLUSION
 
@@ -376,7 +376,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

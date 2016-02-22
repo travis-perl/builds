@@ -13,7 +13,7 @@ Moose::Manual::Attributes - Object attributes with Moose
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 INTRODUCTION
 
@@ -555,8 +555,8 @@ as-is. However, you can change most aspects of the inherited attribute in the
 child class. You cannot change any of its associated method names (reader,
 writer, predicate, etc).
 
-To override an attribute, you simply prepend its name with a plus sign
-(C<+>):
+To change some aspects of an attribute, you simply prepend a plus sign (C<+>)
+to its name:
 
   package LazyPerson;
 
@@ -689,7 +689,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

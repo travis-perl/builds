@@ -13,7 +13,7 @@ Moose::Cookbook::Basics::BinaryTree_AttributeFeatures - Demonstrates various att
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 SYNOPSIS
 
@@ -192,7 +192,7 @@ ensure that is has the correct value for its C<parent> attribute.
 
 As with all the other recipes, B<BinaryTree> can be used just like any
 other Perl 5 class. A more detailed example of its usage can be found
-in F<t/recipes/moose_cookbook_basics_recipe3.t>.
+in F<t/recipes/basics_binarytree_attributefeatures.t>.
 
 =head1 CONCLUSION
 
@@ -389,7 +389,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
