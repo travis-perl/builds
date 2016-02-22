@@ -1,26 +1,4 @@
-=head2 Fri Jan 22 00:11:25 2016: C<Module> L<IO::HTML|IO::HTML>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.001>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Jan 22 00:11:25 2016: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
+=head2 Mon Feb 22 00:09:48 2016: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
 
 =over 4
 
@@ -42,29 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:26 2016: C<Module> L<URI|URI>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.71>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Jan 22 00:11:27 2016: C<Module> L<Encode::Locale|Encode::Locale>
+=head2 Mon Feb 22 00:09:48 2016: C<Module> L<Encode::Locale|Encode::Locale>
 
 =over 4
 
@@ -86,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:28 2016: C<Module> L<HTTP::Date|HTTP::Date>
+=head2 Mon Feb 22 00:09:49 2016: C<Module> L<HTTP::Date|HTTP::Date>
 
 =over 4
 
@@ -108,7 +64,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:28 2016: C<Module> L<HTTP::Message|HTTP::Message>
+=head2 Mon Feb 22 00:09:49 2016: C<Module> L<URI|URI>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.71>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Feb 22 00:09:50 2016: C<Module> L<IO::HTML|IO::HTML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.001>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Feb 22 00:09:50 2016: C<Module> L<HTTP::Message|HTTP::Message>
 
 =over 4
 
@@ -130,73 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:29 2016: C<Module> L<HTML::Tagset|HTML::Tagset>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.20>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Jan 22 00:11:30 2016: C<Module> L<HTML::Parser|HTML::Parser>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.72>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Jan 22 00:11:31 2016: C<Module> L<WWW::RobotRules|WWW::RobotRules>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 6.02>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Jan 22 00:11:32 2016: C<Module> L<HTTP::Cookies|HTTP::Cookies>
+=head2 Mon Feb 22 00:09:51 2016: C<Module> L<HTTP::Daemon|HTTP::Daemon>
 
 =over 4
 
@@ -218,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:32 2016: C<Module> L<HTTP::Daemon|HTTP::Daemon>
+=head2 Mon Feb 22 00:09:51 2016: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
 
 =over 4
 
@@ -240,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:33 2016: C<Module> L<File::Listing|File::Listing>
+=head2 Mon Feb 22 00:09:52 2016: C<Module> L<File::Listing|File::Listing>
 
 =over 4
 
@@ -262,29 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:34 2016: C<Module> L<Net::HTTP|Net::HTTP>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 6.09>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Jan 22 00:11:35 2016: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
+=head2 Mon Feb 22 00:09:52 2016: C<Module> L<HTTP::Cookies|HTTP::Cookies>
 
 =over 4
 
@@ -306,7 +218,95 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:35 2016: C<Module> L<LWP|LWP>
+=head2 Mon Feb 22 00:09:53 2016: C<Module> L<WWW::RobotRules|WWW::RobotRules>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.02>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Feb 22 00:09:53 2016: C<Module> L<Net::HTTP|Net::HTTP>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.09>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Feb 22 00:09:54 2016: C<Module> L<HTML::Tagset|HTML::Tagset>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.20>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Feb 22 00:09:55 2016: C<Module> L<HTML::Parser|HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.72>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Feb 22 00:09:56 2016: C<Module> L<LWP|LWP>
 
 =over 4
 
@@ -328,7 +328,7 @@ C<EXE_FILES: bin/lwp-request bin/lwp-mirror bin/lwp-download bin/lwp-dump>
 
 =back
 
-=head2 Fri Jan 22 00:11:37 2016: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Mon Feb 22 00:09:57 2016: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -350,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:47 2016: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Mon Feb 22 00:10:04 2016: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -372,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:47 2016: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Mon Feb 22 00:10:05 2016: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -386,7 +386,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.022>
+C<VERSION: 2.024>
 
 =item *
 
@@ -394,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Jan 22 00:11:47 2016: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
+=head2 Mon Feb 22 00:10:05 2016: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
 
 =over 4
 

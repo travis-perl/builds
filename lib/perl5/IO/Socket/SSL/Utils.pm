@@ -57,11 +57,11 @@ sub PEM_file2key {
     my $file = shift;
     my $bio = Net::SSLeay::BIO_new_file($file,'r') or
 	croak "cannot read $file: $!";
-    my $cert = Net::SSLeay::PEM_read_bio_PrivateKey($bio);
+    my $key = Net::SSLeay::PEM_read_bio_PrivateKey($bio);
     Net::SSLeay::BIO_free($bio);
-    $cert or croak "cannot parse $file as PEM private key: ".
+    $key or croak "cannot parse $file as PEM private key: ".
 	Net::SSLeay::ERR_error_string(Net::SSLeay::ERR_get_error());
-    return $cert;
+    return $key;
 }
 
 sub PEM_key2file {
@@ -76,11 +76,11 @@ sub PEM_string2key {
     my $string = shift;
     my $bio = Net::SSLeay::BIO_new( Net::SSLeay::BIO_s_mem());
     Net::SSLeay::BIO_write($bio,$string);
-    my $cert = Net::SSLeay::PEM_read_bio_PrivateKey($bio);
+    my $key = Net::SSLeay::PEM_read_bio_PrivateKey($bio);
     Net::SSLeay::BIO_free($bio);
-    $cert or croak "cannot parse string as PEM private key: ".
+    $key or croak "cannot parse string as PEM private key: ".
 	Net::SSLeay::ERR_error_string(Net::SSLeay::ERR_get_error());
-    return $cert;
+    return $key;
 }
 
 sub PEM_key2string {
@@ -259,9 +259,11 @@ sub CERT_create {
 	commonName => 'IO::Socket::SSL Test'
     };
     while ( my ($k,$v) = each %$subj ) {
-	# 0x1000 = MBSTRING_UTF8
-	Net::SSLeay::X509_NAME_add_entry_by_txt($subj_e,
-	    $k, 0x1000, $v, -1, 0)
+	# Not everything we get is nice - try with MBSTRING_UTF8 first and if it
+	# fails try V_ASN1_T61STRING and finally V_ASN1_OCTET_STRING
+	Net::SSLeay::X509_NAME_add_entry_by_txt($subj_e,$k,0x1000,$v,-1,0)
+	    or Net::SSLeay::X509_NAME_add_entry_by_txt($subj_e,$k,20,$v,-1,0)
+	    or Net::SSLeay::X509_NAME_add_entry_by_txt($subj_e,$k,4,$v,-1,0)
 	    or croak("failed to add entry for $k - ".
 	    Net::SSLeay::ERR_error_string(Net::SSLeay::ERR_get_error()));
     }

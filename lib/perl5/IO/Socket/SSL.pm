@@ -13,7 +13,7 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '2.022';
+our $VERSION = '2.024';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
@@ -523,7 +523,14 @@ sub configure {
 
     $self->configure_SSL($arg_hash) || return;
 
-    $arg_hash->{$family_key} ||= $arg_hash->{Domain} || $arg_hash->{Family};
+    if ($arg_hash->{$family_key} ||= $arg_hash->{Domain} || $arg_hash->{Family}) {
+	# Hack to work around the problem that IO::Socket::IP defaults to
+	# AI_ADDRCONFIG which creates problems if we have only the loopback
+	# interface. If we already know the family this flag is more harmful
+	# then useful.
+	$arg_hash->{GetAddrInfoFlags} = 0 if $IOCLASS eq 'IO::Socket::IP'
+		&& ! defined $arg_hash->{GetAddrInfoFlags};
+    }
     return $self->_internal_error("@ISA configuration failed",0)
 	if ! $self->SUPER::configure($arg_hash);
 
@@ -1300,6 +1307,11 @@ sub stop_SSL {
 		    $status & SSL_RECEIVED_SHUTDOWN
 			|| $stop_args->{SSL_fast_shutdown}) {
 		    # shutdown complete
+		    last;
+		}
+		if ((${*$self}{'_SSL_opened'}||0) <= 0) {
+		    # not really open, thus don't expect shutdown to return
+		    # something meaningful
 		    last;
 		}
 
