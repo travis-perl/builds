@@ -1,7 +1,7 @@
 package Method::Generate::Accessor;
 
 use Moo::_strictures;
-use Moo::_Utils;
+use Moo::_Utils qw(_maybe_load_module _install_coderef);
 use Moo::Object ();
 our @ISA = qw(Moo::Object);
 use Sub::Quote qw(quote_sub quoted_from_sub quotify);
@@ -342,36 +342,34 @@ sub _generate_simple_get {
 
 sub _generate_set {
   my ($self, $name, $spec) = @_;
+  my ($me, $source) = ('$_[0]', '$_[1]');
   if ($self->is_simple_set($name, $spec)) {
-    $self->_generate_simple_set('$_[0]', $name, $spec, '$_[1]');
-  } else {
-    my ($coerce, $trigger, $isa_check) = @{$spec}{qw(coerce trigger isa)};
-    my $value_store = '$_[0]';
-    my $code;
-    if ($coerce) {
-      $value_store = '$value';
-      $code = "do { my (\$self, \$value) = \@_;\n"
-        ."        \$value = "
-        .$self->_generate_coerce($name, $value_store, $coerce).";\n";
-    }
-    else {
-      $code = "do { my \$self = shift;\n";
-    }
-    if ($isa_check) {
-      $code .=
-        "        ".$self->_generate_isa_check($name, $value_store, $isa_check).";\n";
-    }
-    my $simple = $self->_generate_simple_set('$self', $name, $spec, $value_store);
-    if ($trigger) {
-      my $fire = $self->_generate_trigger($name, '$self', $value_store, $trigger);
-      $code .=
-        "        ".$simple.";\n        ".$fire.";\n"
-        ."        $value_store;\n";
-    } else {
-      $code .= "        ".$simple.";\n";
-    }
-    $code .= "      }";
-    $code;
+    return $self->_generate_simple_set($me, $name, $spec, $source);
+  }
+
+  my ($coerce, $trigger, $isa_check) = @{$spec}{qw(coerce trigger isa)};
+  if ($coerce) {
+    $source = $self->_generate_coerce($name, $source, $coerce);
+  }
+  if ($isa_check) {
+    'scalar do { my $value = '.$source.";\n"
+    .'  ('.$self->_generate_isa_check($name, '$value', $isa_check)."),\n"
+    .'  ('.$self->_generate_simple_set($me, $name, $spec, '$value')."),\n"
+    .($trigger
+      ? '('.$self->_generate_trigger($name, $me, '$value', $trigger)."),\n"
+      : '')
+    .'  ('.$self->_generate_simple_get($me, $name, $spec)."),\n"
+    ."}";
+  }
+  elsif ($trigger) {
+    my $set = $self->_generate_simple_set($me, $name, $spec, $source);
+    "scalar (\n"
+    . '  ('.$self->_generate_trigger($name, $me, "($set)", $trigger)."),\n"
+    . '  ('.$self->_generate_simple_get($me, $name, $spec)."),\n"
+    . ")";
+  }
+  else {
+    '('.$self->_generate_simple_set($me, $name, $spec, $source).')';
   }
 }
 
@@ -427,24 +425,18 @@ sub _wrap_attr_exception {
   .'    name     => '.quotify($name).",\n"
   .'    step     => '.quotify($step).",\n"
   ."  };\n"
-  .($want_return ? '  my $_return;'."\n" : '')
-  .'  my $_error;'."\n"
-  ."  {\n"
-  .'    my $_old_error = $@;'."\n"
-  ."    if (!eval {\n"
-  .'      $@ = $_old_error;'."\n"
-  .($want_return ? '      $_return ='."\n" : '')
-  .'      '.$code.";\n"
-  ."      1;\n"
-  ."    }) {\n"
-  .'      $_error = $@;'."\n"
-  .'      if (!ref $_error) {'."\n"
-  .'        $_error = '.$prefix.'.$_error;'."\n"
-  ."      }\n"
-  ."    }\n"
-  .'    $@ = $_old_error;'."\n"
-  ."  }\n"
-  .'  die $_error if $_error;'."\n"
+  .($want_return ? '  (my $_return),'."\n" : '')
+  .'  (my $_error), (my $_old_error = $@);'."\n"
+  ."  (eval {\n"
+  .'    ($@ = $_old_error),'."\n"
+  .'    ('
+  .($want_return ? '$_return ='."\n" : '')
+  .$code."),\n"
+  ."    1\n"
+  ."  } or\n"
+  .'    $_error = ref $@ ? $@ : '.$prefix.'.$@);'."\n"
+  .'  ($@ = $_old_error),'."\n"
+  .'  (defined $_error and die $_error);'."\n"
   .($want_return ? '  $_return;'."\n" : '')
   ."}\n"
 }
@@ -499,68 +491,45 @@ sub generate_populate_set {
 
 sub _generate_populate_set {
   my ($self, $me, $name, $spec, $source, $test, $init_arg) = @_;
-  if ($self->has_eager_default($name, $spec)) {
-    my $get_indent = ' ' x ($spec->{isa} ? 6 : 4);
-    my $get_default = $self->_generate_get_default(
-                        '$new', $name, $spec
-                      );
-    my $get_value =
-      defined($spec->{init_arg})
-        ? "(\n${get_indent}  ${test}\n"
-            ."${get_indent}   ? ${source}\n${get_indent}   : "
+
+  my $has_default = $self->has_eager_default($name, $spec);
+  if (!($has_default || $test)) {
+    return '';
+  }
+  if ($has_default) {
+    my $get_default = $self->_generate_get_default($me, $name, $spec);
+    $source =
+      $test
+        ? "(\n  ${test}\n"
+            ."   ? ${source}\n   : "
             .$get_default
-            ."\n${get_indent})"
+            .")"
         : $get_default;
-    if ($spec->{coerce}) {
-      $get_value = $self->_generate_coerce(
-        $name, $get_value,
-        $spec->{coerce}, $init_arg
-      )
-    }
-    ($spec->{isa}
-      ? "    {\n      my \$value = ".$get_value.";\n      "
-        .$self->_generate_isa_check(
-          $name, '$value', $spec->{isa}, $init_arg
-        ).";\n"
-        .'      '.$self->_generate_simple_set($me, $name, $spec, '$value').";\n"
-        ."    }\n"
-      : '    '.$self->_generate_simple_set($me, $name, $spec, $get_value).";\n"
+  }
+  if ($spec->{coerce}) {
+    $source = $self->_generate_coerce(
+      $name, $source,
+      $spec->{coerce}, $init_arg
     )
-    .($spec->{trigger}
-      ? '    '
-        .$self->_generate_trigger(
-          $name, $me, $self->_generate_simple_get($me, $name, $spec),
-          $spec->{trigger}
-        )." if ${test};\n"
-      : ''
-    );
-  } else {
-    "    if (${test}) {\n"
-      .($spec->{coerce}
-        ? "      $source = "
-          .$self->_generate_coerce(
-            $name, $source,
-            $spec->{coerce}, $init_arg
-          ).";\n"
-        : ""
-      )
-      .($spec->{isa}
-        ? "      "
-          .$self->_generate_isa_check(
-            $name, $source, $spec->{isa}, $init_arg
-          ).";\n"
-        : ""
-      )
-      ."      ".$self->_generate_simple_set($me, $name, $spec, $source).";\n"
-      .($spec->{trigger}
-        ? "      "
-          .$self->_generate_trigger(
-            $name, $me, $self->_generate_simple_get($me, $name, $spec),
-            $spec->{trigger}
-          ).";\n"
-        : ""
-      )
-      ."    }\n";
+  }
+  if ($spec->{isa}) {
+    $source = 'scalar do { my $value = '.$source.";\n"
+    .'  ('.$self->_generate_isa_check(
+        $name, '$value', $spec->{isa}, $init_arg
+      )."),\n"
+    ."  \$value\n"
+    ."}\n";
+  }
+  my $set = $self->_generate_simple_set($me, $name, $spec, $source);
+  my $trigger = $spec->{trigger} ? $self->_generate_trigger(
+    $name, $me, $self->_generate_simple_get($me, $name, $spec),
+    $spec->{trigger}
+  ) : undef;
+  if ($has_default) {
+    "($set)," . ($trigger ? "($test and $trigger)," : '')
+  }
+  else {
+    "($test and ($set)" . ($trigger ? ", ($trigger)" : '') . "),";
   }
 }
 

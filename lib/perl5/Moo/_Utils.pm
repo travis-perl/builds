@@ -5,17 +5,22 @@ no warnings 'once'; # guard against -w
 sub _getglob { \*{$_[0]} }
 sub _getstash { \%{"$_[0]::"} }
 
-use constant lt_5_8_3 => ( $] < 5.008003 or $ENV{MOO_TEST_PRE_583} ) ? 1 : 0;
-use constant can_haz_subutil => (
-    $INC{"Sub/Util.pm"}
-    || ( !$INC{"Sub/Name.pm"} && eval { require Sub::Util } )
-  ) && defined &Sub::Util::set_subname;
-use constant can_haz_subname => (
-    $INC{"Sub/Name.pm"}
-    || ( !$INC{"Sub/Util.pm"} && eval { require Sub::Name } )
-  ) && defined &Sub::Name::subname;
-
 use Moo::_strictures;
+
+BEGIN {
+  *lt_5_8_3 = ( $] < 5.008003 or $ENV{MOO_TEST_PRE_583} ) ? sub(){1} : sub(){0};
+  my ($su, $sn);
+  $su = $INC{'Sub/Util.pm'} && defined &Sub::Util::set_subname
+    or $sn = $INC{'Sub/Name.pm'}
+    or $su = eval { require Sub::Util; } && defined &Sub::Util::set_subname
+    or $sn = eval { require Sub::Name; };
+
+  *_subname = $su ? \&Sub::Util::set_subname
+            : $sn ? \&Sub::Name::subname
+            : sub { $_[1] };
+  *_CAN_SUBNAME = ($su || $sn) ? sub(){1} : sub(){0};
+}
+
 use Module::Runtime qw(use_package_optimistically module_notional_filename);
 
 use Devel::GlobalDestruction ();
@@ -25,7 +30,7 @@ use Config;
 
 our @EXPORT = qw(
     _getglob _install_modifier _load_module _maybe_load_module
-    _get_linear_isa _getstash _install_coderef _name_coderef
+    _getstash _install_coderef _name_coderef
     _unimport_coderefs _in_global_destruction _set_loaded
 );
 
@@ -40,6 +45,7 @@ sub _install_modifier {
     Sub::Defer::undefer_sub($to_modify);
   }
 
+  require Class::Method::Modifiers;
   Class::Method::Modifiers::install_modifier(@_);
 }
 
@@ -80,10 +86,6 @@ sub _set_loaded {
   $INC{Module::Runtime::module_notional_filename($_[0])} ||= $_[1];
 }
 
-sub _get_linear_isa {
-  return mro::get_linear_isa($_[0]);
-}
-
 sub _install_coderef {
   my ($glob, $code) = (_getglob($_[0]), _name_coderef(@_));
   no warnings 'redefine';
@@ -100,8 +102,7 @@ sub _install_coderef {
 
 sub _name_coderef {
   shift if @_ > 2; # three args is (target, name, sub)
-  can_haz_subutil ? Sub::Util::set_subname(@_) :
-    can_haz_subname ? Sub::Name::subname(@_) : $_[1];
+  _CAN_SUBNAME ? _subname(@_) : $_[1];
 }
 
 sub _unimport_coderefs {
