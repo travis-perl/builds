@@ -1,1 +1,1 @@
-{"pathname":"B/BP/BPOWERS/Memoize-ExpireLRU-0.55.tar.gz","version":"0.55","target":"Memoize::ExpireLRU","provides":{"Memoize::ExpireLRU":{"file":"ExpireLRU.pm","version":"0.55"}},"name":"Memoize::ExpireLRU","dist":"Memoize-ExpireLRU-0.55"}
+{"provides":{"Memoize::ExpireLRU":{"file":"ExpireLRU.pm","version":"0.55"}},"dist":"Memoize-ExpireLRU-0.55","version":"0.55","target":"Memoize::ExpireLRU","pathname":"B/BP/BPOWERS/Memoize-ExpireLRU-0.55.tar.gz","name":"Memoize::ExpireLRU"}
