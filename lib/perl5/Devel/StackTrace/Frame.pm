@@ -1,10 +1,13 @@
 package Devel::StackTrace::Frame;
-$Devel::StackTrace::Frame::VERSION = '2.00';
+
 use strict;
 use warnings;
 
+our $VERSION = '2.01';
+
 # Create accessor routines
 BEGIN {
+    ## no critic (TestingAndDebugging::ProhibitNoStrict)
     no strict 'refs';
     foreach my $f (
         qw( package filename line subroutine hasargs
@@ -94,15 +97,23 @@ sub as_string {
             for (@a) {
 
                 # set args to the string "undef" if undefined
-                $_ = "undef", next unless defined $_;
+                unless ( defined $_ ) {
+                    $_ = 'undef';
+                    next;
+                }
 
                 # hack!
+                ## no critic (Subroutines::ProtectPrivateSubs)
                 $_ = $self->Devel::StackTrace::_ref_to_string($_)
                     if ref $_;
+                ## use critic;
 
+                ## no critic (Variables::RequireInitializationForLocalVars)
                 local $SIG{__DIE__};
                 local $@;
+                ## use critic;
 
+                ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
                 eval {
                     my $max_arg_length
                         = exists $p->{max_arg_length}
@@ -111,6 +122,7 @@ sub as_string {
 
                     if ( $max_arg_length
                         && length $_ > $max_arg_length ) {
+                        ## no critic (BuiltinFunctions::ProhibitLvalueSubstr)
                         substr( $_, $max_arg_length ) = '...';
                     }
 
@@ -123,6 +135,7 @@ sub as_string {
                     s/([\200-\377])/sprintf("M-%c",ord($1)&0177)/eg;
                     s/([\0-\37\177])/sprintf("^%c",ord($1)^64)/eg;
                 };
+                ## use critic
 
                 if ( my $e = $@ ) {
                     $_ = $e =~ /malformed utf-8/i ? '(bad utf-8)' : '?';
@@ -155,7 +168,7 @@ Devel::StackTrace::Frame - A single frame in a stack trace
 
 =head1 VERSION
 
-version 2.00
+version 2.01
 
 =head1 DESCRIPTION
 
@@ -207,7 +220,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2000 - 2014 by David Rolsky.
+This software is Copyright (c) 2000 - 2016 by David Rolsky.
 
 This is free software, licensed under:
 
