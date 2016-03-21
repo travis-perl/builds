@@ -1,11 +1,22 @@
 package Moo::Role;
 
 use Moo::_strictures;
-use Moo::_Utils;
+use Moo::_Utils qw(
+  _getglob
+  _getstash
+  _install_coderef
+  _install_modifier
+  _load_module
+  _name_coderef
+  _set_loaded
+  _unimport_coderefs
+);
+use Sub::Defer ();
 use Role::Tiny ();
+use Carp qw(croak);
 our @ISA = qw(Role::Tiny);
 
-our $VERSION = '2.000002';
+our $VERSION = '2.001001';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -14,12 +25,14 @@ Moo::sification->import;
 BEGIN {
     *INFO = \%Role::Tiny::INFO;
     *APPLIED_TO = \%Role::Tiny::APPLIED_TO;
+    *COMPOSED = \%Role::Tiny::COMPOSED;
     *ON_ROLE_CREATE = \@Role::Tiny::ON_ROLE_CREATE;
 }
 
 our %INFO;
 our %APPLIED_TO;
 our %APPLY_DEFAULTS;
+our %COMPOSED;
 our @ON_ROLE_CREATE;
 
 sub _install_tracked {
@@ -45,8 +58,7 @@ sub import {
     my $name_proto = shift;
     my @name_proto = ref $name_proto eq 'ARRAY' ? @$name_proto : $name_proto;
     if (@_ % 2 != 0) {
-      require Carp;
-      Carp::croak("Invalid options for " . join(', ', map "'$_'", @name_proto)
+      croak("Invalid options for " . join(', ', map "'$_'", @name_proto)
         . " attribute(s): even number of arguments expected, got " . scalar @_)
     }
     my %spec = @_;
@@ -248,8 +260,13 @@ sub _make_accessors {
   }
 }
 
+sub _undefer_subs {
+  my ($self, $target, $role) = @_;
+  Sub::Defer::undefer_package($role);
+}
+
 sub role_application_steps {
-  qw(_handle_constructor _maybe_make_accessors),
+  qw(_handle_constructor _undefer_subs _maybe_make_accessors),
     $_[0]->SUPER::role_application_steps;
 }
 
@@ -276,11 +293,12 @@ sub create_class_with_roles {
 
   my ($new_name, $compose_name) = $me->_composite_name($superclass, @roles);
 
-  return $new_name if $Role::Tiny::COMPOSED{class}{$new_name};
+  return $new_name if $COMPOSED{class}{$new_name};
 
   foreach my $role (@roles) {
-      _load_module($role);
-      $me->_inhale_if_moose($role);
+    _load_module($role);
+    $me->_inhale_if_moose($role);
+    die "${role} is not a Moo::Role" unless $me->is_role($role);
   }
 
   my $m;
@@ -291,20 +309,16 @@ sub create_class_with_roles {
     *{_getglob("${new_name}::ISA")} = [ $superclass ];
     $Moo::MAKERS{$new_name} = {is_class => 1};
     $me->apply_roles_to_package($new_name, @roles);
-    _set_loaded($new_name, (caller)[1]);
-    return $new_name;
+  }
+  else {
+    $me->SUPER::create_class_with_roles($superclass, @roles);
+    $Moo::MAKERS{$new_name} = {is_class => 1};
+    $me->_handle_constructor($new_name, $_) for @roles;
   }
 
-  $me->SUPER::create_class_with_roles($superclass, @roles);
-
-  foreach my $role (@roles) {
-    die "${role} is not a Moo::Role" unless $me->is_role($role);
+  if ($INC{'Moo/HandleMoose.pm'}) {
+    Moo::HandleMoose::inject_fake_metaclass_for($new_name);
   }
-
-  $Moo::MAKERS{$new_name} = {is_class => 1};
-
-  $me->_handle_constructor($new_name, $_) for @roles;
-
   _set_loaded($new_name, (caller)[1]);
   return $new_name;
 }
@@ -354,7 +368,7 @@ sub apply_roles_to_object {
 sub _composable_package_for {
   my ($self, $role) = @_;
   my $composed_name = 'Role::Tiny::_COMPOSABLE::'.$role;
-  return $composed_name if $Role::Tiny::COMPOSED{role}{$composed_name};
+  return $composed_name if $COMPOSED{role}{$composed_name};
   $self->_make_accessors_if_moose($composed_name, $role);
   $self->SUPER::_composable_package_for($role);
 }
@@ -421,34 +435,34 @@ Moo::Role - Minimal Object Orientation support for Roles
 
 =head1 SYNOPSIS
 
- package My::Role;
+  package My::Role;
 
- use Moo::Role;
- use strictures 2;
+  use Moo::Role;
+  use strictures 2;
 
- sub foo { ... }
+  sub foo { ... }
 
- sub bar { ... }
+  sub bar { ... }
 
- has baz => (
-   is => 'ro',
- );
+  has baz => (
+    is => 'ro',
+  );
 
- 1;
+  1;
 
 And elsewhere:
 
- package Some::Class;
+  package Some::Class;
 
- use Moo;
- use strictures 2;
+  use Moo;
+  use strictures 2;
 
- # bar gets imported, but not foo
- with('My::Role');
+  # bar gets imported, but not foo
+  with('My::Role');
 
- sub foo { ... }
+  sub foo { ... }
 
- 1;
+  1;
 
 =head1 DESCRIPTION
 
@@ -463,9 +477,9 @@ imported by this module.
 
 =head2 has
 
- has attr => (
-   is => 'ro',
- );
+  has attr => (
+    is => 'ro',
+  );
 
 Declares an attribute for the class to be composed into.  See
 L<Moo/has> for all options.
@@ -477,18 +491,18 @@ declared before the C<use Moo::Role> statement automatically.
 Anything imported after C<use Moo::Role> will be composed into
 consuming packages.  A package that consumes this role:
 
- package My::Role::ID;
+  package My::Role::ID;
 
- use Digest::MD5 qw(md5_hex);
- use Moo::Role;
- use Digest::SHA qw(sha1_hex);
+  use Digest::MD5 qw(md5_hex);
+  use Moo::Role;
+  use Digest::SHA qw(sha1_hex);
 
- requires 'name';
+  requires 'name';
 
- sub as_md5  { my ($self) = @_; return md5_hex($self->name);  }
- sub as_sha1 { my ($self) = @_; return sha1_hex($self->name); }
+  sub as_md5  { my ($self) = @_; return md5_hex($self->name);  }
+  sub as_sha1 { my ($self) = @_; return sha1_hex($self->name); }
 
- 1;
+  1;
 
 ..will now have a C<< $self->sha1_hex() >> method available to it
 that probably does not do what you expect.  On the other hand, a call

@@ -5,7 +5,7 @@ use Exporter qw(import);
 use Moo::_Utils qw(_getglob _install_coderef);
 use Scalar::Util qw(weaken);
 
-our $VERSION = '2.000002';
+our $VERSION = '2.001001';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(defer_sub undefer_sub undefer_all);
@@ -44,8 +44,11 @@ sub undefer_all {
 
 sub undefer_package {
   my $package = shift;
-  my @subs = grep { $DEFERRED{$_}[0] =~ /^${package}::[^:]+$/ } keys %DEFERRED;
-  undefer_sub($_) for @subs;
+  undefer_sub($_)
+    for grep {
+      my $name = $DEFERRED{$_} && $DEFERRED{$_}[0];
+      $name && $name =~ /^${package}::[^:]+$/
+    } keys %DEFERRED;
   return;
 }
 

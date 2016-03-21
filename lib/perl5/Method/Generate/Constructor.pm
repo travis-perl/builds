@@ -4,6 +4,7 @@ use Moo::_strictures;
 use Sub::Quote qw(quote_sub unquote_sub quotify);
 use Sub::Defer;
 use Moo::_Utils qw(_getstash _getglob);
+use Scalar::Util qw(weaken);
 use Moo;
 
 sub register_attribute_specs {
@@ -78,7 +79,7 @@ sub install_delayed {
   my $package = $self->{package};
   my (undef, @isa) = @{mro::get_linear_isa($package)};
   my $isa = join ',', @isa;
-  $self->{deferred_constructor} = defer_sub "${package}::new" => sub {
+  my $constructor = defer_sub "${package}::new" => sub {
     my (undef, @new_isa) = @{mro::get_linear_isa($package)};
     if (join(',', @new_isa) ne $isa) {
       my ($expected_new) = grep { *{_getglob($_.'::new')}{CODE} } @isa;
@@ -86,15 +87,21 @@ sub install_delayed {
       if (($found_new||'') ne ($expected_new||'')) {
         $found_new ||= 'none';
         $expected_new ||= 'none';
-        die "Expected parent constructor of $package expected to be"
+        die "Expected parent constructor of $package to be"
         . " $expected_new, but found $found_new: changing the inheritance"
         . " chain (\@ISA) at runtime is unsupported";
       }
     }
-    unquote_sub $self->generate_method(
+
+    my $constructor = unquote_sub $self->generate_method(
       $package, 'new', $self->{attribute_specs}, { no_install => 1 }
-    )
+    );
+    $self->{inlined} = 1;
+    weaken($self->{constructor} = $constructor);
+    $constructor;
   };
+  $self->{inlined} = 0;
+  weaken($self->{constructor} = $constructor);
   $self;
 }
 
@@ -108,15 +115,12 @@ sub assert_constructor {
   my $package = $self->{package} or return 1;
   my $current = $self->current_constructor($package)
     or return 1;
-  my $deferred = $self->{deferred_constructor}
+  my $constructor = $self->{constructor}
     or die "Unknown constructor for $package already exists";
-  return 1
-    if $deferred == $current;
-  my $current_deferred = (Sub::Defer::defer_info($current)||[])->[3];
-  if ($current_deferred && $current_deferred == $deferred) {
-    die "Constructor for $package has been inlined and cannot be updated";
-  }
-  die "Constructor for $package has been replaced with an unknown sub";
+  die "Constructor for $package has been replaced with an unknown sub"
+    if $constructor != $current;
+  die "Constructor for $package has been inlined and cannot be updated"
+    if $self->{inlined};
 }
 
 sub generate_method {
@@ -125,8 +129,7 @@ sub generate_method {
     $spec->{$no_init}{init_arg} = $no_init;
   }
   local $self->{captures} = {};
-  my $body = '    my $class = shift;'."\n"
-            .'    $class = ref($class) if ref($class);'."\n";
+  my $body = '    my $class = ref($_[0]) ? ref(shift) : shift;';
   $body .= $self->_handle_subconstructor($into, $name);
   my $into_buildargs = $into->can('BUILDARGS');
   if ( $into_buildargs && $into_buildargs != \&Moo::Object::BUILDARGS ) {
@@ -181,21 +184,16 @@ sub _generate_args_via_buildargs {
 sub _generate_args {
   my ($self) = @_;
   return <<'_EOA';
-    my $args;
-    if ( scalar @_ == 1 ) {
-        unless ( defined $_[0] && ref $_[0] eq 'HASH' ) {
-            die "Single parameters to new() must be a HASH ref"
-                ." data => ". $_[0] ."\n";
-        }
-        $args = { %{ $_[0] } };
-    }
-    elsif ( @_ % 2 ) {
-        die "The new() method for $class expects a hash reference or a"
-          . " key/value list. You passed an odd number of arguments\n";
-    }
-    else {
-        $args = {@_};
-    }
+    my $args = scalar @_ == 1
+      ? ref $_[0] eq 'HASH'
+        ? { %{ $_[0] } }
+        : die "Single parameters to new() must be a HASH ref"
+            . " data => ". $_[0] ."\n"
+      : @_ % 2
+        ? die "The new() method for $class expects a hash reference or a"
+            . " key/value list. You passed an odd number of arguments\n"
+        : {@_}
+    ;
 _EOA
 
 }
@@ -211,12 +209,13 @@ sub _assign_new {
     $test{$name} = $attr_spec->{init_arg};
   }
   join '', map {
-    my $arg_key = quotify($test{$_});
-    my $test = "exists \$args->{$arg_key}";
-    my $source = "\$args->{$arg_key}";
+    my $arg = $test{$_};
+    my $arg_key = quotify($arg);
+    my $test = defined $arg ? "exists \$args->{$arg_key}" : undef;
+    my $source = defined $arg ? "\$args->{$arg_key}" : undef;
     my $attr_spec = $spec->{$_};
     $self->_cap_call($ag->generate_populate_set(
-      '$new', $_, $attr_spec, $source, $test, $test{$_},
+      '$new', $_, $attr_spec, $source, $test, $arg,
     ));
   } sort keys %test;
 }

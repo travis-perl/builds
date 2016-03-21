@@ -44,6 +44,6 @@
          "url" : "https://github.com/neilbowers/Text-Diff"
       }
    },
-   "version" : "1.43",
+   "version" : "1.44",
    "x_serialization_backend" : "JSON::PP version 2.27203"
 }

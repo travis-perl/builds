@@ -1,7 +1,7 @@
 package Moo::HandleMoose;
 use Moo::_strictures;
 no warnings 'once';
-use Moo::_Utils;
+use Moo::_Utils qw(_getstash);
 use Sub::Quote qw(quotify);
 
 our %TYPE_MAP;
@@ -95,7 +95,10 @@ sub inject_real_metaclass_for {
   }
 
   # needed to ensure the method body is stable and get things named
-  Sub::Defer::undefer_sub($_) for grep defined, values %methods;
+  $methods{$_} = Sub::Defer::undefer_sub($methods{$_})
+    for
+      grep $_ ne 'new' && defined $methods{$_},
+      keys %methods;
   my @attrs;
   {
     # This local is completely not required for roles but harmless

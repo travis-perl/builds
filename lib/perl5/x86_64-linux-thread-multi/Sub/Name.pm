@@ -1,4 +1,4 @@
-package Sub::Name; # git description: v0.13-7-g79187d2
+package Sub::Name; # git description: v0.14-11-g2e37020
 # ABSTRACT: (re)name a sub
 
 #pod =pod
@@ -53,7 +53,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 use Exporter 5.57 'import';
 
@@ -80,7 +80,7 @@ Sub::Name - (re)name a sub
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -124,6 +124,14 @@ L<Sub::Util> - set_subname is another implementation of C<subname>
 =back
 
 =for stopwords cPanel
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Sub-Name>
+(or L<bug-Sub-Name@rt.cpan.org|mailto:bug-Sub-Name@rt.cpan.org>).
+
+There is also an irc channel available for users of this distribution, at
+L<C<#toolchain> on C<irc.perl.org>|irc://irc.perl.org/#toolchain>.
 
 =head1 AUTHOR
 
