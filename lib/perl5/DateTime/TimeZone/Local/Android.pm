@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Local::Android;
-$DateTime::TimeZone::Local::Android::VERSION = '1.95';
+$DateTime::TimeZone::Local::Android::VERSION = '1.96';
 use strict;
 use warnings;
 

@@ -3,7 +3,8 @@ use warnings;
 
 package Version::Next;
 # ABSTRACT: increment module version numbers simply and correctly
-our $VERSION = '0.004'; # VERSION
+
+our $VERSION = '1.000';
 
 # Dependencies
 use version 0.81 ();
@@ -24,7 +25,7 @@ sub _cleanup {
     # fix leading dots
     if ( $version =~ /^\./ ) {
         my $num_dots =()= $version =~ /(\.)/g;
-        return $num_dots > 1 ? version->parse($version)->normal : "0$version";
+        return $num_dots > 1 ? "v0$version" : "0$version";
     }
 
     # fix trailing dots
@@ -55,7 +56,7 @@ sub next_version {
         $version =~ s{^v}{} if $has_v;
         my @parts = split /\./, $version;
         if ($is_alpha) {             # vstring with alpha
-            push @parts, split /_/, pop @parts;
+            Carp::croak( _vstring_alpha_unsupported_msg($version) );
         }
         my @new_ver;
         while (@parts) {
@@ -70,9 +71,6 @@ sub next_version {
         }
         $new_ver = $has_v ? 'v' : '';
         $new_ver .= join( ".", map { 0+ $_ } @parts, @new_ver );
-        if ($is_alpha) {
-            $new_ver =~ s{\A(.*)\.(\d+)}{$1_$2};
-        }
     }
     else { # decimal fraction
         my $alpha_neg_offset;
@@ -91,6 +89,22 @@ sub next_version {
 
 }
 
+sub _vstring_alpha_unsupported_msg {
+    my $v   = shift;
+    my $msg = <<"HERE";
+Can't determine next version number for '$v'.
+
+Due to changes in the interpretation of dotted-decimal version numbers with
+alpha elements in version.pm 0.9913 and later, the notion of the 'next'
+dotted-decimal alpha is ill-defined.  Version::Next no longer supports
+dotted-decimals with alpha elements.
+
+Aborting
+HERE
+    chomp $msg;
+    return $msg;
+}
+
 1;
 
 __END__
@@ -105,13 +119,13 @@ Version::Next - increment module version numbers simply and correctly
 
 =head1 VERSION
 
-version 0.004
+version 1.000
 
 =head1 SYNOPSIS
 
-   use Version::Next qw/next_version/;
- 
-   my $new_version = next_version( $old_version );
+  use Version::Next qw/next_version/;
+
+  my $new_version = next_version( $old_version );
 
 =head1 DESCRIPTION
 
@@ -129,41 +143,50 @@ L<Perl::Version>.
 This module uses L<Sub::Exporter> for optional exporting.  Nothing is exported
 by default.
 
-=head2 C<<< next_version >>>
+=head2 C<next_version>
 
-   my $new_version = next_version( $old_version );
+  my $new_version = next_version( $old_version );
 
-Given a string, this function make the smallest logical increment and returns
-it.  The input string must be a "lax" version numbers as defined by the
-L<version> module.  The literal string "undef" is treated as "0" and incremented
-to "1".  Leading or trailing periods have a "0" prepended or appended as
-appropriate before the version is incremented.  For legacy reasons, given no
-argument, the function returns "0".
+Given a string, this function make the smallest logical increment and
+returns it.  The input string must be a "lax" version numbers as defined by
+the L<version> module.  The string "undef" is treated as C<0> and
+incremented to C<1>.  Leading or trailing periods have a C<0> (or C<v0>)
+prepended or appended as appropriate.  For legacy reasons, given no
+argument or a literal C<undef> (not the string "undef"), the function
+returns C<0>.
 
 Decimal versions are incremented like an odometer, preserving the original
 number of decimal places.  If an underscore is present (indicating an "alpha"
 version), its relative position is preserved.  Examples:
 
-   0.001    ->   0.002
-   0.999    ->   1.000
-   0.1229   ->   0.1230
-   0.12_34  ->   0.12_35
-   0.12_99  ->   0.13_00
+  0.001    ->   0.002
+  0.999    ->   1.000
+  0.1229   ->   0.1230
+  0.12_34  ->   0.12_35
+  0.12_99  ->   0.13_00
 
 Dotted-decimal versions have the least significant element incremented by one.
-If the result exceeds C<<< 999 >>>, the element resets to C<<< 0 >>> and the next
+If the result exceeds C<999>, the element resets to C<0> and the next
 most significant element is incremented, and so on.  Any leading zero padding
 is removed.  Examples:
 
-  v1.2.3     ->  v1.2.4
-  v1.2.999   ->  v1.3.0
-  v1.999.999 ->  v2.0.0
-  v1.2.3_4   ->  v1.2.3_5
-  v1.2.3_999 ->  v1.2.4_0
+ v1.2.3     ->  v1.2.4
+ v1.2.999   ->  v1.3.0
+ v1.999.999 ->  v2.0.0
+
+B<NOTE>: Due to changes in the interpretation of dotted-decimal version
+numbers with alpha elements in L<version> 0.9913 and later, the notion of
+the 'next' dotted-decimal alpha is ill-defined.  Version::Next no longer
+supports dotted-decimals with alpha elements and a fatal exception will be
+thrown if one is provided to C<next_version>.
 
 =head1 SEE ALSO
 
-=over
+=over 4
+
+=item *
+
+L<version>
 
 =item *
 
@@ -196,11 +219,13 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTOR
 
+=for stopwords Grzegorz Rożniecki
+
 Grzegorz Rożniecki <xaerxess@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2014 by David Golden.
+This software is Copyright (c) 2016 by David Golden.
 
 This is free software, licensed under:
 

@@ -3,7 +3,7 @@ package DateTime::LeapSecond;
 use strict;
 use warnings;
 
-our $VERSION = '1.21';
+our $VERSION = '1.25';
 
 use vars qw( @RD @LEAP_SECONDS %RD_LENGTH );
 
@@ -129,7 +129,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.21
+version 1.25
 
 =head1 SYNOPSIS
 
@@ -182,7 +182,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

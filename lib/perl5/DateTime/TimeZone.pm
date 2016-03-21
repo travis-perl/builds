@@ -1,5 +1,5 @@
 package DateTime::TimeZone;
-$DateTime::TimeZone::VERSION = '1.95';
+$DateTime::TimeZone::VERSION = '1.96';
 use 5.006;
 
 use strict;
@@ -564,7 +564,7 @@ DateTime::TimeZone - Time zone object base class and factory
 
 =head1 VERSION
 
-version 1.95
+version 1.96
 
 =head1 SYNOPSIS
 
@@ -851,7 +851,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alexey Molchanov Alfie John Daisuke Maki David Pinkowitz Iain Truskett Joshua Hoblitt Karen Etheridge Peter Rabbitson
+=for stopwords Alexey Molchanov Alfie John Daisuke Maki David Pinkowitz Iain Truskett Joshua Hoblitt Karen Etheridge karupanerura Peter Rabbitson
 
 =over 4
 
@@ -882,6 +882,10 @@ Joshua Hoblitt <jhoblitt@cpan.org>
 =item *
 
 Karen Etheridge <ether@cpan.org>
+
+=item *
+
+karupanerura <karupa@cpan.org>
 
 =item *
 

@@ -4,7 +4,7 @@ use Moo::_strictures;
 use Moo::Object ();
 our @ISA = qw(Moo::Object);
 use Sub::Quote qw(quote_sub quotify);
-use Moo::_Utils;
+use Moo::_Utils qw(_getglob);
 
 sub generate_method {
   my ($self, $into) = @_;
@@ -28,9 +28,9 @@ sub buildall_body_for {
     grep *{_getglob($_)}{CODE},
     map "${_}::BUILD",
     reverse @{mro::get_linear_isa($into)};
-  '    unless (('.$args.')[0]->{__no_BUILD__}) {'."\n"
-  .join('', map qq{      ${me}->${_}(${args});\n}, @builds)
-  ."   }\n";
+  '    (('.$args.')[0]->{__no_BUILD__} or ('."\n"
+  .join('', map qq{      ${me}->${_}(${args}),\n}, @builds)
+  ."    )),\n";
 }
 
 1;

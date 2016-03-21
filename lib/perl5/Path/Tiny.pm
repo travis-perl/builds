@@ -5,12 +5,12 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.076';
+our $VERSION = '0.084';
 
 # Dependencies
 use Config;
 use Exporter 5.57   (qw/import/);
-use File::Spec 3.40 ();
+use File::Spec 0.86 ();          # shipped with 5.8.1
 use Carp ();
 
 our @EXPORT    = qw/path/;
@@ -71,6 +71,10 @@ sub _win32_vol {
 # object test
 sub _is_root {
     return IS_WIN32() ? ( $_[0] =~ /^$WIN32_ROOT$/ ) : ( $_[0] eq '/' );
+}
+
+BEGIN {
+    *_same = IS_WIN32() ? sub { lc( $_[0] ) eq lc( $_[1] ) } : sub { $_[0] eq $_[1] };
 }
 
 # mode bits encoded for chmod in symbolic mode
@@ -223,6 +227,7 @@ sub path {
     # canonicalize, but with unix slashes and put back trailing volume slash
     my $cpath = $path = File::Spec->canonpath($path);
     $path =~ tr[\\][/] if IS_WIN32();
+    $path = "/" if $path eq '/..'; # for old File::Spec
     $path .= "/" if IS_WIN32() && $path =~ m{^$UNC_VOL$};
 
     # root paths must always have a trailing slash, but other paths must not
@@ -329,6 +334,11 @@ sub rootdir { path( File::Spec->rootdir ) }
 #pod less prone to deadlocks or access problems on some platforms.  Think of what
 #pod C<Path::Tiny> gives you to be just a temporary file B<name> that gets cleaned
 #pod up.
+#pod
+#pod B<Note 2>: if you don't want these cleaned up automatically when the object
+#pod is destroyed, File::Temp requires different options for directories and
+#pod files.  Use C<< CLEANUP => 0 >> for directories and C<< UNLINK => 0 >> for
+#pod files.
 #pod
 #pod Current API available since 0.018.
 #pod
@@ -748,6 +758,121 @@ sub dirname {
     return length $self->[DIR] ? $self->[DIR] : ".";
 }
 
+#pod =method edit, edit_raw, edit_utf8
+#pod
+#pod     path("foo.txt")->edit( \&callback, $options );
+#pod     path("foo.txt")->edit_utf8( \&callback );
+#pod     path("foo.txt")->edit_raw( \&callback );
+#pod
+#pod These are convenience methods that allow "editing" a file using a single
+#pod callback argument. They slurp the file using C<slurp>, place the contents
+#pod inside a localized C<$_> variable, call the callback function (without
+#pod arguments), and then write C<$_> (presumably mutated) back to the
+#pod file with C<spew>.
+#pod
+#pod An optional hash reference may be used to pass options.  The only option is
+#pod C<binmode>, which is passed to C<slurp> and C<spew>.
+#pod
+#pod C<edit_utf8> and C<edit_raw> act like their respective C<slurp_*> and
+#pod C<spew_*> methods.
+#pod
+#pod Current API available since 0.077.
+#pod
+#pod =cut
+
+sub edit {
+    my $self = shift;
+    my $cb   = shift;
+    my $args = _get_args( shift, qw/binmode/ );
+    Carp::croak("Callback for edit() must be a code reference")
+      unless defined($cb) && ref($cb) eq 'CODE';
+
+    local $_ =
+      $self->slurp( exists( $args->{binmode} ) ? { binmode => $args->{binmode} } : () );
+    $cb->();
+    $self->spew( $args, $_ );
+
+    return;
+}
+
+# this is done long-hand to benefit from slurp_utf8 optimizations
+sub edit_utf8 {
+    my ( $self, $cb ) = @_;
+    Carp::croak("Callback for edit_utf8() must be a code reference")
+      unless defined($cb) && ref($cb) eq 'CODE';
+
+    local $_ = $self->slurp_utf8;
+    $cb->();
+    $self->spew_utf8($_);
+
+    return;
+}
+
+sub edit_raw { $_[2] = { binmode => ":unix" }; goto &edit }
+
+#pod =method edit_lines, edit_lines_utf8, edit_lines_raw
+#pod
+#pod     path("foo.txt")->edit_lines( \&callback, $options );
+#pod     path("foo.txt")->edit_lines_utf8( \&callback );
+#pod     path("foo.txt")->edit_lines_raw( \&callback );
+#pod
+#pod These are convenience methods that allow "editing" a file's lines using a
+#pod single callback argument.  They iterate over the file: for each line, the
+#pod line is put into a localized C<$_> variable, the callback function is
+#pod executed (without arguments) and then C<$_> is written to a temporary file.
+#pod When iteration is finished, the temporary file is atomically renamed over
+#pod the original.
+#pod
+#pod An optional hash reference may be used to pass options.  The only option is
+#pod C<binmode>, which is passed to the method that open handles for reading and
+#pod writing.
+#pod
+#pod C<edit_lines_utf8> and C<edit_lines_raw> act like their respective
+#pod C<slurp_*> and C<spew_*> methods.
+#pod
+#pod Current API available since 0.077.
+#pod
+#pod =cut
+
+sub edit_lines {
+    my $self = shift;
+    my $cb   = shift;
+    my $args = _get_args( shift, qw/binmode/ );
+    Carp::croak("Callback for edit_lines() must be a code reference")
+      unless defined($cb) && ref($cb) eq 'CODE';
+
+    my $binmode = $args->{binmode};
+    # get default binmode from caller's lexical scope (see "perldoc open")
+    $binmode = ( ( caller(0) )[10] || {} )->{'open>'} unless defined $binmode;
+
+    # writing need to follow the link and create the tempfile in the same
+    # dir for later atomic rename
+    my $resolved_path = $self->[PATH];
+    $resolved_path = readlink $resolved_path while -l $resolved_path;
+    my $temp = path( $resolved_path . $$ . int( rand( 2**31 ) ) );
+
+    my $temp_fh = $temp->filehandle( { exclusive => 1, locked => 1 }, ">", $binmode );
+    my $in_fh = $self->filehandle( { locked => 1 }, '<', $binmode );
+
+    local $_;
+    while (<$in_fh>) {
+        $cb->();
+        $temp_fh->print($_);
+    }
+
+    close $temp_fh or $self->_throw( 'close', $temp );
+    close $in_fh or $self->_throw('close');
+
+    return $temp->move($resolved_path);
+}
+
+sub edit_lines_raw { $_[2] = { binmode => ":unix" }; goto &edit_lines }
+
+sub edit_lines_utf8 {
+    $_[2] = { binmode => ":raw:encoding(UTF-8)" };
+    goto &edit_lines;
+}
+
 #pod =method exists, is_file, is_dir
 #pod
 #pod     if ( path("/tmp")->exists ) { ... }     # -e
@@ -1080,6 +1205,8 @@ sub lines_raw {
     }
 }
 
+my $CRLF = qr/(?:\x{0d}?\x{0a}|\x{0d})/;
+
 sub lines_utf8 {
     my $self = shift;
     my $args = _get_args( shift, qw/binmode chomp count/ );
@@ -1087,7 +1214,9 @@ sub lines_utf8 {
         && $args->{chomp}
         && !$args->{count} )
     {
-        return split /(?:\x{0d}?\x{0a}|\x{0d})/, slurp_utf8($self); ## no critic
+        my $slurp = slurp_utf8($self);
+        $slurp =~ s/$CRLF$//; # like chomp, but full CR?LF|CR
+        return split $CRLF, $slurp, -1; ## no critic
     }
     else {
         $args->{binmode} = ":raw:encoding(UTF-8)";
@@ -1294,6 +1423,10 @@ sub _non_empty {
 # doesn't throw an error resolving non-existent basename
 sub realpath {
     my $self = shift;
+    while ( -l $self->[PATH] ) {
+        my $resolved = readlink $self->[PATH] or $self->_throw( 'readlink', $self->[PATH] );
+        $self = path($resolved);
+    }
     require Cwd;
     $self->_splitpath if !defined $self->[FILE];
     my $check_parent =
@@ -1313,16 +1446,139 @@ sub realpath {
 #pod
 #pod     $rel = path("/tmp/foo/bar")->relative("/tmp"); # foo/bar
 #pod
-#pod Returns a C<Path::Tiny> object with a relative path name.
-#pod Given the trickiness of this, it's a thin wrapper around
-#pod C<< File::Spec->abs2rel() >>.
+#pod Returns a C<Path::Tiny> object with a path relative to a new base path
+#pod given as an argument.  If no argument is given, the current directory will
+#pod be used as the new base path.
 #pod
-#pod Current API available since 0.001.
+#pod If either path is already relative, it will be made absolute based on the
+#pod current directly before determining the new relative path.
+#pod
+#pod The algorithm is roughly as follows:
+#pod
+#pod =for :list
+#pod * If the original and new base path are on different volumes, an exception
+#pod   will be thrown.
+#pod * If the original and new base are identical, the relative path is C<".">.
+#pod * If the new base subsumes the original, the relative path is the original
+#pod   path with the new base chopped off the front
+#pod * If the new base does not subsume the original, a common prefix path is
+#pod   determined (possibly the root directory) and the relative path will
+#pod   consist of updirs (C<"..">) to reach the common prefix, followed by the
+#pod   original path less the common prefix.
+#pod
+#pod Unlike C<File::Spec::rel2abs>, in the last case above, the calculation based
+#pod on a common prefix takes into account symlinks that could affect the updir
+#pod process.  Given an original path "/A/B" and a new base "/A/C",
+#pod (where "A", "B" and "C" could each have multiple path components):
+#pod
+#pod =for :list
+#pod * Symlinks in "A" don't change the result unless the last component of A is
+#pod   a symlink and the first component of "C" is an updir.
+#pod * Symlinks in "B" don't change the result and will exist in the result as
+#pod   given.
+#pod * Symlinks and updirs in "C" must be resolved to actual paths, taking into
+#pod   account the possibility that not all path components might exist on the
+#pod   filesystem.
+#pod
+#pod Current API available since 0.001.  New algorithm (that accounts for
+#pod symlinks) available since 0.079.
 #pod
 #pod =cut
 
-# Easy to get wrong, so wash it through File::Spec (sigh)
-sub relative { path( File::Spec->abs2rel( $_[0]->[PATH], $_[1] ) ) }
+sub relative {
+    my ( $self, $base ) = @_;
+    $base = path( defined $base && length $base ? $base : '.' );
+
+    # relative paths must be converted to absolute first
+    $self = $self->absolute if $self->is_relative;
+    $base = $base->absolute if $base->is_relative;
+
+    # normalize volumes if they exist
+    $self = $self->absolute if !length $self->volume && length $base->volume;
+    $base = $base->absolute if length $self->volume  && !length $base->volume;
+
+    # can't make paths relative across volumes
+    if ( !_same( $self->volume, $base->volume ) ) {
+        Carp::croak("relative() can't cross volumes: '$self' vs '$base'");
+    }
+
+    # if same absolute path, relative is current directory
+    return path(".") if _same( $self->[PATH], $base->[PATH] );
+
+    # if base is a prefix of self, chop prefix off self
+    if ( $base->subsumes($self) ) {
+        $base = "" if $base->is_rootdir;
+        my $relative = "$self";
+        $relative =~ s{\A\Q$base/}{};
+        return path($relative);
+    }
+
+    # base is not a prefix, so must find a common prefix (even if root)
+    my ( @common, @self_parts, @base_parts );
+    @base_parts = split /\//, $base->_just_filepath;
+
+    # if self is rootdir, then common directory is root (shown as empty
+    # string for later joins); otherwise, must be computed from path parts.
+    if ( $self->is_rootdir ) {
+        @common = ("");
+        shift @base_parts;
+    }
+    else {
+        @self_parts = split /\//, $self->_just_filepath;
+
+        while ( @self_parts && @base_parts && _same( $self_parts[0], $base_parts[0] ) ) {
+            push @common, shift @base_parts;
+            shift @self_parts;
+        }
+    }
+
+    # if there are any symlinks from common to base, we have a problem, as
+    # you can't guarantee that updir from base reaches the common prefix;
+    # we must resolve symlinks and try again; likewise, any updirs are
+    # a problem as it throws off calculation of updirs needed to get from
+    # self's path to the common prefix.
+    if ( my $new_base = $self->_resolve_between( \@common, \@base_parts ) ) {
+        return $self->relative($new_base);
+    }
+
+    # otherwise, symlinks in common or from common to A don't matter as
+    # those don't involve updirs
+    my @new_path = ( ("..") x ( 0+ @base_parts ), @self_parts );
+    return path(@new_path);
+}
+
+sub _just_filepath {
+    my $self     = shift;
+    my $self_vol = $self->volume;
+    return "$self" if !length $self_vol;
+
+    ( my $self_path = "$self" ) =~ s{\A\Q$self_vol}{};
+
+    return $self_path;
+}
+
+sub _resolve_between {
+    my ( $self, $common, $base ) = @_;
+    my $path = $self->volume . join( "/", @$common );
+    my $changed = 0;
+    for my $p (@$base) {
+        $path .= "/$p";
+        if ( $p eq '..' ) {
+            $changed = 1;
+            if ( -e $path ) {
+                $path = path($path)->realpath->[PATH];
+            }
+            else {
+                $path =~ s{/[^/]+/..$}{/};
+            }
+        }
+        if ( -l $path ) {
+            $changed = 1;
+            $path    = path($path)->realpath->[PATH];
+        }
+    }
+    return $changed ? path($path) : undef;
+}
 
 #pod =method remove
 #pod
@@ -1407,9 +1663,9 @@ sub sibling {
 #pod     $data = path("foo.txt")->slurp_raw;
 #pod     $data = path("foo.txt")->slurp_utf8;
 #pod
-#pod Reads file contents into a scalar.  Takes an optional hash reference may be
-#pod used to pass options.  The only option is C<binmode>, which is passed to
-#pod C<binmode()> on the handle used for reading.
+#pod Reads file contents into a scalar.  Takes an optional hash reference which may
+#pod be used to pass options.  The only available option is C<binmode>, which is
+#pod passed to C<binmode()> on the handle used for reading.
 #pod
 #pod C<slurp_raw> is like C<slurp> with a C<binmode> of C<:unix> for
 #pod a fast, unbuffered, raw read.
@@ -1744,7 +2000,7 @@ sub visit {
 #pod     $vol = path("C:/tmp/foo.txt")->volume; # "C:"
 #pod
 #pod Returns the volume portion of the path.  This is equivalent
-#pod equivalent to what L<File::Spec> would give from C<splitpath> and thus
+#pod to what L<File::Spec> would give from C<splitpath> and thus
 #pod usually is the empty string on Unix-like operating systems or the
 #pod drive letter for an absolute path on C<MSWin32>.
 #pod
@@ -1788,7 +2044,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.076
+version 0.084
 
 =head1 SYNOPSIS
 
@@ -1970,6 +2226,11 @@ reused.  This is not as secure as using File::Temp handles directly, but is
 less prone to deadlocks or access problems on some platforms.  Think of what
 C<Path::Tiny> gives you to be just a temporary file B<name> that gets cleaned
 up.
+
+B<Note 2>: if you don't want these cleaned up automatically when the object
+is destroyed, File::Temp requires different options for directories and
+files.  Use C<< CLEANUP => 0 >> for directories and C<< UNLINK => 0 >> for
+files.
 
 Current API available since 0.018.
 
@@ -2155,6 +2416,48 @@ A better, more consistently approach is likely C<< $path->parent->stringify >>,
 which will not have a trailing slash except for a root directory.
 
 Deprecated in 0.056.
+
+=head2 edit, edit_raw, edit_utf8
+
+    path("foo.txt")->edit( \&callback, $options );
+    path("foo.txt")->edit_utf8( \&callback );
+    path("foo.txt")->edit_raw( \&callback );
+
+These are convenience methods that allow "editing" a file using a single
+callback argument. They slurp the file using C<slurp>, place the contents
+inside a localized C<$_> variable, call the callback function (without
+arguments), and then write C<$_> (presumably mutated) back to the
+file with C<spew>.
+
+An optional hash reference may be used to pass options.  The only option is
+C<binmode>, which is passed to C<slurp> and C<spew>.
+
+C<edit_utf8> and C<edit_raw> act like their respective C<slurp_*> and
+C<spew_*> methods.
+
+Current API available since 0.077.
+
+=head2 edit_lines, edit_lines_utf8, edit_lines_raw
+
+    path("foo.txt")->edit_lines( \&callback, $options );
+    path("foo.txt")->edit_lines_utf8( \&callback );
+    path("foo.txt")->edit_lines_raw( \&callback );
+
+These are convenience methods that allow "editing" a file's lines using a
+single callback argument.  They iterate over the file: for each line, the
+line is put into a localized C<$_> variable, the callback function is
+executed (without arguments) and then C<$_> is written to a temporary file.
+When iteration is finished, the temporary file is atomically renamed over
+the original.
+
+An optional hash reference may be used to pass options.  The only option is
+C<binmode>, which is passed to the method that open handles for reading and
+writing.
+
+C<edit_lines_utf8> and C<edit_lines_raw> act like their respective
+C<slurp_*> and C<spew_*> methods.
+
+Current API available since 0.077.
 
 =head2 exists, is_file, is_dir
 
@@ -2395,11 +2698,58 @@ Current API available since 0.001.
 
     $rel = path("/tmp/foo/bar")->relative("/tmp"); # foo/bar
 
-Returns a C<Path::Tiny> object with a relative path name.
-Given the trickiness of this, it's a thin wrapper around
-C<< File::Spec->abs2rel() >>.
+Returns a C<Path::Tiny> object with a path relative to a new base path
+given as an argument.  If no argument is given, the current directory will
+be used as the new base path.
 
-Current API available since 0.001.
+If either path is already relative, it will be made absolute based on the
+current directly before determining the new relative path.
+
+The algorithm is roughly as follows:
+
+=over 4
+
+=item *
+
+If the original and new base path are on different volumes, an exception will be thrown.
+
+=item *
+
+If the original and new base are identical, the relative path is C<".">.
+
+=item *
+
+If the new base subsumes the original, the relative path is the original path with the new base chopped off the front
+
+=item *
+
+If the new base does not subsume the original, a common prefix path is determined (possibly the root directory) and the relative path will consist of updirs (C<"..">) to reach the common prefix, followed by the original path less the common prefix.
+
+=back
+
+Unlike C<File::Spec::rel2abs>, in the last case above, the calculation based
+on a common prefix takes into account symlinks that could affect the updir
+process.  Given an original path "/A/B" and a new base "/A/C",
+(where "A", "B" and "C" could each have multiple path components):
+
+=over 4
+
+=item *
+
+Symlinks in "A" don't change the result unless the last component of A is a symlink and the first component of "C" is an updir.
+
+=item *
+
+Symlinks in "B" don't change the result and will exist in the result as given.
+
+=item *
+
+Symlinks and updirs in "C" must be resolved to actual paths, taking into account the possibility that not all path components might exist on the filesystem.
+
+=back
+
+Current API available since 0.001.  New algorithm (that accounts for
+symlinks) available since 0.079.
 
 =head2 remove
 
@@ -2448,9 +2798,9 @@ Current API available since 0.058.
     $data = path("foo.txt")->slurp_raw;
     $data = path("foo.txt")->slurp_utf8;
 
-Reads file contents into a scalar.  Takes an optional hash reference may be
-used to pass options.  The only option is C<binmode>, which is passed to
-C<binmode()> on the handle used for reading.
+Reads file contents into a scalar.  Takes an optional hash reference which may
+be used to pass options.  The only available option is C<binmode>, which is
+passed to C<binmode()> on the handle used for reading.
 
 C<slurp_raw> is like C<slurp> with a C<binmode> of C<:unix> for
 a fast, unbuffered, raw read.
@@ -2617,7 +2967,7 @@ Current API available since 0.062.
     $vol = path("C:/tmp/foo.txt")->volume; # "C:"
 
 Returns the volume portion of the path.  This is equivalent
-equivalent to what L<File::Spec> would give from C<splitpath> and thus
+to what L<File::Spec> would give from C<splitpath> and thus
 usually is the empty string on Unix-like operating systems or the
 drive letter for an absolute path on C<MSWin32>.
 
@@ -2625,7 +2975,7 @@ Current API available since 0.001.
 
 =for Pod::Coverage openr_utf8 opena_utf8 openw_utf8 openrw_utf8
 openr_raw opena_raw openw_raw openrw_raw
-IS_BSD IS_WIN32 FREEZE THAW TO_JSON
+IS_BSD IS_WIN32 FREEZE THAW TO_JSON abs2rel
 
 =head1 EXCEPTION HANDLING
 
@@ -2658,6 +3008,12 @@ C<msg> — a string combining the above data and a Carp-like short stack trace
 Exception objects will stringify as the C<msg> field.
 
 =head1 CAVEATS
+
+=head2 Subclassing not supported
+
+For speed, this class is implemented as an array based object and uses many
+direction function calls internally.  You must not subclass it and expect
+things to work properly.
 
 =head2 File locking
 
@@ -2794,7 +3150,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Efros Chris Williams David Golden Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
+=for stopwords Alex Efros Chris Williams David Golden Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop James Hunt John Karr Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Nigel Gregoire Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
 
 =over 4
 
@@ -2848,6 +3204,10 @@ James Hunt <james@niftylogic.com>
 
 =item *
 
+John Karr <brainbuz@brainbuz.org>
+
+=item *
+
 Karen Etheridge <ether@cpan.org>
 
 =item *
@@ -2861,6 +3221,10 @@ Martin Kjeldsen <mk@bluepipe.dk>
 =item *
 
 Michael G. Schwern <mschwern@cpan.org>
+
+=item *
+
+Nigel Gregoire <nigelgregoire@gmail.com>
 
 =item *
 

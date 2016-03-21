@@ -6,7 +6,7 @@ use Exporter   ();
 use File::Spec ();
 
 # ABSTRACT: Perl implementation of the which utility as an API
-our $VERSION = '1.19'; # VERSION
+our $VERSION = '1.21'; # VERSION
 
 
 our @ISA       = 'Exporter';
@@ -43,7 +43,8 @@ if ( IS_DOS ) {
 sub which {
   my ($exec) = @_;
 
-  return undef unless $exec;
+  return undef unless defined $exec;
+  return undef if $exec eq '';
 
   my $all = wantarray;
   my @results = ();
@@ -145,7 +146,7 @@ File::Which - Perl implementation of the which utility as an API
 
 =head1 VERSION
 
-version 1.19
+version 1.21
 
 =head1 SYNOPSIS
 

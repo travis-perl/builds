@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use warnings::register;
 
-our $VERSION = '1.21';
+our $VERSION = '1.25';
 
 use Carp;
 use DateTime::Duration;
@@ -15,7 +15,7 @@ use DateTime::Locale 0.41;
 use DateTime::TimeZone 1.74;
 use Params::Validate 1.03
     qw( validate validate_pos UNDEF SCALAR BOOLEAN HASHREF OBJECT );
-use POSIX qw(floor);
+use POSIX qw(floor fmod);
 use Try::Tiny;
 
 {
@@ -472,8 +472,11 @@ sub _calc_local_components {
 }
 
 {
+    my $float = qr/
+         ^ -? (?: [0-9]+ (?: \.[0-9]*)? | \. [0-9]+) (?: [eE][+-]?[0-9]+)? $
+    /x;
     my $spec = {
-        epoch     => { regex => qr/^-?(?:\d+(?:\.\d*)?|\.\d+)$/ },
+        epoch     => { regex => $float },
         locale    => { type  => SCALAR | OBJECT, optional => 1 },
         language  => { type  => SCALAR | OBJECT, optional => 1 },
         time_zone => { type  => SCALAR | OBJECT, optional => 1 },
@@ -489,17 +492,38 @@ sub _calc_local_components {
 
         my %args;
 
-        # Epoch may come from Time::HiRes, so it may not be an integer.
-        my ( $int, $dec ) = $p{epoch} =~ /^(-?\d+)?(\.\d+)?/;
-        $int ||= 0;
+        # This does two things. First, if given a negative non-integer epoch,
+        # it will round the epoch _down_ to the next second and then adjust
+        # the nanoseconds to be positive. In other words, -0.5 corresponds to
+        # a second of -1 and a nanosecond value of 500,000. Before this code
+        # was implemented our handling of negative non-integer epochs was
+        # quite broken, and would end up rounding some values up, so that -0.5
+        # become 0.5 (which is obviously wrong!).
+        #
+        # Second, it rounds any decimal values to the nearest millisecond
+        # (1E6). Here's what Christian Hanse, who wrote this patch, says:
+        #
+        #     Perl is typically compiled with NV as a double. A double with a
+        #     significand precision of 53 bits can only represent a nanosecond
+        #     epoch without loss of precision if the duration from zero epoch
+        #     is less than ≈ ±104 days. With microseconds the duration is
+        #     ±104,000 days, which is ~ ±285 years.
+        if ( $p{epoch} =~ /[.eE]/ ) {
+            my ( $floor, $nano, $second );
 
-        $args{nanosecond} = int( $dec * MAX_NANOSECONDS )
-            if $dec;
+            $floor = $nano = fmod( $p{epoch}, 1.0 );
+            $second = floor( $p{epoch} - $floor );
+            if ( $nano < 0 ) {
+                $nano += 1;
+            }
+            $p{epoch}         = $second + floor( $floor - $nano );
+            $args{nanosecond} = floor( $nano * 1E6 + 0.5 ) * 1E3;
+        }
 
         # Note, for very large negative values this may give a
         # blatantly wrong answer.
         @args{qw( second minute hour day month year )}
-            = ( gmtime($int) )[ 0 .. 5 ];
+            = ( gmtime( $p{epoch} ) )[ 0 .. 5 ];
         $args{year} += 1900;
         $args{month}++;
 
@@ -548,8 +572,8 @@ sub today { shift->now(@_)->truncate( to => 'day' ) }
             type => OBJECT,
             can  => 'utc_rd_values',
         },
-        locale   => { type => SCALAR | OBJECT, optional => 1 },
-        language => { type => SCALAR | OBJECT, optional => 1 },
+        locale    => { type => SCALAR | OBJECT, optional => 1 },
+        language  => { type => SCALAR | OBJECT, optional => 1 },
         formatter => {
             type     => SCALAR | OBJECT, can => 'format_datetime',
             optional => 1
@@ -561,6 +585,10 @@ sub today { shift->now(@_)->truncate( to => 'day' ) }
         my %p = validate( @_, $spec );
 
         my $object = delete $p{object};
+
+        if ( $object->isa('DateTime::Infinite') ) {
+            return $object->clone;
+        }
 
         my ( $rd_days, $rd_secs, $rd_nanosecs ) = $object->utc_rd_values;
 
@@ -791,7 +819,7 @@ sub ymd {
         $self->{local_c}{day}
     );
 }
-*date = \&ymd;
+*date = sub { shift->ymd(@_) };
 
 sub mdy {
     my ( $self, $sep ) = @_;
@@ -877,10 +905,10 @@ sub hms {
 }
 
 # don't want to override CORE::time()
-*DateTime::time = \&hms;
+*DateTime::time = sub { shift->hms(@_) };
 
 sub iso8601 { join 'T', $_[0]->ymd('-'), $_[0]->hms(':') }
-*datetime = \&iso8601;
+*datetime = sub { $_[0]->iso8601 };
 
 sub is_leap_year { $_[0]->_is_leap_year( $_[0]->year ) }
 
@@ -1115,7 +1143,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
             $y2 *= -1 if $year < 0;
             $_[0]->_zero_padded_number( 'yy', $y2 );
         },
-        qr/y/ => sub { $_[0]->year() },
+        qr/y/    => sub { $_[0]->year() },
         qr/(u+)/ => sub { $_[0]->_zero_padded_number( $1, $_[0]->year() ) },
         qr/(Y+)/ =>
             sub { $_[0]->_zero_padded_number( $1, $_[0]->week_year() ) },
@@ -1164,7 +1192,7 @@ sub jd { $_[0]->mjd + 2_400_000.5 }
         qr/(D{1,3})/ =>
             sub { $_[0]->_zero_padded_number( $1, $_[0]->day_of_year() ) },
 
-        qr/F/ => 'weekday_of_month',
+        qr/F/    => 'weekday_of_month',
         qr/(g+)/ => sub { $_[0]->_zero_padded_number( $1, $_[0]->mjd() ) },
 
         qr/EEEEE/ => sub {
@@ -2151,7 +2179,7 @@ DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.21
+version 1.25
 
 =head1 SYNOPSIS
 
@@ -2514,11 +2542,8 @@ This class method can be used to construct a new DateTime object from
 an epoch time instead of components. Just as with the C<new()>
 method, it accepts "time_zone", "locale", and "formatter" parameters.
 
-If the epoch value is not an integer, the part after the decimal will
-be converted to nanoseconds. This is done in order to be compatible
-with C<Time::HiRes>. If the floating portion extends past 9 decimal
-places, it will be truncated to nine, so that 1.1234567891 will become
-1 second and 123,456,789 nanoseconds.
+If the epoch value is a floating-point value, it will be rounded to
+nearest microsecond.
 
 By default, the returned object will be in the UTC time zone.
 
@@ -4413,7 +4438,7 @@ Ron Hill <rkhill@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2015 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 
