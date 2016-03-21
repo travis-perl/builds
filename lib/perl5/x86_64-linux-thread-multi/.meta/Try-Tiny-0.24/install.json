@@ -1,1 +1,1 @@
-{"provides":{"Try::Tiny":{"file":"lib/Try/Tiny.pm","version":"0.24"}},"dist":"Try-Tiny-0.24","name":"Try::Tiny","target":"Try::Tiny","version":"0.24","pathname":"E/ET/ETHER/Try-Tiny-0.24.tar.gz"}
+{"target":"Try::Tiny","dist":"Try-Tiny-0.24","provides":{"Try::Tiny":{"file":"lib/Try/Tiny.pm","version":"0.24"}},"name":"Try::Tiny","version":"0.24","pathname":"E/ET/ETHER/Try-Tiny-0.24.tar.gz"}
