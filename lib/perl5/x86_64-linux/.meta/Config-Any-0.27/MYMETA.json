@@ -1,10 +1,10 @@
 {
-   "abstract" : "Displays stack trace in HTML",
+   "abstract" : "Load configuration from different file formats, transparently",
    "author" : [
-      "Tatsuhiko Miyagawa <miyagawa@bulknews.net>"
+      "Joel Bernstein <rataxis@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -12,12 +12,11 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Devel-StackTrace-AsHTML",
+   "name" : "Config-Any",
    "no_index" : {
       "directory" : [
          "inc",
-         "t",
-         "xt"
+         "t"
       ]
    },
    "prereqs" : {
@@ -34,9 +33,8 @@
       },
       "runtime" : {
          "requires" : {
-            "Devel::StackTrace" : "0",
-            "Filter::Util::Call" : "0",
-            "perl" : "5.008001"
+            "Module::Pluggable::Object" : "3.6",
+            "perl" : "5.006"
          }
       }
    },
@@ -47,8 +45,8 @@
       ],
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/miyagawa/Devel-StackTrace-AsHTML.git"
+         "url" : "git://git.shadowcat.co.uk/p5sagit/Config-Any.git"
       }
    },
-   "version" : "0.14"
+   "version" : "0.27"
 }

@@ -3,7 +3,7 @@ package Tree::Simple;
 use strict;
 use warnings;
 
-our $VERSION = '1.26';
+our $VERSION = '1.29';
 
 use Scalar::Util qw(blessed);
 
@@ -602,11 +602,11 @@ Tree::Simple - A simple tree object
   # make a tree root
   my $tree = Tree::Simple->new("0", Tree::Simple->ROOT);
 
-  # explicity add a child to it
+  # explicitly add a child to it
   $tree->addChild(Tree::Simple->new("1"));
 
   # specify the parent when creating
-  # an instance and it adds the child implicity
+  # an instance and it adds the child implicitly
   my $sub_tree = Tree::Simple->new("2", $tree);
 
   # chain method calls
@@ -1192,10 +1192,9 @@ specialized in purpose.
 =item L<Tree::DAG_Node>
 
 This module seems pretty stable and very robust with a lot of functionality.
-However, B<Tree::DAG_Node> does not come with any automated tests.
-I<test.pl> file simply checks the module loads and nothing else. While I
-am sure the author tested his code, I would feel better if I was able to
-see that. The module is approx. 3000 lines with POD, and 1,500 without the
+But it> only comes with 1 sophisticated test, t/cut.and.paste.subtrees.t.
+While I am sure the author tested his code, I would feel better if I was able
+to see that. The module is approx. 3000 lines with POD, and 1,500 without the
 POD. The shear depth and detail of the documentation and the ratio of code
 to documentation is impressive, and not to be taken lightly. But given that
 it is a well known fact that the likeliness of bugs increases along side the
