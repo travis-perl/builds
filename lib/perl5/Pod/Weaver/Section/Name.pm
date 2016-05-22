@@ -1,11 +1,9 @@
 package Pod::Weaver::Section::Name;
 # ABSTRACT: add a NAME section with abstract (for your Perl module)
-$Pod::Weaver::Section::Name::VERSION = '4.012';
+$Pod::Weaver::Section::Name::VERSION = '4.013';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
-
-use Encode;
 
 #pod =head1 OVERVIEW
 #pod
@@ -87,10 +85,8 @@ sub weave_section {
 
   my $filename = $input->{filename} || 'file';
 
-  # We can do this becaue we know that PPI is working on bytes.  If PPI ever
-  # becomes a string parser, we'll need to rethink. -- rjbs, 2014-11-12
-  my $docname  = Encode::decode_utf8($self->_get_docname($input));
-  my $abstract = Encode::decode_utf8($self->_get_abstract($input));
+  my $docname  = $self->_get_docname($input);
+  my $abstract = $self->_get_abstract($input);
 
   Carp::croak sprintf "couldn't determine document name for %s\nAdd something like this to %s:\n# PODNAME: bobby_tables.pl", $filename, $filename
     unless $docname;
@@ -126,7 +122,7 @@ Pod::Weaver::Section::Name - add a NAME section with abstract (for your Perl mod
 
 =head1 VERSION
 
-version 4.012
+version 4.013
 
 =head1 OVERVIEW
 
@@ -159,7 +155,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

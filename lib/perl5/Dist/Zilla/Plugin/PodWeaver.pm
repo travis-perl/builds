@@ -1,8 +1,7 @@
 package Dist::Zilla::Plugin::PodWeaver;
 # ABSTRACT: weave your Pod together from configuration and Dist::Zilla
-$Dist::Zilla::Plugin::PodWeaver::VERSION = '4.006';
+$Dist::Zilla::Plugin::PodWeaver::VERSION = '4.008';
 use Moose;
-use List::MoreUtils qw(any);
 use Pod::Weaver 3.100710; # logging with proxies
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -21,7 +20,7 @@ use namespace::autoclean;
 #pod =head1 CONFIGURATION
 #pod
 #pod If the C<config_plugin> attribute is given, it will be treated like a
-#pod Pod::Weaver section heading.  For example, C<@Default> could be given.  I may
+#pod Pod::Weaver section heading.  For example, C<@Default> could be given.  It may
 #pod be given multiple times.
 #pod
 #pod Otherwise, if a file matching C<./weaver.*> exists, Pod::Weaver will be told to
@@ -53,10 +52,12 @@ use namespace::autoclean;
 sub weaver {
   my ($self) = @_;
 
-  my @files = glob($self->zilla->root->file('weaver.*'));
+  my $root = $self->zilla->root->stringify;
+
+  my @files = glob("$root/weaver.*");
 
   my $arg = {
-      root        => $self->zilla->root,
+      root        => $root,
       root_config => { logger => $self->logger },
   };
 
@@ -74,7 +75,7 @@ sub weaver {
     return Pod::Weaver->new_from_config_sequence($assembler->sequence, $arg);
   } elsif (@files) {
     return Pod::Weaver->new_from_config(
-      { root   => $self->zilla->root },
+      { root   => $root },
       { root_config => { logger => $self->logger } },
     );
   } else {
@@ -195,7 +196,7 @@ Dist::Zilla::Plugin::PodWeaver - weave your Pod together from configuration and 
 
 =head1 VERSION
 
-version 4.006
+version 4.008
 
 =head1 DESCRIPTION
 
@@ -236,7 +237,7 @@ this method in subclasses.
 =head1 CONFIGURATION
 
 If the C<config_plugin> attribute is given, it will be treated like a
-Pod::Weaver section heading.  For example, C<@Default> could be given.  I may
+Pod::Weaver section heading.  For example, C<@Default> could be given.  It may
 be given multiple times.
 
 Otherwise, if a file matching C<./weaver.*> exists, Pod::Weaver will be told to
@@ -248,9 +249,37 @@ Otherwise, it will use the default configuration.
 
 Ricardo SIGNES <rjbs@cpan.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords David Golden Florian Ragwitz Karen Etheridge Yasutaka ATARASHI Сергей Романов
+
+=over 4
+
+=item *
+
+David Golden <dagolden@cpan.org>
+
+=item *
+
+Florian Ragwitz <rafl@debian.org>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Yasutaka ATARASHI <yakex@cpan.org>
+
+=item *
+
+Сергей Романов <sromanov-dev@yandex.ru>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
