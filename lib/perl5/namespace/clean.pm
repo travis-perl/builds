@@ -3,7 +3,7 @@ package namespace::clean;
 use warnings;
 use strict;
 
-our $VERSION = '0.26';
+our $VERSION = '0.27';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 our $STORAGE_VAR = '__NAMESPACE_CLEAN_STORAGE';
@@ -16,7 +16,7 @@ use B::Hooks::EndOfScope 'on_scope_end';
 BEGIN {
   my $provider;
 
-  if ( $] < 5.008007 ) {
+  if ( "$]" < 5.008007 ) {
     require Package::Stash::PP;
     $provider = 'Package::Stash::PP';
   }
@@ -50,6 +50,13 @@ use namespace::clean::_Util qw( DEBUGGER_NEEDS_CV_RENAME DEBUGGER_NEEDS_CV_PIVOT
 # assumes the name of the glob passed to entersub can be used to find the CV
 # Workaround: realias the original glob to the deleted-stash slot
 #
+# While the errors manifest themselves inside perl5db.pl, they are caused by
+# problems inside the interpreter.  If enabled ($^P & 0x01) and existent,
+# the DB::sub sub will be called by the interpreter for any sub call rather
+# that call the sub directly.  It is provided the real sub to call in $DB::sub,
+# but the value given has the issues described above.  We only have to enable
+# the workaround if DB::sub will be used.
+#
 # Can not tie constants to the current value of $^P directly,
 # as the debugger can be enabled during runtime (kinda dubious)
 #
@@ -72,7 +79,9 @@ my $RemoveSubs = sub {
         my $need_debugger_fixup =
           ( DEBUGGER_NEEDS_CV_RENAME or DEBUGGER_NEEDS_CV_PIVOT )
             &&
-          $^P
+          $^P & 0x01
+            &&
+          defined &DB::sub
             &&
           ref(my $globref = \$cleanee_stash->namespace->{$f}) eq 'GLOB'
             &&
@@ -171,13 +180,9 @@ sub import {
             $store->{remove}{ $f } = 1;
         }
 
-        # register EOF handler on first call to import
-        unless ($store->{handler_is_installed}) {
-            on_scope_end {
-                $RemoveSubs->($cleanee, $store, keys %{ $store->{remove} });
-            };
-            $store->{handler_is_installed} = 1;
-        }
+        on_scope_end {
+            $RemoveSubs->($cleanee, $store, keys %{ $store->{remove} });
+        };
 
         return 1;
     }
@@ -304,10 +309,10 @@ until B<runtime>.
 
 You need to work around this by forcing a compile-time resolution like so:
 
- use MyApp::Utils 'sorter';
+ use MyApp::Utils 'my_sorter';
  use namespace::clean;
 
- my $my_sorter_cref = \&sorter;
+ my $my_sorter_cref = \&my_sorter;
 
  my @sorted = sort $my_sorter_cref @list;
 

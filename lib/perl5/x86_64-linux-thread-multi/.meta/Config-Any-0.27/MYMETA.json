@@ -4,7 +4,7 @@
       "Joel Bernstein <rataxis@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -33,7 +33,7 @@
       },
       "runtime" : {
          "requires" : {
-            "Module::Pluggable" : "3.01",
+            "Module::Pluggable::Object" : "3.6",
             "perl" : "5.006"
          }
       }
@@ -48,5 +48,5 @@
          "url" : "git://git.shadowcat.co.uk/p5sagit/Config-Any.git"
       }
    },
-   "version" : "0.26"
+   "version" : "0.27"
 }
