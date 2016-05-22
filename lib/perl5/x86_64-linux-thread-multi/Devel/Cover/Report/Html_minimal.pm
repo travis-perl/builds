@@ -8,7 +8,7 @@ use Devel::Cover::DB;
 use Devel::Cover::Html_Common "launch";
 use Devel::Cover::Truth_Table;
 
-our $VERSION = '1.21'; # VERSION
+our $VERSION = '1.23'; # VERSION
 our $LVERSION = do { eval '$VERSION' || "0.001" };  # for development purposes
 
 #-------------------------------------------------------------------------------
@@ -412,7 +412,7 @@ END_HTML
             } else {
                 $class = sprintf(qq' class="%s"',
                                  pclass($pc, $summary->{$c}{error}));
-                $popup = sprintf(qq' title="%s"', $summary->{$c}{ratio});
+                $popup = sprintf(qq' title="%s"', $c . ': ' . $summary->{$c}{ratio});
                 if ($c =~ /branch|condition|subroutine/) {
                     $link = get_link($file, $c);
                 }
@@ -751,7 +751,7 @@ Devel::Cover::Report::Html_minimal - HTML backend for Devel::Cover
 
 =head1 VERSION
 
-version 1.21
+version 1.23
 
 =head1 SYNOPSIS
 
@@ -809,7 +809,7 @@ Devel::Cover
 
 =head1 LICENCE
 
-Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
 
 This software is free. It is licensed under the same terms as Perl itself.
 

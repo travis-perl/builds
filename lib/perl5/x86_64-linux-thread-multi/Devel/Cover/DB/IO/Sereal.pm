@@ -1,4 +1,4 @@
-# Copyright 2014-2015, Paul Johnson (paul@pjcj.net)
+# Copyright 2014-2016, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -14,7 +14,7 @@ use Fcntl ":flock";
 use Sereal::Decoder;
 use Sereal::Encoder;
 
-our $VERSION = '1.21'; # VERSION
+our $VERSION = '1.23'; # VERSION
 
 my $Decoder;
 my $Encoder;
@@ -64,7 +64,7 @@ Devel::Cover::DB::IO::Sereal - Sereal based IO routines for Devel::Cover::DB
 
 =head1 VERSION
 
-version 1.21
+version 1.23
 
 =head1 SYNOPSIS
 
@@ -108,7 +108,7 @@ Huh?
 
 =head1 LICENCE
 
-Copyright 2011-2015, Paul Johnson (paul@pjcj.net)
+Copyright 2011-2016, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

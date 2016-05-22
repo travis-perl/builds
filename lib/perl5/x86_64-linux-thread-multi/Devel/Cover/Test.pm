@@ -1,4 +1,4 @@
-# Copyright 2002-2015, Paul Johnson (paul@pjcj.net)
+# Copyright 2002-2016, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,12 +10,12 @@ package Devel::Cover::Test;
 use strict;
 use warnings;
 
-our $VERSION = '1.21'; # VERSION
+our $VERSION = '1.23'; # VERSION
 
 use Carp;
 
 use File::Spec;
-use Test ();
+use Test::More;
 
 use Devel::Cover::Inc;
 
@@ -197,23 +197,19 @@ sub run_command {
 sub run_test {
     my $self = shift;
 
+    if ($] < 5.008001) {
+        plan skip_all => "Perl version $] is not supported";
+        return;
+    }
+
     if ($self->{skip}) {
-        Test::plan tests => 1;
-        Test::skip($self->{skip}, 1);
+        plan skip_all => $self->{skip};
         return;
     }
 
     my $version = int(($] - 5) * 1000 + 0.5);
     if ($version % 2 && $version < 22) {
-        Test::plan tests => 1;
-        Test::skip("Perl version $] is an obsolete development version", 1);
-        return;
-    }
-
-    if ($] > 5.019001 && $] < 5.019004) {
-        Test::plan tests => 1;
-        Test::skip("Perl version $] contains a bug which causes this test " .
-                   "to fail", 1);
+        plan skip_all => "Perl version $] is an obsolete development version";
         return;
     }
 
@@ -229,11 +225,11 @@ sub run_test {
 
     # print STDERR "gold from $gold\n", @cover if $self->{debug};
 
-    Test::plan tests => $self->{differences}
-                            ? 1
-                            : exists $self->{tests}
-                                  ? $self->{tests}->(scalar @cover)
-                                  : scalar @cover;
+    plan tests => $self->{differences}
+        ? 1
+        : exists $self->{tests}
+            ? $self->{tests}->(scalar @cover)
+            : scalar @cover;
 
     local $ENV{PERL5OPT};
     $self->{run_test}
@@ -302,16 +298,16 @@ sub run_cover {
             push @at, $t;
             push @ac, $c;
         } else {
-            $self->{no_coverage} ? Test::ok 1 : Test::ok $t, $c;
+            $self->{no_coverage} ? pass : is($t, $c);
             last if $self->{no_coverage} && !@{$self->{cover}};
         }
     }
     if ($self->{differences}) {
         no warnings "redefine";
         local *Test::_quote = sub { "@_" };
-        $self->{no_coverage} ? Test::ok 1 : eq_or_diff(\@at, \@ac, "output");
+        $self->{no_coverage} ? pass : eq_or_diff(\@at, \@ac, "output");
     } elsif ($self->{no_coverage}) {
-        Test::ok 1 for @{$self->{cover}};
+        pass for @{$self->{cover}};
     }
     close T or die "Cannot close $cover_com: $!";
 
@@ -322,10 +318,8 @@ sub create_gold {
     my $self = shift;
 
     # Pod::Coverage not available on all versions, but it must be there on
-    # 5.6.1 and 5.8.0
-    return if $self->{criteria} =~ /\bpod\b/ &&
-               $] != 5.006001 &&
-               $] != 5.008000;
+    # 5.8.1
+    return if $self->{criteria} =~ /\bpod\b/ && $] != 5.008001;
 
     my ($base, $v) = $self->cover_gold;
     my $gold       = "$base.$v";
@@ -398,7 +392,7 @@ Devel::Cover::Test - Internal module for testing
 
 =head1 VERSION
 
-version 1.21
+version 1.23
 
 =head1 METHODS
 
@@ -497,7 +491,7 @@ Huh?
 
 =head1 LICENCE
 
-Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 
