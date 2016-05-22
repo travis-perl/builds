@@ -1,5 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
-our $VERSION = '2.1605';
+our $VERSION = '2.1801';
 
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
@@ -24,7 +24,7 @@ Moose::Meta::Attribute::Native::Trait::Array - Helper trait for ArrayRef attribu
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 SYNOPSIS
 
@@ -161,6 +161,7 @@ like L<List::MoreUtils>'s C<first_index> function. The matching is done with a
 subroutine reference you pass to this method. The subroutine will be called
 against each element in the array until one matches or all elements have been
 checked. Each list element will be available to the sub in C<$_>.
+If no match is made, -1 is returned.
 
 This method requires a single argument.
 

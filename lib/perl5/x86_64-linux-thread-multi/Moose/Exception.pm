@@ -1,5 +1,5 @@
 package Moose::Exception;
-our $VERSION = '2.1605';
+our $VERSION = '2.1801';
 
 use Moose;
 use Devel::StackTrace 1.33;
@@ -15,15 +15,16 @@ has 'trace' => (
 
 has 'message' => (
     is            => 'ro',
-    isa           => 'Str',
+    isa           => 'Defined',
     builder       => '_build_message',
     lazy          => 1,
-    documentation => "This attribute is read-only and isa Str. ".
+    documentation => "This attribute is read-only and isa Defined. ".
                      "It is lazy and has a default value 'Error'."
 );
 
 use overload(
     q{""}    => 'as_string',
+    bool     => sub () { 1 },
     fallback => 1,
 );
 
@@ -106,7 +107,7 @@ Moose::Exception - Superclass for Moose internal exceptions
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 DESCRIPTION
 

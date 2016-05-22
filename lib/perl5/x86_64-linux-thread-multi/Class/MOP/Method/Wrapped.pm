@@ -1,5 +1,5 @@
 package Class::MOP::Method::Wrapped;
-our $VERSION = '2.1605';
+our $VERSION = '2.1801';
 
 use strict;
 use warnings;
@@ -38,13 +38,13 @@ my $_build_wrapped_method = sub {
             return wantarray ? @rval : $rval[0];
         }
     }
-    elsif (@$before && !@$after) {
+    elsif (@$before) {
         $modifier_table->{cache} = sub {
             for my $c (@$before) { $c->(@_) };
             return $around->{cache}->(@_);
         }
     }
-    elsif (@$after && !@$before) {
+    elsif (@$after) {
         $modifier_table->{cache} = sub {
             my @rval;
             ((defined wantarray) ?
@@ -217,7 +217,7 @@ Class::MOP::Method::Wrapped - Method Meta Object for methods with before/after/a
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 DESCRIPTION
 

@@ -1,13 +1,12 @@
 package Moose::Meta::Class;
-our $VERSION = '2.1605';
+our $VERSION = '2.1801';
 
 use strict;
 use warnings;
 
 use Class::MOP;
 use Data::OptList;
-use List::Util 1.33 qw( any first );
-use List::MoreUtils qw( uniq first_index );
+use List::Util 1.33 qw( any );
 use Scalar::Util 'blessed';
 
 use Moose::Meta::Method::Overridden;
@@ -802,7 +801,7 @@ Moose::Meta::Class - The Moose metaclass
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 DESCRIPTION
 
