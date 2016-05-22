@@ -1,4 +1,4 @@
-# Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
+# Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@ package Devel::Cover::Time;
 use strict;
 use warnings;
 
-our $VERSION = '1.21'; # VERSION
+our $VERSION = '1.23'; # VERSION
 
 use base "Devel::Cover::Criterion";
 
@@ -45,7 +45,7 @@ Devel::Cover::Time - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.21
+version 1.23
 
 =head1 SYNOPSIS
 
@@ -73,7 +73,7 @@ Huh?
 
 =head1 LICENCE
 
-Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

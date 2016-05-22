@@ -1,4 +1,4 @@
-# Copyright 2011-2015, Paul Johnson (paul@pjcj.net)
+# Copyright 2011-2016, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -12,7 +12,7 @@ use warnings;
 
 use Storable;
 
-our $VERSION = '1.21'; # VERSION
+our $VERSION = '1.23'; # VERSION
 
 sub new {
     my $class = shift;
@@ -43,7 +43,7 @@ Devel::Cover::DB::IO::Storable - Storable based IO routines for Devel::Cover::DB
 
 =head1 VERSION
 
-version 1.21
+version 1.23
 
 =head1 SYNOPSIS
 
@@ -87,7 +87,7 @@ Huh?
 
 =head1 LICENCE
 
-Copyright 2011-2015, Paul Johnson (paul@pjcj.net)
+Copyright 2011-2016, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

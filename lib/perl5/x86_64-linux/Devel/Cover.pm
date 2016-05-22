@@ -1,4 +1,4 @@
-# Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
+# Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,8 +10,9 @@ package Devel::Cover;
 use strict;
 use warnings;
 
-our $VERSION = '1.21'; # VERSION
-our $LVERSION = do { no warnings; eval '$VERSION' || "0.001" };  # for dev
+our $VERSION = '1.23'; # VERSION
+our $LVERSION;
+BEGIN { $LVERSION = do { no warnings; eval '$VERSION' || "0.001" } }  # for dev
 
 use DynaLoader ();
 our @ISA = "DynaLoader";
@@ -106,6 +107,46 @@ BEGIN {
     $Silent = ($ENV{HARNESS_PERL_SWITCHES} || "") =~ /Devel::Cover/ ||
               ($ENV{PERL5OPT}              || "") =~ /Devel::Cover/;
     *OUT = $ENV{DEVEL_COVER_DEBUG} ? *STDERR : *STDOUT;
+
+    if ($] < 5.008001 && !$ENV{DEVEL_COVER_UNSUPPORTED}) {
+        print <<EOM;
+
+================================================================================
+
+                                   IMPORTANT
+                                   ---------
+
+Devel::Cover $LVERSION is not supported on perl $].  The last version of
+Devel::Cover which was supported was version 1.22.  This version may not work.
+I have not tested it.  If it does work it will not be fully functional.
+
+If you decide to use it anyway, you are on your own.  If it works at all, there
+will be some constructs for which coverage will not be collected, and you may
+well encounter bugs which have been fixed in subsequent versions of perl.
+EOM
+
+        print <<EOM if $^O eq "MSWin32";
+
+And things are even worse under Windows.  You may well find random bugs of
+various severities.
+EOM
+        print <<EOM;
+
+If you are actually using this version of Devel::Cover with perl $], please let
+me know.  I don't want to know if you are just testing Devel::Cover, only if you
+are seriously using this version to do code coverage analysis of real code.  If
+I get no reports of such usage then I will remove support and delete the
+workarounds for versions of perl below 5.8.1.
+
+In order to use this version of Devel::Cover with perl $] you must set the
+environment variable \$DEVEL_COVER_UNSUPPORTED
+
+================================================================================
+
+EOM
+
+        die "Exiting";
+    }
 
     if ($^X =~ /(apache2|httpd)$/) {
         # mod_perl < 2.0.8
@@ -1231,7 +1272,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.21
+version 1.23
 
 =head1 SYNOPSIS
 
@@ -1319,15 +1360,22 @@ reported.
 
 =over
 
-=item * Perl 5.6.1 or greater.  Perl 5.8.8 or greater is recommended.
+=item * Perl 5.8.1 or greater.  Perl 5.8.8 or greater is recommended.
 
-Perl 5.7 is unsupported.  Perl 5.8.8 or greater is recommended.  Perl 5.8.7
-has problems and may crash.  Whilst Perl 5.6 should mostly work you will
-probably miss out on coverage information which would be available using a
-more modern version and will likely run into bugs in perl.  Devel::Cover
-support for unsupported Perl versions may be removed at any time, but I try to
-keep older versions running provided this does not cause undue difficulty i
-other areas.
+Perl versions 5.6.1, 5.6.2 and 5.8.0 may work to an extent but are unsupported.
+Perl 5.8.8 or greater is recommended.  Perl 5.8.7 has problems and may crash.
+
+If you want to use an unsupported version you will need to set the environment
+variable $DEVEL_COVER_UNSUPPORTED.  Unsupported versions are also untested.  I
+will consider patches for unsupported versions only if they do not compromise
+the code.  This is a vague, nebulous concept that I will decide on if and when
+necessary.
+
+If you are using an unsupported version, please let me know.  I don't want to
+know if you are just testing Devel::Cover, only if you are seriously using it to
+do code coverage analysis of real code.  If I get no reports of such usage then
+I will remove support and delete the workarounds for versions of perl below
+5.8.1.  I may do that anyway.
 
 Different versions of perl may give slightly different results due to changes
 in the op tree.
@@ -1565,22 +1613,23 @@ case at the moment.
 =head2 Non-invasive specification
 
 If you can't, or don't want to add coverage comments to your code, you can
-specify the uncoverable information in a separate file.  By default this file
-is L<.uncoverable> but you can override that.
+specify the uncoverable information in a separate file.  By default the files
+PWD/.uncoverable and HOME/.uncoverable are checked.  If you use the
+-uncoverable_file parameter then the file you provide is checked as well as
+those two files.
 
 The interface to managing this file is the L<cover> program, and the options
 are:
 
  -uncoverable_file
  -add_uncoverable_point
- -delete_uncoverable_point
- -clean_uncoverable_points
+ -delete_uncoverable_point   **UNIMPLEMENTED**
+ -clean_uncoverable_points   **UNIMPLEMENTED**
 
-Of these, only the first two are implemented at the moment.  The parameter for
--add_uncoverable_point is a string composed of up to seven space separated
-elements: "$file $criterion $line $count $type $class $note".
+The parameter for -add_uncoverable_point is a string composed of up to seven
+space separated elements: "$file $criterion $line $count $type $class $note".
 
-TODO - more information and examples.
+The contents of the uncoverable file is the same, with one point per line.
 
 =head1 ENVIRONMENT
 
@@ -1706,7 +1755,7 @@ Please report new bugs on Github.
 
 =head1 LICENCE
 
-Copyright 2001-2015, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 
