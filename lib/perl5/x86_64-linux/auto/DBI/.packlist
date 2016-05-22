@@ -32,7 +32,6 @@
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/DBD/SqlEngine.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/DBD/SqlEngine/Developers.pod
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/DBD/SqlEngine/HowTo.pod
-/home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/FAQ.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/Gofer/Execute.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/Gofer/Request.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBI/Gofer/Response.pm

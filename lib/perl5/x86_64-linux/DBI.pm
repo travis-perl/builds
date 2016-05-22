@@ -11,7 +11,7 @@ package DBI;
 require 5.008_001;
 
 BEGIN {
-our $XS_VERSION = our $VERSION = "1.634"; # ==> ALSO update the version in the pod text below!
+our $XS_VERSION = our $VERSION = "1.636"; # ==> ALSO update the version in the pod text below!
 $VERSION = eval $VERSION;
 }
 
@@ -146,7 +146,7 @@ sure that your issue isn't related to the driver you're using.
 
 =head2 NOTES
 
-This is the DBI specification that corresponds to DBI version 1.634
+This is the DBI specification that corresponds to DBI version 1.636
 (see L<DBI::Changes> for details).
 
 The DBI is evolving at a steady pace, so it's good to check that
@@ -458,6 +458,7 @@ my $keeperr = { O=>0x0004 };
 	selectrow_arrayref=>{U =>[2,0,'$statement [, \%attr [, @bind_params ] ]'], O=>0x2000 },
 	selectrow_hashref=>{ U =>[2,0,'$statement [, \%attr [, @bind_params ] ]'], O=>0x2000 },
 	selectall_arrayref=>{U =>[2,0,'$statement [, \%attr [, @bind_params ] ]'], O=>0x2000 },
+	selectall_array   =>{U =>[2,0,'$statement [, \%attr [, @bind_params ] ]'], O=>0x2000 },
 	selectall_hashref=>{ U =>[3,0,'$statement, $keyfield [, \%attr [, @bind_params ] ]'], O=>0x2000 },
 	selectcol_arrayref=>{U =>[2,0,'$statement [, \%attr [, @bind_params ] ]'], O=>0x2000 },
 	ping       	=> { U =>[1,1], O=>0x0404 },
@@ -1662,6 +1663,10 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
 	return @$row;
     }
 
+    sub selectall_array {
+        return @{ shift->selectall_arrayref(@_) || [] };
+    }
+
     # XXX selectall_arrayref also has C implementation in Driver.xst
     # which fallsback to this if a slice is given
     sub selectall_arrayref {
@@ -2080,7 +2085,10 @@ sub _new_sth {	# called by DBD::<drivername>::db::prepare)
                 }
 	    }
 	    else {
-		$sth->bind_columns( \( @row{ @{$sth->FETCH($sth->FETCH('FetchHashKeyName')) } } ) );
+		my @column_names = @{ $sth->FETCH($sth->FETCH('FetchHashKeyName')) };
+		return [] if !@column_names;
+
+		$sth->bind_columns( \( @row{@column_names} ) );
 	    }
 	}
 	else {
@@ -2661,7 +2669,7 @@ is a reference to a hash containing the parsed attribute names and values.
 $driver_dsn is the last part of the DBI DSN string. For example:
 
   ($scheme, $driver, $attr_string, $attr_hash, $driver_dsn)
-      = DBI->parse_dsn("DBI:MyDriver(RaiseError=>1):db=test;port=42");
+      = DBI->parse_dsn("dbi:MyDriver(RaiseError=>1):db=test;port=42");
   $scheme      = 'dbi';
   $driver      = 'MyDriver';
   $attr_string = 'RaiseError=>1';
@@ -3145,7 +3153,8 @@ L<http://www.isthe.com/chongo/tech/comp/fnv/> for more information.
 Both types are implemented in C and are very fast.
 
 This function doesn't have much to do with databases, except that
-it can be handy to store hash values in a database.
+it can sometimes be handy to store such values in a database.
+It also doesn't have much to do with perl hashes, like %foo.
 
 =head3 C<sql_type_cast>
 
@@ -4659,6 +4668,18 @@ Or, to fetch into an array instead of an array ref:
   @result = @{ $dbh->selectall_arrayref($sql, { Slice => {} }) };
 
 See L</fetchall_arrayref> method for more details.
+
+=head3 C<selectall_array>
+
+  @ary = $dbh->selectall_array($statement);
+  @ary = $dbh->selectall_array($statement, \%attr);
+  @ary = $dbh->selectall_array($statement, \%attr, @bind_values);
+
+This is a convenience wrapper around L<selectall_arrayref> that returns
+the rows directly as a list, rather than a reference to an array of rows.
+
+Note that if L</RaiseError> is not set then you can't tell the difference
+between returning no rows and an error. Using RaiseError is best practice.
 
 =head3 C<selectall_hashref>
 
@@ -7531,7 +7552,7 @@ Unfortunately, this solution is somewhat messy, and it does I<not> work with
 perl versions less than perl 5.8 where C<POSIX::sigaction()> appears to be broken.
 
 For a cleaner implementation that works across perl versions, see Lincoln Baxter's
-Sys::SigAction module at L<http://search.cpan.org/~lbaxter/Sys-SigAction/>.
+Sys::SigAction module at L<Sys::SigAction>.
 The documentation for Sys::SigAction includes an longer discussion
 of this problem, and a DBD::Oracle test script.
 
@@ -8125,17 +8146,12 @@ Oracle 7 SQL and PL/SQL) is available here:
 
   http://cui.unige.ch/db-research/Enseignement/analyseinfo/SQL92/BNFindex.html
 
-A BNF syntax for SQL3 is available here:
+You can find more information about SQL standards online by searching for the
+appropriate standard names and numbers. For example, searching for
+"ANSI/ISO/IEC International Standard (IS) Database Language SQL - Part 1:
+SQL/Framework" you'll find a copy at:
 
-  http://www.sqlstandards.org/SC32/WG3/Progression_Documents/Informal_working_drafts/iso-9075-2-1999.bnf
-
-The following links provide further useful information about SQL.
-Some of these are rather dated now but may still be useful.
-
-  http://www.jcc.com/SQLPages/jccs_sql.htm
-  http://www.contrib.andrew.cmu.edu/~shadow/sql.html
-  http://www.altavista.com/query?q=sql+tutorial
-
+  ftp://ftp.iks-jena.de/mitarb/lutz/standards/sql/ansi-iso-9075-1-1999.pdf
 
 =head2 Books and Articles
 
@@ -8154,9 +8170,9 @@ Details of many other books related to perl can be found at L<http://books.perl.
 
 Index of DBI related modules available from CPAN:
 
- https://metacpan.org/search?q=DBD%3A%3A
- https://metacpan.org/search?q=DBIx%3A%3A
- https://metacpan.org/search?q=DBI
+ L<https://metacpan.org/search?q=DBD%3A%3A>
+ L<https://metacpan.org/search?q=DBIx%3A%3A>
+ L<https://metacpan.org/search?q=DBI>
 
 For a good comparison of RDBMS-OO mappers and some OO-RDBMS mappers
 (including Class::DBI, Alzabo, and DBIx::RecordSet in the former
@@ -8174,7 +8190,7 @@ A similar page for Java toolkits can be found at:
 The I<dbi-users> mailing list is the primary means of communication among
 users of the DBI and its related modules. For details send email to:
 
- dbi-users-help@perl.org
+ L<dbi-users-help@perl.org>
 
 There are typically between 700 and 900 messages per month.  You have
 to subscribe in order to be able to post. However you can opt for a
@@ -8186,7 +8202,7 @@ Mailing list archives (of variable quality) are held at:
  http://www.xray.mpe.mpg.de/mailing-lists/dbi/
  http://www.mail-archive.com/dbi-users%40perl.org/
 
-=head2 Assorted Related WWW Links
+=head2 Assorted Related Links
 
 The DBI "Home Page":
 
@@ -8194,42 +8210,17 @@ The DBI "Home Page":
 
 Other DBI related links:
 
- http://tegan.deltanet.com/~phlip/DBUIdoc.html
- http://dc.pm.org/perl_db.html
- http://wdvl.com/Authoring/DB/Intro/toc.html
- http://www.hotwired.com/webmonkey/backend/tutorials/tutorial1.html
- http://bumppo.net/lists/macperl/1999/06/msg00197.html
  http://www.perlmonks.org/?node=DBI%20recipes
  http://www.perlmonks.org/?node=Speeding%20up%20the%20DBI
 
 Other database related links:
 
- http://www.jcc.com/sql_stnd.html
- http://cuiwww.unige.ch/OSG/info/FreeDB/FreeDB.home.html
  http://www.connectionstrings.com/
 
 Security, especially the "SQL Injection" attack:
 
- http://www.ngssoftware.com/research/papers.html
- http://www.ngssoftware.com/papers/advanced_sql_injection.pdf
- http://www.ngssoftware.com/papers/more_advanced_sql_injection.pdf
- http://www.esecurityplanet.com/trends/article.php/2243461
- http://www.spidynamics.com/papers/SQLInjectionWhitePaper.pdf
- http://www.imperva.com/application_defense_center/white_papers/blind_sql_server_injection.html
+ http://bobby-tables.com/
  http://online.securityfocus.com/infocus/1644
-
-Commercial and Data Warehouse Links
-
- http://www.dwinfocenter.org
- http://www.datawarehouse.com
- http://www.datamining.org
- http://www.olapcouncil.org
- http://www.idwa.org
- http://www.knowledgecenters.org/dwcenter.asp
-
-Recommended Perl Programming Links
-
- http://language.perl.com/style/
 
 
 =head2 FAQ
@@ -8404,11 +8395,6 @@ available, thanks to O'Reilly, at:
 
   http://www.oreilly.de/catalog/perldbiger/
 
-Some other translations:
-
- http://cronopio.net/perl/                              - Spanish
- http://member.nifty.ne.jp/hippo2000/dbimemo.htm        - Japanese
-
 =head1 TRAINING
 
 References to DBI related training resources. No recommendation implied.
@@ -8423,7 +8409,7 @@ please send me your details so I can add them here.)
 
 =over 4
 
-=item Apache::DBI by E.Mergl@bawue.de
+=item L<Apache::DBI>
 
 To be used with the Apache daemon together with an embedded Perl
 interpreter like C<mod_perl>. Establishes a database connection which

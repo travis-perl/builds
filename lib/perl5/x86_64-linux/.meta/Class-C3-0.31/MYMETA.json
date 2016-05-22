@@ -32,15 +32,8 @@
       },
       "develop" : {
          "requires" : {
-            "Moose" : "0",
-            "MooseX::Types::Common::Numeric" : "0",
-            "Mouse" : "0",
-            "Type::Tiny" : "0",
-            "bareword::filehandles" : "0",
-            "indirect" : "0",
-            "multidimensional" : "0",
-            "namespace::autoclean" : "0",
-            "namespace::clean" : "0"
+            "Test::Pod" : "1.14",
+            "Test::Pod::Coverage" : "1.04"
          }
       },
       "runtime" : {
@@ -72,5 +65,5 @@
          "web" : "http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=gitmo/Class-C3.git"
       }
    },
-   "version" : "0.30"
+   "version" : "0.31"
 }

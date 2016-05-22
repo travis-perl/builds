@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use Module::Pluggable::Object ();
 
-our $VERSION = '0.26';
+our $VERSION = '0.27';
 
 =head1 NAME
 
@@ -314,7 +314,7 @@ Config::Any requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<Module::Pluggable|Module::Pluggable>
+L<Module::Pluggable::Object|Module::Pluggable::Object>
 
 And at least one of the following:
 L<Config::General|Config::General>

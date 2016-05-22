@@ -4,7 +4,7 @@ package Class::C3;
 use strict;
 use warnings;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 our $C3_IN_CORE;
 our $C3_XS;

@@ -6,6 +6,79 @@ DBI::Changes - List of significant changes to the DBI
 
 =cut
 
+=head2 Changes in DBI 1.636 - 24th April 2016
+
+    Fix compilation for threaded perl <= 5.12 broken in 1.635 RT#113955
+    Revert change to DBI::PurePerl DESTROY in 1.635
+    Change t/16destroy.t to avoid race hazard RT#113951
+    Output perl version and archname in t/01basics.t
+    Add perl 5.22 and 5.22-extras to travis-ci config
+
+=head2 Changes in DBI 1.635 - 24th April 2016
+
+    Fixed RaiseError/PrintError for UTF-8 errors/warnings. RT#102404
+    Fixed cases where ShowErrorStatement might show incorrect Statement RT#97434
+    Fixed DBD::Gofer for UTF-8-enabled STDIN/STDOUT
+        thanks to mauke PR#32
+    Fixed fetchall_arrayref({}) behavior with no columns
+        thanks to Dan McGee PR#31
+    Fixed tied CachedKids ref leak in attribute cache by weakening
+        thanks to Michael Conrad RT#113852
+    Fixed "panic: attempt to copy freed scalar" upon commit() or rollback()
+        thanks to fbriere for detailed bug report RT#102791
+    Ceased to ignore DESTROY of outer handle in DBI::PurePerl
+    Treat undef in DBI::Profile Path as string "undef"
+        thanks to fREW Schmidt RT#113298
+    Fix SQL::Nano parser to ignore trailing semicolon
+        thanks to H.Merijn Brand.
+
+    Added @ary = $dbh->selectall_array(...) method
+        thanks to Ed Avis RT#106411
+    Added appveyor support (Travis like CI for windows)
+        thanks to mbeijen PR#30
+
+    Corrected spelling errors in pod
+        thanks to Gregor Herrmann RT#107838
+    Corrected and/or removed broken links to SQL standards
+        thanks to David Pottage RT#111437
+    Corrected doc example to use dbi: instead of DBI: in DSN
+        thanks to Michael R. Davis RT#101181
+    Removed/updated broken links in docs
+        thanks to mbeijen PR#29
+    Clarified docs for DBI::hash($string)
+    Removed the ancient DBI::FAQ module RT#102714
+    Fixed t/pod.t to require Test::Pod >= 1.41 RT#101769
+
+This release was developed at the Perl QA Hackathon 2016
+L<http://act.qa-hackathon.org/qa2016/>
+which was made possible by the generosity of many sponsors:
+
+L<https://www.fastmail.com> FastMail,
+L<https://www.ziprecruiter.com> ZipRecruiter,
+L<http://www.activestate.com> ActiveState,
+L<http://www.opusvl.com> OpusVL,
+L<https://www.strato.com> Strato,
+L<http://www.surevoip.co.uk> SureVoIP,
+L<http://www.cv-library.co.uk> CV-Library,
+L<https://www.iinteractive.com/> Infinity,
+L<https://opensource.careers/perl-careers/> Perl Careers,
+L<https://www.mongodb.com> MongoDB,
+L<https://www.thinkproject.com> thinkproject!,
+L<https://www.dreamhost.com/> Dreamhost,
+L<http://www.perl6.org/> Perl 6,
+L<http://www.perl-services.de/> Perl Services,
+L<https://www.evozon.com/> Evozon,
+L<http://www.booking.com> Booking,
+L<http://eligo.co.uk> Eligo,
+L<http://www.oetiker.ch/> Oetiker+Partner,
+L<http://capside.com/en/> CAPSiDE,
+L<https://www.procura.nl/> Procura,
+L<https://constructor.io/> Constructor.io,
+L<https://metacpan.org/author/BABF> Robbie Bow,
+L<https://metacpan.org/author/RSAVAGE> Ron Savage,
+L<https://metacpan.org/author/ITCHARLIE> Charlie Gonzalez,
+L<https://twitter.com/jscook2345> Justin Cook.
+
 =head2 Changes in DBI 1.634 - 3rd August 2015
 
     Enabled strictures on all modules (Jose Luis Perez Diez) #22
