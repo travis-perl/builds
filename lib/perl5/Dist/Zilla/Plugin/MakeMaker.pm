@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MakeMaker;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.043';
+$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.047';
 use Moose;
 
 use namespace::autoclean;
@@ -224,9 +224,10 @@ sub write_makefile_args {
   # higher configure-requires version, we should at least warn the user
   # https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/issues/215
   foreach my $phase (qw(configure build test runtime)) {
-    if (my @version_ranges = pairgrep { !version::is_lax($b) } %{ $require_prereqs{$phase} }) {
-      $self->log([
-        'found version range in %s prerequisites, which ExtUtils::MakeMaker cannot parse: %s %s',
+    if (my @version_ranges = pairgrep { defined($b) && !version::is_lax($b) } %{ $require_prereqs{$phase} }
+        and ($self->eumm_version || 0) < '7.1101') {
+      $self->log_fatal([
+        'found version range in %s prerequisites, which ExtUtils::MakeMaker cannot parse (must specify eumm_version of at least 7.1101): %s %s',
         $phase, $_->[0], $_->[1]
       ]) foreach pairs @version_ranges;
     }
@@ -366,7 +367,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -412,7 +413,7 @@ L<TestRunner|Dist::Zilla::Role::TestRunner>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -222,6 +222,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Tehran.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Thimphu.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Tokyo.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Tomsk.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Ulaanbaatar.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Urumqi.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Ust_Nera.pm
@@ -273,6 +274,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/Istanbul.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/Kaliningrad.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/Kiev.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/Kirov.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/Lisbon.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/London.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Europe/Luxembourg.pm

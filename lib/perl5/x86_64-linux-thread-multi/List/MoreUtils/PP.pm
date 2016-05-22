@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.413';
+our $VERSION = '0.415';
 
 =pod
 
@@ -576,7 +576,7 @@ Some parts copyright 2011 Aaron Crane.
 
 Copyright 2004 - 2010 by Tassilo von Parseval
 
-Copyright 2013 - 2015 by Jens Rehsack
+Copyright 2013 - 2016 by Jens Rehsack
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,

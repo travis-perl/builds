@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::NextRelease;
 # ABSTRACT: update the next release number in your changelog
-$Dist::Zilla::Plugin::NextRelease::VERSION = '5.043';
+$Dist::Zilla::Plugin::NextRelease::VERSION = '5.047';
 use namespace::autoclean;
 
 use Moose;
@@ -246,7 +246,7 @@ __PACKAGE__->meta->make_immutable;
 #pod The email address of the user making this release (from C<user_stash>).
 #pod
 #pod = C<%P>
-#pod The CPAN (PAUSE) id of the user namking this release (from -Releaser plugins;
+#pod The CPAN (PAUSE) id of the user making this release (from -Releaser plugins;
 #pod see L<[UploadToCPAN]|Dist::Zilla::Plugin::UploadToCPAN/username>).
 #pod
 #pod = C<%n>
@@ -281,7 +281,7 @@ Dist::Zilla::Plugin::NextRelease - update the next release number in your change
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -382,7 +382,7 @@ The email address of the user making this release (from C<user_stash>).
 
 =item C<%P>
 
-The CPAN (PAUSE) id of the user namking this release (from -Releaser plugins;
+The CPAN (PAUSE) id of the user making this release (from -Releaser plugins;
 see L<[UploadToCPAN]|Dist::Zilla::Plugin::UploadToCPAN/username>).
 
 =item C<%n>
@@ -409,7 +409,7 @@ L<TextTemplate|Dist::Zilla::Role::TextTemplate>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

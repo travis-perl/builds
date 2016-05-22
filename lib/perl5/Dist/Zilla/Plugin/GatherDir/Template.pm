@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GatherDir::Template;
 # ABSTRACT: gather all the files in a directory and use them as templates
-$Dist::Zilla::Plugin::GatherDir::Template::VERSION = '5.043';
+$Dist::Zilla::Plugin::GatherDir::Template::VERSION = '5.047';
 use Moose;
 extends 'Dist::Zilla::Plugin::GatherDir';
 with 'Dist::Zilla::Role::TextTemplate';
@@ -24,7 +24,45 @@ use Path::Tiny;
 #pod It is meant to be used when minting dists with C<dzil new>, but could be used
 #pod in building existing dists, too.
 #pod
+#pod =head1 ATTRIBUTES
+#pod
+#pod =head2 rename
+#pod
+#pod Use this to rename files while they are being gathered.  This is a list of
+#pod key/value pairs, specified thus:
+#pod
+#pod     [GatherDir::Template]
+#pod     rename.DISTNAME = $dist->name =~ s/...//r
+#pod     rename.DISTVER  = $dist->version
+#pod
+#pod This example will replace the tokens C<DISTNAME> and C<DISTVER> with the
+#pod expressions they are associated with. These expressions will be treated as
+#pod though they were miniature Text::Template sections, and hence will receive the
+#pod same variables that the file itself receives, i.e. C<$dist> and C<$plugin>.
+#pod
 #pod =cut
+
+has _rename => (
+  is => 'ro',
+  isa => 'HashRef',
+  default => sub { +{} },
+);
+
+around BUILDARGS => sub {
+  my $orig = shift;
+  my ($class, @arg) = @_;
+
+  my $args = $class->$orig(@arg);
+  my %retargs = %$args;
+
+  for my $rename (grep /^rename/, keys %retargs) {
+    my $expr = delete $retargs{$rename};
+    $rename =~ s/^rename\.//;
+    $retargs{_rename}->{$rename} = $expr;
+  }
+
+  return \%retargs;
+};
 
 sub _file_from_filename {
   my ($self, $filename) = @_;
@@ -33,8 +71,24 @@ sub _file_from_filename {
 
   my @stat = stat $filename or $self->log_fatal("$filename does not exist!");
 
+  my $new_filename = $filename;
+
+  for my $token (keys %{$self->_rename}) {
+    my $expr = $self->_rename->{$token};
+    my $temp_temp = "{{ $expr }}";
+    my $replacement = $self->fill_in_string(
+      $temp_temp,
+      {
+        dist   => \($self->zilla),
+        plugin => \($self),
+      },
+    );
+
+    $new_filename =~ s/\Q$token/$replacement/g;
+  }
+
   return Dist::Zilla::File::FromCode->new({
-    name => $filename,
+    name => $new_filename,
     mode => ($stat[2] & 0755) | 0200, # kill world-writeability, make sure owner-writable.
     code => sub {
       my ($file_obj) = @_;
@@ -64,7 +118,7 @@ Dist::Zilla::Plugin::GatherDir::Template - gather all the files in a directory a
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -79,9 +133,25 @@ object, respectively.
 It is meant to be used when minting dists with C<dzil new>, but could be used
 in building existing dists, too.
 
+=head1 ATTRIBUTES
+
+=head2 rename
+
+Use this to rename files while they are being gathered.  This is a list of
+key/value pairs, specified thus:
+
+    [GatherDir::Template]
+    rename.DISTNAME = $dist->name =~ s/...//r
+    rename.DISTVER  = $dist->version
+
+This example will replace the tokens C<DISTNAME> and C<DISTVER> with the
+expressions they are associated with. These expressions will be treated as
+though they were miniature Text::Template sections, and hence will receive the
+same variables that the file itself receives, i.e. C<$dist> and C<$plugin>.
+
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

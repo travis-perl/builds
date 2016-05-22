@@ -3,7 +3,7 @@ use warnings;
 use 5.006; # warnings
 package Software::License;
 # ABSTRACT: packages that provide templated software licenses
-$Software::License::VERSION = '0.103011';
+$Software::License::VERSION = '0.103012';
 use Data::Section -setup => { header_re => qr/\A__([^_]+)__\Z/ };
 use Text::Template ();
 
@@ -216,7 +216,7 @@ Software::License - packages that provide templated software licenses
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 SYNOPSIS
 

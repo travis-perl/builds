@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PodVersion;
 # ABSTRACT: add a VERSION head1 to each Perl document
-$Dist::Zilla::Plugin::PodVersion::VERSION = '5.043';
+$Dist::Zilla::Plugin::PodVersion::VERSION = '5.047';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -37,8 +37,9 @@ sub munge_pod {
 
   my @content = split /\n/, $file->content;
 
-  require List::MoreUtils;
-  if (List::MoreUtils::any(sub { $_ =~ /^=head1 VERSION\b/ }, @content)) {
+  require List::Util;
+  List::Util->VERSION('1.33');
+  if (List::Util::any(sub { $_ =~ /^=head1 VERSION\b/ }, @content)) {
     $self->log($file->name . ' already has a VERSION section in POD');
     return;
   }
@@ -97,7 +98,7 @@ Dist::Zilla::Plugin::PodVersion - add a VERSION head1 to each Perl document
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -115,7 +116,7 @@ L<NextRelease|Dist::Zilla::Plugin::NextRelease>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

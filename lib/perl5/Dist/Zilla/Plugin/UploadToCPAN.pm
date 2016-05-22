@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::UploadToCPAN;
 # ABSTRACT: upload the dist to CPAN
-$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.043';
+$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.047';
 use Moose;
 with qw(Dist::Zilla::Role::BeforeRelease Dist::Zilla::Role::Releaser);
 
@@ -51,6 +51,14 @@ use namespace::autoclean;
     $self->{'Dist::Zilla'}{plugin}->log(@_);
   }
 }
+
+#pod =attr credentials_stash
+#pod
+#pod This attribute holds the name of a L<PAUSE stash|Dist::Zilla::Stash::PAUSE>
+#pod that will contain the credentials to be used for the upload.  By default,
+#pod UploadToCPAN will look for a C<%PAUSE> stash.
+#pod
+#pod =cut
 
 has credentials_stash => (
   is  => 'ro',
@@ -276,7 +284,7 @@ Dist::Zilla::Plugin::UploadToCPAN - upload the dist to CPAN
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -304,6 +312,12 @@ blank username or password will abort the release.
 You can't put your password in your F<dist.ini>.  C'mon now!
 
 =head1 ATTRIBUTES
+
+=head2 credentials_stash
+
+This attribute holds the name of a L<PAUSE stash|Dist::Zilla::Stash::PAUSE>
+that will contain the credentials to be used for the upload.  By default,
+UploadToCPAN will look for a C<%PAUSE> stash.
 
 =head2 username
 
@@ -347,7 +361,7 @@ is not recommended in most cases.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

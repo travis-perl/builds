@@ -1,8 +1,9 @@
 package Dist::Zilla::Role::File;
 # ABSTRACT: something that can act like a file
-$Dist::Zilla::Role::File::VERSION = '5.043';
+$Dist::Zilla::Role::File::VERSION = '5.047';
 use Moose::Role;
 
+use Dist::Zilla::Types qw(_Filename);
 use Moose::Util::TypeConstraints;
 use Try::Tiny;
 
@@ -22,7 +23,7 @@ with 'Dist::Zilla::Role::StubBuild';
 
 has name => (
   is   => 'rw',
-  isa  => 'Str', # Path::Class::File?
+  isa  => _Filename,
   required => 1,
 );
 
@@ -169,7 +170,7 @@ Dist::Zilla::Role::File - something that can act like a file
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -203,7 +204,7 @@ C<content> will be an error.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

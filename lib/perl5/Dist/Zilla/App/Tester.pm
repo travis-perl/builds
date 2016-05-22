@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Tester;
 # ABSTRACT: testing library for Dist::Zilla::App
-$Dist::Zilla::App::Tester::VERSION = '5.043';
+$Dist::Zilla::App::Tester::VERSION = '5.047';
 use parent 'App::Cmd::Tester::CaptureExternal';
 use App::Cmd::Tester 0.306 (); # result_class, ->app
 
@@ -25,7 +25,7 @@ sub test_dzil {
   my ($self, $source, $argv, $arg) = @_;
   $arg ||= {};
 
-  local @INC = map {; File::Spec->rel2abs($_) } @INC;
+  local @INC = map {; ref($_) ? $_ : File::Spec->rel2abs($_) } @INC;
 
   my $tmpdir = $arg->{tempdir} || File::Temp::tempdir(CLEANUP => 1);
   my $root   = dir($tmpdir)->subdir('source');
@@ -44,7 +44,7 @@ sub test_dzil {
 
 {
   package Dist::Zilla::App::Tester::Result;
-$Dist::Zilla::App::Tester::Result::VERSION = '5.043';
+$Dist::Zilla::App::Tester::Result::VERSION = '5.047';
 BEGIN { our @ISA = qw(App::Cmd::Tester::Result); }
 
   sub tempdir {
@@ -93,11 +93,11 @@ Dist::Zilla::App::Tester - testing library for Dist::Zilla::App
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

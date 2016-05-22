@@ -1,6 +1,6 @@
 package Dist::Zilla::Chrome::Term;
 # ABSTRACT: chrome used for terminal-based interaction
-$Dist::Zilla::Chrome::Term::VERSION = '5.043';
+$Dist::Zilla::Chrome::Term::VERSION = '5.047';
 use Moose;
 
 #pod =head1 OVERVIEW
@@ -152,7 +152,7 @@ Dist::Zilla::Chrome::Term - chrome used for terminal-based interaction
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 OVERVIEW
 
@@ -161,7 +161,7 @@ terminal environment.  It's the default chrome used by L<Dist::Zilla::App>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

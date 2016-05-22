@@ -1,6 +1,6 @@
 package Dist::Zilla;
 # ABSTRACT: distribution builder; installer not included!
-$Dist::Zilla::VERSION = '5.043';
+$Dist::Zilla::VERSION = '5.047';
 use Moose 0.92; # role composition fixes
 with 'Dist::Zilla::Role::ConfigDumper';
 
@@ -379,7 +379,11 @@ sub _build_license {
     $self->log("based on POD in $filename, guessing license is $guess[0]");
   }
 
-  Class::Load::load_class($license_class);
+  unless (Class::Load::try_load_class($license_class)) {
+    $self->log_fatal(
+      "could not load class $license_class for license " . $self->_license_class
+    );
+  }
 
   my $license = $license_class->new({
     holder => $self->_copyright_holder,
@@ -589,7 +593,7 @@ sub _build_distmeta {
   my $meta = {
     'meta-spec' => {
       version => 2,
-      url     => 'http://search.cpan.org/perldoc?CPAN::Meta::Spec',
+      url     => 'https://metacpan.org/pod/CPAN::Meta::Spec',
     },
     name     => $self->name,
     version  => $self->version,
@@ -886,7 +890,7 @@ Dist::Zilla - distribution builder; installer not included!
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -1154,17 +1158,21 @@ Search for plugin bundles: L<https://metacpan.org/search?q=Dist::Zilla::PluginBu
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ævar Arnfjörð Bjarmason Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Cory G Watson csjewell Curtis Brandt Dagfinn Ilmari Mannsåker Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David E. Wheeler Golden H. Adler Steinbrunner Zurborg Davor Cubranic Dimitar Petrov Doug Bell Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X Hunter Michael Jemmeson Mike Doherty Mohammad S Anwar Moritz Onken Neil Bowers Nickolay Platonov Nick Tonkin nperez Olivier Mengué Paul Cochrane Pedro Melo Philippe Bruhat (BooK) Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
+=for stopwords Ævar Arnfjörð Bjarmason Alastair McGowan-Douglas Alexei Znamensky Alex Vandiver ambs Andrew Rodland Andy Jack Apocalypse ben hengst Bernardo Rechea Brian Fraser Caleb Cushing Chisel Christian Walde Christopher J. Madsen Chris Weyl Cory G Watson csjewell Curtis Brandt Dagfinn Ilmari Mannsåker Damien KRotkine Danijel Tasov Dave O'Neill Rolsky David E. Wheeler Golden H. Adler Steinbrunner Zurborg Davor Cubranic Dimitar Petrov Doug Bell Erik Carlsson Fayland Lam Florian Ragwitz Fred Moyer fREW Schmidt gardnerm Gianni Ceccarelli Graham Barr Knop Ollis Grzegorz Rożniecki Hans Dieter Pearcey Hunter McMillen Ivan Bessarabov Jakob Voss jantore Jérôme Quelin Jesse Luehrs Vincent John Napiorkowski Jonathan C. Otsuka Rockway Scott Duff Yu Karen Etheridge Kent Fredric Leon Timmermans Lucas Theisen Luc St-Louis Marcel Gruenauer Martin McGrath Mateu X mauke Michael Jemmeson Mike Doherty Mohammad S Anwar Moritz Onken Neil Bowers Nickolay Platonov Nick Tonkin nperez Olivier Mengué Paul Cochrane Pedro Melo Philippe Bruhat (BooK) Randy Stauner robertkrimen Rob Hoelz Robin Smidsrød Shawn M Moore Smylers Steffen Schwigon Steven Haryanto Tatsuhiko Miyagawa Upasana Shukla Vyacheslav Matjukhin Yanick Champoux Yuval Kogman
 
 =over 4
 
 =item *
 
 Ævar Arnfjörð Bjarmason <avarab@gmail.com>
+
+=item *
+
+Alastair McGowan-Douglas <alastair.mcgowan@opusvl.com>
 
 =item *
 
@@ -1205,6 +1213,10 @@ Brian Fraser <fraserbn@gmail.com>
 =item *
 
 Caleb Cushing <xenoterracide@gmail.com>
+
+=item *
+
+Chisel <chisel@chizography.net>
 
 =item *
 
@@ -1284,6 +1296,10 @@ Doug Bell <madcityzen@gmail.com>
 
 =item *
 
+Erik Carlsson <info@code301.com>
+
+=item *
+
 Fayland Lam <fayland@gmail.com>
 
 =item *
@@ -1329,6 +1345,10 @@ Grzegorz Rożniecki <xaerxess@gmail.com>
 =item *
 
 Hans Dieter Pearcey <hdp@weftsoar.net>
+
+=item *
+
+Hunter McMillen <mcmillhj@gmail.com>
 
 =item *
 
@@ -1405,6 +1425,10 @@ Martin McGrath <mcgrath.martin@gmail.com>
 =item *
 
 Mateu X Hunter <hunter@missoula.org>
+
+=item *
+
+mauke <l.mai@web.de>
 
 =item *
 

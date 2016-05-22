@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::add;
 # ABSTRACT: add a module to a dist
-$Dist::Zilla::App::Command::add::VERSION = '5.043';
+$Dist::Zilla::App::Command::add::VERSION = '5.047';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -90,7 +90,7 @@ Dist::Zilla::App::Command::add - add a module to a dist
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -103,7 +103,7 @@ provider and C<-p> - the profile name. These work just like C<dzil new>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Software::License::LGPL_2_1;
-$Software::License::LGPL_2_1::VERSION = '0.103011';
+$Software::License::LGPL_2_1::VERSION = '0.103012';
 use parent 'Software::License';
 # ABSTRACT: GNU Lesser General Public License, Version 2.1
 
@@ -22,7 +22,7 @@ Software::License::LGPL_2_1 - GNU Lesser General Public License, Version 2.1
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 AUTHOR
 

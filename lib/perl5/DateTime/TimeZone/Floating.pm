@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Floating;
-$DateTime::TimeZone::Floating::VERSION = '1.96';
+$DateTime::TimeZone::Floating::VERSION = '1.98';
 use strict;
 use warnings;
 
@@ -48,13 +48,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::TimeZone::Floating - A time zone that is always local
 
 =head1 VERSION
 
-version 1.96
+version 1.98
 
 =head1 SYNOPSIS
 
@@ -72,11 +74,18 @@ This class has the same methods as a real time zone object, but the
 C<short_name_for_datetime()>, and C<category()> methods both return
 undef.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-TimeZone>
+(or L<bug-datetime-timezone@rt.cpan.org|mailto:bug-datetime-timezone@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

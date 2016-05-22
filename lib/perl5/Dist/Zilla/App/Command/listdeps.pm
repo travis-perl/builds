@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::listdeps;
 # ABSTRACT: print your distribution's prerequisites
-$Dist::Zilla::App::Command::listdeps::VERSION = '5.043';
+$Dist::Zilla::App::Command::listdeps::VERSION = '5.047';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -30,6 +30,11 @@ use Dist::Zilla::App -command;
 #pod
 #pod Also display the required versions of listed modules.
 #pod
+#pod =head2 --cpanm-versions
+#pod
+#pod Also display the required versions of listed modules, but in a format suitable
+#pod for piping into F<cpanm>.
+#pod
 #pod =head2 --json
 #pod
 #pod Lists all prerequisites in JSON format, as they would appear in META.json
@@ -51,6 +56,7 @@ sub opt_spec {
   [ 'develop|author', 'include author/develop dependencies' ],
   [ 'missing', 'list only the missing dependencies' ],
   [ 'versions', 'include required version numbers in listing' ],
+  [ 'cpanm-versions', 'format versions for consumption by cpanm' ],
   [ 'json', 'list dependencies by phase, in JSON format' ],
   [ 'omit-core=s', 'Omit dependencies that are shipped with the specified version of perl' ],
 }
@@ -145,9 +151,12 @@ sub execute {
 
   my %modules = $self->extract_dependencies($self->zilla, \@phases, $opt->missing, $opt->omit_core);
 
-  if($opt->versions) {
-    for(sort { lc $a cmp lc $b } keys %modules) {
-      print "$_ = ".$modules{$_}."\n";
+  if ($opt->versions or $opt->cpanm_versions) {
+    my @names = sort { lc $a cmp lc $b } keys %modules;
+    if ($opt->cpanm_versions) {
+      print qq{$_~"$modules{$_}"\n} for @names;
+    } else {
+      print "$_ = $modules{$_}\n" for @names;
     }
   } else {
       print "$_\n" for sort { lc $a cmp lc $b } keys(%modules);
@@ -168,7 +177,7 @@ Dist::Zilla::App::Command::listdeps - print your distribution's prerequisites
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -195,6 +204,11 @@ List only dependencies which are unsatisfied.
 
 Also display the required versions of listed modules.
 
+=head2 --cpanm-versions
+
+Also display the required versions of listed modules, but in a format suitable
+for piping into F<cpanm>.
+
 =head2 --json
 
 Lists all prerequisites in JSON format, as they would appear in META.json
@@ -208,7 +222,7 @@ API.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

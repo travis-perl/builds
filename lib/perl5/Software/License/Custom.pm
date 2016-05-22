@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Software::License::Custom;
 # ABSTRACT: custom license handler
-$Software::License::Custom::VERSION = '0.103011';
+$Software::License::Custom::VERSION = '0.103012';
 use parent 'Software::License';
 
 use Carp;
@@ -205,7 +205,7 @@ Software::License::Custom - custom license handler
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 DESCRIPTION
 

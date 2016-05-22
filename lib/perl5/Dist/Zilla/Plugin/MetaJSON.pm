@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MetaJSON;
 # ABSTRACT: produce a META.json
-$Dist::Zilla::Plugin::MetaJSON::VERSION = '5.043';
+$Dist::Zilla::Plugin::MetaJSON::VERSION = '5.047';
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
@@ -56,6 +56,7 @@ sub gather_files {
 
   my $file  = Dist::Zilla::File::FromCode->new({
     name => $self->filename,
+    encoding => 'ascii',
     code_return_type => 'text',
     code => sub {
       my $distmeta  = $zilla->distmeta;
@@ -74,7 +75,7 @@ sub gather_files {
       # note utf8 => 1 is *not* used - so unicode characters remain as-is in
       # the resulting json string, and therefore an encoding must be used when
       # the file is written to disk.
-      JSON::MaybeXS->new(canonical => 1, pretty => 1)->encode($output)
+      JSON::MaybeXS->new(canonical => 1, pretty => 1, ascii => 1)->encode($output)
       . "\n";
     },
   });
@@ -113,7 +114,7 @@ Dist::Zilla::Plugin::MetaJSON - produce a META.json
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -152,7 +153,7 @@ L<CPAN::Meta::Spec>, L<JSON::MaybeXS>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

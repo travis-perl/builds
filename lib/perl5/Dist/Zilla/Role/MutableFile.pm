@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::MutableFile;
 # ABSTRACT: something that can act like a file with changeable contents
-$Dist::Zilla::Role::MutableFile::VERSION = '5.043';
+$Dist::Zilla::Role::MutableFile::VERSION = '5.047';
 use Moose::Role;
 
 use Moose::Util::TypeConstraints;
@@ -135,7 +135,7 @@ Dist::Zilla::Role::MutableFile - something that can act like a file with changea
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -153,7 +153,7 @@ Default is 'UTF-8'. Can only be set once.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Prereqs;
 # ABSTRACT: list simple prerequisites
-$Dist::Zilla::Plugin::Prereqs::VERSION = '5.043';
+$Dist::Zilla::Plugin::Prereqs::VERSION = '5.047';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
@@ -216,7 +216,7 @@ Dist::Zilla::Plugin::Prereqs - list simple prerequisites
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -343,7 +343,7 @@ The CPAN Meta specification: L<CPAN::Meta/PREREQUISITES>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

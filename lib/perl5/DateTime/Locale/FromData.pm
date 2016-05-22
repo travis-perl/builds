@@ -6,7 +6,7 @@ use warnings;
 use DateTime::Locale::Util qw( parse_locale_code );
 use Params::Validate qw( validate_pos );
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 my @FormatLengths;
 
@@ -267,13 +267,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::Locale::FromData - Class for locale objects instantiated from pre-defined data
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
 
@@ -283,8 +285,6 @@ version 1.02
 
 This class is used to represent locales instantiated from the data in the
 DateTime::Locale::Data module.
-
-=encoding UTF-8
 
 =head1 METHODS
 
@@ -486,13 +486,23 @@ The CLDR version from which this locale was generated.
 
 =back
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-Locale>
+(or L<bug-datetime-locale@rt.cpan.org|mailto:bug-datetime-locale@rt.cpan.org>).
+
+There is a mailing list available for users of this distribution,
+L<mailto:datetime@perl.org>.
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2015 by Dave Rolsky.
+This software is copyright (c) 2016 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -3,7 +3,7 @@ package Log::Dispatch::Email::MailSendmail;
 use strict;
 use warnings;
 
-our $VERSION = '2.54';
+our $VERSION = '2.56';
 
 use Log::Dispatch::Email;
 
@@ -16,7 +16,7 @@ sub send_email {
     my %p    = @_;
 
     my %mail = (
-        To => ( join ',', @{ $self->{to} } ),
+        To      => ( join ',', @{ $self->{to} } ),
         Subject => $self->{subject},
         Message => $p{message},
 
@@ -38,13 +38,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::Email::MailSendmail - Subclass of Log::Dispatch::Email that uses the Mail::Sendmail module
 
 =head1 VERSION
 
-version 2.54
+version 2.56
 
 =head1 SYNOPSIS
 
@@ -68,11 +70,18 @@ version 2.54
 This is a subclass of L<Log::Dispatch::Email> that implements the
 send_email method using the L<Mail::Sendmail> module.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Log-Dispatch>
+(or L<bug-log-dispatch@rt.cpan.org|mailto:bug-log-dispatch@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

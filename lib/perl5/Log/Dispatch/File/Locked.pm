@@ -5,7 +5,7 @@ use warnings;
 
 use base qw( Log::Dispatch::File );
 
-our $VERSION = '2.54';
+our $VERSION = '2.56';
 
 use Fcntl qw(:DEFAULT :flock);
 
@@ -51,13 +51,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch::File::Locked - Subclass of Log::Dispatch::File to facilitate locking
 
 =head1 VERSION
 
-version 2.54
+version 2.56
 
 =head1 SYNOPSIS
 
@@ -91,11 +93,18 @@ another.
 
 L<perlfunc/flock>
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Log-Dispatch>
+(or L<bug-log-dispatch@rt.cpan.org|mailto:bug-log-dispatch@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

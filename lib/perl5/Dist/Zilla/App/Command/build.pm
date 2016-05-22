@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::build;
 # ABSTRACT: build your dist
-$Dist::Zilla::App::Command::build::VERSION = '5.043';
+$Dist::Zilla::App::Command::build::VERSION = '5.047';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -58,6 +58,10 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   if ($opt->in) {
+    require Path::Tiny;
+    die qq{using "--in ." would destroy your working directory!\n}
+      if Path::Tiny::path($opt->in)->absolute eq Path::Tiny::path('.')->absolute;
+
     $self->zilla->build_in($opt->in);
   } else {
     my $method = $opt->tgz ? 'build_archive' : 'build';
@@ -88,7 +92,7 @@ Dist::Zilla::App::Command::build - build your dist
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -127,7 +131,7 @@ necessary, the directory will be created.  An archive will not be created.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

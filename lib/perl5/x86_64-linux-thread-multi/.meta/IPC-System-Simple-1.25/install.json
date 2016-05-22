@@ -1,1 +1,1 @@
-{"name":"IPC::System::Simple","provides":{"IPC::System::Simple":{"version":"1.25","file":"lib/IPC/System/Simple.pm"}},"dist":"IPC-System-Simple-1.25","version":"1.25","target":"IPC::System::Simple","pathname":"P/PJ/PJF/IPC-System-Simple-1.25.tar.gz"}
+{"target":"IPC::System::Simple","pathname":"P/PJ/PJF/IPC-System-Simple-1.25.tar.gz","dist":"IPC-System-Simple-1.25","version":"1.25","name":"IPC::System::Simple","provides":{"IPC::System::Simple":{"version":"1.25","file":"lib/IPC/System/Simple.pm"}}}

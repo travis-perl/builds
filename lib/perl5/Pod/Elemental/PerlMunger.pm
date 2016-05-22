@@ -1,6 +1,6 @@
 package Pod::Elemental::PerlMunger;
 # ABSTRACT: a thing that takes a string of Perl and rewrites its documentation
-$Pod::Elemental::PerlMunger::VERSION = '0.200003';
+$Pod::Elemental::PerlMunger::VERSION = '0.200006';
 use Moose::Role;
 
 #pod =head1 OVERVIEW
@@ -19,9 +19,16 @@ use Moose::Role;
 #pod
 #pod C<$perl_string> should be a character string containing Perl source code.
 #pod
-#pod C<%arg> may contain any input for the underlying procedure.  The only key with
-#pod associated meaning is C<filename> which may be omitted.  If given, it should be
-#pod the name of the file whose contents are being munged.
+#pod C<%arg> may contain any input for the underlying procedure.  Defined keys for
+#pod C<%arg> are:
+#pod
+#pod =for :list
+#pod = filename
+#pod the name of the file whose contents are being munged; optional, used for error
+#pod messages
+#pod = no_strip_bom
+#pod If given, the BOM character (U+FEFF) won't be stripped from the input.
+#pod Probably best to leave this one off.
 #pod
 #pod The method will return a character string containing the rewritten and combined
 #pod document.
@@ -53,9 +60,9 @@ requires 'munge_perl_string';
 around munge_perl_string => sub {
   my ($orig, $self, $perl, $arg) = @_;
 
-  my $perl_utf8 = Encode::encode('utf-8', $perl, Encode::FB_CROAK);
+  $perl =~ s/^\x{FEFF}// unless $arg->{no_strip_bom};
 
-  my $ppi_document = PPI::Document->new(\$perl_utf8);
+  my $ppi_document = PPI::Document->new(\$perl);
   confess(PPI::Document->errstr) unless $ppi_document;
 
   my $last_code_elem;
@@ -127,8 +134,9 @@ around munge_perl_string => sub {
   # TODO: I should add a $weaver->weave_* like the Linewise methods to take the
   # input, get a Document, perform the stock transformations, and then weave.
   # -- rjbs, 2009-10-24
-  my $pod_str = join "\n", @pod_tokens;
-  my $pod_document = Pod::Elemental->read_string($pod_str);
+  my $pod_str  = join "\n", @pod_tokens;
+  my $pod_utf8 = Encode::encode('utf-8', $pod_str, Encode::FB_CROAK);
+  my $pod_document = Pod::Elemental->read_string($pod_utf8);
 
   my $doc = $self->$orig(
     {
@@ -161,11 +169,7 @@ around munge_perl_string => sub {
 
   $doc->{ppi}->prune($end_finder);
 
-  my $new_perl = Encode::decode(
-    'utf-8',
-    $doc->{ppi}->serialize,
-    Encode::FB_CROAK,
-  );
+  my $new_perl = $doc->{ppi}->serialize;
 
   s/\n\s*\z// for $new_perl, $new_pod;
 
@@ -297,7 +301,7 @@ Pod::Elemental::PerlMunger - a thing that takes a string of Perl and rewrites it
 
 =head1 VERSION
 
-version 0.200003
+version 0.200006
 
 =head1 OVERVIEW
 
@@ -315,9 +319,22 @@ this:
 
 C<$perl_string> should be a character string containing Perl source code.
 
-C<%arg> may contain any input for the underlying procedure.  The only key with
-associated meaning is C<filename> which may be omitted.  If given, it should be
-the name of the file whose contents are being munged.
+C<%arg> may contain any input for the underlying procedure.  Defined keys for
+C<%arg> are:
+
+=over 4
+
+=item filename
+
+the name of the file whose contents are being munged; optional, used for error
+messages
+
+=item no_strip_bom
+
+If given, the BOM character (U+FEFF) won't be stripped from the input.
+Probably best to leave this one off.
+
+=back
 
 The method will return a character string containing the rewritten and combined
 document.
@@ -403,7 +420,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Christopher J. Madsen Dave Rolsky Karen Etheridge
+=for stopwords Christopher J. Madsen Dave Rolsky Karen Etheridge perlancar (on PC, Bandung)
 
 =over 4
 
@@ -419,11 +436,15 @@ Dave Rolsky <autarch@urth.org>
 
 Karen Etheridge <ether@cpan.org>
 
+=item *
+
+perlancar (on PC, Bandung) <perlancar@gmail.com>
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

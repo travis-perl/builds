@@ -1,11 +1,11 @@
 package MooseX::Getopt::GLD;
 # ABSTRACT: A Moose role for processing command line options with Getopt::Long::Descriptive
 
-our $VERSION = '0.68';
+our $VERSION = '0.70';
 
 use strict;
 use warnings;
-use MooseX::Role::Parameterized;
+use MooseX::Role::Parameterized 1.01;
 use Getopt::Long::Descriptive 0.088;
 with 'MooseX::Getopt::Basic';
 use namespace::autoclean;
@@ -97,7 +97,7 @@ MooseX::Getopt::GLD - A Moose role for processing command line options with Geto
 
 =head1 VERSION
 
-version 0.68
+version 0.70
 
 =head1 SYNOPSIS
 
@@ -133,6 +133,17 @@ This role is a parameterized role. It accepts one configuration parameter,
 C<getopt_conf>. This parameter is an ArrayRef of strings, which are
 L<Getopt::Long> configuration options (see "Configuring Getopt::Long" in
 L<Getopt::Long>)
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Getopt>
+(or L<bug-MooseX-Getopt@rt.cpan.org|mailto:bug-MooseX-Getopt@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

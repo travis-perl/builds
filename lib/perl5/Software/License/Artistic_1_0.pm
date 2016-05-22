@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Software::License::Artistic_1_0;
-$Software::License::Artistic_1_0::VERSION = '0.103011';
+$Software::License::Artistic_1_0::VERSION = '0.103012';
 use parent 'Software::License';
 # ABSTRACT: The Artistic License
 
@@ -60,7 +60,7 @@ Software::License::Artistic_1_0 - The Artistic License
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 OPTIONS
 

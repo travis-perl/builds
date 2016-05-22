@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgDist;
 # ABSTRACT: add a $DIST to your packages
-$Dist::Zilla::Plugin::PkgDist::VERSION = '5.043';
+$Dist::Zilla::Plugin::PkgDist::VERSION = '5.047';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -91,8 +91,12 @@ sub munge_perl {
       $file->name,
     ]);
 
+    # the extra whitespace element ensures we don't swallow up any blanks
+    # lines after 'package ...' in the source file that PkgVersion warns about
+    # if it's missing.
     Carp::carp('error inserting $DIST in ' . $file->name)
-      unless $stmt->insert_after($children[0]->clone)
+      unless $stmt->add_element( PPI::Token::Whitespace->new("\n") )
+      and    $stmt->insert_after($children[0]->clone)
       and    $stmt->insert_after( PPI::Token::Whitespace->new("\n") );
   }
 
@@ -115,7 +119,7 @@ Dist::Zilla::Plugin::PkgDist - add a $DIST to your packages
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -135,7 +139,7 @@ typically used when doing monkey patching or other tricky things.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

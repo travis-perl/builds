@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::ExecDir;
 # ABSTRACT: install a directory's contents as executables
-$Dist::Zilla::Plugin::ExecDir::VERSION = '5.043';
+$Dist::Zilla::Plugin::ExecDir::VERSION = '5.047';
 use Moose;
 
 use namespace::autoclean;
@@ -47,7 +47,7 @@ Dist::Zilla::Plugin::ExecDir - install a directory's contents as executables
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -60,7 +60,7 @@ If no C<dir> is provided, the default is F<bin>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

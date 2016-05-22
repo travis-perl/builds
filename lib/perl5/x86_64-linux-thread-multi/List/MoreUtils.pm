@@ -6,7 +6,7 @@ use warnings;
 
 BEGIN
 {
-    our $VERSION = '0.413';
+    our $VERSION = '0.415';
 }
 
 use Exporter::Tiny qw();
@@ -783,7 +783,7 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=List-MoreUtils>
+L<https://rt.cpan.org/Dist/Display.html?Name=List-MoreUtils>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
@@ -791,7 +791,11 @@ L<http://annocpan.org/dist/List-MoreUtils>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/l/List-MoreUtils>
+L<http://cpanratings.perl.org/dist/List-MoreUtils>
+
+=item * MetaCPAN
+
+L<https://metacpan.org/release/List-MoreUtils>
 
 =item * CPAN Search
 
@@ -949,7 +953,7 @@ Some parts copyright 2011 Aaron Crane.
 
 Copyright 2004 - 2010 by Tassilo von Parseval
 
-Copyright 2013 - 2015 by Jens Rehsack
+Copyright 2013 - 2016 by Jens Rehsack
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,

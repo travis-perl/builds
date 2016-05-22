@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 use DateTime::Locale::Data;
 use DateTime::Locale::FromData;
@@ -360,13 +360,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::Locale - Localization support for DateTime.pm
 
 =head1 VERSION
 
-version 1.02
+version 1.03
 
 =head1 SYNOPSIS
 
@@ -389,8 +391,6 @@ locales.
 
 If you want to know what methods are available for locale objects, then please
 read the C<DateTime::Locale::FromData> documentation.
-
-=encoding utf8
 
 =head1 USAGE
 
@@ -460,7 +460,7 @@ Returns an unsorted list of the available locale names in their native
 language, or an array reference if called in a scalar context. All native
 names in UTF-8 characters as appropriate.
 
-=head1 SUPPORT
+=head1 CLDR DATA BUGS
 
 Please be aware that all locale data has been generated from the CLDR (Common
 Locale Data Repository) project locales data). The data is incomplete, and may
@@ -473,26 +473,6 @@ details.
 
 Once these errors have been confirmed, please forward the error report and
 corrections to the DateTime mailing list, datetime@perl.org.
-
-Support for this module is provided via the datetime@perl.org email list. See
-http://lists.perl.org/ for more details.
-
-=head1 DONATIONS
-
-If you'd like to thank me for the work I've done on this module, please
-consider making a "donation" to me via PayPal. I spend a lot of free time
-creating free software, and would appreciate any support you'd care to offer.
-
-Please note that B<I am not suggesting that you must do this> in order for me
-to continue working on this particular software. I will continue to do so,
-inasmuch as I have in the past, for as long as it interests me.
-
-Similarly, a donation made in this way will probably not make me work on this
-software much more, unless I get so many donations that I can consider working
-on free software full time, which seems unlikely at best.
-
-To donate, log into PayPal and send money to autarch@urth.org or use the
-button on this page: L<http://www.urth.org/~autarch/fs-donation.html>
 
 =head1 AUTHOR EMERITUS
 
@@ -507,13 +487,40 @@ datetime@perl.org mailing list
 
 http://datetime.perl.org/
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-Locale>
+(or L<bug-datetime-locale@rt.cpan.org|mailto:bug-datetime-locale@rt.cpan.org>).
+
+There is a mailing list available for users of this distribution,
+L<mailto:datetime@perl.org>.
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
+=head1 DONATIONS
+
+If you'd like to thank me for the work I've done on this module, please
+consider making a "donation" to me via PayPal. I spend a lot of free time
+creating free software, and would appreciate any support you'd care to offer.
+
+Please note that B<I am not suggesting that you must do this> in order for me
+to continue working on this particular software. I will continue to do so,
+inasmuch as I have in the past, for as long as it interests me.
+
+Similarly, a donation made in this way will probably not make me work on this
+software much more, unless I get so many donations that I can consider working
+on free software full time (let's all have a chuckle at that together).
+
+To donate, log into PayPal and send money to autarch@urth.org, or use the
+button at L<http://www.urth.org/~autarch/fs-donation.html>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2015 by Dave Rolsky.
+This software is copyright (c) 2016 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

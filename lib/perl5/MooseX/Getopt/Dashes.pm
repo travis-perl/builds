@@ -1,7 +1,7 @@
 package MooseX::Getopt::Dashes;
 # ABSTRACT: convert underscores in attribute names to dashes
 
-our $VERSION = '0.68';
+our $VERSION = '0.70';
 
 use Moose::Role;
 with 'MooseX::Getopt';
@@ -33,7 +33,7 @@ MooseX::Getopt::Dashes - convert underscores in attribute names to dashes
 
 =head1 VERSION
 
-version 0.68
+version 0.70
 
 =head1 SYNOPSIS
 
@@ -68,6 +68,17 @@ You can selectively disable this on a per-attribute basis by supplying
 a L<cmd_flag|MooseX::Getopt::Meta::Attribute/METHODS> argument with
 the command flag you'd like for a given attribute. No underscore to
 dash replacement will be done on the C<cmd_flag>.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Getopt>
+(or L<bug-MooseX-Getopt@rt.cpan.org|mailto:bug-MooseX-Getopt@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

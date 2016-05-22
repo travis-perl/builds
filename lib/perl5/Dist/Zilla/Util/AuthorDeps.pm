@@ -2,10 +2,10 @@ use strict;
 use warnings;
 package Dist::Zilla::Util::AuthorDeps;
 # ABSTRACT: Utils for listing your distribution's author dependencies
-$Dist::Zilla::Util::AuthorDeps::VERSION = '5.043';
+$Dist::Zilla::Util::AuthorDeps::VERSION = '5.047';
 use Dist::Zilla::Util;
 use Path::Tiny;
-use List::MoreUtils ();
+use List::Util 1.45 ();
 
 
 sub format_author_deps {
@@ -72,14 +72,16 @@ sub extract_author_deps {
   my @packages;
   while (<$fh>) {
     chomp;
-    next unless /\A\s*;\s*authordep\s*(\S+)\s*(?:=\s*(.+))?\s*\z/;
+    next unless /\A\s*;\s*authordep\s*(\S+)\s*(?:=\s*([^;]+))?\s*/;
+    my $module = $1;
     my $ver = defined $2 ? $2 : "0";
+    $ver =~ s/\s+$//;
     # Any "; authordep " is inserted at the beginning of the list
     # in the file order so the user can control the order of at least a part of
     # the plugin list
-    push @packages, $1;
+    push @packages, $module;
     # And added to the requirements so we can use it later
-    $reqs->add_string_requirement($1 => $ver);
+    $reqs->add_string_requirement($module => $ver);
   }
 
   my $vermap = $reqs->as_string_hash;
@@ -97,7 +99,6 @@ sub extract_author_deps {
 
   # Now that we have a sorted list of packages, use that to build an array of
   # hashrefs for display.
-  require List::MoreUtils;
   require Class::Load;
 
   my @final =
@@ -109,8 +110,7 @@ sub extract_author_deps {
           : (! Class::Load::try_load_class($_, ($vermap->{$_} ? {-version => $vermap->{$_}} : ())))
         : 1
       }
-    List::MoreUtils::uniq
-    @packages;
+    List::Util::uniq(@packages);
 
   return \@final;
 }
@@ -129,11 +129,11 @@ Dist::Zilla::Util::AuthorDeps - Utils for listing your distribution's author dep
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

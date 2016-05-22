@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::InlineFiles;
 # ABSTRACT: files in a data section
-$Dist::Zilla::Plugin::InlineFiles::VERSION = '5.043';
+$Dist::Zilla::Plugin::InlineFiles::VERSION = '5.047';
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
@@ -62,7 +62,7 @@ Dist::Zilla::Plugin::InlineFiles - files in a data section
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -79,7 +79,7 @@ L<PodSyntaxTests|Dist::Zilla::Plugin::PodSyntaxTests>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

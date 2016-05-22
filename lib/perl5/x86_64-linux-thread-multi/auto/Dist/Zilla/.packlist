@@ -116,6 +116,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/Plugin.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/PluginBundle.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/PluginBundle/Easy.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/PrereqScanner.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/PrereqSource.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/ReleaseStatusProvider.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Role/Releaser.pm

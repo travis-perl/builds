@@ -1,5 +1,5 @@
 package DateTime::TimeZone;
-$DateTime::TimeZone::VERSION = '1.96';
+$DateTime::TimeZone::VERSION = '1.98';
 use 5.006;
 
 use strict;
@@ -558,13 +558,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::TimeZone - Time zone object base class and factory
 
 =head1 VERSION
 
-version 1.96
+version 1.98
 
 =head1 SYNOPSIS
 
@@ -798,15 +800,6 @@ If you subclass C<DateTime::TimeZone>, you will inherit its hooks,
 which may not work for your module, so please test the interaction of
 your module with Storable.
 
-=head1 SUPPORT
-
-Support for this module is provided via the datetime@perl.org email list. See
-http://datetime.perl.org/wiki/datetime/page/Mailing_List for details.
-
-Please submit bugs to the CPAN RT system at
-http://rt.cpan.org/NoAuth/ReportBug.html?Queue=datetime%3A%3Atimezone
-or via email at bug-datetime-timezone@rt.cpan.org.
-
 =head1 DONATIONS
 
 If you'd like to thank me for the work I've done on this module,
@@ -844,6 +837,37 @@ The tools directory of the DateTime::TimeZone distribution includes
 two scripts that may be of interest to some people.  They are
 parse_olson and tests_from_zdump.  Please run them with the --help
 flag to see what they can be used for.
+
+=head1 SUPPORT
+
+Support for this module is provided via the datetime@perl.org email list. See
+http://datetime.perl.org/wiki/datetime/page/Mailing_List for details.
+
+Please submit bugs to the CPAN RT system at
+http://rt.cpan.org/NoAuth/ReportBug.html?Queue=datetime%3A%3Atimezone
+or via email at bug-datetime-timezone@rt.cpan.org.
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-TimeZone>
+(or L<bug-datetime-timezone@rt.cpan.org|mailto:bug-datetime-timezone@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
+=head1 DONATIONS
+
+If you'd like to thank me for the work I've done on this module, please
+consider making a "donation" to me via PayPal. I spend a lot of free time
+creating free software, and would appreciate any support you'd care to offer.
+
+Please note that B<I am not suggesting that you must do this> in order for me
+to continue working on this particular software. I will continue to do so,
+inasmuch as I have in the past, for as long as it interests me.
+
+Similarly, a donation made in this way will probably not make me work on this
+software much more, unless I get so many donations that I can consider working
+on free software full time (let's all have a chuckle at that together).
+
+To donate, log into PayPal and send money to autarch@urth.org, or use the
+button at L<http://www.urth.org/~autarch/fs-donation.html>.
 
 =head1 AUTHOR
 
@@ -893,7 +917,7 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

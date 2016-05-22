@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Software::License::Sun;
-$Software::License::Sun::VERSION = '0.103011';
+$Software::License::Sun::VERSION = '0.103012';
 use parent 'Software::License';
 # ABSTRACT: Sun Internet Standards Source License (SISSL)
 
@@ -23,7 +23,7 @@ Software::License::Sun - Sun Internet Standards Source License (SISSL)
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 AUTHOR
 

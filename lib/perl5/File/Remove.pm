@@ -2,11 +2,12 @@ package File::Remove;
 
 use 5.00503;
 use strict;
+use warnings;
 
 use vars qw{ $VERSION @ISA @EXPORT_OK };
 use vars qw{ $DEBUG $unlink $rmdir    };
 BEGIN {
-	$VERSION   = '1.55';
+	$VERSION   = '1.57';
 	# $VERSION   = eval $VERSION;
 	@ISA       = qw{ Exporter };
 	@EXPORT_OK = qw{ remove rm clear trash };
@@ -281,7 +282,7 @@ File::Remove - Remove files and directories
 
 =head1 VERSION
 
-version 1.55
+version 1.57
 
 =head1 SYNOPSIS
 
@@ -398,6 +399,10 @@ Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
+Taken over by Shlomi Fish (L<http://www.shlomifish.org/>) while disclaiming
+all rights and placing his modifications under
+CC0/public-domain/MIT/any-other-licence.
+
 Some parts copyright 2006 - 2012 Adam Kennedy.
 
 Taken over by Adam Kennedy E<lt>adamk@cpan.orgE<gt> to fix the
@@ -419,7 +424,7 @@ Shlomi Fish <shlomif@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Shlomi Fish.
+This software is copyright (c) 1998 by Gabor Egressy.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,6 +1,6 @@
 package Pod::Weaver::Role::Dialect;
 # ABSTRACT: something that translates Pod subdialects to standard Pod5
-$Pod::Weaver::Role::Dialect::VERSION = '4.012';
+$Pod::Weaver::Role::Dialect::VERSION = '4.013';
 use Moose::Role;
 with 'Pod::Weaver::Role::Plugin';
 
@@ -31,7 +31,7 @@ Pod::Weaver::Role::Dialect - something that translates Pod subdialects to standa
 
 =head1 VERSION
 
-version 4.012
+version 4.013
 
 =head1 IMPLEMENTING
 
@@ -46,7 +46,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

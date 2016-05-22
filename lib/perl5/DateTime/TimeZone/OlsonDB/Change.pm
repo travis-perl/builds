@@ -1,5 +1,5 @@
 package DateTime::TimeZone::OlsonDB::Change;
-$DateTime::TimeZone::OlsonDB::Change::VERSION = '1.96';
+$DateTime::TimeZone::OlsonDB::Change::VERSION = '1.98';
 use strict;
 use warnings;
 

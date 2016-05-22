@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.084';
+our $VERSION = '0.090';
 
 # Dependencies
 use Config;
@@ -116,7 +116,7 @@ sub _symbolic_chmod {
 my $WARNED_BSD_NFS = 0;
 
 sub _throw {
-    my ( $self, $function, $file ) = @_;
+    my ( $self, $function, $file, $msg ) = @_;
     if (   IS_BSD()
         && $function =~ /^flock/
         && $! =~ /operation not supported/i
@@ -128,7 +128,9 @@ sub _throw {
         }
     }
     else {
-        Path::Tiny::Error->throw( $function, ( defined $file ? $file : $self->[PATH] ), $! );
+        $msg = $! unless defined $msg;
+        Path::Tiny::Error->throw( $function, ( defined $file ? $file : $self->[PATH] ),
+            $msg );
     }
     return;
 }
@@ -394,6 +396,24 @@ sub _parse_file_temp_args {
 sub _splitpath {
     my ($self) = @_;
     @{$self}[ VOL, DIR, FILE ] = File::Spec->splitpath( $self->[PATH] );
+}
+
+sub _resolve_symlinks {
+    my ($self) = @_;
+    my $new = $self;
+    my ( $count, %seen ) = 0;
+    while ( -l $new->[PATH] ) {
+        if ( $seen{ $new->[PATH] }++ ) {
+            $self->_throw( 'readlink', $self->[PATH], "symlink loop detected" );
+        }
+        if ( ++$count > 100 ) {
+            $self->_throw( 'readlink', $self->[PATH], "maximum symlink depth exceeded" );
+        }
+        my $resolved = readlink $new->[PATH] or $new->_throw( 'readlink', $new->[PATH] );
+        $resolved = path($resolved);
+        $new = $resolved->is_absolute ? $resolved : $new->sibling($resolved);
+    }
+    return $new;
 }
 
 #--------------------------------------------------------------------------#
@@ -681,9 +701,9 @@ sub chmod {
 #pod
 #pod     path("/tmp/foo.txt")->copy("/tmp/bar.txt");
 #pod
-#pod Copies a file using L<File::Copy>'s C<copy> function. Upon
-#pod success, returns the C<Path::Tiny> object for the newly copied
-#pod file.
+#pod Copies the current path to the given destination using L<File::Copy>'s
+#pod C<copy> function. Upon success, returns the C<Path::Tiny> object for the
+#pod newly copied file.
 #pod
 #pod Current API available since 0.070.
 #pod
@@ -847,9 +867,8 @@ sub edit_lines {
 
     # writing need to follow the link and create the tempfile in the same
     # dir for later atomic rename
-    my $resolved_path = $self->[PATH];
-    $resolved_path = readlink $resolved_path while -l $resolved_path;
-    my $temp = path( $resolved_path . $$ . int( rand( 2**31 ) ) );
+    my $resolved_path = $self->_resolve_symlinks;
+    my $temp          = path( $resolved_path . $$ . int( rand( 2**31 ) ) );
 
     my $temp_fh = $temp->filehandle( { exclusive => 1, locked => 1 }, ">", $binmode );
     my $in_fh = $self->filehandle( { locked => 1 }, '<', $binmode );
@@ -1256,7 +1275,9 @@ sub mkpath {
 #pod
 #pod     path("foo.txt")->move("bar.txt");
 #pod
-#pod Just like C<rename>.
+#pod Move the current path to the given destination path using Perl's
+#pod built-in L<rename|perlfunc/rename> function. Returns the result
+#pod of the C<rename> function.
 #pod
 #pod Current API available since 0.001.
 #pod
@@ -1423,10 +1444,7 @@ sub _non_empty {
 # doesn't throw an error resolving non-existent basename
 sub realpath {
     my $self = shift;
-    while ( -l $self->[PATH] ) {
-        my $resolved = readlink $self->[PATH] or $self->_throw( 'readlink', $self->[PATH] );
-        $self = path($resolved);
-    }
+    $self = $self->_resolve_symlinks;
     require Cwd;
     $self->_splitpath if !defined $self->[FILE];
     my $check_parent =
@@ -1759,8 +1777,7 @@ sub spew {
 
     # spewing need to follow the link
     # and create the tempfile in the same dir
-    my $resolved_path = $self->[PATH];
-    $resolved_path = readlink $resolved_path while -l $resolved_path;
+    my $resolved_path = $self->_resolve_symlinks;
 
     my $temp = path( $resolved_path . $$ . int( rand( 2**31 ) ) );
     my $fh = $temp->filehandle( { exclusive => 1, locked => 1 }, ">", $binmode );
@@ -1775,7 +1792,11 @@ sub spew_raw { splice @_, 1, 0, { binmode => ":unix" }; goto &spew }
 sub spew_utf8 {
     if ( defined($HAS_UU) ? $HAS_UU : ( $HAS_UU = _check_UU() ) ) {
         my $self = shift;
-        spew( $self, { binmode => ":unix" }, map { Unicode::UTF8::encode_utf8($_) } @_ );
+        spew(
+            $self,
+            { binmode => ":unix" },
+            map { Unicode::UTF8::encode_utf8($_) } map { ref eq 'ARRAY' ? @$_ : $_ } @_
+        );
     }
     else {
         splice @_, 1, 0, { binmode => ":unix:encoding(UTF-8)" };
@@ -2044,7 +2065,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.084
+version 0.090
 
 =head1 SYNOPSIS
 
@@ -2380,9 +2401,9 @@ Current API available since 0.053.
 
     path("/tmp/foo.txt")->copy("/tmp/bar.txt");
 
-Copies a file using L<File::Copy>'s C<copy> function. Upon
-success, returns the C<Path::Tiny> object for the newly copied
-file.
+Copies the current path to the given destination using L<File::Copy>'s
+C<copy> function. Upon success, returns the C<Path::Tiny> object for the
+newly copied file.
 
 Current API available since 0.070.
 
@@ -2617,7 +2638,9 @@ Current API available since 0.001.
 
     path("foo.txt")->move("bar.txt");
 
-Just like C<rename>.
+Move the current path to the given destination path using Perl's
+built-in L<rename|perlfunc/rename> function. Returns the result
+of the C<rename> function.
 
 Current API available since 0.001.
 

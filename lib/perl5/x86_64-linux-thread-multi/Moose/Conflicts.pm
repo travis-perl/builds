@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.17
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.18
 
 use Dist::CheckConflicts
     -dist      => 'Moose',
@@ -85,8 +85,6 @@ use Dist::CheckConflicts
         Devel::StackTrace
         Dist::CheckConflicts
         Eval::Closure
-        JSON::PP
-        List::MoreUtils
         List::Util
         MRO::Compat
         Module::Runtime
@@ -99,7 +97,6 @@ use Dist::CheckConflicts
         Sub::Exporter
         Sub::Identify
         Sub::Name
-        Task::Weaken
         Try::Tiny
         parent
         strict

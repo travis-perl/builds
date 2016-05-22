@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Software::License::Perl_5;
-$Software::License::Perl_5::VERSION = '0.103011';
+$Software::License::Perl_5::VERSION = '0.103012';
 use parent 'Software::License';
 # ABSTRACT: The Perl 5 License (Artistic 1 & GPL 1)
 
@@ -41,7 +41,7 @@ Software::License::Perl_5 - The Perl 5 License (Artistic 1 & GPL 1)
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 AUTHOR
 

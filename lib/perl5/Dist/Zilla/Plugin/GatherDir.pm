@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GatherDir;
 # ABSTRACT: gather all the files in a directory
-$Dist::Zilla::Plugin::GatherDir::VERSION = '5.043';
+$Dist::Zilla::Plugin::GatherDir::VERSION = '5.047';
 use Moose;
 use MooseX::Types::Path::Class qw(Dir File);
 with 'Dist::Zilla::Role::FileGatherer';
@@ -18,11 +18,14 @@ use namespace::autoclean;
 #pod easiest way to get files from disk into your dist.  Most users just need:
 #pod
 #pod   [GatherDir]
+#pod   [PruneCruft]
 #pod
 #pod ...and this will pick up all the files from the current directory into the
-#pod dist.  You can use it multiple times, as you can any other plugin, by providing
-#pod a plugin name.  For example, if you want to include external specification
-#pod files into a subdir of your dist, you might write:
+#pod dist.  (L<PruneCruft|Dist::Zilla::Plugin::PruneCruft> is needed, here, to drop
+#pod files that might present as build artifacts, but should not be shipped.)  You
+#pod can use it multiple times, as you can any other plugin, by providing a plugin
+#pod name.  For example, if you want to include external specification files into a
+#pod subdir of your dist, you might write:
 #pod
 #pod   [GatherDir]
 #pod   ; this plugin needs no config and gathers most of your files
@@ -173,7 +176,7 @@ sub gather_files {
   my $repo_root = $self->zilla->root;
   my $root = "" . $self->root;
   $root =~ s{^~([\\/])}{require File::HomeDir; File::HomeDir::->my_home . $1}e;
-  $root = path($repo_root)->child($root)->stringify if path($root)->is_relative;
+  $root = path($root)->absolute($repo_root)->stringify if path($root)->is_relative;
 
   my $prune_regex = qr/\000/;
   $prune_regex = qr/$prune_regex|$_/
@@ -214,6 +217,8 @@ sub gather_files {
     # _file_from_filename is overloaded in GatherDir::Template
     my $fileobj = $self->_file_from_filename($filename);
 
+    # GatherDir::Template may rename the file
+    $filename = $fileobj->name;
     my $file = path($filename)->relative($root);
     $file = path($self->prefix, $file) if $self->prefix;
 
@@ -250,7 +255,7 @@ Dist::Zilla::Plugin::GatherDir - gather all the files in a directory
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -263,11 +268,14 @@ Almost every dist will be built with one GatherDir plugin, since it's the
 easiest way to get files from disk into your dist.  Most users just need:
 
   [GatherDir]
+  [PruneCruft]
 
 ...and this will pick up all the files from the current directory into the
-dist.  You can use it multiple times, as you can any other plugin, by providing
-a plugin name.  For example, if you want to include external specification
-files into a subdir of your dist, you might write:
+dist.  (L<PruneCruft|Dist::Zilla::Plugin::PruneCruft> is needed, here, to drop
+files that might present as build artifacts, but should not be shipped.)  You
+can use it multiple times, as you can any other plugin, by providing a plugin
+name.  For example, if you want to include external specification files into a
+subdir of your dist, you might write:
 
   [GatherDir]
   ; this plugin needs no config and gathers most of your files
@@ -327,7 +335,7 @@ directories to skip.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Dist::Builder;
 # ABSTRACT: dist zilla subclass for building dists
-$Dist::Zilla::Dist::Builder::VERSION = '5.043';
+$Dist::Zilla::Dist::Builder::VERSION = '5.047';
 use Moose 0.92; # role composition fixes
 extends 'Dist::Zilla';
 
@@ -11,6 +11,7 @@ use File::pushd ();
 use Path::Class;
 use Path::Tiny; # because more Path::* is better, eh?
 use Try::Tiny;
+use List::Util 1.45 'uniq';
 
 use namespace::autoclean;
 
@@ -119,7 +120,7 @@ sub _setup_default_plugins {
       style       => 'list',
       code        => sub {
         my $plugins = $_[0]->zilla->plugins_with(-ExecFiles);
-        my @files = map {; @{ $_->find_files } } @$plugins;
+        my @files = uniq map {; @{ $_->find_files } } @$plugins;
 
         return \@files;
       },
@@ -873,7 +874,7 @@ Dist::Zilla::Dist::Builder - dist zilla subclass for building dists
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 ATTRIBUTES
 
@@ -1023,7 +1024,7 @@ non-zero, the directory will be left in place.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

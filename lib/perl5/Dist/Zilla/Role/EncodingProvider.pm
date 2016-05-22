@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::EncodingProvider;
 # ABSTRACT: something that sets a files' encoding
-$Dist::Zilla::Role::EncodingProvider::VERSION = '5.043';
+$Dist::Zilla::Role::EncodingProvider::VERSION = '5.047';
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -31,7 +31,7 @@ Dist::Zilla::Role::EncodingProvider - something that sets a files' encoding
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -42,7 +42,7 @@ The method C<set_file_encodings> is called with no arguments.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

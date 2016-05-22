@@ -1,6 +1,6 @@
 package Dist::Zilla::Stash::PAUSE;
 # ABSTRACT: a stash of your PAUSE credentials
-$Dist::Zilla::Stash::PAUSE::VERSION = '5.043';
+$Dist::Zilla::Stash::PAUSE::VERSION = '5.047';
 use Moose;
 
 use namespace::autoclean;
@@ -44,7 +44,7 @@ Dist::Zilla::Stash::PAUSE - a stash of your PAUSE credentials
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 OVERVIEW
 
@@ -53,7 +53,7 @@ used for uploading to PAUSE.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

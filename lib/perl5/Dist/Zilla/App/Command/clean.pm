@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::clean;
 # ABSTRACT: clean up after build, test, or install
-$Dist::Zilla::App::Command::clean::VERSION = '5.043';
+$Dist::Zilla::App::Command::clean::VERSION = '5.047';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -50,7 +50,7 @@ Dist::Zilla::App::Command::clean - clean up after build, test, or install
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 SYNOPSIS
 
@@ -69,7 +69,7 @@ Nothing is removed; instead, everything that would be removed will be listed.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -6,7 +6,7 @@ sub _getstash { \%{"$_[0]::"} }
 use strict;
 use warnings;
 
-our $VERSION = '2.000001';
+our $VERSION = '2.000003';
 $VERSION = eval $VERSION;
 
 our %INFO;
@@ -20,6 +20,13 @@ our @ON_ROLE_CREATE;
 BEGIN {
   *_WORK_AROUND_BROKEN_MODULE_STATE = "$]" < 5.009 ? sub(){1} : sub(){0};
   *_MRO_MODULE = "$]" < 5.010 ? sub(){"MRO/Compat.pm"} : sub(){"mro.pm"};
+}
+
+sub croak {
+  require Carp;
+  no warnings 'redefine';
+  *croak = \&Carp::croak;
+  goto &Carp::croak;
 }
 
 sub Role::Tiny::__GUARD__::DESTROY {
@@ -45,14 +52,30 @@ sub import {
   my $me = shift;
   strict->import;
   warnings->import;
+  $me->_install_subs($target);
   return if $me->is_role($target); # already exported into this package
   $INFO{$target}{is_role} = 1;
   # get symbol table reference
   my $stash = _getstash($target);
+  # grab all *non-constant* (stash slot is not a scalarref) subs present
+  # in the symbol table and store their refaddrs (no need to forcibly
+  # inflate constant subs into real subs) with a map to the coderefs in
+  # case of copying or re-use
+  my @not_methods = (map { *$_{CODE}||() } grep !ref($_), values %$stash);
+  @{$INFO{$target}{not_methods}={}}{@not_methods} = @not_methods;
+  # a role does itself
+  $APPLIED_TO{$target} = { $target => undef };
+  foreach my $hook (@ON_ROLE_CREATE) {
+    $hook->($target);
+  }
+}
+
+sub _install_subs {
+  my ($me, $target) = @_;
+  return if $me->is_role($target);
   # install before/after/around subs
   foreach my $type (qw(before after around)) {
     *{_getglob "${target}::${type}"} = sub {
-      require Class::Method::Modifiers;
       push @{$INFO{$target}{modifiers}||=[]}, [ $type => @_ ];
       return;
     };
@@ -65,15 +88,6 @@ sub import {
     $me->apply_roles_to_package($target, @_);
     return;
   };
-  # grab all *non-constant* (stash slot is not a scalarref) subs present
-  # in the symbol table and store their refaddrs (no need to forcibly
-  # inflate constant subs into real subs) with a map to the coderefs in
-  # case of copying or re-use
-  my @not_methods = (map { *$_{CODE}||() } grep !ref($_), values %$stash);
-  @{$INFO{$target}{not_methods}={}}{@not_methods} = @not_methods;
-  # a role does itself
-  $APPLIED_TO{$target} = { $target => undef };
-  $_->($target) for @ON_ROLE_CREATE;
 }
 
 sub role_application_steps {
@@ -85,8 +99,8 @@ sub apply_single_role_to_package {
 
   _load_module($role);
 
-  die "This is apply_role_to_package" if ref($to);
-  die "${role} is not a Role::Tiny" unless $me->is_role($role);
+  croak "This is apply_role_to_package" if ref($to);
+  croak "${role} is not a Role::Tiny" unless $me->is_role($role);
 
   foreach my $step ($me->role_application_steps) {
     $me->$step($to, $role);
@@ -101,7 +115,7 @@ sub _copy_applied_list {
 
 sub apply_roles_to_object {
   my ($me, $object, @roles) = @_;
-  die "No roles supplied!" unless @roles;
+  croak "No roles supplied!" unless @roles;
   my $class = ref($object);
   # on perl < 5.8.9, magic isn't copied to all ref copies. bless the parameter
   # directly, so at least the variable passed to us will get any magic applied
@@ -129,14 +143,13 @@ sub _composite_name {
 sub create_class_with_roles {
   my ($me, $superclass, @roles) = @_;
 
-  die "No roles supplied!" unless @roles;
+  croak "No roles supplied!" unless @roles;
 
   _load_module($superclass);
   {
     my %seen;
-    $seen{$_}++ for @roles;
-    if (my @dupes = grep $seen{$_} > 1, @roles) {
-      die "Duplicated roles: ".join(', ', @dupes);
+    if (my @dupes = grep 1 == $seen{$_}++, @roles) {
+      croak "Duplicated roles: ".join(', ', @dupes);
     }
   }
 
@@ -146,7 +159,7 @@ sub create_class_with_roles {
 
   foreach my $role (@roles) {
     _load_module($role);
-    die "${role} is not a Role::Tiny" unless $me->is_role($role);
+    croak "${role} is not a Role::Tiny" unless $me->is_role($role);
   }
 
   require(_MRO_MODULE);
@@ -161,7 +174,7 @@ sub create_class_with_roles {
           ."'".join(' and ', sort values %{$conflicts{$_}})."'"
           .", cannot apply these simultaneously to an object."
         } keys %conflicts;
-    die $fail;
+    croak $fail;
   }
 
   my @composable = map $me->_composable_package_for($_), reverse @roles;
@@ -212,7 +225,7 @@ sub apply_roles_to_package {
           ."'".join(' and ', sort values %{$conflicts{$_}})."'"
           .", the method '$_' must be implemented by '${to}'"
         } keys %conflicts;
-    die $fail;
+    croak $fail;
   }
 
   # conflicting methods are supposed to be treated as required by the
@@ -317,7 +330,7 @@ sub _check_requires {
     if (my $to_info = $INFO{$to}) {
       push @{$to_info->{requires}||=[]}, @requires_fail;
     } else {
-      die "Can't apply ${name} to ${to} - missing ".join(', ', @requires_fail);
+      croak "Can't apply ${name} to ${to} - missing ".join(', ', @requires_fail);
     }
   }
 }
@@ -341,7 +354,7 @@ sub _concrete_methods_of {
 
 sub methods_provided_by {
   my ($me, $role) = @_;
-  die "${role} is not a Role::Tiny" unless $me->is_role($role);
+  croak "${role} is not a Role::Tiny" unless $me->is_role($role);
   (keys %{$me->_concrete_methods_of($role)}, @{$INFO{$role}->{requires}||[]});
 }
 
@@ -387,10 +400,16 @@ sub _install_methods {
 sub _install_modifiers {
   my ($me, $to, $name) = @_;
   return unless my $modifiers = $INFO{$name}{modifiers};
-  if (my $info = $INFO{$to}) {
-    push @{$info->{modifiers}}, @{$modifiers||[]};
-  } else {
-    foreach my $modifier (@{$modifiers||[]}) {
+  my $info = $INFO{$to};
+  my $existing = ($info ? $info->{modifiers} : $COMPOSED{modifiers}{$to}) ||= [];
+  my @modifiers = grep {
+    my $modifier = $_;
+    !grep $_ == $modifier, @$existing;
+  } @{$modifiers||[]};
+  push @$existing, @modifiers;
+
+  if (!$info) {
+    foreach my $modifier (@modifiers) {
       $me->_install_single_modifier($to, @$modifier);
     }
   }
@@ -402,9 +421,11 @@ sub _install_single_modifier {
   my ($me, @args) = @_;
   defined($vcheck_error) or $vcheck_error = do {
     local $@;
-    eval { Class::Method::Modifiers->VERSION(1.05); 1 }
-      ? 0
-      : $@
+    eval {
+      require Class::Method::Modifiers;
+      Class::Method::Modifiers->VERSION(1.05);
+      1;
+    } ? 0 : $@;
   };
   $vcheck_error and die $vcheck_error;
   Class::Method::Modifiers::install_modifier(@args);
@@ -444,7 +465,7 @@ sub does_role {
 
 sub is_role {
   my ($me, $role) = @_;
-  return !!($INFO{$role} && $INFO{$role}{is_role});
+  return !!($INFO{$role} && ($INFO{$role}{is_role} || $INFO{$role}{not_methods}));
 }
 
 1;
@@ -466,11 +487,11 @@ Role::Tiny - Roles. Like a nouvelle cuisine portion size slice of Moose.
 
  sub bar { ... }
 
- around baz => sub { ... }
+ around baz => sub { ... };
 
  1;
 
-else where
+elsewhere
 
  package Some::Class;
 
@@ -502,7 +523,8 @@ inheritance.  The basics of this implementation of roles is:
 =item *
 
 If a method is already defined on a class, that method will not be composed in
-from the role.
+from the role. A method inherited by a class gets overridden by the role's
+method of the same name, though.
 
 =item *
 
@@ -620,8 +642,9 @@ Composes role with package.  See also L<Role::Tiny::With>.
 
  Role::Tiny->apply_roles_to_object($foo, qw(Some::Role1 Some::Role2));
 
-Composes roles in order into object directly.  Object is reblessed into the
-resulting class.
+Composes roles in order into object directly. Object is reblessed into the
+resulting class. Note that the object's methods get overridden by the role's
+ones with the same names.
 
 =head2 create_class_with_roles
 
@@ -641,7 +664,10 @@ Returns true if the given package is a role.
 =over 4
 
 =item * On perl 5.8.8 and earlier, applying a role to an object won't apply any
-overloads from the role to all copies of the object.
+overloads from the role to other copies of the object.
+
+=item * On perl 5.16 and earlier, applying a role to a class won't apply any
+overloads from the role to any existing instances of the class.
 
 =back
 

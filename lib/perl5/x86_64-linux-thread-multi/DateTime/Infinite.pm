@@ -3,7 +3,7 @@ package DateTime::Infinite;
 use strict;
 use warnings;
 
-our $VERSION = '1.25';
+our $VERSION = '1.28';
 
 use DateTime;
 use DateTime::TimeZone;
@@ -198,13 +198,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime::Infinite - Infinite past and future DateTime objects
 
 =head1 VERSION
 
-version 1.25
+version 1.28
 
 =head1 SYNOPSIS
 
@@ -218,13 +220,6 @@ C<DateTime::Infinite::Future> and C<DateTime::Infinite::Past>.
 
 The objects are in the "floating" timezone, and this cannot be
 changed.
-
-=head1 BUGS
-
-There seem to be lots of problems when dealing with infinite numbers
-on Win32. This may be a problem with this code, Perl, or Win32's IEEE
-math implementation. Either way, the module may not be well-behaved
-on Win32 operating systems.
 
 =head1 METHODS
 
@@ -253,11 +248,26 @@ datetime@perl.org mailing list
 
 http://datetime.perl.org/
 
+=head1 BUGS
+
+There seem to be lots of problems when dealing with infinite numbers
+on Win32. This may be a problem with this code, Perl, or Win32's IEEE
+math implementation. Either way, the module may not be well-behaved
+on Win32 operating systems.
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime>
+(or L<bug-datetime@rt.cpan.org|mailto:bug-datetime@rt.cpan.org>).
+
+There is a mailing list available for users of this distribution,
+L<mailto:datetime@perl.org>.
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

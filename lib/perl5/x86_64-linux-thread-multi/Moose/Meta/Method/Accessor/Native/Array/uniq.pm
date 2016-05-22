@@ -1,10 +1,10 @@
 package Moose::Meta::Method::Accessor::Native::Array::uniq;
-our $VERSION = '2.1605';
+our $VERSION = '2.1801';
 
 use strict;
 use warnings;
 
-use List::MoreUtils ();
+use List::Util 1.45 ();
 
 use Moose::Role;
 
@@ -16,7 +16,7 @@ sub _return_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return 'List::MoreUtils::uniq @{ (' . $slot_access . ') }';
+    return 'List::Util::uniq @{ (' . $slot_access . ') }';
 }
 
 no Moose::Role;

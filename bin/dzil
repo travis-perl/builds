@@ -13,8 +13,8 @@ Dist::Zilla::App->run;
 
 #pod =head1 OVERVIEW
 #pod
-#pod For help with Dist::Zilla, start with http://dzil.org/ or by running "dzil
-#pod commands"
+#pod For help with L<Dist::Zilla|Dist::Zilla>, start with L<http://dzil.org/> or
+#pod by running C<dzil commands>.
 #pod
 #pod =cut
 
@@ -30,16 +30,16 @@ dzil - do stuff with your dist
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 OVERVIEW
 
-For help with Dist::Zilla, start with http://dzil.org/ or by running "dzil
-commands"
+For help with L<Dist::Zilla|Dist::Zilla>, start with L<http://dzil.org/> or
+by running C<dzil commands>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

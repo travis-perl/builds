@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::VersionProvider;
 # ABSTRACT: something that provides a version number for the dist
-$Dist::Zilla::Role::VersionProvider::VERSION = '5.043';
+$Dist::Zilla::Role::VersionProvider::VERSION = '5.047';
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -40,7 +40,7 @@ Dist::Zilla::Role::VersionProvider - something that provides a version number fo
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -58,7 +58,7 @@ L<AutoVersion|Dist::Zilla::Plugin::AutoVersion>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

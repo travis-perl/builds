@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Software::License::CC0_1_0;
-$Software::License::CC0_1_0::VERSION = '0.103011';
+$Software::License::CC0_1_0::VERSION = '0.103012';
 use parent 'Software::License';
 # ABSTRACT: the "public domain"-like CC0 license, version 1.0
 
@@ -36,7 +36,7 @@ Software::License::CC0_1_0 - the "public domain"-like CC0 license, version 1.0
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 WARNING
 

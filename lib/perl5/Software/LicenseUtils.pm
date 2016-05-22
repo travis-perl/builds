@@ -4,7 +4,7 @@ use Carp;
 
 package Software::LicenseUtils;
 # ABSTRACT: little useful bits of code for licensey things
-$Software::LicenseUtils::VERSION = '0.103011';
+$Software::LicenseUtils::VERSION = '0.103012';
 use File::Spec;
 use IO::Dir;
 use Module::Load;
@@ -74,6 +74,9 @@ for my $lib (map { "$_/Software/License" } @INC) {
       $meta2_keys{ $class->meta2_name }{$mod} = undef;
       my $name = $class->name;
       unshift @phrases, qr/\Q$name\E/, [$mod];
+      if ((my $name_without_space = $name) =~ s/\s+\(.+?\)//) {
+        unshift @phrases, qr/\Q$name_without_space\E/, [$mod];
+      }
     };
   }
 }
@@ -90,8 +93,8 @@ sub guess_license_from_pod {
 
   my $header = $1;
 
-	if (
-		$pm_text =~ m/
+  if (
+    $pm_text =~ m/
       \G
       (
         .*?
@@ -100,28 +103,28 @@ sub guess_license_from_pod {
       \z
     /ixms
   ) {
-		my $license_text = "$header$1";
+    my $license_text = "$header$1";
 
     for (my $i = 0; $i < @phrases; $i += 2) {
       my ($pattern, $license) = @phrases[ $i .. $i+1 ];
-			$pattern =~ s{\s+}{\\s+}g
-				unless ref $pattern eq 'Regexp';
-			if ( $license_text =~ /$pattern/i ) {
+      $pattern =~ s{\s+}{\\s+}g
+        unless ref $pattern eq 'Regexp';
+      if ( $license_text =~ /\b$pattern\b/i ) {
         my $match = $1;
-				# if ( $osi and $license_text =~ /All rights reserved/i ) {
-				# 	warn "LEGAL WARNING: 'All rights reserved' may invalidate Open Source licenses. Consider removing it.";
-				# }
+        # if ( $osi and $license_text =~ /All rights reserved/i ) {
+        #   warn "LEGAL WARNING: 'All rights reserved' may invalidate Open Source licenses. Consider removing it.";
+        # }
         my @result = (ref $license||'') eq 'CODE'  ? $license->($match)
                    : (ref $license||'') eq 'ARRAY' ? @$license
                    :                                 $license;
 
         return unless @result;
-				return map { "Software::License::$_" } sort @result;
-			}
-		}
-	}
+        return map { "Software::License::$_" } sort @result;
+      }
+    }
+  }
 
-	return;
+  return;
 }
 
 #pod =method guess_license_from_meta
@@ -227,7 +230,7 @@ Software::LicenseUtils - little useful bits of code for licensey things
 
 =head1 VERSION
 
-version 0.103011
+version 0.103012
 
 =head1 METHODS
 

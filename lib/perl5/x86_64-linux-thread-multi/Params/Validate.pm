@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.22';
+our $VERSION = '1.24';
 
 use Exporter;
 use Module::Implementation;
@@ -69,13 +69,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Params::Validate - Validate method/function parameters
 
 =head1 VERSION
 
-version 1.22
+version 1.24
 
 =head1 SYNOPSIS
 
@@ -186,8 +188,6 @@ in the section on L<Type Validation|Params::Validate/Type Validation>.
 The constants are available via the export tag C<:types>. There is
 also an C<:all> tag which includes all of the constants as well as the
 C<validation_options()> function.
-
-=encoding UTF-8
 
 =head1 PARAMETER VALIDATION
 
@@ -812,7 +812,7 @@ then this module will die when loaded.
 =head1 TAINT MODE
 
 The XS implementation of this module has some problems Under taint mode with
-version of Perl before 5.14. If validation I<fails>, then instead of getting
+versions of Perl before 5.14. If validation I<fails>, then instead of getting
 the expected error message you'll get a message like "Insecure dependency in
 eval_sv". This can be worked around by either untainting the arguments
 yourself, using the pure Perl implementation, or upgrading your Perl.
@@ -829,32 +829,27 @@ figures out how to do this, please let me know.
 
 =head1 SUPPORT
 
-Please submit bugs and patches to the CPAN RT system at
-http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Params%3A%3AValidate or
-via email at bug-params-validate@rt.cpan.org.
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Params-Validate>
+(or L<bug-params-validate@rt.cpan.org|mailto:bug-params-validate@rt.cpan.org>).
 
-Support questions can be sent to Dave at autarch@urth.org.
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 =head1 DONATIONS
 
-If you'd like to thank me for the work I've done on this module,
-please consider making a "donation" to me via PayPal. I spend a lot of
-free time creating free software, and would appreciate any support
-you'd care to offer.
+If you'd like to thank me for the work I've done on this module, please
+consider making a "donation" to me via PayPal. I spend a lot of free time
+creating free software, and would appreciate any support you'd care to offer.
 
-Please note that B<I am not suggesting that you must do this> in order
-for me to continue working on this particular software. I will
-continue to do so, inasmuch as I have in the past, for as long as it
-interests me.
+Please note that B<I am not suggesting that you must do this> in order for me
+to continue working on this particular software. I will continue to do so,
+inasmuch as I have in the past, for as long as it interests me.
 
-Similarly, a donation made in this way will probably not make me work
-on this software much more, unless I get so many donations that I can
-consider working on free software full time, which seems unlikely at
-best.
+Similarly, a donation made in this way will probably not make me work on this
+software much more, unless I get so many donations that I can consider working
+on free software full time (let's all have a chuckle at that together).
 
-To donate, log into PayPal and send money to autarch@urth.org or use
-the button on this page:
-L<http://www.urth.org/~autarch/fs-donation.html>
+To donate, log into PayPal and send money to autarch@urth.org, or use the
+button at L<http://www.urth.org/~autarch/fs-donation.html>.
 
 =head1 AUTHORS
 
@@ -872,7 +867,7 @@ Ilya Martynov <ilya@martynov.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ivan Bessarabov J.R. Mash Noel Maddy Olivier Mengué Vincent Pit
+=for stopwords Ivan Bessarabov J.R. Mash Noel Maddy Olivier Mengué Tony Cook Vincent Pit
 
 =over 4
 
@@ -894,11 +889,15 @@ Olivier Mengué <dolmen@cpan.org>
 
 =item *
 
+Tony Cook <tony@develop-help.com>
+
+=item *
+
 Vincent Pit <perl@profvince.com>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is Copyright (c) 2001 - 2016 by Dave Rolsky and Ilya Martynov.
 

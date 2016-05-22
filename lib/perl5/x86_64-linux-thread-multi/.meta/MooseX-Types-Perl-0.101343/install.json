@@ -1,1 +1,1 @@
-{"pathname":"R/RJ/RJBS/MooseX-Types-Perl-0.101343.tar.gz","provides":{"MooseX::Types::Perl":{"file":"lib/MooseX/Types/Perl.pm","version":"0.101343"}},"target":"MooseX::Types::Perl","version":"0.101343","name":"MooseX::Types::Perl","dist":"MooseX-Types-Perl-0.101343"}
+{"provides":{"MooseX::Types::Perl":{"file":"lib/MooseX/Types/Perl.pm","version":"0.101343"}},"version":"0.101343","name":"MooseX::Types::Perl","target":"MooseX::Types::Perl","dist":"MooseX-Types-Perl-0.101343","pathname":"R/RJ/RJBS/MooseX-Types-Perl-0.101343.tar.gz"}

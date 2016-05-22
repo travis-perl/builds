@@ -7,7 +7,7 @@ package # hide from pause
 use strict;
 use warnings;
 
-our $VERSION = '0.15';
+our $VERSION = '0.20';
 
 use Tie::Hash ();
 use Hash::Util::FieldHash 'fieldhash';

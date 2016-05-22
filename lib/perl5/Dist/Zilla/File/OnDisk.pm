@@ -1,6 +1,6 @@
 package Dist::Zilla::File::OnDisk;
 # ABSTRACT: a file that comes from your filesystem
-$Dist::Zilla::File::OnDisk::VERSION = '5.043';
+$Dist::Zilla::File::OnDisk::VERSION = '5.047';
 use Moose;
 
 use Path::Tiny;
@@ -55,7 +55,7 @@ Dist::Zilla::File::OnDisk - a file that comes from your filesystem
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -65,7 +65,7 @@ may be altered by plugins.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

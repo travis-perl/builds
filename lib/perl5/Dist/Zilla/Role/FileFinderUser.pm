@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::FileFinderUser;
 # ABSTRACT: something that uses FileFinder plugins
-$Dist::Zilla::Role::FileFinderUser::VERSION = '5.043';
+$Dist::Zilla::Role::FileFinderUser::VERSION = '5.047';
 use MooseX::Role::Parameterized 1.01;
 
 use namespace::autoclean;
@@ -18,7 +18,7 @@ use namespace::autoclean;
 #pod
 #pod Then you use it in your code like this:
 #pod
-#pod   foreach my $file ( $self->found_files ) {
+#pod   foreach my $file ( @{ $self->found_files }) {
 #pod     # $file is an object! Look at L<Dist::Zilla::Role::File>
 #pod   }
 #pod
@@ -178,7 +178,7 @@ Dist::Zilla::Role::FileFinderUser - something that uses FileFinder plugins
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -193,7 +193,7 @@ Here's an example of a finder: ( taken from AutoPrereqs )
 
 Then you use it in your code like this:
 
-  foreach my $file ( $self->found_files ) {
+  foreach my $file ( @{ $self->found_files }) {
     # $file is an object! Look at L<Dist::Zilla::Role::File>
   }
 
@@ -273,7 +273,7 @@ Default: found_files
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

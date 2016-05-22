@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::TextTemplate;
 # ABSTRACT: something that renders a Text::Template template string
-$Dist::Zilla::Role::TextTemplate::VERSION = '5.043';
+$Dist::Zilla::Role::TextTemplate::VERSION = '5.047';
 use Moose::Role;
 
 use namespace::autoclean;
@@ -61,7 +61,7 @@ sub fill_in_string {
   $self->log_fatal("Could not create a Text::Template object from:\n$string")
     unless $tmpl;
 
-  my $content = $tmpl->fill_in(HASH => $stash);
+  my $content = $tmpl->fill_in(%$arg, HASH => $stash);
 
   $self->log_fatal("Filling in the template returned undef for:\n$string")
     unless defined $content;
@@ -83,7 +83,7 @@ Dist::Zilla::Role::TextTemplate - something that renders a Text::Template templa
 
 =head1 VERSION
 
-version 5.043
+version 5.047
 
 =head1 DESCRIPTION
 
@@ -113,7 +113,7 @@ C<new> routine.
 
 =head1 AUTHOR
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ricardo SIGNES 🎃 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

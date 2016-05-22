@@ -244,6 +244,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_419.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_AR.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_BO.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_BR.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_CL.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_CO.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/es_CR.pod
@@ -546,8 +547,11 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_AO.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_BR.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_CH.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_CV.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_GQ.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_GW.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_LU.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_MO.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_MZ.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/pt_PT.pod
@@ -700,6 +704,8 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/yo.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/yo_BJ.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/yo_NG.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/yue.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/yue_HK.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/zgh.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/zgh_MA.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/zh.pod

@@ -5,7 +5,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '2.54';
+our $VERSION = '2.56';
 
 use base qw( Log::Dispatch::Base );
 
@@ -19,7 +19,7 @@ BEGIN {
         my $sub = sub {
             my $self = shift;
             $self->log(
-                level => $CanonicalLevelNames{$l},
+                level   => $CanonicalLevelNames{$l},
                 message => @_ > 1 ? "@_" : $_[0],
             );
         };
@@ -36,7 +36,7 @@ sub new {
     my %p = validate_with(
         params => \@_,
         spec   => {
-            outputs => { type => ARRAYREF, optional => 1 },
+            outputs   => { type => ARRAYREF,           optional => 1 },
             callbacks => { type => ARRAYREF | CODEREF, optional => 1 }
         },
         allow_extra => 1,    # for backward compatibility
@@ -278,13 +278,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 Log::Dispatch - Dispatches messages to one or more outputs
 
 =head1 VERSION
 
-version 2.54
+version 2.56
 
 =head1 SYNOPSIS
 
@@ -338,8 +340,6 @@ This makes it possible to call single method and send a message to a
 log file, via email, to the screen, and anywhere else, all with very
 little code needed on your part, once the dispatching object has been
 created.
-
-=encoding UTF-8
 
 =head1 METHODS
 
@@ -652,35 +652,6 @@ Simpler than Log::Log4perl.
 A very different API for doing many of the same things that
 Log::Dispatch does. Originally written by Raphael Manfredi.
 
-=head1 SUPPORT
-
-Please submit bugs and patches to the CPAN RT system at
-http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Log%3A%3ADispatch
-or via email at bug-log-dispatch@rt.cpan.org.
-
-Support questions can be sent to me at my email address, shown below.
-
-=head1 DONATIONS
-
-If you'd like to thank me for the work I've done on this module,
-please consider making a "donation" to me via PayPal. I spend a lot of
-free time creating free software, and would appreciate any support
-you'd care to offer.
-
-Please note that B<I am not suggesting that you must do this> in order
-for me to continue working on this particular software. I will
-continue to do so, inasmuch as I have in the past, for as long as it
-interests me.
-
-Similarly, a donation made in this way will probably not make me work
-on this software much more, unless I get so many donations that I can
-consider working on free software full time, which seems unlikely at
-best.
-
-To donate, log into PayPal and send money to autarch@urth.org or use
-the button on this page:
-L<http://www.urth.org/~autarch/fs-donation.html>
-
 =head1 SEE ALSO
 
 L<Log::Dispatch::ApacheLog>, L<Log::Dispatch::Email>,
@@ -690,19 +661,51 @@ L<Log::Dispatch::File>, L<Log::Dispatch::File::Locked>,
 L<Log::Dispatch::Handle>, L<Log::Dispatch::Output>, L<Log::Dispatch::Screen>,
 L<Log::Dispatch::Syslog>
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Log-Dispatch>
+(or L<bug-log-dispatch@rt.cpan.org|mailto:bug-log-dispatch@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
+=head1 DONATIONS
+
+If you'd like to thank me for the work I've done on this module, please
+consider making a "donation" to me via PayPal. I spend a lot of free time
+creating free software, and would appreciate any support you'd care to offer.
+
+Please note that B<I am not suggesting that you must do this> in order for me
+to continue working on this particular software. I will continue to do so,
+inasmuch as I have in the past, for as long as it interests me.
+
+Similarly, a donation made in this way will probably not make me work on this
+software much more, unless I get so many donations that I can consider working
+on free software full time (let's all have a chuckle at that together).
+
+To donate, log into PayPal and send money to autarch@urth.org, or use the
+button at L<http://www.urth.org/~autarch/fs-donation.html>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Gregory Oschwald Karen Etheridge Konrad Bucheli Olaf Alders Olivier Mengué Rohan Carly Ross Attrill Steve Bertrand swartz@jonathan-swartzs-macbook-4.local swartz@pobox.com Whitney Jackson
+=for stopwords Graham Ollis Gregory Oschwald Jonathan Swartz Karen Etheridge Konrad Bucheli Olaf Alders Olivier Mengué Rohan Carly Ross Attrill Salvador Fandiño Steve Bertrand Whitney Jackson
 
 =over 4
 
 =item *
 
+Graham Ollis <plicease@cpan.org>
+
+=item *
+
 Gregory Oschwald <goschwald@maxmind.com>
+
+=item *
+
+Jonathan Swartz <swartz@pobox.com>
 
 =item *
 
@@ -730,15 +733,11 @@ Ross Attrill <ross.attrill@gmail.com>
 
 =item *
 
+Salvador Fandiño <sfandino@yahoo.com>
+
+=item *
+
 Steve Bertrand <steveb@cpan.org>
-
-=item *
-
-swartz@jonathan-swartzs-macbook-4.local <swartz@jonathan-swartzs-macbook-4.local>
-
-=item *
-
-swartz@pobox.com <swartz@pobox.com>
 
 =item *
 
@@ -746,7 +745,7 @@ Whitney Jackson <whitney.jackson@baml.com>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use warnings::register;
 
-our $VERSION = '1.25';
+our $VERSION = '1.28';
 
 use Carp;
 use DateTime::Duration;
@@ -96,7 +96,7 @@ BEGIN {
     my $DefaultLocale;
 
     sub DefaultLocale {
-        my $class = shift;
+        shift;
 
         if (@_) {
             my $lang = shift;
@@ -187,8 +187,8 @@ my $BasicValidate = {
 my $NewValidate = {
     %$BasicValidate,
     time_zone => {
-        type    => SCALAR | OBJECT,
-        default => 'floating'
+        type     => SCALAR | OBJECT,
+        optional => 1,
     },
 };
 
@@ -213,14 +213,14 @@ sub _new {
         if ref $class;
 
     # If this method is called from somewhere other than new(), then some of
-    # these default may not get applied.
-    $p{month}      = 1          unless exists $p{month};
-    $p{day}        = 1          unless exists $p{day};
-    $p{hour}       = 0          unless exists $p{hour};
-    $p{minute}     = 0          unless exists $p{minute};
-    $p{second}     = 0          unless exists $p{second};
-    $p{nanosecond} = 0          unless exists $p{nanosecond};
-    $p{time_zone}  = 'floating' unless exists $p{time_zone};
+    # these defaults may not get applied.
+    $p{month}      = 1                          unless exists $p{month};
+    $p{day}        = 1                          unless exists $p{day};
+    $p{hour}       = 0                          unless exists $p{hour};
+    $p{minute}     = 0                          unless exists $p{minute};
+    $p{second}     = 0                          unless exists $p{second};
+    $p{nanosecond} = 0                          unless exists $p{nanosecond};
+    $p{time_zone}  = $class->_default_time_zone unless exists $p{time_zone};
 
     my $self = bless {}, $class;
 
@@ -279,6 +279,12 @@ sub _new {
     }
 
     return $self;
+}
+
+# Warning: do not use this environment variable unless you have no choice in
+# the matter.
+sub _default_time_zone {
+    return $ENV{PERL_DATETIME_DEFAULT_TZ} || 'floating';
 }
 
 sub _set_locale {
@@ -500,15 +506,15 @@ sub _calc_local_components {
         # quite broken, and would end up rounding some values up, so that -0.5
         # become 0.5 (which is obviously wrong!).
         #
-        # Second, it rounds any decimal values to the nearest millisecond
-        # (1E6). Here's what Christian Hanse, who wrote this patch, says:
+        # Second, it rounds any decimal values to the nearest microsecond
+        # (1E6). Here's what Christian Hansen, who wrote this patch, says:
         #
         #     Perl is typically compiled with NV as a double. A double with a
         #     significand precision of 53 bits can only represent a nanosecond
         #     epoch without loss of precision if the duration from zero epoch
         #     is less than ≈ ±104 days. With microseconds the duration is
-        #     ±104,000 days, which is ~ ±285 years.
-        if ( $p{epoch} =~ /[.eE]/ ) {
+        #     ±104,000 days, which is ≈ ±285 years.
+        if ( int $p{epoch} != $p{epoch} ) {
             my ( $floor, $nano, $second );
 
             $floor = $nano = fmod( $p{epoch}, 1.0 );
@@ -529,7 +535,6 @@ sub _calc_local_components {
 
         my $self = $class->_new( %p, %args, time_zone => 'UTC' );
 
-        my $tz = $p{time_zone};
         $self->_maybe_future_dst_warning( $self->year(), $p{time_zone} );
 
         $self->set_time_zone( $p{time_zone} ) if exists $p{time_zone};
@@ -622,7 +627,7 @@ sub today { shift->now(@_)->truncate( to => 'day' ) }
             $new->set_time_zone( $object->time_zone );
         }
         else {
-            $new->set_time_zone('floating');
+            $new->set_time_zone( $class->_default_time_zone );
         }
 
         return $new;
@@ -1858,7 +1863,7 @@ sub compare_ignore_floating {
 }
 
 sub _compare {
-    my ( $class, $dt1, $dt2, $consistent ) = ref $_[0] ? ( undef, @_ ) : @_;
+    my ( undef, $dt1, $dt2, $consistent ) = ref $_[0] ? ( undef, @_ ) : @_;
 
     return undef unless defined $dt2;
 
@@ -2090,8 +2095,7 @@ sub set_time_zone {
 }
 
 sub STORABLE_freeze {
-    my $self    = shift;
-    my $cloning = shift;
+    my $self = shift;
 
     my $serialized = '';
     foreach my $key (
@@ -2112,8 +2116,8 @@ sub STORABLE_freeze {
 }
 
 sub STORABLE_thaw {
-    my $self       = shift;
-    my $cloning    = shift;
+    my $self = shift;
+    shift;
     my $serialized = shift;
 
     my %serialized = map { split /:/ } split /\|/, $serialized;
@@ -2173,13 +2177,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.25
+version 1.28
 
 =head1 SYNOPSIS
 
@@ -2277,14 +2283,12 @@ from how dates are often written using "BCE/CE" or "BC/AD".
 For infinite datetimes, please see the
 L<DateTime::Infinite|DateTime::Infinite> module.
 
-=encoding UTF-8
-
 =head1 USAGE
 
 =head2 0-based Versus 1-based Numbers
 
-The DateTime.pm module follows a simple consistent logic for
-determining whether or not a given number is 0-based or 1-based.
+The DateTime.pm module follows a simple logic for determining whether or not a
+given number is 0-based or 1-based.
 
 Month, day of month, day of week, and day of year are 1-based. Any
 method that is 1-based also has an equivalent 0-based method ending in
@@ -2363,6 +2367,24 @@ very far in the future (thousands of years). The current
 implementation of C<DateTime::TimeZone> will use a huge amount of
 memory calculating all the DST changes from now until the future
 date. Use UTC or the floating time zone and you will be safe.
+
+=head2 Globally Setting a Default Time Zone
+
+B<Warning: This is very dangerous. Do this at your own risk!>
+
+By default, C<DateTime> uses either the floating time zone or UTC for newly
+created objects, depending on the constructor.
+
+You can force C<DateTime> to use a different time zone by setting the
+C<PERL_DATETIME_DEFAULT_TZ> environment variable.
+
+As noted above, this is very dangerous, as it affects all code that creates a
+C<DateTime> object, including modules from CPAN. If those modules expect the
+normal default, then setting this can cause confusing breakage or subtly
+broken data. Before setting this variable, you are strongly encouraged to
+audit your CPAN dependencies to see how they use C<DateTime>. Try running the
+test suite for each dependency with this environment variable set before using
+this in production.
 
 =head2 Upper and Lower Bounds
 
@@ -3327,6 +3349,13 @@ Note that using C<delta_days> ensures that this formula always works,
 regardless of the timezone of the objects involved, as does using
 C<subtract_datetime_absolute()>. Other methods of subtraction are not
 always reversible.
+
+=item * never do math on two objects where only is in the floating time zone
+
+The date math code accounts for leap seconds whenever the C<DateTime> object
+is not in the floating time zone. If you try to do math where one object is in
+the floating zone and the other isn't, the results will be confusing and
+wrong.
 
 =back
 
@@ -4328,36 +4357,6 @@ platform/compiler/phase of moon dependent.
 If you don't plan to use infinite datetimes you can probably ignore
 this. This will be fixed (perhaps) in future versions.
 
-=head1 SUPPORT
-
-Support for this module is provided via the datetime@perl.org email list. See
-http://datetime.perl.org/wiki/datetime/page/Mailing_List for details.
-
-Please submit bugs to the CPAN RT system at
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=DateTime or via email at
-bug-datetime@rt.cpan.org.
-
-=head1 DONATIONS
-
-If you'd like to thank me for the work I've done on this module,
-please consider making a "donation" to me via PayPal. I spend a lot of
-free time creating free software, and would appreciate any support
-you'd care to offer.
-
-Please note that B<I am not suggesting that you must do this> in order
-for me to continue working on this particular software. I will
-continue to do so, inasmuch as I have in the past, for as long as it
-interests me.
-
-Similarly, a donation made in this way will probably not make me work
-on this software much more, unless I get so many donations that I can
-consider working on free software full time, which seems unlikely at
-best.
-
-To donate, log into PayPal and send money to autarch@urth.org or use
-the button on this page:
-L<http://www.urth.org/~autarch/fs-donation.html>
-
 =head1 SEE ALSO
 
 L<A Date with
@@ -4368,13 +4367,40 @@ L<datetime@perl.org mailing list|http://lists.perl.org/list/datetime.html>
 
 L<http://datetime.perl.org/>
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime>
+(or L<bug-datetime@rt.cpan.org|mailto:bug-datetime@rt.cpan.org>).
+
+There is a mailing list available for users of this distribution,
+L<mailto:datetime@perl.org>.
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
+=head1 DONATIONS
+
+If you'd like to thank me for the work I've done on this module, please
+consider making a "donation" to me via PayPal. I spend a lot of free time
+creating free software, and would appreciate any support you'd care to offer.
+
+Please note that B<I am not suggesting that you must do this> in order for me
+to continue working on this particular software. I will continue to do so,
+inasmuch as I have in the past, for as long as it interests me.
+
+Similarly, a donation made in this way will probably not make me work on this
+software much more, unless I get so many donations that I can consider working
+on free software full time (let's all have a chuckle at that together).
+
+To donate, log into PayPal and send money to autarch@urth.org, or use the
+button at L<http://www.urth.org/~autarch/fs-donation.html>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Nick Tonkin Ricardo Signes Richard Bowen Ron Hill
+=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Karen Etheridge Nick Tonkin Ovid Ricardo Signes Richard Bowen Ron Hill
 
 =over 4
 
@@ -4420,7 +4446,15 @@ Joshua Hoblitt <jhoblitt@cpan.org>
 
 =item *
 
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
 Nick Tonkin <1nickt@users.noreply.github.com>
+
+=item *
+
+Ovid <curtis_ovid_poe@yahoo.com>
 
 =item *
 
@@ -4436,7 +4470,7 @@ Ron Hill <rkhill@cpan.org>
 
 =back
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 
