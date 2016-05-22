@@ -1,5 +1,5 @@
 package Class::MOP::Object;
-our $VERSION = '2.1605';
+our $VERSION = '2.1801';
 
 use strict;
 use warnings;
@@ -115,7 +115,7 @@ Class::MOP::Object - Base class for metaclasses
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 DESCRIPTION
 

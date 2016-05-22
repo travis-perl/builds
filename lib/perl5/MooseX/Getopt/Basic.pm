@@ -1,7 +1,7 @@
 package MooseX::Getopt::Basic;
 # ABSTRACT: MooseX::Getopt::Basic - role to implement the Getopt::Long functionality
 
-our $VERSION = '0.68';
+our $VERSION = '0.70';
 
 use Moose::Role;
 
@@ -212,6 +212,8 @@ sub _compute_getopt_attrs {
             or
         $_->name !~ /^_/
     } grep {
+        defined $_->init_arg
+    } grep {
         !$_->does('MooseX::Getopt::Meta::Attribute::Trait::NoGetopt')
     } $class->meta->get_all_attributes
 }
@@ -219,7 +221,7 @@ sub _compute_getopt_attrs {
 sub _get_cmd_flags_for_attr {
     my ( $class, $attr ) = @_;
 
-    my $flag = $attr->name;
+    my $flag = $attr->init_arg;
 
     my @aliases;
 
@@ -287,7 +289,7 @@ MooseX::Getopt::Basic - MooseX::Getopt::Basic - role to implement the Getopt::Lo
 
 =head1 VERSION
 
-version 0.68
+version 0.70
 
 =head1 SYNOPSIS
 
@@ -329,6 +331,17 @@ See L<MooseX::Getopt/new_with_options>.
 See L<MooseX::Getopt/process_argv>.
 
 =for Pod::Coverage print_usage_text
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Getopt>
+(or L<bug-MooseX-Getopt@rt.cpan.org|mailto:bug-MooseX-Getopt@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

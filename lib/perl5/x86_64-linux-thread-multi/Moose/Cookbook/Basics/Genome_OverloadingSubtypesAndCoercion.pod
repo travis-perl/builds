@@ -13,7 +13,7 @@ Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion - Operator overlo
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 SYNOPSIS
 
@@ -263,12 +263,6 @@ Had this been a real project we'd probably want:
 
 =back
 
-=head1 LICENSE
-
-This work is licensed under a Creative Commons Attribution 3.0 Unported License.
-
-License details are at: L<http://creativecommons.org/licenses/by/3.0/>
-
 =head1 AUTHORS
 
 =over 4
@@ -317,9 +311,8 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc.
+This work is licensed under a Creative Commons Attribution 3.0 Unported License.
 
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+License details are at: L<http://creativecommons.org/licenses/by/3.0/>
 
 =cut

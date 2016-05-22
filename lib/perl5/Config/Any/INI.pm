@@ -103,7 +103,7 @@ Joel Bernstein E<lt>rataxis@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2015 by Brian Cassidy, portions copyright 2006, 2007 by Joel Bernstein
+Copyright 2006-2016 by Brian Cassidy, portions copyright 2006, 2007 by Joel Bernstein
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

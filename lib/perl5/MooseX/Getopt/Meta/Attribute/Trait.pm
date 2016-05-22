@@ -1,7 +1,7 @@
 package MooseX::Getopt::Meta::Attribute::Trait;
 # ABSTRACT: Optional meta attribute trait for custom option names
 
-our $VERSION = '0.68';
+our $VERSION = '0.70';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -15,15 +15,15 @@ has 'cmd_flag' => (
 
 # This subtype is to support scalar -> arrayref coercion
 #  without polluting the built-in types
-subtype '_MooseX_Getopt_CmdAliases' => as 'ArrayRef';
+my $cmd_aliases = subtype as 'ArrayRef';
 
-coerce '_MooseX_Getopt_CmdAliases'
+coerce $cmd_aliases
     => from 'Str'
         => via { [$_] };
 
 has 'cmd_aliases' => (
     is        => 'rw',
-    isa       => '_MooseX_Getopt_CmdAliases',
+    isa       => $cmd_aliases,
     predicate => 'has_cmd_aliases',
     coerce    => 1,
 );
@@ -47,7 +47,7 @@ MooseX::Getopt::Meta::Attribute::Trait - Optional meta attribute trait for custo
 
 =head1 VERSION
 
-version 0.68
+version 0.70
 
 =head1 SYNOPSIS
 
@@ -97,6 +97,17 @@ and such.
 =head2 B<has_cmd_flag>
 
 =head2 B<has_cmd_aliases>
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Getopt>
+(or L<bug-MooseX-Getopt@rt.cpan.org|mailto:bug-MooseX-Getopt@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

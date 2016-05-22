@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-package Moose; # git description: 2.1604-21-g729a32b
-our $VERSION = '2.1605';
+package Moose; # git description: 2.1800-4-g2ab9af5
+our $VERSION = '2.1801';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use 5.008003;
@@ -16,10 +16,8 @@ use Moose::Exporter;
 
 use Class::MOP;
 
-BEGIN {
-    die "Class::MOP version $Moose::VERSION required--this is version $Class::MOP::VERSION"
-        if $Moose::VERSION && $Class::MOP::VERSION ne $Moose::VERSION;
-}
+die "Class::MOP version $Moose::VERSION required--this is version $Class::MOP::VERSION"
+    if $Class::MOP::VERSION ne $Moose::VERSION;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
@@ -300,7 +298,7 @@ Moose - A postmodern object system for Perl 5
 
 =head1 VERSION
 
-version 2.1605
+version 2.1801
 
 =head1 SYNOPSIS
 

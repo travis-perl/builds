@@ -1,8 +1,8 @@
-package MooseX::Getopt; # git description: v0.67-7-g7122518
+package MooseX::Getopt; # git description: v0.69-6-g6f5d9e0
 # ABSTRACT: A Moose role for processing command line options
 # KEYWORDS: moose extension command line options attributes executable flags switches arguments
 
-our $VERSION = '0.68';
+our $VERSION = '0.70';
 
 use Moose::Role 0.56;
 use namespace::autoclean;
@@ -23,7 +23,7 @@ MooseX::Getopt - A Moose role for processing command line options
 
 =head1 VERSION
 
-version 0.68
+version 0.70
 
 =head1 SYNOPSIS
 
@@ -95,8 +95,9 @@ L<Getopt::Long> did not parse.  Note that the real C<@ARGV> is left
 untouched.
 
 B<Important>: By default, L<Getopt::Long> will reject unrecognized I<options>
-(that is, options that do not correspond with attributes using the Getopt
-trait). To disable this, and allow options to also be saved in C<extra_argv> (for example to pass along to another class's C<new_with_options>), you can either enable the
+(that is, options that do not correspond with attributes using the C<Getopt>
+trait). To disable this, and allow options to also be saved in C<extra_argv>
+(for example to pass along to another class's C<new_with_options>), you can either enable the
 C<pass_through> option of L<Getopt::Long> for your class:  C<< use Getopt::Long
 qw(:config pass_through); >> or specify a value for L<MooseX::Getopt::GLD>'s C<getopt_conf> parameter.
 
@@ -113,7 +114,7 @@ options (true if any of these options were passed on the command line).
 =head2 C<print_usage_text>
 
 This method is called internally when the C<help_flag> state is true.
-It prints the text from the C<usage> object (see above) to C<stdout> and then the
+It prints the text from the C<usage> object (see above) to C<STDOUT> and then the
 program terminates normally.  You can apply a method modification (see
 L<Moose::Manual::MethodModifiers>) if different behaviour is desired, for
 example to include additional text.
@@ -135,7 +136,7 @@ C<new_with_options>.
 This module attempts to DWIM as much as possible with the command line
 parameters by introspecting your class's attributes. It will use the name
 of your attribute as the command line option, and if there is a type
-constraint defined, it will configure Getopt::Long to handle the option
+constraint defined, it will configure L<Getopt::Long> to handle the option
 accordingly.
 
 You can use the trait L<MooseX::Getopt::Meta::Attribute::Trait> or the
@@ -157,7 +158,7 @@ to have the leading underscore in their name, you can do this:
   # or for read-only attributes
   has '_bar' => (reader => 'bar', ...);
 
-This will mean that Getopt will not handle a --foo parameter, but your
+This will mean that MooseX::Getopt will not handle a --foo parameter, but your
 code can still call the C<foo> method.
 
 =for stopwords configfile
@@ -179,11 +180,11 @@ overrides explicit new_with_options parameters.
 =item I<Bool>
 
 A I<Bool> type constraint is set up as a boolean option with
-Getopt::Long. So that this attribute description:
+L<Getopt::Long>. So that this attribute description:
 
   has 'verbose' => (is => 'rw', isa => 'Bool');
 
-would translate into C<verbose!> as a Getopt::Long option descriptor,
+would translate into C<verbose!> as a L<Getopt::Long> option descriptor,
 which would enable the following command line options:
 
   % my_script.pl --verbose
@@ -194,12 +195,12 @@ which would enable the following command line options:
 =item I<Int>, I<Float>, I<Str>
 
 These type constraints are set up as properly typed options with
-Getopt::Long, using the C<=i>, C<=f> and C<=s> modifiers as appropriate.
+L<Getopt::Long>, using the C<=i>, C<=f> and C<=s> modifiers as appropriate.
 
 =item I<ArrayRef>
 
 An I<ArrayRef> type constraint is set up as a multiple value option
-in Getopt::Long. So that this attribute description:
+in L<Getopt::Long>. So that this attribute description:
 
   has 'include' => (
       is      => 'rw',
@@ -207,7 +208,7 @@ in Getopt::Long. So that this attribute description:
       default => sub { [] }
   );
 
-would translate into C<includes=s@> as a Getopt::Long option descriptor,
+would translate into C<includes=s@> as a L<Getopt::Long> option descriptor,
 which would enable the following command line options:
 
   % my_script.pl --include /usr/lib --include /usr/local/lib
@@ -215,7 +216,7 @@ which would enable the following command line options:
 =item I<HashRef>
 
 A I<HashRef> type constraint is set up as a hash value option
-in Getopt::Long. So that this attribute description:
+in L<Getopt::Long>. So that this attribute description:
 
   has 'define' => (
       is      => 'rw',
@@ -223,7 +224,7 @@ in Getopt::Long. So that this attribute description:
       default => sub { {} }
   );
 
-would translate into C<define=s%> as a Getopt::Long option descriptor,
+would translate into C<define=s%> as a L<Getopt::Long> option descriptor,
 which would enable the following command line options:
 
   % my_script.pl --define os=linux --define vendor=debian
@@ -264,7 +265,7 @@ Will translate to the following on the command line:
 
 This example is fairly trivial, but more complex validations are
 easily possible with a little creativity. The trick is balancing
-the type constraint validations with the Getopt::Long validations.
+the type constraint validations with the L<Getopt::Long> validations.
 
 Better examples are certainly welcome :)
 
@@ -290,24 +291,33 @@ See L<Getopt::Long/Configuring Getopt::Long> for many other customizations you
 can make to how options are parsed. Simply C<use Getopt::Long qw(:config
 other_options...)> in your class to set these.
 
+Note in particular that the default setting for case sensitivity has changed
+over time in L<Getopt::Long::Descriptive>, so if you rely on a particular
+setting, you should set it explicitly, or enforce the version of
+L<Getopt::Long::Descriptive> that you install.
+
 =head1 SEE ALSO
 
 L<MooseX::Getopt::Usage>, an extension to generate man pages, with colour
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Getopt>
+(or L<bug-MooseX-Getopt@rt.cpan.org|mailto:bug-MooseX-Getopt@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 
 Stevan Little <stevan@iinteractive.com>
 
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2007 by Infinity Interactive, Inc.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Hans Dieter Pearcey Ryan D Johnson Nelo Onyiah Ricardo SIGNES Ævar Arnfjörð Bjarmason Damien Krotkine Hinrik Örn Sigurðsson Todd Hepler Devin Austin Jose Luis Martinez Chris Prather Justin Hunter Gordon Irving Dagfinn Ilmari Mannsåker Jesse Luehrs Olaf Alders Jonathan Swartz John Goulah
+=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Hans Dieter Pearcey Olaf Alders Nelo Onyiah Ryan D Johnson Ricardo SIGNES Damien Krotkine Dave Rolsky Hinrik Örn Sigurðsson Ævar Arnfjörð Bjarmason Chris Prather Devin Austin Jose Luis Martinez Todd Hepler Dagfinn Ilmari Mannsåker Gordon Irving Gregory Oschwald Jesse Luehrs John Goulah Jonathan Swartz Justin Hunter Stuart A Johnston
 
 =over 4
 
@@ -337,7 +347,7 @@ Brandon L Black <blblack@gmail.com>
 
 =item *
 
-Shlomi Fish <shlomif@iglu.org.il>
+Shlomi Fish <shlomif@cpan.org>
 
 =item *
 
@@ -345,7 +355,7 @@ Hans Dieter Pearcey <hdp@weftsoar.net>
 
 =item *
 
-Ryan D Johnson <ryan@innerfence.com>
+Olaf Alders <olaf@wundersolutions.com>
 
 =item *
 
@@ -353,11 +363,11 @@ Nelo Onyiah <nelo.onyiah@gmail.com>
 
 =item *
 
-Ricardo SIGNES <rjbs@cpan.org>
+Ryan D Johnson <ryan@innerfence.com>
 
 =item *
 
-Ævar Arnfjörð Bjarmason <avarab@gmail.com>
+Ricardo SIGNES <rjbs@cpan.org>
 
 =item *
 
@@ -365,11 +375,19 @@ Damien Krotkine <dkrotkine@weborama.com>
 
 =item *
 
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
 Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
 
 =item *
 
-Todd Hepler <thepler@employees.org>
+Ævar Arnfjörð Bjarmason <avarab@gmail.com>
+
+=item *
+
+Chris Prather <chris@prather.org>
 
 =item *
 
@@ -381,15 +399,7 @@ Jose Luis Martinez <jlmartinez@capside.com>
 
 =item *
 
-Chris Prather <chris@prather.org>
-
-=item *
-
-Justin Hunter <justin.d.hunter@gmail.com>
-
-=item *
-
-Gordon Irving <goraxe@goraxe.me.uk>
+Todd Hepler <thepler@employees.org>
 
 =item *
 
@@ -397,11 +407,19 @@ Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
 
 =item *
 
+Gordon Irving <goraxe@goraxe.me.uk>
+
+=item *
+
+Gregory Oschwald <goschwald@maxmind.com>
+
+=item *
+
 Jesse Luehrs <doy@tozt.net>
 
 =item *
 
-Olaf Alders <olaf@wundersolutions.com>
+John Goulah <jgoulah@cpan.org>
 
 =item *
 
@@ -409,8 +427,23 @@ Jonathan Swartz <swartz@pobox.com>
 
 =item *
 
-John Goulah <jgoulah@cpan.org>
+Justin Hunter <justin.d.hunter@gmail.com>
+
+=item *
+
+Shlomi Fish <shlomif@shlomifish.org>
+
+=item *
+
+Stuart A Johnston <saj_git@thecommune.net>
 
 =back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2007 by Infinity Interactive, Inc.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

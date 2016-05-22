@@ -5,7 +5,7 @@
 #          config values from a given file and
 #          return it as hash structure
 #
-# Copyright (c) 2000-2015 Thomas Linden <tlinden |AT| cpan.org>.
+# Copyright (c) 2000-2016 Thomas Linden <tlinden |AT| cpan.org>.
 # All Rights Reserved. Std. disclaimer applies.
 # Artistic License, same as perl itself. Have fun.
 #
@@ -32,11 +32,13 @@ use Carp::Heavy;
 use Carp;
 use Exporter;
 
-$Config::General::VERSION = "2.60";
+$Config::General::VERSION = "2.61";
 
 use vars  qw(@ISA @EXPORT_OK);
 use base qw(Exporter);
 @EXPORT_OK = qw(ParseConfig SaveConfig SaveConfigString);
+
+use constant _UTF8_BOM => "\x{ef}\x{bb}\x{bf}";
 
 sub new {
   #
@@ -47,46 +49,46 @@ sub new {
 
   # define default options
   my $self = {
-	      # sha256 of current date
-	      # hopefully this lowers the probability that
-	      # this matches any configuration key or value out there
-	      # bugfix for rt.40925
-	      EOFseparator          => 'ad7d7b87f5b81d2a0d5cb75294afeb91aa4801b1f8e8532dc1b633c0e1d47037',
-	      SlashIsDirectory      => 0,
-	      AllowMultiOptions     => 1,
-	      MergeDuplicateOptions => 0,
-	      MergeDuplicateBlocks  => 0,
-	      LowerCaseNames        => 0,
-	      ApacheCompatible      => 0,
-	      UseApacheInclude      => 0,
-	      IncludeRelative       => 0,
-	      IncludeDirectories    => 0,
-	      IncludeGlob           => 0,
+              # sha256 of current date
+              # hopefully this lowers the probability that
+              # this matches any configuration key or value out there
+              # bugfix for rt.40925
+              EOFseparator          => 'ad7d7b87f5b81d2a0d5cb75294afeb91aa4801b1f8e8532dc1b633c0e1d47037',
+              SlashIsDirectory      => 0,
+              AllowMultiOptions     => 1,
+              MergeDuplicateOptions => 0,
+              MergeDuplicateBlocks  => 0,
+              LowerCaseNames        => 0,
+              ApacheCompatible      => 0,
+              UseApacheInclude      => 0,
+              IncludeRelative       => 0,
+              IncludeDirectories    => 0,
+              IncludeGlob           => 0,
               IncludeAgain          => 0,
-	      AutoLaunder           => 0,
-	      AutoTrue              => 0,
-	      AutoTrueFlags         => {
-					true  => '^(on|yes|true|1)$',
-					false => '^(off|no|false|0)$',
-				       },
-	      DefaultConfig         => {},
-	      String                => '',
-	      level                 => 1,
-	      InterPolateVars       => 0,
-	      InterPolateEnv        => 0,
-	      ExtendedAccess        => 0,
-	      SplitPolicy           => 'guess', # also possible: whitespace, equalsign and custom
-	      SplitDelimiter        => 0,       # must be set by the user if SplitPolicy is 'custom'
-	      StoreDelimiter        => 0,       # will be set by me unless user uses 'custom' policy
-	      CComments             => 1,       # by default turned on
-	      BackslashEscape       => 0,       # deprecated
-	      StrictObjects         => 1,       # be strict on non-existent keys in OOP mode
-	      StrictVars            => 1,       # be strict on undefined variables in Interpolate mode
-	      Tie                   => q(),      # could be set to a perl module for tie'ing new hashes
-	      parsed                => 0,       # internal state stuff for variable interpolation
-	      files                 => {},      # which files we have read, if any
-	      UTF8                  => 0,
-	      SaveSorted            => 0,
+              AutoLaunder           => 0,
+              AutoTrue              => 0,
+              AutoTrueFlags         => {
+                                        true  => '^(on|yes|true|1)$',
+                                        false => '^(off|no|false|0)$',
+                                       },
+              DefaultConfig         => {},
+              String                => '',
+              level                 => 1,
+              InterPolateVars       => 0,
+              InterPolateEnv        => 0,
+              ExtendedAccess        => 0,
+              SplitPolicy           => 'guess', # also possible: whitespace, equalsign and custom
+              SplitDelimiter        => 0,       # must be set by the user if SplitPolicy is 'custom'
+              StoreDelimiter        => 0,       # will be set by me unless user uses 'custom' policy
+              CComments             => 1,       # by default turned on
+              BackslashEscape       => 0,       # deprecated
+              StrictObjects         => 1,       # be strict on non-existent keys in OOP mode
+              StrictVars            => 1,       # be strict on undefined variables in Interpolate mode
+              Tie                   => q(),      # could be set to a perl module for tie'ing new hashes
+              parsed                => 0,       # internal state stuff for variable interpolation
+              files                 => {},      # which files we have read, if any
+              UTF8                  => 0,
+              SaveSorted            => 0,
               ForceArray            => 0,       # force single value array if value enclosed in []
               AllowSingleQuoteInterpolation => 0,
               NoEscape              => 0,
@@ -94,7 +96,7 @@ sub new {
               NormalizeOption       => 0,
               NormalizeValue        => 0,
               Plug                  => {}
-	     };
+             };
 
   # create the class instance
   bless $self, $class;
@@ -407,7 +409,7 @@ sub files {
 
 sub _open {
   #
-  # open the config file, or expand a directory or glob
+  # open the config file, or expand a directory or glob or include
   #
   my($this, $basefile, $basepath) = @_;
   my $cont;
@@ -433,11 +435,11 @@ sub _open {
     # applied patch by AlexK fixing rt.cpan.org#41030
     if ( !@include && defined $this->{ConfigPath} ) {
       foreach my $dir (@{$this->{ConfigPath}}) {
-	my ($volume, $path, undef) = splitpath($basefile);
-	if ( -d catfile( $dir, $path )  ) {
-	  push @include, grep { -f $_ } bsd_glob(catfile($dir, $basefile), GLOB_BRACE | GLOB_QUOTE);
-	  last;
-	}
+        my ($volume, $path, undef) = splitpath($basefile);
+        if ( -d catfile( $dir, $path )  ) {
+          push @include, grep { -f $_ } bsd_glob(catfile($dir, $basefile), GLOB_BRACE | GLOB_QUOTE);
+          last;
+        }
       }
     }
 
@@ -449,7 +451,7 @@ sub _open {
       # include foo/* shouldn't fail if there isn't anything matching)
       # rt.cpan.org#79869: local $this->{IncludeGlob};
       for (@include) {
-	$this->_open($_);
+        $this->_open($_);
       }
       return;
     }
@@ -460,11 +462,11 @@ sub _open {
     if (defined $this->{ConfigPath}) {
       # try to find the file within ConfigPath
       foreach my $dir (@{$this->{ConfigPath}}) {
-	if( -e catfile($dir, $basefile) ) {
-	  $configfile = catfile($dir, $basefile);
-	  $found = 1;
-	  last; # found it
-	}
+        if( -e catfile($dir, $basefile) ) {
+          $configfile = catfile($dir, $basefile);
+          $found = 1;
+          last; # found it
+        }
       }
     }
     if (!$found) {
@@ -490,16 +492,9 @@ sub _open {
       my $file = catfile($configfile, $_);
       if (! exists $this->{files}->{$file} or $this->{IncludeAgain} ) {
         # support re-read if used urged us to do so, otherwise ignore the file
-	if ($this->{UTF8}) {
-	  $fh = IO::File->new;
-	  open( $fh, "<:utf8", $file)
-	    or croak "Config::General: Could not open $file in UTF8 mode!($!)\n";
-	}
-	else {
-	  $fh = IO::File->new( $file, 'r') or croak "Config::General: Could not open $file!($!)\n";
-	}
-	$this->{files}->{"$file"} = 1;
-	$this->_read($fh);
+        $fh = $this->_openfile_for_read($file);
+        $this->{files}->{"$file"} = 1;
+        $this->_read($fh);
       }
       else {
         warn "File $file already loaded.  Use -IncludeAgain to load it again.\n";
@@ -516,16 +511,7 @@ sub _open {
       return;
     }
     else {
-      if ($this->{UTF8}) {
-	$fh = IO::File->new;
-	open( $fh, "<:utf8", $configfile)
-	  or croak "Config::General: Could not open $configfile in UTF8 mode!($!)\n";
-      }
-      else {
-	$fh = IO::File->new( "$configfile", 'r')
-	  or croak "Config::General: Could not open $configfile!($!)\n";
-      }
-
+      $fh = $this->_openfile_for_read($configfile);
       $this->{files}->{$configfile}    = 1;
 
       my ($volume, $path, undef)           = splitpath($configfile);
@@ -536,6 +522,30 @@ sub _open {
   }
   return;
 }
+
+
+sub _openfile_for_read {
+  #
+  # actually open a file, turn on utf8 mode if requested by bom
+  #
+  my ($this, $file) = @_;
+
+  my $fh = IO::File->new( $file, 'r')
+    or croak "Config::General: Could not open $file!($!)\n";
+
+  # attempt to read an initial utf8 byte-order mark (BOM)
+  my $n_read  = sysread $fh, my $read_BOM, length(_UTF8_BOM);
+  my $has_BOM = $n_read == length(_UTF8_BOM) && $read_BOM eq _UTF8_BOM;
+
+  # set utf8 perlio layer if BOM was found or if option -UTF8 is turned on
+  binmode $fh, ":utf8" if $this->{UTF8} || $has_BOM;
+
+  # rewind to beginning of file if we read chars that were not the BOM
+  sysseek $fh, 0, 0 if $n_read && !$has_BOM;
+
+  return $fh;
+}
+
 
 
 sub _read {
@@ -569,7 +579,7 @@ sub _read {
   foreach (@stuff) {
     if ($this->{AutoLaunder}) {
       if (m/^(.*)$/) {
-	$_ = $1;
+        $_ = $1;
       }
     }
 
@@ -579,26 +589,26 @@ sub _read {
     if ($hier) {
       # inside here-doc, only look for $hierend marker
       if (/^(\s*)\Q$hierend\E\s*$/) {
-	my $indent = $1;                 # preserve indentation
-	$hier .= ' ' . $this->{EOFseparator}; # bugfix of rt.40925
-	                                 # _parse will also preserver indentation
-	if ($indent) {
-	  foreach (@hierdoc) {
-	    s/^$indent//;                # i.e. the end was: "    EOF" then we remove "    " from every here-doc line
-	    $hier .= $_ . "\n";          # and store it in $hier
-	  }
-	}
-	else {
-	  $hier .= join "\n", @hierdoc;  # there was no indentation of the end-string, so join it 1:1
-	}
-	push @{$this->{content}}, $hier; # push it onto the content stack
-	@hierdoc = ();
-	undef $hier;
-	undef $hierend;
+        my $indent = $1;                 # preserve indentation
+        $hier .= ' ' . $this->{EOFseparator}; # bugfix of rt.40925
+        # _parse will also preserver indentation
+        if ($indent) {
+          foreach (@hierdoc) {
+            s/^$indent//;                # i.e. the end was: "    EOF" then we remove "    " from every here-doc line
+            $hier .= $_ . "\n";          # and store it in $hier
+          }
+        }
+        else {
+          $hier .= join "\n", @hierdoc;  # there was no indentation of the end-string, so join it 1:1
+        }
+        push @{$this->{content}}, $hier; # push it onto the content stack
+        @hierdoc = ();
+        undef $hier;
+        undef $hierend;
       }
       else {
-	# everything else onto the stack
-	push @hierdoc, $_;
+        # everything else onto the stack
+        push @hierdoc, $_;
       }
       next;
     }
@@ -606,25 +616,25 @@ sub _read {
     if ($this->{CComments}) {
       # look for C-Style comments, if activated
       if (/(\s*\/\*.*\*\/\s*)/) {
-       # single c-comment on one line
-       s/\s*\/\*.*\*\/\s*//;
+        # single c-comment on one line
+        s/\s*\/\*.*\*\/\s*//;
       }
       elsif (/^\s*\/\*/) {
-       # the beginning of a C-comment ("/*"), from now on ignore everything.
-       if (/\*\/\s*$/) {
-         # C-comment end is already there, so just ignore this line!
-         $c_comment = 0;
-       }
-       else {
-         $c_comment = 1;
-       }
+        # the beginning of a C-comment ("/*"), from now on ignore everything.
+        if (/\*\/\s*$/) {
+          # C-comment end is already there, so just ignore this line!
+          $c_comment = 0;
+        }
+        else {
+          $c_comment = 1;
+        }
       }
       elsif (/\*\//) {
-       if (!$c_comment) {
-         warn "invalid syntax: found end of C-comment without previous start!\n";
-       }
-       $c_comment = 0;    # the current C-comment ends here, go on
-       s/^.*\*\///;       # if there is still stuff, it will be read
+        if (!$c_comment) {
+          warn "invalid syntax: found end of C-comment without previous start!\n";
+        }
+        $c_comment = 0;    # the current C-comment ends here, go on
+        s/^.*\*\///;       # if there is still stuff, it will be read
       }
       next if($c_comment); # ignore EVERYTHING from now on, IF it IS a C-Comment
     }
@@ -648,16 +658,16 @@ sub _read {
     if (!$this->{ApacheCompatible} && /\s*<([^\/]+?.*?)\/>\s*$/) {
       my $block = $1;
       if ($block !~ /\"/) {
-	if ($block !~ /\s[^\s]/) {
-	  # fix of bug 7957, add quotation to pure slash at the
-	  # end of a block so that it will be considered as directory
-	  # unless the block is already quoted or contains whitespaces
-	  # and no quotes.
-	  if ($this->{SlashIsDirectory}) {
-	    push @{$this->{content}}, '<' . $block . '"/">';
-	    next;
-	  }
-	}
+        if ($block !~ /\s[^\s]/) {
+          # fix of bug 7957, add quotation to pure slash at the
+          # end of a block so that it will be considered as directory
+          # unless the block is already quoted or contains whitespaces
+          # and no quotes.
+          if ($this->{SlashIsDirectory}) {
+            push @{$this->{content}}, '<' . $block . '"/">';
+            next;
+          }
+        }
       }
       my $orig  = $_;
       $orig     =~ s/\/>$/>/;
@@ -670,24 +680,24 @@ sub _read {
     # look for here-doc identifier
     if ($this->{SplitPolicy} eq 'guess') {
       if (/^\s*([^=]+?)\s*=\s*<<\s*(.+?)\s*$/) {
-	# try equal sign (fix bug rt#36607)
-	$hier    = $1;  # the actual here-doc variable name
-	$hierend = $2;  # the here-doc identifier, i.e. "EOF"
-	next;
+        # try equal sign (fix bug rt#36607)
+        $hier    = $1;  # the actual here-doc variable name
+        $hierend = $2;  # the here-doc identifier, i.e. "EOF"
+        next;
       }
       elsif (/^\s*(\S+?)\s+<<\s*(.+?)\s*$/) {
-	# try whitespace
-	$hier    = $1;  # the actual here-doc variable name
-	$hierend = $2;  # the here-doc identifier, i.e. "EOF"
-	next;
+        # try whitespace
+        $hier    = $1;  # the actual here-doc variable name
+        $hierend = $2;  # the here-doc identifier, i.e. "EOF"
+        next;
       }
     }
     else {
       # no guess, use one of the configured strict split policies
       if (/^\s*(.+?)($this->{SplitDelimiter})<<\s*(.+?)\s*$/) {
-	$hier    = $1;  # the actual here-doc variable name
-	$hierend = $3;  # the here-doc identifier, i.e. "EOF"
-	next;
+        $hier    = $1;  # the actual here-doc variable name
+        $hierend = $3;  # the here-doc identifier, i.e. "EOF"
+        next;
       }
     }
 
@@ -713,61 +723,61 @@ sub _read {
       my $incl_file;
       my $path = '';
       if ( $this->{IncludeRelative} and defined $this->{CurrentConfigFilePath}) {
-      	$path = $this->{CurrentConfigFilePath};
+        $path = $this->{CurrentConfigFilePath};
       }
       elsif (defined $this->{ConfigPath}) {
-	# fetch pathname of base config file, assuming the 1st one is the path of it
-	$path = $this->{ConfigPath}->[0];
+        # fetch pathname of base config file, assuming the 1st one is the path of it
+        $path = $this->{ConfigPath}->[0];
       }
 
       # bugfix rt.cpan.org#38635: support quoted filenames
       if ($this->{UseApacheInclude}) {
-	my $opt = '';
-	if (/^\s*(include|includeoptional)\s*(["'])(.*?)(?<!\\)\2$/i) {
-	  $incl_file = $3;
-	  $opt = $1;
-	}
-	elsif (/^\s*(include|includeoptional)\s+(.+?)\s*$/i) {
-	  $incl_file = $2;
-	  $opt = $1;
-	}
-	if ($incl_file) {
-	  if ($this->{IncludeGlob} && $opt =~ /opt/i && $incl_file !~ /[*?\[\{\\]/) {
-	    # fix rt#107108
-	    # glob enabled && optional include && file is not already a glob:
-	    # turn it into a singular matching glob, like:
-	    # "file" => "[f][i][l][e]"  and:
-	    # "dir/file" => "dir/[f][i][l][e]"
-	    # which IS a glob but only matches that particular file. if it
-	    # doesn't exist, it will be ignored by _open(), just what
-	    # we'd like to have when using IncludeOptional.
-	    my ($vol,$dirs,$file) = splitpath( $incl_file );
-	    $incl_file = catpath($vol, $dirs, join '', map { "[$_]" } split //, $file);
-	  }
-	}
+        my $opt = '';
+        if (/^\s*(include|includeoptional)\s*(["'])(.*?)(?<!\\)\2$/i) {
+          $incl_file = $3;
+          $opt = $1;
+        }
+        elsif (/^\s*(include|includeoptional)\s+(.+?)\s*$/i) {
+          $incl_file = $2;
+          $opt = $1;
+        }
+        if ($incl_file) {
+          if ($this->{IncludeGlob} && $opt =~ /opt/i && $incl_file !~ /[*?\[\{\\]/) {
+            # fix rt#107108
+            # glob enabled && optional include && file is not already a glob:
+            # turn it into a singular matching glob, like:
+            # "file" => "[f][i][l][e]"  and:
+            # "dir/file" => "dir/[f][i][l][e]"
+            # which IS a glob but only matches that particular file. if it
+            # doesn't exist, it will be ignored by _open(), just what
+            # we'd like to have when using IncludeOptional.
+            my ($vol,$dirs,$file) = splitpath( $incl_file );
+            $incl_file = catpath($vol, $dirs, join '', map { "[$_]" } split //, $file);
+          }
+        }
       }
       else {
-	if (/^\s*<<include\s+(["'])(.+?)>>\\s*$/i) {
-	  $incl_file = $2;
-	}
+        if (/^\s*<<include\s+(["'])(.+?)>>\\s*$/i) {
+          $incl_file = $2;
+        }
         elsif (/^\s*<<include\s+(.+?)>>\s*$/i) {
           $incl_file = $1;
         }
       }
 
       if ($incl_file) {
-	if ( $this->{IncludeRelative} && $path && !file_name_is_absolute($incl_file) ) {
-	  # include the file from within location of $this->{configfile}
-	  $this->_open( $incl_file, $path );
-	}
-	else {
-	  # include the file from within pwd, or absolute
-	  $this->_open($incl_file);
-	}
+        if ( $this->{IncludeRelative} && $path && !file_name_is_absolute($incl_file) ) {
+          # include the file from within location of $this->{configfile}
+          $this->_open( $incl_file, $path );
+        }
+        else {
+          # include the file from within pwd, or absolute
+          $this->_open($incl_file);
+        }
       }
       else {
-	# standard entry, (option = value)
-	push @{$this->{content}}, $_;
+        # standard entry, (option = value)
+        push @{$this->{content}}, $_;
       }
 
     }
@@ -795,24 +805,25 @@ sub _parse {
     $chunk++;
     $_ =~ s/^\s+//;                                        # strip spaces @ end and begin
     $_ =~ s/\s+$//;
+    ###### bad $_ =~ s/^\x{ef}\x{bb}\x{bf}//; # strip utf BOM, if any, fix rt.cpan.org#113671
 
-    #
-    # build option value assignment, split current input
-    # using whitespace, equal sign or optionally here-doc
-    # separator EOFseparator
+#
+# build option value assignment, split current input
+# using whitespace, equal sign or optionally here-doc
+# separator EOFseparator
     my ($option,$value);
     if (/$this->{EOFseparator}/) {
       ($option,$value) = split /\s*$this->{EOFseparator}\s*/, $_, 2;   # separated by heredoc-finding in _open()
     }
     else {
       if ($this->{SplitPolicy} eq 'guess') {
-	# again the old regex. use equalsign SplitPolicy to get the
-	# 2.00 behavior. the new regexes were too odd.
-	($option,$value) = split /\s*=\s*|\s+/, $_, 2;
+        # again the old regex. use equalsign SplitPolicy to get the
+        # 2.00 behavior. the new regexes were too odd.
+        ($option,$value) = split /\s*=\s*|\s+/, $_, 2;
       }
       else {
-	# no guess, use one of the configured strict split policies
-	($option,$value) = split /$this->{SplitDelimiter}/, $_, 2;
+        # no guess, use one of the configured strict split policies
+        ($option,$value) = split /$this->{SplitDelimiter}/, $_, 2;
       }
     }
 
@@ -826,102 +837,102 @@ sub _parse {
     }
     if (! defined $block) {                                # not inside a block @ the moment
       if (/^<([^\/]+?.*?)>$/) {                            # look if it is a block
-	$block = $1;                                       # store block name
-	if ($block =~ /^"([^"]+)"$/) {
-	  # quoted block, unquote it and do not split
-	  $block =~ s/"//g;
-	}
-	else {
-	  # If it is a named block store the name separately; allow the block and name to each be quoted
-	  if ($block =~ /^(?:"([^"]+)"|(\S+))(?:\s+(?:"([^"]+)"|(.*)))?$/) {
-	    $block = $1 || $2;
-	    $blockname = $3 || $4;
-	  }
-	}
+        $block = $1;                                       # store block name
+        if ($block =~ /^"([^"]+)"$/) {
+# quoted block, unquote it and do not split
+          $block =~ s/"//g;
+        }
+        else {
+          # If it is a named block store the name separately; allow the block and name to each be quoted
+          if ($block =~ /^(?:"([^"]+)"|(\S+))(?:\s+(?:"([^"]+)"|(.*)))?$/) {
+            $block = $1 || $2;
+            $blockname = $3 || $4;
+          }
+        }
         if($this->{NormalizeBlock}) {
           $block = $this->{NormalizeBlock}($block);
-	  if (defined $blockname) {
+          if (defined $blockname) {
             $blockname = $this->{NormalizeBlock}($blockname);
             if($blockname eq "") {
               # if, after normalization no blockname is left, remove it
               $blockname = undef;
             }
-	  }
+          }
         }
-	if ($this->{InterPolateVars}) {
-	  # interpolate block(name), add "<" and ">" to the key, because
-	  # it is sure that such keys does not exist otherwise.
-	  $block     = $this->_interpolate($config, "<$block>", $block);
-	  if (defined $blockname) {
-	    $blockname = $this->_interpolate($config, "<$blockname>", "$blockname");
-	  }
-	}
-	if ($this->{LowerCaseNames}) {
-	  $block = lc $block;    # only for blocks lc(), if configured via new()
-	}
-	$this->{level} += 1;
-	undef @newcontent;
-	next;
+        if ($this->{InterPolateVars}) {
+          # interpolate block(name), add "<" and ">" to the key, because
+          # it is sure that such keys does not exist otherwise.
+          $block     = $this->_interpolate($config, "<$block>", $block);
+          if (defined $blockname) {
+            $blockname = $this->_interpolate($config, "<$blockname>", "$blockname");
+          }
+        }
+        if ($this->{LowerCaseNames}) {
+          $block = lc $block;    # only for blocks lc(), if configured via new()
+        }
+        $this->{level} += 1;
+        undef @newcontent;
+        next;
       }
       elsif (/^<\/(.+?)>$/) { # it is an end block, but we don't have a matching block!
-	croak "Config::General: EndBlock \"<\/$1>\" has no StartBlock statement (level: $this->{level}, chunk $chunk)!\n";
+        croak "Config::General: EndBlock \"<\/$1>\" has no StartBlock statement (level: $this->{level}, chunk $chunk)!\n";
       }
       else {                                               # insert key/value pair into actual node
-	if ($this->{LowerCaseNames}) {
-	  $option = lc $option;
-	}
+        if ($this->{LowerCaseNames}) {
+          $option = lc $option;
+        }
 
-	if (exists $config->{$option}) {
-	  if ($this->{MergeDuplicateOptions}) {
-	    $config->{$option} = $this->_parse_value($config, $option, $value);
+        if (exists $config->{$option}) {
+          if ($this->{MergeDuplicateOptions}) {
+            $config->{$option} = $this->_parse_value($config, $option, $value);
 
-	    # bugfix rt.cpan.org#33216
-	    if ($this->{InterPolateVars}) {
-	      # save pair on local stack
-	      $config->{__stack}->{$option} = $config->{$option};
-	    }
-	  }
-	  else {
-	    if (! $this->{AllowMultiOptions} ) {
-	      # no, duplicates not allowed
-	      croak "Config::General: Option \"$option\" occurs more than once (level: $this->{level}, chunk $chunk)!\n";
-	    }
-	    else {
-	      # yes, duplicates allowed
-	      if (ref($config->{$option}) ne 'ARRAY') {      # convert scalar to array
-		my $savevalue = $config->{$option};
-		delete $config->{$option};
-		push @{$config->{$option}}, $savevalue;
-	      }
-	      eval {
-		# check if arrays are supported by the underlying hash
-		my $i = scalar @{$config->{$option}};
-	      };
-	      if ($EVAL_ERROR) {
-		$config->{$option} = $this->_parse_value($config, $option, $value);
-	      }
-	      else {
-		# it's already an array, just push
-		push @{$config->{$option}}, $this->_parse_value($config, $option, $value);
-	      }
-	    }
-	  }
-	}
-	else {
+            # bugfix rt.cpan.org#33216
+            if ($this->{InterPolateVars}) {
+              # save pair on local stack
+              $config->{__stack}->{$option} = $config->{$option};
+            }
+          }
+          else {
+            if (! $this->{AllowMultiOptions} ) {
+              # no, duplicates not allowed
+              croak "Config::General: Option \"$option\" occurs more than once (level: $this->{level}, chunk $chunk)!\n";
+            }
+            else {
+              # yes, duplicates allowed
+              if (ref($config->{$option}) ne 'ARRAY') {      # convert scalar to array
+                my $savevalue = $config->{$option};
+                delete $config->{$option};
+                push @{$config->{$option}}, $savevalue;
+              }
+              eval {
+                # check if arrays are supported by the underlying hash
+                my $i = scalar @{$config->{$option}};
+              };
+              if ($EVAL_ERROR) {
+                $config->{$option} = $this->_parse_value($config, $option, $value);
+              }
+              else {
+                # it's already an array, just push
+                push @{$config->{$option}}, $this->_parse_value($config, $option, $value);
+              }
+            }
+          }
+        }
+        else {
           if($this->{ForceArray} && defined $value && $value =~ /^\[\s*(.+?)\s*\]$/) {
             # force single value array entry
             push @{$config->{$option}}, $this->_parse_value($config, $option, $1);
           }
           else {
-	    # standard config option, insert key/value pair into node
-	    $config->{$option} = $this->_parse_value($config, $option, $value);
+            # standard config option, insert key/value pair into node
+            $config->{$option} = $this->_parse_value($config, $option, $value);
 
-	    if ($this->{InterPolateVars}) {
-	      # save pair on local stack
-	      $config->{__stack}->{$option} = $config->{$option};
-	    }
+            if ($this->{InterPolateVars}) {
+              # save pair on local stack
+              $config->{__stack}->{$option} = $config->{$option};
+            }
           }
-	}
+        }
       }
     }
     elsif (/^<([^\/]+?.*?)>$/) {    # found a start block inside a block, don't forget it
@@ -930,127 +941,127 @@ sub _parse {
     }
     elsif (/^<\/(.+?)>$/) {
       if ($block_level) {           # this endblock is not the one we are searching for, decrement and push
-	$block_level--;             # if it is 0, then the endblock was the one we searched for, see below
-	push @newcontent, $_;       # push onto new content stack
+        $block_level--;             # if it is 0, then the endblock was the one we searched for, see below
+        push @newcontent, $_;       # push onto new content stack
       }
       else {                        # calling myself recursively, end of $block reached, $block_level is 0
-	if (defined $blockname) {
-	  # a named block, make it a hashref inside a hash within the current node
+        if (defined $blockname) {
+          # a named block, make it a hashref inside a hash within the current node
 
-	  if (! exists $config->{$block}) {
-	    # Make sure that the hash is not created implicitly
-	    $config->{$block} = $this->_hashref();
+          if (! exists $config->{$block}) {
+            # Make sure that the hash is not created implicitly
+            $config->{$block} = $this->_hashref();
 
-	    if ($this->{InterPolateVars}) {
-	      # inherit current __stack to new block
-	      $config->{$block}->{__stack} = $this->_copy($config->{__stack});
-	    }
-	  }
+            if ($this->{InterPolateVars}) {
+              # inherit current __stack to new block
+              $config->{$block}->{__stack} = $this->_copy($config->{__stack});
+            }
+          }
 
-	  if (ref($config->{$block}) eq '') {
-	    croak "Config::General: Block <$block> already exists as scalar entry!\n";
-	  }
-	  elsif (ref($config->{$block}) eq 'ARRAY') {
-	    croak "Config::General: Cannot append named block <$block $blockname> to array of scalars!\n"
-	         ."Block <$block> or scalar '$block' occurs more than once.\n"
-	         ."Turn on -MergeDuplicateBlocks or make sure <$block> occurs only once in the config.\n";
-	  }
-	  elsif (exists $config->{$block}->{$blockname}) {
-	    # the named block already exists, make it an array
-	    if ($this->{MergeDuplicateBlocks}) {
-	      # just merge the new block with the same name as an existing one into
+          if (ref($config->{$block}) eq '') {
+            croak "Config::General: Block <$block> already exists as scalar entry!\n";
+          }
+          elsif (ref($config->{$block}) eq 'ARRAY') {
+            croak "Config::General: Cannot append named block <$block $blockname> to array of scalars!\n"
+              ."Block <$block> or scalar '$block' occurs more than once.\n"
+              ."Turn on -MergeDuplicateBlocks or make sure <$block> occurs only once in the config.\n";
+          }
+          elsif (exists $config->{$block}->{$blockname}) {
+            # the named block already exists, make it an array
+            if ($this->{MergeDuplicateBlocks}) {
+              # just merge the new block with the same name as an existing one into
               # this one.
-	      $config->{$block}->{$blockname} = $this->_parse($config->{$block}->{$blockname}, \@newcontent);
-	    }
-	    else {
-	      if (! $this->{AllowMultiOptions}) {
-		croak "Config::General: Named block \"<$block $blockname>\" occurs more than once (level: $this->{level}, chunk $chunk)!\n";
-	      }
-	      else {                                       # preserve existing data
-		my $savevalue = $config->{$block}->{$blockname};
-		delete $config->{$block}->{$blockname};
-		my @ar;
-		if (ref $savevalue eq 'ARRAY') {
-		  push @ar, @{$savevalue};                   # preserve array if any
-		}
-		else {
-		  push @ar, $savevalue;
-		}
-		push @ar, $this->_parse( $this->_hashref(), \@newcontent);  # append it
-		$config->{$block}->{$blockname} = \@ar;
-	      }
-	    }
-	  }
-	  else {
-	    # the first occurrence of this particular named block
-	    my $tmphash = $this->_hashref();
-
-	    if ($this->{InterPolateVars}) {
-	      # inherit current __stack to new block
-	      $tmphash->{__stack} = $this->_copy($config->{__stack});
-	    }
-
-	    $config->{$block}->{$blockname} = $this->_parse($tmphash, \@newcontent);
-	  }
-	}
-	else {
-	  # standard block
-	  if (exists $config->{$block}) {
-	    if (ref($config->{$block}) eq '') {
-	      croak "Config::General: Cannot create hashref from <$block> because there is\n"
-		   ."already a scalar option '$block' with value '$config->{$block}'\n";
-	    }
-
-	    # the block already exists, make it an array
-	    if ($this->{MergeDuplicateBlocks}) {
-	      # just merge the new block with the same name as an existing one into
-              # this one.
-	      $config->{$block} = $this->_parse($config->{$block}, \@newcontent);
+              $config->{$block}->{$blockname} = $this->_parse($config->{$block}->{$blockname}, \@newcontent);
             }
             else {
-	      if (! $this->{AllowMultiOptions}) {
-	        croak "Config::General: Block \"<$block>\" occurs more than once (level: $this->{level}, chunk $chunk)!\n";
-	      }
-	      else {
-		my $savevalue = $config->{$block};
-		delete $config->{$block};
-		my @ar;
-		if (ref $savevalue eq "ARRAY") {
-		  push @ar, @{$savevalue};
-		}
-		else {
-		  push @ar, $savevalue;
-		}
+              if (! $this->{AllowMultiOptions}) {
+                croak "Config::General: Named block \"<$block $blockname>\" occurs more than once (level: $this->{level}, chunk $chunk)!\n";
+              }
+              else {                                       # preserve existing data
+                my $savevalue = $config->{$block}->{$blockname};
+                delete $config->{$block}->{$blockname};
+                my @ar;
+                if (ref $savevalue eq 'ARRAY') {
+                  push @ar, @{$savevalue};                   # preserve array if any
+                }
+                else {
+                  push @ar, $savevalue;
+                }
+                push @ar, $this->_parse( $this->_hashref(), \@newcontent);  # append it
+                $config->{$block}->{$blockname} = \@ar;
+              }
+            }
+          }
+          else {
+            # the first occurrence of this particular named block
+            my $tmphash = $this->_hashref();
 
-		# fixes rt#31529
-		my $tmphash = $this->_hashref();
-		if ($this->{InterPolateVars}) {
-		  # inherit current __stack to new block
-		  $tmphash->{__stack} = $this->_copy($config->{__stack});
-		}
+            if ($this->{InterPolateVars}) {
+              # inherit current __stack to new block
+              $tmphash->{__stack} = $this->_copy($config->{__stack});
+            }
 
-		push @ar, $this->_parse( $tmphash, \@newcontent);
+            $config->{$block}->{$blockname} = $this->_parse($tmphash, \@newcontent);
+          }
+        }
+        else {
+          # standard block
+          if (exists $config->{$block}) {
+            if (ref($config->{$block}) eq '') {
+              croak "Config::General: Cannot create hashref from <$block> because there is\n"
+                ."already a scalar option '$block' with value '$config->{$block}'\n";
+            }
 
-		$config->{$block} = \@ar;
-	      }
-	    }
-	  }
-	  else {
-	    # the first occurrence of this particular block
-	    my $tmphash = $this->_hashref();
+            # the block already exists, make it an array
+            if ($this->{MergeDuplicateBlocks}) {
+              # just merge the new block with the same name as an existing one into
+              # this one.
+              $config->{$block} = $this->_parse($config->{$block}, \@newcontent);
+            }
+            else {
+              if (! $this->{AllowMultiOptions}) {
+                croak "Config::General: Block \"<$block>\" occurs more than once (level: $this->{level}, chunk $chunk)!\n";
+              }
+              else {
+                my $savevalue = $config->{$block};
+                delete $config->{$block};
+                my @ar;
+                if (ref $savevalue eq "ARRAY") {
+                  push @ar, @{$savevalue};
+                }
+                else {
+                  push @ar, $savevalue;
+                }
 
-	    if ($this->{InterPolateVars}) {
-	      # inherit current __stack to new block
-	      $tmphash->{__stack} = $this->_copy($config->{__stack});
-	    }
+                # fixes rt#31529
+                my $tmphash = $this->_hashref();
+                if ($this->{InterPolateVars}) {
+                  # inherit current __stack to new block
+                  $tmphash->{__stack} = $this->_copy($config->{__stack});
+                }
 
-	    $config->{$block} = $this->_parse($tmphash, \@newcontent);
-	  }
-	}
-	undef $blockname;
-	undef $block;
-	$this->{level} -= 1;
-	next;
+                push @ar, $this->_parse( $tmphash, \@newcontent);
+
+                $config->{$block} = \@ar;
+              }
+            }
+          }
+          else {
+            # the first occurrence of this particular block
+            my $tmphash = $this->_hashref();
+
+            if ($this->{InterPolateVars}) {
+              # inherit current __stack to new block
+              $tmphash->{__stack} = $this->_copy($config->{__stack});
+            }
+
+            $config->{$block} = $this->_parse($tmphash, \@newcontent);
+          }
+        }
+        undef $blockname;
+        undef $block;
+        $this->{level} -= 1;
+        next;
       }
     }
     else { # inside $block, just push onto new content stack
@@ -2112,82 +2123,86 @@ The method B<getall> returns a hash of all values.
 
 You can define a B<block> of options. A B<block> looks much like a block
 in the wellknown Apache config format. It starts with E<lt>B<blockname>E<gt> and ends
-with E<lt>/B<blockname>E<gt>. An example:
+with E<lt>/B<blockname>E<gt>.
 
- <database>
-    host   = muli
-    user   = moare
-    dbname = modb
-    dbpass = D4r_9Iu
- </database>
+A block start and end cannot be on the same line.
+
+An example:
+
+<database>
+host   = muli
+user   = moare
+dbname = modb
+dbpass = D4r_9Iu
+</database>
 
 Blocks can also be nested. Here is a more complicated example:
 
- user   = hans
- server = mc200
- db     = maxis
- passwd = D3rf$
- <jonas>
-        user    = tom
-        db      = unknown
-        host    = mila
-        <tablestructure>
-                index   int(100000)
-                name    char(100)
-                prename char(100)
-                city    char(100)
-                status  int(10)
-                allowed moses
-                allowed ingram
-                allowed joice
-        </tablestructure>
- </jonas>
+user   = hans
+server = mc200
+db     = maxis
+passwd = D3rf$
+<jonas>
+user    = tom
+db      = unknown
+host    = mila
+<tablestructure>
+index   int(100000)
+name    char(100)
+prename char(100)
+city    char(100)
+status  int(10)
+allowed moses
+allowed ingram
+allowed joice
+</tablestructure>
+</jonas>
 
 The hash which the method B<getall> returns look like that:
 
- print Data::Dumper(\%hash);
- $VAR1 = {
-          'passwd' => 'D3rf$',
-          'jonas'  => {
-                       'tablestructure' => {
-                                             'prename' => 'char(100)',
-                                             'index'   => 'int(100000)',
-                                             'city'    => 'char(100)',
-                                             'name'    => 'char(100)',
-                                             'status'  => 'int(10)',
-                                             'allowed' => [
-                                                            'moses',
-                                                            'ingram',
-                                                            'joice',
-                                                          ]
-                                           },
-                       'host'           => 'mila',
-                       'db'             => 'unknown',
-                       'user'           => 'tom'
-                     },
-          'db'     => 'maxis',
-          'server' => 'mc200',
-          'user'   => 'hans'
-        };
+print Data::Dumper(\%hash);
+$VAR1 = {
+'passwd' => 'D3rf$',
+'jonas'  => {
+'tablestructure' => {
+'prename' => 'char(100)',
+'index'   => 'int(100000)',
+'city'    => 'char(100)',
+'name'    => 'char(100)',
+'status'  => 'int(10)',
+'allowed' => [
+'moses',
+'ingram',
+'joice',
+]
+},
+'host'           => 'mila',
+'db'             => 'unknown',
+'user'           => 'tom'
+},
+'db'     => 'maxis',
+'server' => 'mc200',
+'user'   => 'hans'
+};
 
 If you have turned on B<-LowerCaseNames> (see new()) then blocks as in the
 following example:
 
- <Dir>
-   <AttriBUTES>
-     Owner  root
-   </attributes>
- </dir>
+<Dir>
+<AttriBUTES>
+Owner  root
+</attributes>
+</dir>
 
 would produce the following hash structure:
 
- $VAR1 = {
-          'dir' => {
-                    'attributes' => {
-                                     'owner  => "root",
-                                    }
-                   }
-         };
+$VAR1 = {
+'dir' => {
+'attributes' => {
+'owner  => "root",
+}
+}
+};
 
 As you can see, the keys inside the config hash are normalized.
 
@@ -2209,29 +2224,29 @@ create a hashref with the left part of the named block as the key containing
 one or more hashrefs with the right part of the block as key containing everything
 inside the block(which may again be nested!). As examples says more than words:
 
- # given the following sample
- <Directory /usr/frisco>
-        Limit Deny
-        Options ExecCgi Index
- </Directory>
- <Directory /usr/frik>
-        Limit DenyAll
-        Options None
- </Directory>
+# given the following sample
+<Directory /usr/frisco>
+Limit Deny
+Options ExecCgi Index
+</Directory>
+<Directory /usr/frik>
+Limit DenyAll
+Options None
+</Directory>
 
- # you will get:
- $VAR1 = {
-          'Directory' => {
-                           '/usr/frik' => {
-                                            'Options' => 'None',
-                                            'Limit' => 'DenyAll'
-                                          },
-                           '/usr/frisco' => {
-                                              'Options' => 'ExecCgi Index',
-                                              'Limit' => 'Deny'
-                                            }
-                         }
-        };
+# you will get:
+$VAR1 = {
+'Directory' => {
+'/usr/frik' => {
+'Options' => 'None',
+'Limit' => 'DenyAll'
+},
+'/usr/frisco' => {
+'Options' => 'ExecCgi Index',
+'Limit' => 'Deny'
+}
+}
+};
 
 You cannot have more than one named block with the same name because it will
 be stored in a hashref and therefore be overwritten if a block occurs once more.
@@ -2247,28 +2262,28 @@ Sometimes you may need blocknames which have whitespace in their names.
 With named blocks this is no problem, as the module only looks for the
 first whitespace:
 
- <person hugo gera>
- </person>
+<person hugo gera>
+</person>
 
 would be parsed to:
 
- $VAR1 = {
-          'person' => {
-                       'hugo gera' => {
-                                      },
-                      }
-         };
+$VAR1 = {
+'person' => {
+'hugo gera' => {
+},
+}
+};
 
 The problem occurs, if you want to have a simple block containing whitespace:
 
- <hugo gera>
- </hugo gera>
+<hugo gera>
+</hugo gera>
 
 This would be parsed as a named block, which is not what you wanted. In this
 very case you may use quotation marks to indicate that it is not a named block:
 
- <"hugo gera">
- </"hugo gera">
+<"hugo gera">
+</"hugo gera">
 
 The save() method of the module inserts automatically quotation marks in such
 cases.
@@ -2282,12 +2297,12 @@ explicit empty blocks.
 Normally you would write this in your config to define an empty
 block:
 
- <driver Apache>
- </driver>
+<driver Apache>
+</driver>
 
 To save writing you can also write:
 
- <driver Apache/>
+<driver Apache/>
 
 which is the very same as above. This works for normal blocks and
 for named blocks.
@@ -2299,45 +2314,45 @@ for named blocks.
 You may have more than one line of the same option with different values.
 
 Example:
- log  log1
- log  log2
- log  log2
+log  log1
+log  log2
+log  log2
 
 You will get a scalar if the option occurred only once or an array if it occurred
 more than once. If you expect multiple identical options, then you may need to
 check if an option occurred more than once:
 
- $allowed = $hash{jonas}->{tablestructure}->{allowed};
- if(ref($allowed) eq "ARRAY") {
-     @ALLOWED = @{$allowed};
- else {
-     @ALLOWED = ($allowed);
- }
+$allowed = $hash{jonas}->{tablestructure}->{allowed};
+if(ref($allowed) eq "ARRAY") {
+@ALLOWED = @{$allowed};
+else {
+@ALLOWED = ($allowed);
+}
 
 The same applies to blocks and named blocks too (they are described in more detail
 below). For example, if you have the following config:
 
- <dir blah>
-   user max
- </dir>
- <dir blah>
-   user hannes
- </dir>
+<dir blah>
+user max
+</dir>
+<dir blah>
+user hannes
+</dir>
 
 then you would end up with a data structure like this:
 
- $VAR1 = {
-          'dir' => {
-                    'blah' => [
-                                {
-                                  'user' => 'max'
-                                },
-                                {
-                                  'user' => 'hannes'
-                                }
-                              ]
-                    }
-          };
+$VAR1 = {
+'dir' => {
+'blah' => [
+{
+'user' => 'max'
+},
+{
+'user' => 'hannes'
+}
+]
+}
+};
 
 As you can see, the two identical blocks are stored in a hash which contains
 an array(-reference) of hashes.
@@ -2348,16 +2363,16 @@ both identical blocks, then you need to turn the B<new()> parameter B<-MergeDupl
 on (see above). The parsed structure of the example above would then look like
 this:
 
- $VAR1 = {
-          'dir' => {
-                    'blah' => {
-			       'user' => [
-					   'max',
-					   'hannes'
-					 ]
-                              }
-                    }
-          };
+$VAR1 = {
+'dir' => {
+'blah' => {
+'user' => [
+'max',
+'hannes'
+]
+}
+}
+};
 
 As you can see, there is only one hash "dir->{blah}" containing multiple
 "user" entries. As you can also see, turning on  B<-MergeDuplicateBlocks>
@@ -2375,7 +2390,7 @@ You may also force a single config line to get parsed into an array by
 turning on the option B<-ForceArray> and by surrounding the value of the
 config entry by []. Example:
 
- hostlist = [ foo.bar ]
+hostlist = [ foo.bar ]
 
 Will be a singlevalue array entry if the option is turned on. If you want
 it to remain to be an array you have to turn on B<-ForceArray> during save too.
@@ -2389,11 +2404,11 @@ of the line. The Config::General module will concatenate those lines to one sing
 Example:
 
 command = cat /var/log/secure/tripwire | \
-           mail C<-s> "report from tripwire" \
-           honey@myotherhost.nl
+mail C<-s> "report from tripwire" \
+honey@myotherhost.nl
 
 command will become:
- "cat /var/log/secure/tripwire | mail C<-s> 'report from twire' honey@myotherhost.nl"
+"cat /var/log/secure/tripwire | mail C<-s> 'report from twire' honey@myotherhost.nl"
 
 
 =head1 HERE DOCUMENTS
@@ -2404,12 +2419,12 @@ identifier must follow a "<<".
 
 Example:
 
- message <<EOF
-   we want to
-   remove the
-   homedir of
-   root.
- EOF
+message <<EOF
+we want to
+remove the
+homedir of
+root.
+EOF
 
 Everything between the two "EOF" strings will be in the option I<message>.
 
@@ -2420,19 +2435,19 @@ amount of spaces from every line inside the here-document.
 
 Example:
 
- message <<EOF
-         we want to
-         remove the
-         homedir of
-         root.
-      EOF
+message <<EOF
+we want to
+remove the
+homedir of
+root.
+EOF
 
 After parsing, message will become:
 
-   we want to
-   remove the
-   homedir of
-   root.
+we want to
+remove the
+homedir of
+root.
 
 because there were the string "     " in front of EOF, which were cut from every
 line inside the here-document.
@@ -2444,12 +2459,12 @@ line inside the here-document.
 You can include an external file at any position in your config file using the following statement
 in your config file:
 
- <<include externalconfig.rc>>
+<<include externalconfig.rc>>
 
 If you turned on B<-UseApacheInclude> (see B<new()>), then you can also use the following
 statement to include an external file:
 
- include externalconfig.rc
+include externalconfig.rc
 
 This file will be inserted at the position where it was found as if the contents of this file
 were directly at this position.
@@ -2463,22 +2478,22 @@ working directory. Under some circumstances it maybe possible to
 open included files from the directory, where the configfile resides. You need to turn on
 the option B<-IncludeRelative> (see B<new()>) if you want that. An example:
 
- my $conf = Config::General(
-                             -ConfigFile => "/etc/crypt.d/server.cfg"
-                             -IncludeRelative => 1
-                           );
+my $conf = Config::General(
+-ConfigFile => "/etc/crypt.d/server.cfg"
+-IncludeRelative => 1
+);
 
- /etc/crypt.d/server.cfg:
-  <<include acl.cfg>>
+/etc/crypt.d/server.cfg:
+<<include acl.cfg>>
 
 In this example Config::General will try to include I<acl.cfg> from I</etc/crypt.d>:
 
- /etc/crypt.d/acl.cfg
+/etc/crypt.d/acl.cfg
 
 The default behavior (if B<-IncludeRelative> is B<not> set!) will be to open just I<acl.cfg>,
 wherever it is, i.e. if you did a chdir("/usr/local/etc"), then Config::General will include:
 
- /usr/local/etc/acl.cfg
+/usr/local/etc/acl.cfg
 
 Include statements can be case insensitive (added in version 1.25).
 
@@ -2491,21 +2506,21 @@ so make sure, you're not including the same file from within itself!
 
 Example:
 
-    # main.cfg
-    <object billy>
-        class=Some::Class
-        <printers>
-            include printers.cfg
-        </printers>
-        # ...
-    </object>
-    <object bob>
-        class=Another::Class
-        <printers>
-            include printers.cfg
-        </printers>
-        # ...
-    </object>
+# main.cfg
+<object billy>
+class=Some::Class
+<printers>
+include printers.cfg
+</printers>
+# ...
+</object>
+<object bob>
+class=Another::Class
+<printers>
+include printers.cfg
+</printers>
+# ...
+</object>
 
 Now C<printers.cfg> will be include in both the C<billy> and C<bob> objects.
 
@@ -2521,18 +2536,18 @@ tab stops in front of the #.
 
 A comment can also occur after a config statement. Example:
 
- username = max  # this is the comment
+username = max  # this is the comment
 
 If you want to comment out a large block you can use C-style comments. A B</*> signals
 the begin of a comment block and the B<*/> signals the end of the comment block.
 Example:
 
- user  = max # valid option
- db    = tothemax
- /*
- user  = andors
- db    = toand
- */
+user  = max # valid option
+db    = tothemax
+/*
+user  = andors
+db    = toand
+*/
 
 In this example the second options of user and db will be ignored. Please beware of the fact,
 if the Module finds a B</*> string which is the start of a comment block, but no matching
@@ -2541,7 +2556,7 @@ end block, it will ignore the whole rest of the config file!
 B<NOTE:> If you require the B<#> character (number sign) to remain in the option value, then
 you can use a backslash in front of it, to escape it. Example:
 
- bgcolor = \#ffffcc
+bgcolor = \#ffffcc
 
 In this example the value of $config{bgcolor} will be "#ffffcc", Config::General will not treat
 the number sign as the begin of a comment because of the leading backslash.
@@ -2557,25 +2572,25 @@ and parsing.
 
 The general aproach works like this:
 
- sub ck {
-  my($file, $base) = @_;
-  print "_open() tries $file ... ";
-  if($file =~ /blah/) {
-    print "ignored\n";
-    return (0);
-  }
-  else {
-    print "allowed\n";
-    return (1, @_);
-  }
- }
+sub ck {
+my($file, $base) = @_;
+print "_open() tries $file ... ";
+if($file =~ /blah/) {
+print "ignored\n";
+return (0);
+}
+else {
+print "allowed\n";
+return (1, @_);
+}
+}
  
- my %c = ParseConfig(
-              -IncludeGlob => 1,
-              -UseApacheInclude => 1,
-              -ConfigFile => shift,
-              -Plug => { pre_open => *ck }
- );
+my %c = ParseConfig(
+-IncludeGlob => 1,
+-UseApacheInclude => 1,
+-ConfigFile => shift,
+-Plug => { pre_open => *ck }
+);
  
 Output:
 
@@ -2745,7 +2760,7 @@ I recommend you to read the following documents, which are supplied with Perl:
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2000-2015 Thomas Linden
+Copyright (c) 2000-2016 Thomas Linden
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -2774,7 +2789,7 @@ Thomas Linden <tlinden |AT| cpan.org>
 
 =head1 VERSION
 
-2.60
+2.61
 
 =cut
 

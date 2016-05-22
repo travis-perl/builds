@@ -1,7 +1,7 @@
 package MooseX::Getopt::OptionTypeMap;
 # ABSTRACT: Storage for the option to type mappings
 
-our $VERSION = '0.68';
+our $VERSION = '0.70';
 
 use Moose;
 use Carp 'confess';
@@ -104,7 +104,7 @@ MooseX::Getopt::OptionTypeMap - Storage for the option to type mappings
 
 =head1 VERSION
 
-version 0.68
+version 0.70
 
 =head1 DESCRIPTION
 
@@ -118,6 +118,17 @@ for more info about how to use this module.
 =head2 B<get_option_type ($type_or_name)>
 
 =head2 B<add_option_type_to_map ($type_name, $option_spec)>
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Getopt>
+(or L<bug-MooseX-Getopt@rt.cpan.org|mailto:bug-MooseX-Getopt@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

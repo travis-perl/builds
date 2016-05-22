@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @EXPORT @EXPORT_OK @ISA $CurrentPackage @IncludeLibs $ScanFileRE );
 
-$VERSION   = '1.20';
+$VERSION   = '1.21';
 @EXPORT    = qw( scan_deps scan_deps_runtime );
 @EXPORT_OK = qw( scan_line scan_chunk add_deps scan_deps_runtime path_to_inc_name );
 
@@ -258,9 +258,7 @@ my %Preload = (
     'Catalyst/Engine.pm' => 'sub',
     'CGI/Application/Plugin/Authentication.pm' => [qw( CGI/Application/Plugin/Authentication/Store/Cookie.pm )],
     'CGI/Application/Plugin/AutoRunmode.pm' => [qw( Attribute/Handlers.pm )],
-    'charnames.pm' => sub {
-        _find_in_inc('unicore/Name.pl') ? 'unicore/Name.pl' : 'unicode/Name.pl'
-    },
+    'charnames.pm' => \&_unicore,
     'Class/Load.pm' => [qw( Class/Load/PP.pm )],
     'Class/MakeMethods.pm' => 'sub',
     'Class/MethodMaker.pm' => 'sub',
@@ -363,9 +361,11 @@ my %Preload = (
         # but accept JSON::XS, too (because JSON.pm might use it if present)
         return( grep /^JSON\/(PP|XS)/, _glob_in_inc('JSON', 1) );
     },
-    'Locale/Maketext/Lexicon.pm'    => 'sub',
+    'List/MoreUtils.pm'         => 'sub',
+    'Locale/Maketext/Lexicon.pm' => 'sub',
     'Locale/Maketext/GutsLoader.pm' => [qw( Locale/Maketext/Guts.pm )],
     'Log/Any.pm'                => 'sub',
+    'Log/Dispatch.pm'           => 'sub',
     'Log/Log4perl.pm'           => 'sub',
     'Log/Report/Dispatcher.pm'  => 'sub',
     'LWP/MediaTypes.pm'         => [qw( LWP/media.types )],
@@ -495,7 +495,8 @@ my %Preload = (
     'Tk/FBox.pm'        => [qw( Tk/folder.xpm Tk/file.xpm )],
     'Tk/Getopt.pm'      => [qw( Tk/openfolder.xpm Tk/win.xbm )],
     'Tk/Toplevel.pm'    => [qw( Tk/Wm.pm )],
-    'Unicode/UCD.pm'    => [qw( utf8_heavy.pl )],
+    'Unicode/Normalize.pm' => \&_unicore,
+    'Unicode/UCD.pm'    => \&_unicore,
     'URI.pm'            => sub { grep !/urn/, _glob_in_inc('URI', 1) },
     'utf8_heavy.pl'     => \&_unicore,
     'Win32/EventLog.pm'    => [qw( Win32/IPC.pm )],
@@ -716,12 +717,11 @@ sub scan_deps_static {
 
 sub scan_deps_runtime {
     my %args = (
-        perl => $^X,
         rv   => {},
         (@_ and $_[0] =~ /^(?:$Keys)$/o) ? @_ : (files => [@_], recurse => 1)
     );
-    my ($files, $rv, $execute, $compile, $skip, $perl) =
-      @args{qw( files rv execute compile skip perl )};
+    my ($files, $rv, $execute, $compile) =
+      @args{qw( files rv execute compile )};
 
     $files = (ref($files)) ? $files : [$files];
 
@@ -729,20 +729,15 @@ sub scan_deps_runtime {
         foreach my $file (@$files) {
             next unless $file =~ $ScanFileRE;
 
-            my ($inchash, $dl_shared_objects, $incarray) = ({}, [], []);
-            _compile_or_execute($perl, $file, undef,
-                                $inchash, $dl_shared_objects, $incarray);
-
+            my ($inchash, $dl_shared_objects, $incarray) = _compile_or_execute($file);
             _merge_rv(_make_rv($inchash, $dl_shared_objects, $incarray), $rv);
         }
     }
     elsif ($execute) {
         foreach my $file (@$files) {
             $execute = [] unless ref $execute;  # make sure it's an array ref
-            my ($inchash, $dl_shared_objects, $incarray) = ({}, [], []);
-            _compile_or_execute($perl, $file, $execute,
-                                $inchash, $dl_shared_objects, $incarray);
 
+            my ($inchash, $dl_shared_objects, $incarray) = _compile_or_execute($file, $execute);
             _merge_rv(_make_rv($inchash, $dl_shared_objects, $incarray), $rv);
         }
     }
@@ -1181,9 +1176,36 @@ sub _glob_in_inc {
     return @files;
 }
 
+# like _glob_in_inc, but looks only at the first level
+# (i.e. the children of $subdir)
+# NOTE: File::Find has no public notion of the depth of the traversal
+# in its "wanted" callback, so it's not helpful 
+sub _glob_in_inc_1 {
+    my $subdir  = shift;
+    my $pm_only = shift;
+    my @files;
+
+    $subdir =~ s/\$CurrentPackage/$CurrentPackage/;
+
+    foreach my $inc (grep !/\bBSDPAN\b/, @INC, @IncludeLibs) {
+        my $dir = "$inc/$subdir";
+        next unless -d $dir;
+
+        opendir my $dh, $dir or next; 
+        my @names = map { "$subdir/$_" } grep { -f "$dir/$_" } readdir $dh;
+        closedir $dh;
+
+        push @files, $pm_only
+            ? ( grep { /\.p[mh]$/i } @names )
+            : ( map { { file => "$inc/$_", name => $_ } } @names );
+    }
+
+    return @files;
+}
+
 my $unicore_stuff;
 sub _unicore {
-    $unicore_stuff ||= [ map $_->{name}, _glob_in_inc('unicore', 0) ];
+    $unicore_stuff ||= [ 'utf8_heavy.pl', map $_->{name}, _glob_in_inc('unicore', 0) ];
     return @$unicore_stuff;
 }
 
@@ -1295,26 +1317,26 @@ sub add_preload_rule {
 # compile $file if $execute is undef,
 # otherwise execute $file with arguments @$execute
 sub _compile_or_execute {
-    my ($perl, $file, $execute, $inchash, $dl_shared_objects, $incarray) = @_;
+    my ($file, $execute) = @_;
 
-    my ($fh, $instrumented_file) = File::Temp::tempfile();
+    my ($ih, $instrumented_file) = File::Temp::tempfile(UNLINK => 1);
 
     # spoof $0 (to $file) so that FindBin works as expected
     # NOTE: We don't directly assign to $0 as it has magic (i.e.
     # assigning has side effects and may actually fail, cf. perlvar(1)).
     # Instead we alias *0 to a package variable holding the correct value.
     local $ENV{MSD_ORIGINAL_FILE} = $file;
-    print $fh <<'...';
+    print $ih <<'...';
 BEGIN { my $_0 = $ENV{MSD_ORIGINAL_FILE}; *0 = \$_0; }
 ...
 
-    my (undef, $data_file) = File::Temp::tempfile();
+    my (undef, $data_file) = File::Temp::tempfile(UNLINK => 1);
     local $ENV{MSD_DATA_FILE} = $data_file;
 
     # NOTE: When compiling the block will run as the last CHECK block;
     # when executing the block will run as the first END block and 
     # the programs continues.
-    print $fh $execute ? "END\n" : "CHECK\n", <<'...';
+    print $ih $execute ? "END\n" : "CHECK\n", <<'...';
 {
     # save %INC etc so that requires below don't pollute them
     my %_INC = %INC;
@@ -1400,29 +1422,26 @@ BEGIN { my $_0 = $ENV{MSD_ORIGINAL_FILE}; *0 = \$_0; }
 
     # append the file to compile or execute
     {
-        open my $in, "<", $file or die "Couldn't open $file: $!";
-        print $fh qq[#line 1 "$file"\n], <$in>;
-        close $in;
+        open my $fh, "<", $file or die "Couldn't open $file: $!";
+        print $ih qq[#line 1 "$file"\n], <$fh>;
+        close $fh;
     }
-    close $fh;
+    close $ih;
 
     # run the instrumented file
-    my @cmd = ($perl);
-    push @cmd, "-c" unless $execute;
-    push @cmd, map { "-I$_" } @IncludeLibs;
-    push @cmd, $instrumented_file;
-    push @cmd, @$execute if $execute;
-    my $rc = system(@cmd);
-
-    _extract_info($data_file, $inchash, $dl_shared_objects, $incarray) 
-        if $rc == 0;
-
-    unlink($instrumented_file, $data_file);
+    my $rc = system(
+        $^X,
+        $execute ? () : ("-c"),
+        (map { "-I$_" } @IncludeLibs),
+        $instrumented_file,
+        $execute ? @$execute : ());
 
     die $execute
         ? "SYSTEM ERROR in executing $file @$execute: $rc" 
         : "SYSTEM ERROR in compiling $file: $rc" 
         unless $rc == 0;
+    
+    return _extract_info($data_file);
 }
 
 # create a new hashref, applying fixups
@@ -1465,7 +1484,7 @@ sub _make_rv {
 }
 
 sub _extract_info {
-    my ($fname, $inchash, $dl_shared_objects, $incarray) = @_;
+    my ($fname) = @_;
 
     use vars qw(%inchash @dl_shared_objects @incarray);
 
@@ -1474,9 +1493,10 @@ sub _extract_info {
             $@ || "can't read $fname: $!";
     }
 
-    $inchash->{$_} = $inchash{$_} for keys %inchash;
-    @$dl_shared_objects = @dl_shared_objects;
-    @$incarray          = @incarray;
+    my %ih = %inchash;
+    my @dso = @dl_shared_objects;
+    my @ia = @incarray;
+    return (\%ih, \@dso, \@ia);
 }
 
 sub _gettype {
@@ -1629,8 +1649,7 @@ B<Perl2Exe> by IndigoStar, Inc L<http://www.indigostar.com/>
 
 The B<scan_deps_runtime> function is contributed by Edward S. Peschko.
 
-L<http://par.perl.org/> is the official website for this module.  You
-can write to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty
+You can write to the mailing list at E<lt>par@perl.orgE<gt>, or send an empty
 mail to E<lt>par-subscribe@perl.orgE<gt> to participate in the discussion.
 
 Please submit bug reports to E<lt>bug-Module-ScanDeps@rt.cpan.orgE<gt>.
