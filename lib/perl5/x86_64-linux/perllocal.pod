@@ -1,136 +1,4 @@
-=head2 Sun May 22 00:02:34 2016: C<Module> L<Module::Find|Module::Find>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:35 2016: C<Module> L<Data::Dumper::Concise|Data::Dumper::Concise>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.022>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:40 2016: C<Module> L<DBI|DBI>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.636>
-
-=item *
-
-C<EXE_FILES: dbiproxy dbiprof dbilogstrip>
-
-=back
-
-=head2 Sun May 22 00:02:41 2016: C<Module> L<Algorithm::C3|Algorithm::C3>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.10>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:42 2016: C<Module> L<Class::C3|Class::C3>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.31>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:42 2016: C<Module> L<Class::C3::Componentised|Class::C3::Componentised>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.001000>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:43 2016: C<Module> L<Hash::Merge|Hash::Merge>
+=head2 Wed Jun 22 00:02:52 2016: C<Module> L<Hash::Merge|Hash::Merge>
 
 =over 4
 
@@ -152,139 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:02:43 2016: C<Module> L<Config::Any|Config::Any>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.27>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:44 2016: C<Module> L<Context::Preserve|Context::Preserve>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.01>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:47 2016: C<Module> L<Class::XSAccessor|Class::XSAccessor>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.19>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:47 2016: C<Module> L<Class::Accessor::Grouped|Class::Accessor::Grouped>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.10012>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:48 2016: C<Module> L<Class::Accessor|Class::Accessor>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.34>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:49 2016: C<Module> L<Scope::Guard|Scope::Guard>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.21>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:02:50 2016: C<Module> L<SQL::Abstract|SQL::Abstract>
+=head2 Wed Jun 22 00:02:52 2016: C<Module> L<SQL::Abstract|SQL::Abstract>
 
 =over 4
 
@@ -306,7 +42,139 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:11 2016: C<Module> L<DBD::SQLite|DBD::SQLite>
+=head2 Wed Jun 22 00:02:53 2016: C<Module> L<Algorithm::C3|Algorithm::C3>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.10>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:02:53 2016: C<Module> L<Class::C3|Class::C3>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.31>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:02:54 2016: C<Module> L<Class::C3::Componentised|Class::C3::Componentised>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.001000>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:02:54 2016: C<Module> L<Module::Find|Module::Find>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:02:55 2016: C<Module> L<Scope::Guard|Scope::Guard>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.21>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:00 2016: C<Module> L<DBI|DBI>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.636>
+
+=item *
+
+C<EXE_FILES: dbiproxy dbiprof dbilogstrip>
+
+=back
+
+=head2 Wed Jun 22 00:03:21 2016: C<Module> L<DBD::SQLite|DBD::SQLite>
 
 =over 4
 
@@ -328,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:12 2016: C<Module> L<DBIx::Class|DBIx::Class>
+=head2 Wed Jun 22 00:03:23 2016: C<Module> L<Class::Accessor|Class::Accessor>
 
 =over 4
 
@@ -342,7 +210,139 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.082821>
+C<VERSION: 0.34>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:26 2016: C<Module> L<Class::XSAccessor|Class::XSAccessor>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.19>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:26 2016: C<Module> L<Class::Accessor::Grouped|Class::Accessor::Grouped>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.10012>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:27 2016: C<Module> L<Context::Preserve|Context::Preserve>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.01>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:27 2016: C<Module> L<Config::Any|Config::Any>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.27>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:28 2016: C<Module> L<Data::Dumper::Concise|Data::Dumper::Concise>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.022>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:29 2016: C<Module> L<DBIx::Class|DBIx::Class>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.082840>
 
 =item *
 
@@ -350,227 +350,7 @@ C<EXE_FILES: script/dbicadmin>
 
 =back
 
-=head2 Sun May 22 00:03:14 2016: C<Module> L<Class::Unload|Class::Unload>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.09>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:15 2016: C<Module> L<Lingua::EN::Inflect::Number|Lingua::EN::Inflect::Number>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.12>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:17 2016: C<Module> L<Lingua::Stem::Fr|Lingua::Stem::Fr>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.02>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:18 2016: C<Module> L<Lingua::Stem::Snowball::Da|Lingua::Stem::Snowball::Da>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.01>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:19 2016: C<Module> L<Lingua::Stem::Ru|Lingua::Stem::Ru>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.04>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:20 2016: C<Module> L<Lingua::PT::Stemmer|Lingua::PT::Stemmer>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.02>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:20 2016: C<Module> L<Text::German|Text::German>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.06>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:21 2016: C<Module> L<Lingua::Stem::It|Lingua::Stem::It>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.02>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:23 2016: C<Module> L<Memoize::ExpireLRU|Memoize::ExpireLRU>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.55>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:24 2016: C<Module> L<Lingua::EN::Tagger|Lingua::EN::Tagger>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.25>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:25 2016: C<Module> L<Lingua::EN::Words2Nums|Lingua::EN::Words2Nums>
+=head2 Wed Jun 22 00:03:32 2016: C<Module> L<Lingua::EN::Words2Nums|Lingua::EN::Words2Nums>
 
 =over 4
 
@@ -592,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:26 2016: C<Module> L<Lingua::EN::FindNumber|Lingua::EN::FindNumber>
+=head2 Wed Jun 22 00:03:32 2016: C<Module> L<Lingua::EN::FindNumber|Lingua::EN::FindNumber>
 
 =over 4
 
@@ -614,7 +394,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:26 2016: C<Module> L<Lingua::EN::Number::IsOrdinal|Lingua::EN::Number::IsOrdinal>
+=head2 Wed Jun 22 00:03:33 2016: C<Module> L<Lingua::EN::Number::IsOrdinal|Lingua::EN::Number::IsOrdinal>
 
 =over 4
 
@@ -636,7 +416,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:26 2016: C<Module> L<Lingua::EN::Inflect::Phrase|Lingua::EN::Inflect::Phrase>
+=head2 Wed Jun 22 00:03:33 2016: C<Module> L<Lingua::EN::Inflect::Number|Lingua::EN::Inflect::Number>
 
 =over 4
 
@@ -650,7 +430,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.18>
+C<VERSION: 1.12>
 
 =item *
 
@@ -658,7 +438,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:27 2016: C<Module> L<DBIx::Class::IntrospectableM2M|DBIx::Class::IntrospectableM2M>
+=head2 Wed Jun 22 00:03:34 2016: C<Module> L<Memoize::ExpireLRU|Memoize::ExpireLRU>
 
 =over 4
 
@@ -672,7 +452,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.001002>
+C<VERSION: 0.55>
 
 =item *
 
@@ -680,51 +460,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:29 2016: C<Module> L<Text::Unidecode|Text::Unidecode>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.27>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:29 2016: C<Module> L<String::ToIdentifier::EN|String::ToIdentifier::EN>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.11>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun May 22 00:03:30 2016: C<Module> L<String::CamelCase|String::CamelCase>
+=head2 Wed Jun 22 00:03:35 2016: C<Module> L<Lingua::Stem::It|Lingua::Stem::It>
 
 =over 4
 
@@ -746,7 +482,249 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:31 2016: C<Module> L<Data::Dump|Data::Dump>
+=head2 Wed Jun 22 00:03:36 2016: C<Module> L<Lingua::PT::Stemmer|Lingua::PT::Stemmer>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.02>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:37 2016: C<Module> L<Text::German|Text::German>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.06>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:38 2016: C<Module> L<Lingua::Stem::Ru|Lingua::Stem::Ru>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:38 2016: C<Module> L<Lingua::Stem::Fr|Lingua::Stem::Fr>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.02>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:40 2016: C<Module> L<Lingua::Stem::Snowball::Da|Lingua::Stem::Snowball::Da>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.01>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:41 2016: C<Module> L<Lingua::EN::Tagger|Lingua::EN::Tagger>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.25>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:41 2016: C<Module> L<Lingua::EN::Inflect::Phrase|Lingua::EN::Inflect::Phrase>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.18>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:43 2016: C<Module> L<Text::Unidecode|Text::Unidecode>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.27>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:43 2016: C<Module> L<String::ToIdentifier::EN|String::ToIdentifier::EN>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.11>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:44 2016: C<Module> L<DBIx::Class::IntrospectableM2M|DBIx::Class::IntrospectableM2M>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.001002>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:45 2016: C<Module> L<Class::Unload|Class::Unload>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.09>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:45 2016: C<Module> L<Data::Dump|Data::Dump>
 
 =over 4
 
@@ -768,7 +746,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun May 22 00:03:31 2016: C<Module> L<DBIx::Class::Schema::Loader|DBIx::Class::Schema::Loader>
+=head2 Wed Jun 22 00:03:46 2016: C<Module> L<String::CamelCase|String::CamelCase>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.02>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jun 22 00:03:46 2016: C<Module> L<DBIx::Class::Schema::Loader|DBIx::Class::Schema::Loader>
 
 =over 4
 
