@@ -12,7 +12,8 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Init;
 # ABSTRACT: initialize git repository on dzil new
-$Dist::Zilla::Plugin::Git::Init::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 our %transform = (
   lc => sub { lc shift },
@@ -32,6 +33,7 @@ use String::Formatter method_stringf => {
 
 use MooseX::Types::Moose qw(Str Bool ArrayRef);
 with 'Dist::Zilla::Role::AfterMint';
+use namespace::autoclean;
 
 has commit_message => (
     is      => 'ro',
@@ -110,7 +112,7 @@ Dist::Zilla::Plugin::Git::Init - initialize git repository on dzil new
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 SYNOPSIS
 
@@ -174,11 +176,24 @@ the name in lower case or upper case, respectively.
 
 =for Pod::Coverage after_mint mvp_aliases mvp_multivalue_args
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 

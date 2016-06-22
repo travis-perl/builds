@@ -11,14 +11,15 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::NextVersion;
 # ABSTRACT: provide a version number by bumping the last git release tag
-$Dist::Zilla::Plugin::Git::NextVersion::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 use Dist::Zilla 4 ();
 use version 0.80 ();
 
 use Moose;
 use namespace::autoclean 0.09;
-use Path::Tiny qw();
+use Path::Tiny;
 use Try::Tiny;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw(Str RegexpRef Bool ArrayRef);
@@ -85,7 +86,7 @@ sub _last_version {
 
   if ($by_branch) {
     my $head;
-    my $cachefile = Path::Tiny::path(_cache_fn);
+    my $cachefile = path(_cache_fn);
     if (-f $cachefile) {
       ($head) = $git->rev_parse('HEAD');
       return $1 if $cachefile->slurp =~ /^\Q$head\E (.+)/;
@@ -151,7 +152,7 @@ sub after_release {
   my $self = shift;
 
   # Remove the cache file, just in case:
-  $self->zilla->root->file(_cache_fn)->remove;
+  path($self->zilla->root)->child(_cache_fn)->remove;
 }
 
 sub provide_version {
@@ -204,7 +205,7 @@ Dist::Zilla::Plugin::Git::NextVersion - provide a version number by bumping the 
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 SYNOPSIS
 
@@ -276,11 +277,24 @@ automatically be pruned from the distribution.
     before_release
     after_release
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 

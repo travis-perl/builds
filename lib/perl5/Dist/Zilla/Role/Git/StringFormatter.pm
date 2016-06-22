@@ -8,7 +8,8 @@
 #
 package Dist::Zilla::Role::Git::StringFormatter;
 # ABSTRACT: Provide a String::Formatter for commit messages
-$Dist::Zilla::Role::Git::StringFormatter::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 use 5.008;
 use strict;
@@ -38,6 +39,16 @@ use String::Formatter method_stringf => {
   },
 };
 
+#pod =attr changelog
+#pod
+#pod The filename of your F<Changes> file.  (Must be provided by the class
+#pod that consumes this role.)
+#pod
+#pod =attr time_zone
+#pod
+#pod The time zone used with the C<%d> code.  The default is C<local>.
+#pod
+#pod =cut
 
 has time_zone => ( ro, isa=>Str, default => 'local' );
 
@@ -110,7 +121,7 @@ Dist::Zilla::Role::Git::StringFormatter - Provide a String::Formatter for commit
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 DESCRIPTION
 
@@ -163,11 +174,24 @@ that consumes this role.)
 
 The time zone used with the C<%d> code.  The default is C<local>.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 

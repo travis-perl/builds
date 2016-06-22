@@ -12,7 +12,8 @@ use warnings;
 
 package Dist::Zilla::Role::Git::DirtyFiles;
 # ABSTRACT: provide the allow_dirty & changelog attributes
-$Dist::Zilla::Role::Git::DirtyFiles::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 use Moose::Role;
 use MooseX::Types::Moose qw{ Any ArrayRef Str RegexpRef };
@@ -27,6 +28,29 @@ requires qw(log_fatal repo_root zilla);
 
 # -- attributes
 
+#pod =attr allow_dirty
+#pod
+#pod A list of paths that are allowed to be dirty in the git checkout.
+#pod Defaults to C<dist.ini> and the changelog (as defined per the
+#pod C<changelog> attribute.
+#pod
+#pod If your C<repo_root> is not the default (C<.>), then these pathnames
+#pod are relative to Dist::Zilla's root directory, not the Git root directory.
+#pod
+#pod =attr allow_dirty_match
+#pod
+#pod A list of regular expressions that match paths allowed to be dirty in
+#pod the git checkout.  This is combined with C<allow_dirty>.  Defaults to
+#pod the empty list.
+#pod
+#pod The paths being matched are relative to the Git root directory, even
+#pod if your C<repo_root> is not the default (C<.>).
+#pod
+#pod =attr changelog
+#pod
+#pod The name of the changelog. Defaults to C<Changes>.
+#pod
+#pod =cut
 
 {
   # We specifically allow the empty string to represent the empty list.
@@ -85,6 +109,18 @@ around dump_config => sub
     return $config;
 };
 
+#pod =method list_dirty_files
+#pod
+#pod   my @dirty = $plugin->list_dirty_files($git, $listAllowed);
+#pod
+#pod This returns a list of the modified or deleted files in C<$git>,
+#pod filtered against the C<allow_dirty> attribute.  If C<$listAllowed> is
+#pod true, only allowed files are listed.  If it's false, only files that
+#pod are not allowed to be dirty are listed.
+#pod
+#pod In scalar context, returns the number of dirty files.
+#pod
+#pod =cut
 
 sub list_dirty_files
 {
@@ -137,7 +173,7 @@ Dist::Zilla::Role::Git::DirtyFiles - provide the allow_dirty & changelog attribu
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 DESCRIPTION
 
@@ -183,11 +219,24 @@ In scalar context, returns the number of dirty files.
 
 =for Pod::Coverage mvp_multivalue_args
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 

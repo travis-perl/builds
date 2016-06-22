@@ -12,7 +12,8 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Commit;
 # ABSTRACT: commit dirty files
-$Dist::Zilla::Plugin::Git::Commit::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 use namespace::autoclean;
 use File::Temp           qw{ tempfile };
@@ -99,6 +100,12 @@ sub after_release {
 }
 
 
+#pod =method get_commit_message
+#pod
+#pod This method returns the commit message.  The default implementation
+#pod reads the Changes file to get the list of changes in the just-released version.
+#pod
+#pod =cut
 
 sub get_commit_message {
     my $self = shift;
@@ -120,7 +127,7 @@ Dist::Zilla::Plugin::Git::Commit - commit dirty files
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 SYNOPSIS
 
@@ -183,11 +190,24 @@ reads the Changes file to get the list of changes in the just-released version.
 
 =for Pod::Coverage after_release mvp_multivalue_args
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 
