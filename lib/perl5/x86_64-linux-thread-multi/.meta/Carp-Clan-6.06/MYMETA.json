@@ -4,7 +4,7 @@
       "Steffen Beyer <STBEY@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.42, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.1001, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -13,6 +13,12 @@
       "version" : "2"
    },
    "name" : "Carp-Clan",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -31,5 +37,6 @@
       }
    },
    "release_status" : "stable",
-   "version" : "6.04"
+   "version" : "6.06",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }

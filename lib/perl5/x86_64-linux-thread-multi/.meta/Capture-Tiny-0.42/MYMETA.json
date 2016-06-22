@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.043, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 6.005, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "apache_2_0"
    ],
@@ -88,7 +88,7 @@
    "provides" : {
       "Capture::Tiny" : {
          "file" : "lib/Capture/Tiny.pm",
-         "version" : "0.36"
+         "version" : "0.42"
       }
    },
    "release_status" : "stable",
@@ -103,11 +103,12 @@
          "web" : "https://github.com/dagolden/Capture-Tiny"
       }
    },
-   "version" : "0.36",
+   "version" : "0.42",
    "x_authority" : "cpan:DAGOLDEN",
    "x_contributors" : [
       "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>",
       "David E. Wheeler <david@justatheory.com>",
-      "fecundf <not.com+github@gmail.com>"
+      "fecundf <not.com+github@gmail.com>",
+      "Peter Rabbitson <ribasushi@cpan.org>"
    ]
 }

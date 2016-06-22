@@ -12,11 +12,20 @@ use Moo::_Utils qw(
   _unimport_coderefs
 );
 use Sub::Defer ();
+use Sub::Quote qw(quote_sub sanitize_identifier);
 use Role::Tiny ();
 use Carp qw(croak);
-our @ISA = qw(Role::Tiny);
+BEGIN { our @ISA = qw(Role::Tiny) }
+BEGIN {
+  our @CARP_NOT = qw(
+    Method::Generate::Accessor
+    Method::Generate::Constructor
+    Moo::sification
+    Moo::_Utils
+  );
+}
 
-our $VERSION = '2.001001';
+our $VERSION = '2.002002';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -43,17 +52,15 @@ sub _install_tracked {
 
 sub import {
   my $target = caller;
-  my ($me) = @_;
-
-  _set_loaded(caller);
-  strict->import;
-  warnings->import;
   if ($Moo::MAKERS{$target} and $Moo::MAKERS{$target}{is_class}) {
-    die "Cannot import Moo::Role into a Moo class";
+    croak "Cannot import Moo::Role into a Moo class";
   }
-  $INFO{$target} ||= {};
-  # get symbol table reference
-  my $stash = _getstash($target);
+  _set_loaded(caller);
+  goto &Role::Tiny::import;
+}
+
+sub _install_subs {
+  my ($me, $target) = @_;
   _install_tracked $target => has => sub {
     my $name_proto = shift;
     my @name_proto = ref $name_proto eq 'ARRAY' ? @$name_proto : $name_proto;
@@ -75,7 +82,6 @@ sub import {
   # install before/after/around subs
   foreach my $type (qw(before after around)) {
     _install_tracked $target => $type => sub {
-      require Class::Method::Modifiers;
       push @{$INFO{$target}{modifiers}||=[]}, [ $type => @_ ];
       $me->_maybe_reset_handlemoose($target);
     };
@@ -88,25 +94,12 @@ sub import {
     $me->apply_roles_to_package($target, @_);
     $me->_maybe_reset_handlemoose($target);
   };
-  return if $me->is_role($target); # already exported into this package
-  $INFO{$target}{is_role} = 1;
   *{_getglob("${target}::meta")} = $me->can('meta');
-  # grab all *non-constant* (stash slot is not a scalarref) subs present
-  # in the symbol table and store their refaddrs (no need to forcibly
-  # inflate constant subs into real subs) - also add '' to here (this
-  # is used later) with a map to the coderefs in case of copying or re-use
-  my @not_methods = ('', map { *$_{CODE}||() } grep !ref($_), values %$stash);
-  @{$INFO{$target}{not_methods}={}}{@not_methods} = @not_methods;
-  # a role does itself
-  $APPLIED_TO{$target} = { $target => undef };
-
-  $_->($target)
-    for @ON_ROLE_CREATE;
 }
 
 push @ON_ROLE_CREATE, sub {
   my $target = shift;
-  if ($INC{'Moo/HandleMoose.pm'}) {
+  if ($INC{'Moo/HandleMoose.pm'} && !$Moo::sification::disabled) {
     Moo::HandleMoose::inject_fake_metaclass_for($target);
   }
 };
@@ -125,7 +118,7 @@ sub unimport {
 
 sub _maybe_reset_handlemoose {
   my ($class, $target) = @_;
-  if ($INC{"Moo/HandleMoose.pm"}) {
+  if ($INC{'Moo/HandleMoose.pm'} && !$Moo::sification::disabled) {
     Moo::HandleMoose::maybe_reinject_fake_metaclass_for($target);
   }
 }
@@ -134,7 +127,7 @@ sub methods_provided_by {
   my ($self, $role) = @_;
   _load_module($role);
   $self->_inhale_if_moose($role);
-  die "${role} is not a Moo::Role" unless $self->is_role($role);
+  croak "${role} is not a Moo::Role" unless $self->is_role($role);
   return $self->SUPER::methods_provided_by($role);
 }
 
@@ -189,10 +182,17 @@ sub _inhale_if_moose {
 
           my $tc = $get_constraint->($spec->{isa});
           my $check = $tc->_compiled_type_constraint;
+          my $tc_var = '$_check_for_'.sanitize_identifier($tc->name);
 
-          $spec->{isa} = sub {
-            &$check or die "Type constraint failed for $_[0]"
-          };
+          $spec->{isa} = quote_sub
+            qq{
+              &${tc_var} or Carp::croak "Type constraint failed for \$_[0]"
+            },
+            { $tc_var => \$check },
+            {
+              package => $role,
+            },
+          ;
 
           if ($spec->{coerce}) {
 
@@ -219,7 +219,6 @@ sub _inhale_if_moose {
         }
       }
     }
-    require Class::Method::Modifiers if @$mods;
     $INFO{$role}{inhaled_from_moose} = 1;
     $INFO{$role}{is_role} = 1;
   }
@@ -275,7 +274,7 @@ sub apply_roles_to_package {
   foreach my $role (@roles) {
     _load_module($role);
     $me->_inhale_if_moose($role);
-    die "${role} is not a Moo::Role" unless $me->is_role($role);
+    croak "${role} is not a Moo::Role" unless $me->is_role($role);
   }
   $me->SUPER::apply_roles_to_package($to, @roles);
 }
@@ -284,7 +283,7 @@ sub apply_single_role_to_package {
   my ($me, $to, $role) = @_;
   _load_module($role);
   $me->_inhale_if_moose($role);
-  die "${role} is not a Moo::Role" unless $me->is_role($role);
+  croak "${role} is not a Moo::Role" unless $me->is_role($role);
   $me->SUPER::apply_single_role_to_package($to, $role);
 }
 
@@ -298,7 +297,7 @@ sub create_class_with_roles {
   foreach my $role (@roles) {
     _load_module($role);
     $me->_inhale_if_moose($role);
-    die "${role} is not a Moo::Role" unless $me->is_role($role);
+    croak "${role} is not a Moo::Role" unless $me->is_role($role);
   }
 
   my $m;
@@ -316,7 +315,7 @@ sub create_class_with_roles {
     $me->_handle_constructor($new_name, $_) for @roles;
   }
 
-  if ($INC{'Moo/HandleMoose.pm'}) {
+  if ($INC{'Moo/HandleMoose.pm'} && !$Moo::sification::disabled) {
     Moo::HandleMoose::inject_fake_metaclass_for($new_name);
   }
   _set_loaded($new_name, (caller)[1]);
@@ -326,42 +325,61 @@ sub create_class_with_roles {
 sub apply_roles_to_object {
   my ($me, $object, @roles) = @_;
   my $new = $me->SUPER::apply_roles_to_object($object, @roles);
-  _set_loaded(ref $new, (caller)[1]);
+  my $class = ref $new;
+  _set_loaded($class, (caller)[1]);
 
-  my $apply_defaults = $APPLY_DEFAULTS{ref $new} ||= do {
+  my $apply_defaults = exists $APPLY_DEFAULTS{$class} ? $APPLY_DEFAULTS{$class}
+    : $APPLY_DEFAULTS{$class} = do {
     my %attrs = map { @{$INFO{$_}{attributes}||[]} } @roles;
 
     if ($INC{'Moo.pm'}
         and keys %attrs
-        and my $con_gen = Moo->_constructor_maker_for(ref $new)
-        and my $m = Moo->_accessor_maker_for(ref $new)) {
+        and my $con_gen = Moo->_constructor_maker_for($class)
+        and my $m = Moo->_accessor_maker_for($class)) {
       require Sub::Quote;
 
       my $specs = $con_gen->all_attribute_specs;
 
-      my $assign = "{no warnings 'void';\n";
       my %captures;
-      foreach my $name ( keys %attrs ) {
-        my $spec = $specs->{$name};
-        if ($m->has_eager_default($name, $spec)) {
-          my ($has, $has_cap)
-            = $m->generate_simple_has('$_[0]', $name, $spec);
-          my ($code, $pop_cap)
-            = $m->generate_use_default('$_[0]', $name, $spec, $has);
+      my $code = join('',
+        "no warnings 'void';\n",
+        ( map {
+          my $name = $_;
+          my $spec = $specs->{$name};
+          if ($m->has_eager_default($name, $spec)) {
+            my ($has, $has_cap)
+              = $m->generate_simple_has('$_[0]', $name, $spec);
+            my ($set, $pop_cap)
+              = $m->generate_use_default('$_[0]', $name, $spec, $has);
 
-          $assign .= $code . ";\n";
-          @captures{keys %$has_cap, keys %$pop_cap}
-            = (values %$has_cap, values %$pop_cap);
+            @captures{keys %$has_cap, keys %$pop_cap}
+              = (values %$has_cap, values %$pop_cap);
+            "($set),";
+          }
+          else {
+            ();
+          }
+        } sort keys %attrs ),
+      );
+      Sub::Quote::quote_sub(
+        "${class}::_apply_defaults",
+        $code,
+        \%captures,
+        {
+          package => $class,
+          no_install => 1,
         }
-      }
-      $assign .= "}";
-      Sub::Quote::quote_sub($assign, \%captures);
+      );
     }
     else {
-      sub {};
+      0;
     }
   };
-  $new->$apply_defaults;
+  if ($apply_defaults) {
+    local $Carp::Internal{+__PACKAGE__} = 1;
+    local $Carp::Internal{$class} = 1;
+    $new->$apply_defaults;
+  }
   return $new;
 }
 

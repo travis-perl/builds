@@ -11,7 +11,7 @@ our $VERSION;
 # $VERSION declaration must stay up here, ahead of any other package
 # declarations, as to not confuse various modules attempting to determine
 # this ones version, whether that be s.c.o. or Module::Metadata, etc
-$VERSION = '0.082821';
+$VERSION = '0.082840';
 
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
@@ -209,7 +209,7 @@ Then you can use these classes in your application's code:
   my $cd = $millennium_cds_rs->next; # SELECT ... FROM cds JOIN artists ...
   my $cd_artist_name = $cd->artist->name; # Already has the data so no 2nd query
 
-  # new() makes a Result object but doesnt insert it into the DB.
+  # new() makes a Result object but doesn't insert it into the DB.
   # create() is the same as new() then insert().
   my $new_cd = $schema->resultset('CD')->new({ title => 'Spoon' });
   $new_cd->artist($cd->artist);
@@ -284,10 +284,6 @@ accessible at the following locations:
 =item * Authorized committers: L<ssh://dbsrgits@git.shadowcat.co.uk/DBIx-Class.git>
 
 =item * Travis-CI log: L<https://travis-ci.org/dbsrgits/dbix-class/builds>
-
-=for html
-&#x21AA; Main dev branch CI status: <img src="https://secure.travis-ci.org/dbsrgits/dbix-class.png?branch=current/blead"></img>
-&#x21AA; Release branch CI status: <img src="https://secure.travis-ci.org/dbsrgits/dbix-class.png?branch=current/for_cpan_index"></img>
 
 =back
 

@@ -1114,6 +1114,9 @@ sub _server_info {
   unless ($info = $self->_dbh_details->{info}) {
 
     $info = {};
+    # this guarantees that problematic conninfo won't be hidden
+    # by the try{} below
+    $self->ensure_connected;
 
     my $server_version = try {
       $self->_get_server_version
@@ -1321,7 +1324,16 @@ sub _extract_driver_from_connect_info {
     # try to use dsn to not require being connected, the driver may still
     # force a connection later in _rebless to determine version
     # (dsn may not be supplied at all if all we do is make a mock-schema)
-    ($drv) = ($self->_dbi_connect_info->[0] || '') =~ /^dbi:([^:]+):/i;
+    #
+    # Use the same regex as the one used by DBI itself (even if the use of
+    # \w is odd given unicode):
+    # https://metacpan.org/source/TIMB/DBI-1.634/DBI.pm#L621
+    #
+    # DO NOT use https://metacpan.org/source/TIMB/DBI-1.634/DBI.pm#L559-566
+    # as there is a long-standing precedent of not loading DBI.pm until the
+    # very moment we are actually connecting
+    #
+    ($drv) = ($self->_dbi_connect_info->[0] || '') =~ /^dbi:(\w*)/i;
     $drv ||= $ENV{DBI_DRIVER};
   }
 
@@ -1371,24 +1383,40 @@ sub _warn_undetermined_driver {
 }
 
 sub _do_connection_actions {
-  my $self          = shift;
-  my $method_prefix = shift;
-  my $call          = shift;
+  my ($self, $method_prefix, $call, @args) = @_;
 
-  if (not ref($call)) {
-    my $method = $method_prefix . $call;
-    $self->$method(@_);
-  } elsif (ref($call) eq 'CODE') {
-    $self->$call(@_);
-  } elsif (ref($call) eq 'ARRAY') {
-    if (ref($call->[0]) ne 'ARRAY') {
-      $self->_do_connection_actions($method_prefix, $_) for @$call;
-    } else {
-      $self->_do_connection_actions($method_prefix, @$_) for @$call;
+  try {
+    if (not ref($call)) {
+      my $method = $method_prefix . $call;
+      $self->$method(@args);
     }
-  } else {
-    $self->throw_exception (sprintf ("Don't know how to process conection actions of type '%s'", ref($call)) );
+    elsif (ref($call) eq 'CODE') {
+      $self->$call(@args);
+    }
+    elsif (ref($call) eq 'ARRAY') {
+      if (ref($call->[0]) ne 'ARRAY') {
+        $self->_do_connection_actions($method_prefix, $_) for @$call;
+      }
+      else {
+        $self->_do_connection_actions($method_prefix, @$_) for @$call;
+      }
+    }
+    else {
+      $self->throw_exception (sprintf ("Don't know how to process conection actions of type '%s'", ref($call)) );
+    }
   }
+  catch {
+    if ( $method_prefix =~ /^connect/ ) {
+      # this is an on_connect cycle - we can't just throw while leaving
+      # a handle in an undefined state in our storage object
+      # kill it with fire and rethrow
+      $self->_dbh(undef);
+      $self->throw_exception( $_[0] );
+    }
+    else {
+      carp "Disconnect action failed: $_[0]";
+    }
+  };
 
   return $self;
 }
@@ -1700,7 +1728,6 @@ sub _resolve_bindattrs {
   };
 
   return [ map {
-    my $resolved =
       ( ref $_ ne 'ARRAY' or @$_ != 2 ) ? [ {}, $_ ]
     : ( ! defined $_->[0] )             ? [ {}, $_->[1] ]
     : (ref $_->[0] eq 'HASH')           ? [(
@@ -1717,31 +1744,6 @@ sub _resolve_bindattrs {
     :                                     [ $resolve_bindinfo->(
                                               { dbic_colname => $_->[0] }
                                             ), $_->[1] ]
-    ;
-
-    if (
-      ! exists $resolved->[0]{dbd_attrs}
-        and
-      ! $resolved->[0]{sqlt_datatype}
-        and
-      length ref $resolved->[1]
-        and
-      ! is_plain_value $resolved->[1]
-    ) {
-      require Data::Dumper;
-      local $Data::Dumper::Maxdepth = 1;
-      local $Data::Dumper::Terse = 1;
-      local $Data::Dumper::Useqq = 1;
-      local $Data::Dumper::Indent = 0;
-      local $Data::Dumper::Pad = ' ';
-      $self->throw_exception(
-        'You must supply a datatype/bindtype (see DBIx::Class::ResultSet/DBIC BIND VALUES) '
-      . 'for non-scalar value '. Data::Dumper::Dumper ($resolved->[1])
-      );
-    }
-
-    $resolved;
-
   } @$bind ];
 }
 
@@ -1975,12 +1977,30 @@ sub insert {
 
   my %returned_cols = %$to_insert;
   if (my $retlist = $sqla_opts->{returning}) {  # if IR is supported - we will get everything in one set
-    @ir_container = try {
-      local $SIG{__WARN__} = sub {};
-      my @r = $sth->fetchrow_array;
-      $sth->finish;
-      @r;
-    } unless @ir_container;
+
+    unless( @ir_container ) {
+      try {
+
+        # FIXME - need to investigate why Caelum silenced this in 4d4dc518
+        local $SIG{__WARN__} = sub {};
+
+        @ir_container = $sth->fetchrow_array;
+        $sth->finish;
+
+      } catch {
+        # Evict the $sth from the cache in case we got here, since the finish()
+        # is crucial, at least on older Firebirds, possibly on other engines too
+        #
+        # It would be too complex to make this a proper subclass override,
+        # and besides we already take the try{} penalty, adding a catch that
+        # triggers infrequently is a no-brainer
+        #
+        if( my $kids = $self->_dbh->{CachedKids} ) {
+          $kids->{$_} == $sth and delete $kids->{$_}
+            for keys %$kids
+        }
+      };
+    }
 
     @returned_cols{@$retlist} = @ir_container if @ir_container;
   }
