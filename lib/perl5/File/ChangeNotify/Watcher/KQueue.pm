@@ -1,28 +1,27 @@
 package File::ChangeNotify::Watcher::KQueue;
-{
-  $File::ChangeNotify::Watcher::KQueue::VERSION = '0.24';
-}
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
-use Moose;
+our $VERSION = '0.26';
 
 use File::Find ();
 use IO::KQueue;
+use Types::Standard qw( HashRef Int );
+use Type::Utils qw( class_type );
 
-extends 'File::ChangeNotify::Watcher';
+use Moo;
 
 has absorb_delay => (
     is      => 'ro',
-    isa     => 'Int',
+    isa     => Int,
     default => 100,
 );
 
 has _kqueue => (
     is       => 'ro',
-    isa      => 'IO::KQueue',
+    isa      => class_type('IO::KQueue'),
     default  => sub { IO::KQueue->new },
     init_arg => undef,
 );
@@ -32,10 +31,12 @@ has _kqueue => (
 # of scope.
 has _files => (
     is       => 'ro',
-    isa      => 'HashRef',
+    isa      => HashRef,
     default  => sub { {} },
     init_arg => undef,
 );
+
+with 'File::ChangeNotify::Watcher';
 
 sub sees_all_events {0}
 
@@ -70,7 +71,7 @@ sub _get_events {
 
     my @events;
     foreach my $kevent (@kevents) {
-        my $path  = $kevent->[KQ_UDATA];
+        my $path = $kevent->[KQ_UDATA];
         next if $self->_path_is_excluded($path);
 
         my $flags = $kevent->[KQ_FFLAGS];
@@ -182,6 +183,8 @@ sub _find {
 
 sub _watch_file {
     my ( $self, $file ) = @_;
+
+    ## no critic (InputOutput::RequireBriefOpen)
 
     # Don't panic if we can't open a file
     open my $fh, '<', $file or warn "Can't open '$file': $!";

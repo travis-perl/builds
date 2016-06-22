@@ -1,28 +1,27 @@
 package File::ChangeNotify::Watcher::Inotify;
-{
-  $File::ChangeNotify::Watcher::Inotify::VERSION = '0.24';
-}
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
+our $VERSION = '0.26';
+
 use File::Find ();
 use Linux::Inotify2 1.2;
+use Types::Standard qw( Bool Int );
+use Type::Utils qw( class_type );
 
-use Moose;
-
-extends 'File::ChangeNotify::Watcher';
+use Moo;
 
 has is_blocking => (
     is      => 'ro',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 1,
 );
 
 has _inotify => (
     is      => 'ro',
-    isa     => 'Linux::Inotify2',
+    isa     => class_type('Linux::Inotify2'),
     default => sub {
         Linux::Inotify2->new()
             or die "Cannot construct a Linux::Inotify2 object: $!";
@@ -32,10 +31,12 @@ has _inotify => (
 
 has _mask => (
     is      => 'ro',
-    isa     => 'Int',
+    isa     => Int,
     lazy    => 1,
     builder => '_build_mask',
 );
+
+with 'File::ChangeNotify::Watcher';
 
 sub sees_all_events {1}
 
@@ -63,12 +64,13 @@ sub wait_for_events {
     }
 }
 
-override new_events => sub {
+around new_events => sub {
+    my $orig = shift;
     my $self = shift;
 
     $self->_inotify()->blocking(0);
 
-    super();
+    return $self->$orig(@_);
 };
 
 sub _interesting_events {
@@ -82,6 +84,7 @@ sub _interesting_events {
     # something happens. For Catalyst, the restarter will end up calling
     # ->watch again after handling the changes.
     for my $event ( $self->_inotify()->read() ) {
+
         # An excluded path will show up here if ...
         #
         # Something created a new directory and that directory needs to be
@@ -176,10 +179,11 @@ sub _fake_events_for_new_dir {
                     return;
                 }
 
-                push @events, $self->event_class()->new(
+                push @events,
+                    $self->event_class()->new(
                     path => $path,
                     type => 'create',
-                );
+                    );
             },
             follow_fast => ( $self->follow_symlinks() ? 1 : 0 ),
             no_chdir => 1
@@ -200,7 +204,7 @@ sub _convert_event {
               $event->IN_CREATE() ? 'create'
             : $event->IN_MODIFY() ? 'modify'
             : $event->IN_DELETE() ? 'delete'
-            : 'unknown'
+            :                       'unknown'
         ),
     );
 }
@@ -215,13 +219,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 File::ChangeNotify::Watcher::Inotify - Inotify-based watcher subclass
 
 =head1 VERSION
 
-version 0.24
+version 0.26
 
 =head1 DESCRIPTION
 
@@ -231,13 +237,20 @@ module. This only works on Linux 2.6.13 or newer.
 This watcher is much more efficient and accurate than the
 C<File::ChangeNotify::Watcher::Default> class.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=File-ChangeNotify>
+(or L<bug-file-changenotify@rt.cpan.org|mailto:bug-file-changenotify@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

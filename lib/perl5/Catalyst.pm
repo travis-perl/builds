@@ -81,6 +81,8 @@ sub _build_request_constructor_args {
 
 sub composed_request_class {
   my $class = shift;
+  return $class->_composed_request_class if $class->_composed_request_class;
+
   my @traits = (@{$class->request_class_traits||[]}, @{$class->config->{request_class_traits}||[]});
 
   # For each trait listed, figure out what the namespace is.  First we try the $trait
@@ -92,8 +94,14 @@ sub composed_request_class {
     Class::Load::load_first_existing_class($_, $class.'::'.$trait_ns.'::'. $_, 'Catalyst::'.$trait_ns.'::'.$_)
   } @traits;
 
-  return $class->_composed_request_class ||
-    $class->_composed_request_class(Moose::Util::with_traits($class->request_class, @normalized_traits));
+  if ($class->debug && scalar(@normalized_traits)) {
+      my $column_width = Catalyst::Utils::term_width() - 6;
+      my $t = Text::SimpleTable->new($column_width);
+      $t->row($_) for @normalized_traits;
+      $class->log->debug( "Composed Request Class Traits:\n" . $t->draw . "\n" );
+  }
+
+  return $class->_composed_request_class(Moose::Util::with_traits($class->request_class, @normalized_traits));
 }
 
 has response => (
@@ -115,6 +123,8 @@ sub _build_response_constructor_args {
 
 sub composed_response_class {
   my $class = shift;
+  return $class->_composed_response_class if $class->_composed_response_class;
+  
   my @traits = (@{$class->response_class_traits||[]}, @{$class->config->{response_class_traits}||[]});
 
   my $trait_ns = 'TraitFor::Response';
@@ -122,8 +132,14 @@ sub composed_response_class {
     Class::Load::load_first_existing_class($_, $class.'::'.$trait_ns.'::'. $_, 'Catalyst::'.$trait_ns.'::'.$_)
   } @traits;
 
-  return $class->_composed_response_class ||
-    $class->_composed_response_class(Moose::Util::with_traits($class->response_class, @normalized_traits));
+  if ($class->debug && scalar(@normalized_traits)) {
+      my $column_width = Catalyst::Utils::term_width() - 6;
+      my $t = Text::SimpleTable->new($column_width);
+      $t->row($_) for @normalized_traits;
+      $class->log->debug( "Composed Response Class Traits:\n" . $t->draw . "\n" );
+  }
+
+  return $class->_composed_response_class(Moose::Util::with_traits($class->response_class, @normalized_traits));
 }
 
 has namespace => (is => 'rw');
@@ -166,6 +182,8 @@ __PACKAGE__->stats_class('Catalyst::Stats');
 
 sub composed_stats_class {
   my $class = shift;
+  return $class->_composed_stats_class if $class->_composed_stats_class;
+
   my @traits = (@{$class->stats_class_traits||[]}, @{$class->config->{stats_class_traits}||[]});
 
   my $trait_ns = 'TraitFor::Stats';
@@ -173,14 +191,20 @@ sub composed_stats_class {
     Class::Load::load_first_existing_class($_, $class.'::'.$trait_ns.'::'. $_, 'Catalyst::'.$trait_ns.'::'.$_)
   } @traits;
 
-  return $class->_composed_stats_class ||
-    $class->_composed_stats_class(Moose::Util::with_traits($class->stats_class, @normalized_traits));
+  if ($class->debug && scalar(@normalized_traits)) {
+      my $column_width = Catalyst::Utils::term_width() - 6;
+      my $t = Text::SimpleTable->new($column_width);
+      $t->row($_) for @normalized_traits;
+      $class->log->debug( "Composed Stats Class Traits:\n" . $t->draw . "\n" );
+  }
+
+  return $class->_composed_stats_class(Moose::Util::with_traits($class->stats_class, @normalized_traits));
 }
 
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90104';
+our $VERSION = '5.90105';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -1472,6 +1496,11 @@ EOF
         $class->log->warn($class . "->config->{case_sensitive} is set.");
         $class->log->warn("This setting is deprecated and planned to be removed in Catalyst 5.81.");
     }
+
+    # call these so we pre setup the composed classes
+    $class->composed_request_class;
+    $class->composed_response_class;
+    $class->composed_stats_class;
 
     $class->setup_finalize;
 
@@ -4827,6 +4856,8 @@ bricas: Brian Cassidy <bricas@cpan.org>
 Caelum: Rafael Kitover <rkitover@io.com>
 
 chansen: Christian Hansen
+
+Chase Venters C<chase.venters@gmail.com>
 
 chicks: Christopher Hicks
 
