@@ -1,0 +1,4 @@
+/home/travis/.perlbrew/libs/5.25.2-thr@moose/bin/package-stash-conflicts
+/home/travis/.perlbrew/libs/5.25.2-thr@moose/lib/perl5/Package/Stash.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@moose/lib/perl5/Package/Stash/Conflicts.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@moose/lib/perl5/Package/Stash/PP.pm
