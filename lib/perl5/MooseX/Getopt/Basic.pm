@@ -1,7 +1,7 @@
 package MooseX::Getopt::Basic;
 # ABSTRACT: MooseX::Getopt::Basic - role to implement the Getopt::Long functionality
 
-our $VERSION = '0.70';
+our $VERSION = '0.71';
 
 use Moose::Role;
 
@@ -210,7 +210,7 @@ sub _compute_getopt_attrs {
     grep {
         $_->does("MooseX::Getopt::Meta::Attribute::Trait")
             or
-        $_->name !~ /^_/
+        $_->init_arg !~ /^_/
     } grep {
         defined $_->init_arg
     } grep {
@@ -289,7 +289,7 @@ MooseX::Getopt::Basic - MooseX::Getopt::Basic - role to implement the Getopt::Lo
 
 =head1 VERSION
 
-version 0.70
+version 0.71
 
 =head1 SYNOPSIS
 

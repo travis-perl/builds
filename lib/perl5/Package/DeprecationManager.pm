@@ -2,9 +2,8 @@ package Package::DeprecationManager;
 
 use strict;
 use warnings;
-use namespace::autoclean;
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use Carp qw( croak );
 use List::Util 1.33 qw( any );
@@ -167,7 +166,7 @@ Package::DeprecationManager - Manage deprecation warnings for your distribution
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 SYNOPSIS
 

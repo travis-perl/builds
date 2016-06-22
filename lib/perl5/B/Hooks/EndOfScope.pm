@@ -1,11 +1,11 @@
-package B::Hooks::EndOfScope; # git description: 0.19-2-g86b1dd5
+package B::Hooks::EndOfScope; # git description: 0.20-3-ge7283e2
 # ABSTRACT: Execute code after a scope finished compilation
 # KEYWORDS: code hooks execution scope
 
 use strict;
 use warnings;
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 # note - a %^H tie() fallback will probably work on 5.6 as well,
 # if you need to go that low - sane patches passing *all* tests
@@ -39,7 +39,7 @@ B::Hooks::EndOfScope - Execute code after a scope finished compilation
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 SYNOPSIS
 
@@ -109,13 +109,17 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Simon Wilper Tatsuhiko Miyagawa Tomas Doran
+=for stopwords Karen Etheridge Christian Walde Simon Wilper Tatsuhiko Miyagawa Tomas Doran
 
 =over 4
 
 =item *
 
 Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Christian Walde <walde.christian@googlemail.com>
 
 =item *
 

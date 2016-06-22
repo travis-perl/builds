@@ -1,5 +1,5 @@
 package Moose::Exception::ClassDoesTheExcludedRole;
-our $VERSION = '2.1801';
+our $VERSION = '2.1804';
 
 use Moose;
 extends 'Moose::Exception';

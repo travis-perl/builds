@@ -4,7 +4,7 @@ package B::Hooks::EndOfScope::XS;
 use strict;
 use warnings;
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 use Variable::Magic 0.48 ();
 use Sub::Exporter::Progressive 0.001006 -setup => {
@@ -51,7 +51,7 @@ B::Hooks::EndOfScope::XS - Execute code after a scope finished compilation - XS 
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 DESCRIPTION
 

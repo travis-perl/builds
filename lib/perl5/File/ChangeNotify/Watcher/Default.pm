@@ -1,30 +1,31 @@
 package File::ChangeNotify::Watcher::Default;
-{
-  $File::ChangeNotify::Watcher::Default::VERSION = '0.24';
-}
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
+our $VERSION = '0.26';
+
 use File::Find qw( finddepth );
 use File::Spec;
 use Time::HiRes qw( sleep );
+use Types::Standard qw( HashRef );
 
 # Trying to import this just blows up on Win32, and checking
 # Time::HiRes::d_hires_stat() _also_ blows up on Win32.
 BEGIN {
+    ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
     eval { Time::HiRes->import('stat') };
 }
 
-use Moose;
-use MooseX::SemiAffordanceAccessor;
+use Moo;
 
-extends 'File::ChangeNotify::Watcher';
+with 'File::ChangeNotify::Watcher';
 
 has _map => (
     is      => 'rw',
-    isa     => 'HashRef',
+    writer  => '_set_map',
+    isa     => HashRef,
     default => sub { {} },
 );
 
@@ -165,13 +166,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 File::ChangeNotify::Watcher::Default - Fallback default watcher subclass
 
 =head1 VERSION
 
-version 0.24
+version 0.26
 
 =head1 DESCRIPTION
 
@@ -181,13 +184,20 @@ tree. It if inefficient and dumb, and so it is the subclass of last resort.
 Its C<< $watcher->wait_for_events() >> method sleeps between
 comparisons of the filesystem snapshot it takes.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=File-ChangeNotify>
+(or L<bug-file-changenotify@rt.cpan.org|mailto:bug-file-changenotify@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

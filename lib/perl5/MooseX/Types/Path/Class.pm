@@ -1,9 +1,9 @@
 use strict;
 use warnings;
-package MooseX::Types::Path::Class; # git description: v0.07-6-g6afe19a
+package MooseX::Types::Path::Class; # git description: v0.08-5-gc1e201f
 # ABSTRACT: A Path::Class type library for Moose
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Path::Class 0.16 ();
 
@@ -52,7 +52,7 @@ MooseX::Types::Path::Class - A Path::Class type library for Moose
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 SYNOPSIS
 
@@ -141,10 +141,16 @@ L<MooseX::Types::Path::Class::MoreCoercions>, L<MooseX::FileAttribute>, L<MooseX
 
 L<Moose>, L<MooseX::Types>, L<Path::Class>
 
-=head1 BUGS AND LIMITATIONS
+=head1 SUPPORT
 
-If you find a bug please either email the author, or add
-the bug to cpan-RT L<http://rt.cpan.org>.
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Types-Path-Class>
+(or L<bug-MooseX-Types-Path-Class@rt.cpan.org|mailto:bug-MooseX-Types-Path-Class@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

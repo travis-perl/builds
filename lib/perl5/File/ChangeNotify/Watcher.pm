@@ -1,72 +1,72 @@
 package File::ChangeNotify::Watcher;
-{
-  $File::ChangeNotify::Watcher::VERSION = '0.24';
-}
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
+our $VERSION = '0.26';
+
 use Class::Load qw( load_class );
 use File::ChangeNotify::Event;
-use List::MoreUtils qw(all);
-use Moose;
-use Moose::Util::TypeConstraints;
-use MooseX::Params::Validate qw( pos_validated_list );
+use Types::Standard qw( ArrayRef Bool ClassName CodeRef Num RegexpRef Str );
+use Type::Utils -all;
+
+use Moo::Role;
 
 has filter => (
     is      => 'ro',
-    isa     => 'RegexpRef',
+    isa     => RegexpRef,
     default => sub {qr/.*/},
 );
 
 #<<<
-my $dir = subtype as 'Str',
+my $dir_t = subtype as Str,
     where { -d $_ },
     message { "$_ is not a valid directory" };
 
-my $array_of_dirs = subtype as 'ArrayRef[Str]',
+my $array_of_dirs_t = subtype as ArrayRef[Str],
     where {
         map {-d} @{$_};
     },
     message {"@{$_} is not a list of valid directories"};
 
-coerce $array_of_dirs,
-    from $dir,
+coerce $array_of_dirs_t,
+    from $dir_t,
     via { [$_] };
 #>>>
 
 has directories => (
     is       => 'ro',
     writer   => '_set_directories',
-    isa      => $array_of_dirs,
+    isa      => $array_of_dirs_t,
     required => 1,
     coerce   => 1,
 );
 
 has follow_symlinks => (
     is      => 'ro',
-    isa     => 'Bool',
+    isa     => Bool,
     default => 0,
 );
 
 has event_class => (
     is      => 'ro',
-    isa     => 'ClassName',
+    isa     => ClassName,
     default => 'File::ChangeNotify::Event',
 );
 
 has sleep_interval => (
     is      => 'ro',
-    isa     => 'Num',
+    isa     => Num,
     default => 2,
 );
 
-my $files_or_regexps = subtype as 'ArrayRef[Str|RegexpRef]';
+my $files_or_regexps_or_code_t
+    = subtype as ArrayRef [ Str | RegexpRef | CodeRef ];
 
 has exclude => (
     is      => 'ro',
-    isa     => $files_or_regexps,
+    isa     => $files_or_regexps_or_code_t,
     default => sub { [] },
 );
 
@@ -82,23 +82,20 @@ sub new_events {
     return $self->_interesting_events();
 }
 
-sub _add_directory {
-    my $self = shift;
-    my $dir  = shift;
-
-    return if grep { $_ eq $dir } $self->directories();
-
-    push @{ $self->directories() }, $dir;
-}
-
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _path_is_excluded {
     my $self = shift;
     my $path = shift;
 
     foreach my $excluded ( @{ $self->exclude } ) {
-
-        if ( ref $excluded && ref $excluded eq 'Regexp' ) {
-            return 1 if $path =~ /$excluded/;
+        if ( my $ref = ref $excluded ) {
+            if ( $ref eq 'Regexp' ) {
+                return 1 if $path =~ /$excluded/;
+            }
+            elsif ( $ref eq 'CODE' ) {
+                local $_ = $path;
+                return 1 if $excluded->($path);
+            }
         }
         else {
             return 1 if $path eq $excluded;
@@ -115,24 +112,25 @@ sub _remove_directory {
     $self->_set_directories(
         [ grep { $_ ne $dir } @{ $self->directories() } ] );
 }
-
-__PACKAGE__->meta()->make_immutable();
+## use critic
 
 1;
 
-# ABSTRACT: Base class for all watchers
+# ABSTRACT: Role consumed by all watchers
 
 __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
-File::ChangeNotify::Watcher - Base class for all watchers
+File::ChangeNotify::Watcher - Role consumed by all watchers
 
 =head1 VERSION
 
-version 0.24
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -140,7 +138,8 @@ version 0.24
         File::ChangeNotify->instantiate_watcher
             ( directories => [ '/my/path', '/my/other' ],
               filter      => qr/\.(?:pm|conf|yml)$/,
-              exclude     => ['t', 'root', qr(/(?!\.)[^/]+$)],
+              exclude     => ['t', 'root', qr(/(?!\.)[^/]+$),
+		              sub { -e && ! -r }],
             );
 
     if ( my @events = $watcher->new_events() ) { ... }
@@ -150,23 +149,23 @@ version 0.24
 
 =head1 DESCRIPTION
 
-A C<File::ChangeNotify::Watcher> class monitors a directory for
-changes made to any file. You can provide a regular expression to
-filter out files you are not interested in. It handles the addition of
-new subdirectories by adding them to the watch list.
+A C<File::ChangeNotify::Watcher> monitors a directory for changes made to any
+file. You can provide a regular expression to filter out files you are not
+interested in. It handles the addition of new subdirectories by adding them to
+the watch list.
 
-Note that the actual granularity of what each watcher subclass reports
-may vary across subclasses. Implementations that hook into some sort
-of kernel event interface (Inotify, for example) have much better
-knowledge of exactly what changes are happening than one implemented
-purely in userspace code (like the Default subclass).
+Note that the actual granularity of what each watcher class reports may
+vary. Implementations that hook into some sort of kernel event interface
+(Inotify, for example) have much better knowledge of exactly what changes are
+happening than one implemented purely in userspace code (like the Default
+class).
 
-By default, events are returned in the form
-L<File::ChangeNotify::Event> objects, but this can be overridden by
-providing an "event_class" attribute to the constructor.
+By default, events are returned in the form L<File::ChangeNotify::Event>
+objects, but this can be overridden by providing an "event_class" attribute to
+the constructor.
 
-The watcher can operate in a blocking/callback style, or you can
-simply ask it for a list of new events as needed.
+The watcher can operate in a blocking/callback style, or you can simply ask it
+for a list of new events as needed.
 
 =head1 METHODS
 
@@ -192,9 +191,13 @@ By default, all files are included.
 
 =item * exclude => [...]
 
-An optional list of paths to exclude. This list can contain either plain
-strings or regular expressions. If you provide a string it should contain the
-complete path to be excluded.
+An optional list of paths to exclude. This list can contain plain strings,
+regular expressions, or subroutine references. If you provide a string it
+should contain the complete path to be excluded.
+
+If you provide a sub, it should return a true value for paths to be excluded
+e.g. C<< exclude => [ sub { -e && ! -r } ], >>. The path will be passed as the
+first argument to the subroutine as well as in a localized C<$_>.
 
 The paths can be either directories or specific files. If the exclusion
 matches a directory, all of its files and subdirectories are ignored.
@@ -246,13 +249,20 @@ and can only detect changes between snapshots of the file system.
 Other watchers, like the Inotify subclass, see all events that happen
 and report on them.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=File-ChangeNotify>
+(or L<bug-file-changenotify@rt.cpan.org|mailto:bug-file-changenotify@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 

@@ -1,8 +1,8 @@
-package MooseX::Getopt; # git description: v0.69-6-g6f5d9e0
+package MooseX::Getopt; # git description: v0.70-3-gcead5b0
 # ABSTRACT: A Moose role for processing command line options
 # KEYWORDS: moose extension command line options attributes executable flags switches arguments
 
-our $VERSION = '0.70';
+our $VERSION = '0.71';
 
 use Moose::Role 0.56;
 use namespace::autoclean;
@@ -23,7 +23,7 @@ MooseX::Getopt - A Moose role for processing command line options
 
 =head1 VERSION
 
-version 0.70
+version 0.71
 
 =head1 SYNOPSIS
 
@@ -298,7 +298,17 @@ L<Getopt::Long::Descriptive> that you install.
 
 =head1 SEE ALSO
 
+=over 4
+
+=item *
+
 L<MooseX::Getopt::Usage>, an extension to generate man pages, with colour
+
+=item *
+
+L<MooX::Options>, similar functionality for L<Moo>
+
+=back
 
 =head1 SUPPORT
 
@@ -317,7 +327,7 @@ Stevan Little <stevan@iinteractive.com>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Hans Dieter Pearcey Olaf Alders Nelo Onyiah Ryan D Johnson Ricardo SIGNES Damien Krotkine Dave Rolsky Hinrik Örn Sigurðsson Ævar Arnfjörð Bjarmason Chris Prather Devin Austin Jose Luis Martinez Todd Hepler Dagfinn Ilmari Mannsåker Gordon Irving Gregory Oschwald Jesse Luehrs John Goulah Jonathan Swartz Justin Hunter Stuart A Johnston
+=for stopwords Karen Etheridge Tomas Doran Stevan Little Yuval Kogman Florian Ragwitz Brandon L Black Shlomi Fish Olaf Alders Hans Dieter Pearcey Nelo Onyiah Ryan D Johnson Dave Rolsky Ricardo SIGNES Ævar Arnfjörð Bjarmason Damien Krotkine Hinrik Örn Sigurðsson Jose Luis Martinez Todd Hepler Devin Austin Gregory Oschwald Chris Prather Gordon Irving Stuart A Johnston Dagfinn Ilmari Mannsåker Jonathan Swartz John Goulah Jesse Luehrs Justin Hunter
 
 =over 4
 
@@ -351,11 +361,11 @@ Shlomi Fish <shlomif@cpan.org>
 
 =item *
 
-Hans Dieter Pearcey <hdp@weftsoar.net>
+Olaf Alders <olaf@wundersolutions.com>
 
 =item *
 
-Olaf Alders <olaf@wundersolutions.com>
+Hans Dieter Pearcey <hdp@weftsoar.net>
 
 =item *
 
@@ -367,19 +377,11 @@ Ryan D Johnson <ryan@innerfence.com>
 
 =item *
 
-Ricardo SIGNES <rjbs@cpan.org>
-
-=item *
-
-Damien Krotkine <dkrotkine@weborama.com>
-
-=item *
-
 Dave Rolsky <autarch@urth.org>
 
 =item *
 
-Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
+Ricardo SIGNES <rjbs@cpan.org>
 
 =item *
 
@@ -387,11 +389,11 @@ Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
 
 =item *
 
-Chris Prather <chris@prather.org>
+Damien Krotkine <dkrotkine@weborama.com>
 
 =item *
 
-Devin Austin <dhoss@cpan.org>
+Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>
 
 =item *
 
@@ -403,11 +405,7 @@ Todd Hepler <thepler@employees.org>
 
 =item *
 
-Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
-
-=item *
-
-Gordon Irving <goraxe@goraxe.me.uk>
+Devin Austin <dhoss@cpan.org>
 
 =item *
 
@@ -415,19 +413,19 @@ Gregory Oschwald <goschwald@maxmind.com>
 
 =item *
 
-Jesse Luehrs <doy@tozt.net>
+Chris Prather <chris@prather.org>
 
 =item *
 
-John Goulah <jgoulah@cpan.org>
+Gordon Irving <goraxe@goraxe.me.uk>
 
 =item *
 
-Jonathan Swartz <swartz@pobox.com>
+Stuart A Johnston <saj_git@thecommune.net>
 
 =item *
 
-Justin Hunter <justin.d.hunter@gmail.com>
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
 
 =item *
 
@@ -435,7 +433,19 @@ Shlomi Fish <shlomif@shlomifish.org>
 
 =item *
 
-Stuart A Johnston <saj_git@thecommune.net>
+Jonathan Swartz <swartz@pobox.com>
+
+=item *
+
+John Goulah <jgoulah@cpan.org>
+
+=item *
+
+Jesse Luehrs <doy@tozt.net>
+
+=item *
+
+Justin Hunter <justin.d.hunter@gmail.com>
 
 =back
 

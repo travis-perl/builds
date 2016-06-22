@@ -1,18 +1,19 @@
 package File::ChangeNotify::Event;
-{
-  $File::ChangeNotify::Event::VERSION = '0.24';
-}
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
-use Moose;
-use Moose::Util::TypeConstraints;
+our $VERSION = '0.26';
+
+use Types::Standard qw( Str );
+use Type::Utils qw( enum );
+
+use Moo;
 
 has path => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 
@@ -32,13 +33,15 @@ __END__
 
 =pod
 
+=encoding UTF-8
+
 =head1 NAME
 
 File::ChangeNotify::Event - Class for file change events
 
 =head1 VERSION
 
-version 0.24
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -84,13 +87,20 @@ Returns the path of the changed file or directory.
 
 Returns the type of event.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=File-ChangeNotify>
+(or L<bug-file-changenotify@rt.cpan.org|mailto:bug-file-changenotify@rt.cpan.org>).
+
+I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
-This software is Copyright (c) 2013 by Dave Rolsky.
+This software is Copyright (c) 2016 by Dave Rolsky.
 
 This is free software, licensed under:
 
