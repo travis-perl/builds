@@ -1,11 +1,19 @@
 package Method::Generate::Constructor;
 
 use Moo::_strictures;
-use Sub::Quote qw(quote_sub unquote_sub quotify);
+use Sub::Quote qw(quote_sub quotify);
 use Sub::Defer;
 use Moo::_Utils qw(_getstash _getglob);
+use Moo::_mro;
 use Scalar::Util qw(weaken);
-use Moo;
+use Carp qw(croak);
+use Carp::Heavy ();
+BEGIN { our @CARP_NOT = qw(Sub::Defer) }
+BEGIN {
+  local $Moo::sification::disabled = 1;
+  require Moo;
+  Moo->import;
+}
 
 sub register_attribute_specs {
   my ($self, @new_specs) = @_;
@@ -13,7 +21,7 @@ sub register_attribute_specs {
   my $specs = $self->{attribute_specs}||={};
   while (my ($name, $new_spec) = splice @new_specs, 0, 2) {
     if ($name =~ s/^\+//) {
-      die "has '+${name}' given but no ${name} attribute already exists"
+      croak "has '+${name}' given but no ${name} attribute already exists"
         unless my $old_spec = $specs->{$name};
       foreach my $key (keys %$old_spec) {
         if (!exists $new_spec->{$key}) {
@@ -35,7 +43,7 @@ sub register_attribute_specs {
         || defined $new_spec->{init_arg}
       )
     ) {
-      die "You cannot have a required attribute (${name})"
+      croak "You cannot have a required attribute (${name})"
         . " without a default, builder, or an init_arg";
     }
     $new_spec->{index} = scalar keys %$specs
@@ -79,6 +87,7 @@ sub install_delayed {
   my $package = $self->{package};
   my (undef, @isa) = @{mro::get_linear_isa($package)};
   my $isa = join ',', @isa;
+  my (undef, $from_file, $from_line) = caller(Carp::short_error_loc());
   my $constructor = defer_sub "${package}::new" => sub {
     my (undef, @new_isa) = @{mro::get_linear_isa($package)};
     if (join(',', @new_isa) ne $isa) {
@@ -87,14 +96,14 @@ sub install_delayed {
       if (($found_new||'') ne ($expected_new||'')) {
         $found_new ||= 'none';
         $expected_new ||= 'none';
-        die "Expected parent constructor of $package to be"
+        croak "Expected parent constructor of $package to be"
         . " $expected_new, but found $found_new: changing the inheritance"
-        . " chain (\@ISA) at runtime is unsupported";
+        . " chain (\@ISA) at runtime (after $from_file line $from_line) is unsupported";
       }
     }
 
-    my $constructor = unquote_sub $self->generate_method(
-      $package, 'new', $self->{attribute_specs}, { no_install => 1 }
+    my $constructor = $self->generate_method(
+      $package, 'new', $self->{attribute_specs}, { no_install => 1, no_defer => 1 }
     );
     $self->{inlined} = 1;
     weaken($self->{constructor} = $constructor);
@@ -116,36 +125,43 @@ sub assert_constructor {
   my $current = $self->current_constructor($package)
     or return 1;
   my $constructor = $self->{constructor}
-    or die "Unknown constructor for $package already exists";
-  die "Constructor for $package has been replaced with an unknown sub"
+    or croak "Unknown constructor for $package already exists";
+  croak "Constructor for $package has been replaced with an unknown sub"
     if $constructor != $current;
-  die "Constructor for $package has been inlined and cannot be updated"
+  croak "Constructor for $package has been inlined and cannot be updated"
     if $self->{inlined};
 }
 
 sub generate_method {
   my ($self, $into, $name, $spec, $quote_opts) = @_;
+  $quote_opts = {
+    %{$quote_opts||{}},
+    package => $into,
+  };
   foreach my $no_init (grep !exists($spec->{$_}{init_arg}), keys %$spec) {
     $spec->{$no_init}{init_arg} = $no_init;
   }
   local $self->{captures} = {};
-  my $body = '    my $class = ref($_[0]) ? ref(shift) : shift;';
-  $body .= $self->_handle_subconstructor($into, $name);
+
   my $into_buildargs = $into->can('BUILDARGS');
-  if ( $into_buildargs && $into_buildargs != \&Moo::Object::BUILDARGS ) {
-      $body .= $self->_generate_args_via_buildargs;
-  } else {
-      $body .= $self->_generate_args;
-  }
-  $body .= $self->_check_required($spec);
-  $body .= '    my $new = '.$self->construction_string.";\n";
-  $body .= $self->_assign_new($spec);
-  if ($into->can('BUILD')) {
-    $body .= $self->buildall_generator->buildall_body_for(
-      $into, '$new', '$args'
-    );
-  }
-  $body .= '    return $new;'."\n";
+
+  my $body
+    = '    my $invoker = shift;'."\n"
+    . '    my $class = ref($invoker) ? ref($invoker) : $invoker;'."\n"
+    . $self->_handle_subconstructor($into, $name)
+    . ( $into_buildargs && $into_buildargs != \&Moo::Object::BUILDARGS
+      ? $self->_generate_args_via_buildargs
+      : $self->_generate_args
+    )
+    . $self->_check_required($spec)
+    . '    my $new = '.$self->construction_string.";\n"
+    . $self->_assign_new($spec)
+    . ( $into->can('BUILD')
+      ? $self->buildall_generator->buildall_body_for( $into, '$new', '$args' )
+      : ''
+    )
+    . '    return $new;'."\n";
+
   if ($into->can('DEMOLISH')) {
     require Method::Generate::DemolishAll;
     Method::Generate::DemolishAll->new->generate_method($into);
@@ -176,7 +192,7 @@ sub _cap_call {
 sub _generate_args_via_buildargs {
   my ($self) = @_;
   q{    my $args = $class->BUILDARGS(@_);}."\n"
-  .q{    die "BUILDARGS did not return a hashref" unless ref($args) eq 'HASH';}
+  .q{    Carp::croak("BUILDARGS did not return a hashref") unless ref($args) eq 'HASH';}
   ."\n";
 }
 
@@ -187,11 +203,11 @@ sub _generate_args {
     my $args = scalar @_ == 1
       ? ref $_[0] eq 'HASH'
         ? { %{ $_[0] } }
-        : die "Single parameters to new() must be a HASH ref"
-            . " data => ". $_[0] ."\n"
+        : Carp::croak("Single parameters to new() must be a HASH ref"
+            . " data => ". $_[0])
       : @_ % 2
-        ? die "The new() method for $class expects a hash reference or a"
-            . " key/value list. You passed an odd number of arguments\n"
+        ? Carp::croak("The new() method for $class expects a hash reference or a"
+            . " key/value list. You passed an odd number of arguments")
         : {@_}
     ;
 _EOA
@@ -231,7 +247,7 @@ sub _check_required {
   return '' unless @required_init;
   '    if (my @missing = grep !exists $args->{$_}, '
     .join(', ', map quotify($_), @required_init).') {'."\n"
-    .q{      die "Missing required arguments: ".join(', ', sort @missing);}."\n"
+    .q{      Carp::croak("Missing required arguments: ".join(', ', sort @missing));}."\n"
     ."    }\n";
 }
 
@@ -253,5 +269,8 @@ Moo->_constructor_maker_for(__PACKAGE__)
   subconstructor_handler => { is => 'ro' },
   package => { is => 'bare' },
 );
+if ($INC{'Moo/HandleMoose.pm'} && !$Moo::sification::disabled) {
+  Moo::HandleMoose::inject_fake_metaclass_for(__PACKAGE__);
+}
 
 1;
