@@ -1,0 +1,14 @@
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig/Args.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig/CGI.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig/File.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig/Getopt.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig/State.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/lib/perl5/AppConfig/Sys.pm
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig.0
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig::Args.0
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig::CGI.0
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig::File.0
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig::Getopt.0
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig::State.0
+/home/travis/.perlbrew/libs/5.25.2-thr@cat/man/man3/AppConfig::Sys.0
