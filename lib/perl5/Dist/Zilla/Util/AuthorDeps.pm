@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::Util::AuthorDeps;
 # ABSTRACT: Utils for listing your distribution's author dependencies
-$Dist::Zilla::Util::AuthorDeps::VERSION = '5.047';
+$Dist::Zilla::Util::AuthorDeps::VERSION = '6.005';
 use Dist::Zilla::Util;
 use Path::Tiny;
 use List::Util 1.45 ();
@@ -74,7 +74,7 @@ sub extract_author_deps {
     chomp;
     next unless /\A\s*;\s*authordep\s*(\S+)\s*(?:=\s*([^;]+))?\s*/;
     my $module = $1;
-    my $ver = defined $2 ? $2 : "0";
+    my $ver = $2 // "0";
     $ver =~ s/\s+$//;
     # Any "; authordep " is inserted at the beginning of the list
     # in the file order so the user can control the order of at least a part of
@@ -96,23 +96,33 @@ sub extract_author_deps {
   # for the common case (no inc::, no '; authordep') as in previous dzil
   # releases.
   @packages = ((sort grep /^inc::/, @packages), (grep !/^inc::/, @packages));
+  @packages = List::Util::uniq(@packages);
+
+  if ($missing) {
+    require Module::Runtime;
+
+    @packages =
+      grep {
+        $_ eq 'perl'
+        ? ! ($vermap->{perl} && eval "use $vermap->{perl}; 1")
+        : do {
+            my $m = $_;
+            ! eval {
+              # This will die if module is missing
+              Module::Runtime::require_module($m);
+              my $v = $vermap->{$m};
+              # This will die if VERSION is too low
+              !$v || $m->VERSION($v);
+              # Success!
+              1
+            }
+          }
+      } @packages;
+  }
 
   # Now that we have a sorted list of packages, use that to build an array of
   # hashrefs for display.
-  require Class::Load;
-
-  my @final =
-    map { { $_ => $vermap->{$_} } }
-    grep {
-      $missing
-        ? $_ eq 'perl'
-          ? ($vermap->{perl} ? !eval "use $vermap->{perl}; 1" : ())
-          : (! Class::Load::try_load_class($_, ($vermap->{$_} ? {-version => $vermap->{$_}} : ())))
-        : 1
-      }
-    List::Util::uniq(@packages);
-
-  return \@final;
+  [ map { { $_ => $vermap->{$_} } } @packages ]
 }
 
 1;
@@ -129,11 +139,11 @@ Dist::Zilla::Util::AuthorDeps - Utils for listing your distribution's author dep
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

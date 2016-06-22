@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::TestRelease;
 # ABSTRACT: extract archive and run tests before releasing the dist
-$Dist::Zilla::Plugin::TestRelease::VERSION = '5.047';
+$Dist::Zilla::Plugin::TestRelease::VERSION = '6.005';
 use Moose;
 with 'Dist::Zilla::Role::BeforeRelease';
 
@@ -24,16 +24,16 @@ use namespace::autoclean;
 #pod =cut
 
 use File::pushd ();
-use Path::Class ();
+use Dist::Zilla::Path;
 
 sub before_release {
   my ($self, $tgz) = @_;
   $tgz = $tgz->absolute;
 
-  my $build_root = $self->zilla->root->subdir('.build');
+  my $build_root = $self->zilla->root->child('.build');
   $build_root->mkpath unless -d $build_root;
 
-  my $tmpdir = Path::Class::dir( File::Temp::tempdir(DIR => $build_root) );
+  my $tmpdir = path( File::Temp::tempdir(DIR => $build_root) );
 
   $self->log("Extracting $tgz to $tmpdir");
 
@@ -48,14 +48,14 @@ sub before_release {
     unless @files;
 
   # Run tests on the extracted tarball:
-  my $target = $tmpdir->subdir( $self->zilla->dist_basename );
+  my $target = $tmpdir->child( $self->zilla->dist_basename );
 
   local $ENV{RELEASE_TESTING} = 1;
   local $ENV{AUTHOR_TESTING} = 1;
   $self->zilla->run_tests_in($target);
 
   $self->log("all's well; removing $tmpdir");
-  $tmpdir->rmtree;
+  $tmpdir->remove_tree({ safe => 0 });
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -73,7 +73,7 @@ Dist::Zilla::Plugin::TestRelease - extract archive and run tests before releasin
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -92,7 +92,7 @@ This plugin was originally contributed by Christopher J. Madsen.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

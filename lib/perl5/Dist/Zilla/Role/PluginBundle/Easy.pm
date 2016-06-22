@@ -1,7 +1,7 @@
 package Dist::Zilla::Role::PluginBundle::Easy;
 # ABSTRACT: something that bundles a bunch of plugins easily
 # This plugin was originally contributed by Christopher J. Madsen
-$Dist::Zilla::Role::PluginBundle::Easy::VERSION = '5.047';
+$Dist::Zilla::Role::PluginBundle::Easy::VERSION = '6.005';
 use Moose::Role;
 with 'Dist::Zilla::Role::PluginBundle';
 
@@ -226,7 +226,7 @@ Dist::Zilla::Role::PluginBundle::Easy - something that bundles a bunch of plugin
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -316,7 +316,7 @@ key does not exist in C<payload>, then it is omitted from the result.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

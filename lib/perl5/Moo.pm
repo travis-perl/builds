@@ -1,6 +1,7 @@
 package Moo;
 
 use Moo::_strictures;
+use Moo::_mro;
 use Moo::_Utils qw(
   _getglob
   _getstash
@@ -11,8 +12,17 @@ use Moo::_Utils qw(
   _unimport_coderefs
 );
 use Carp qw(croak);
+BEGIN {
+  our @CARP_NOT = qw(
+    Method::Generate::Constructor
+    Method::Generate::Accessor
+    Moo::sification
+    Moo::_Utils
+    Moo::Role
+  );
+}
 
-our $VERSION = '2.001001';
+our $VERSION = '2.002002';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -35,7 +45,7 @@ sub import {
   warnings->import;
 
   if ($INC{'Role/Tiny.pm'} and Role::Tiny->is_role($target)) {
-    die "Cannot import Moo into a role";
+    croak "Cannot import Moo into a role";
   }
   $MAKERS{$target} ||= {};
   _install_tracked $target => extends => sub {
@@ -85,7 +95,7 @@ sub import {
       require Moo::Object; ('Moo::Object');
     } unless @{"${target}::ISA"};
   }
-  if ($INC{'Moo/HandleMoose.pm'}) {
+  if ($INC{'Moo/HandleMoose.pm'} && !$Moo::sification::disabled) {
     Moo::HandleMoose::inject_fake_metaclass_for($target);
   }
 }
@@ -123,7 +133,7 @@ sub _set_superclasses {
 
 sub _maybe_reset_handlemoose {
   my ($class, $target) = @_;
-  if ($INC{"Moo/HandleMoose.pm"}) {
+  if ($INC{'Moo/HandleMoose.pm'} && !$Moo::sification::disabled) {
     Moo::HandleMoose::maybe_reinject_fake_metaclass_for($target);
   }
 }
@@ -168,10 +178,10 @@ sub _constructor_maker_for {
         '      if ($Moo::MAKERS{$class}) {'."\n"
         .'        if ($Moo::MAKERS{$class}{constructor}) {'."\n"
         .'          package '.$target.';'."\n"
-        .'          return $class->SUPER::new(@_);'."\n"
+        .'          return $invoker->SUPER::new(@_);'."\n"
         .'        }'."\n"
         .'        '.$class.'->_constructor_maker_for($class);'."\n"
-        .'        return $class->new(@_)'.";\n"
+        .'        return $invoker->new(@_)'.";\n"
         .'      } elsif ($INC{"Moose.pm"} and my $meta = Class::MOP::get_metaclass_by_name($class)) {'."\n"
         .'        return $meta->new_object('."\n"
         .'          $class->can("BUILDARGS") ? $class->BUILDARGS(@_)'."\n"
@@ -199,13 +209,13 @@ sub _constructor_maker_for {
           'do {'
           .'  my $args = $class->'.$inv.'BUILDARGS(@_);'
           .'  $args->{__no_BUILD__} = 1;'
-          .'  $class->'.$target.'::SUPER::new($args);'
+          .'  $invoker->'.$target.'::SUPER::new($args);'
           .'}'
         };
       }
       else {
         $construct_opts{construction_builder} = sub {
-          '$class->'.$target.'::SUPER::new('
+          '$invoker->'.$target.'::SUPER::new('
             .($target->can('FOREIGNBUILDARGS') ?
               '$class->FOREIGNBUILDARGS(@_)' : '@_')
             .')'

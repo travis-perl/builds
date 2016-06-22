@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PruneCruft;
 # ABSTRACT: prune stuff that you probably don't mean to include
-$Dist::Zilla::Plugin::PruneCruft::VERSION = '5.047';
+$Dist::Zilla::Plugin::PruneCruft::VERSION = '6.005';
 use Moose;
 use Moose::Util::TypeConstraints;
 with 'Dist::Zilla::Role::FilePruner';
@@ -75,10 +75,10 @@ sub exclude_file {
   # https://github.com/andk/pause/pull/65
   return 1 if substr($file->name, 0, 7) eq 'fatlib/';
 
-  if ((my $file = $file->name) =~ s/\.c$//) {
-      for my $other (@{ $self->zilla->files }) {
-          return 1 if $other->name eq "${file}.xs";
-      }
+  if (my $file = $file->name =~ s/\.c$//r) {
+    for my $other (@{ $self->zilla->files }) {
+      return 1 if $other->name eq "${file}.xs";
+    }
   }
 
   return;
@@ -114,7 +114,7 @@ Dist::Zilla::Plugin::PruneCruft - prune stuff that you probably don't mean to in
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -145,7 +145,7 @@ L<ManifestSkip|Dist::Zilla::Plugin::ManifestSkip>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::File::InMemory;
 # ABSTRACT: a file that you build entirely in memory
-$Dist::Zilla::File::InMemory::VERSION = '5.047';
+$Dist::Zilla::File::InMemory::VERSION = '6.005';
 use Moose;
 
 use namespace::autoclean;
@@ -51,7 +51,7 @@ Dist::Zilla::File::InMemory - a file that you build entirely in memory
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -62,7 +62,7 @@ See L<Dist::Zilla::Role::MutableFile> for details.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -2,8 +2,9 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::add;
 # ABSTRACT: add a module to a dist
-$Dist::Zilla::App::Command::add::VERSION = '5.047';
+$Dist::Zilla::App::Command::add::VERSION = '6.005';
 use Dist::Zilla::App -command;
+use Dist::Zilla::Path;
 
 #pod =head1 SYNOPSIS
 #pod
@@ -48,8 +49,7 @@ sub execute {
 
   my $zilla = $self->zilla;
   my $dist = $zilla->name;
-
-  require Path::Class;
+  
   require File::pushd;
 
   require Dist::Zilla::Dist::Minter;
@@ -62,7 +62,7 @@ sub execute {
     },
   );
 
-  my $root = Path::Class::dir($zilla->root)->absolute;
+  my $root = path($zilla->root)->absolute;
   my $wd = File::pushd::pushd($minter->root);
 
   my $factory = $minter->plugin_named(':DefaultModuleMaker');
@@ -90,7 +90,7 @@ Dist::Zilla::App::Command::add - add a module to a dist
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -103,7 +103,7 @@ provider and C<-p> - the profile name. These work just like C<dzil new>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

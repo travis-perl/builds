@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::Util;
 # ABSTRACT: random snippets of code that Dist::Zilla wants
-$Dist::Zilla::Util::VERSION = '5.047';
+$Dist::Zilla::Util::VERSION = '6.005';
 use Carp ();
 use Encode ();
 
@@ -102,14 +102,14 @@ sub expand_config_package_name {
 }
 
 sub _global_config_root {
-  require Path::Class;
-  return Path::Class::dir($ENV{DZIL_GLOBAL_CONFIG_ROOT}) if $ENV{DZIL_GLOBAL_CONFIG_ROOT};
+  require Dist::Zilla::Path;
+  return Dist::Zilla::Path::path($ENV{DZIL_GLOBAL_CONFIG_ROOT}) if $ENV{DZIL_GLOBAL_CONFIG_ROOT};
 
   require File::HomeDir;
   my $homedir = File::HomeDir->my_home
     or Carp::croak("couldn't determine home directory");
 
-  return Path::Class::dir($homedir)->subdir('.dzil');
+  return Dist::Zilla::Path::path($homedir)->child('.dzil');
 }
 
 sub _assert_loaded_class_version_ok {
@@ -125,7 +125,7 @@ sub _assert_loaded_class_version_ok {
     die( sprintf
       "%s version (%s) does not match required version: %s\n",
       $pkg,
-      ( defined $have_version ? $have_version : 'undef' ),
+      $have_version // 'undef',
       $version,
     );
   }
@@ -145,7 +145,7 @@ Dist::Zilla::Util - random snippets of code that Dist::Zilla wants
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 METHODS
 
@@ -186,7 +186,7 @@ otherwise, C<Dist::Zilla::Plugin::> is prepended
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

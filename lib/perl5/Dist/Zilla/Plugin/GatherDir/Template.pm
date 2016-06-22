@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::GatherDir::Template;
 # ABSTRACT: gather all the files in a directory and use them as templates
-$Dist::Zilla::Plugin::GatherDir::Template::VERSION = '5.047';
+$Dist::Zilla::Plugin::GatherDir::Template::VERSION = '6.005';
 use Moose;
 extends 'Dist::Zilla::Plugin::GatherDir';
 with 'Dist::Zilla::Role::TextTemplate';
@@ -9,7 +9,7 @@ use namespace::autoclean;
 
 use autodie;
 use Dist::Zilla::File::FromCode;
-use Path::Tiny;
+use Dist::Zilla::Path;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -118,7 +118,7 @@ Dist::Zilla::Plugin::GatherDir::Template - gather all the files in a directory a
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -151,7 +151,7 @@ same variables that the file itself receives, i.e. C<$dist> and C<$plugin>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::run;
 # ABSTRACT: run stuff in a dir where your dist is built
-$Dist::Zilla::App::Command::run::VERSION = '5.047';
+$Dist::Zilla::App::Command::run::VERSION = '6.005';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -42,6 +42,7 @@ sub abstract { 'run stuff in a dir where your dist is built' }
 sub opt_spec {
   [ 'build!' => 'do the Build actions before running the command; done by default',
                 { default => 1 } ],
+  [ 'trial'  => 'build a trial release that PAUSE will not index' ],
 }
 
 sub description {
@@ -65,7 +66,7 @@ sub execute {
     $self->log("no command supplied to run so using \$$envname: $args->[0]");
   }
 
-  $self->zilla->run_in_build($args, { build => $opt->build });
+  $self->zilla->run_in_build($args, { build => $opt->build, trial => $opt->trial });
 }
 
 1;
@@ -82,7 +83,7 @@ Dist::Zilla::App::Command::run - run stuff in a dir where your dist is built
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -116,7 +117,7 @@ useful for testing your distribution as if it were installed.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

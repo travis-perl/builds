@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::ConfigDumper;
 # ABSTRACT: something that can dump its (public, simplified) configuration
-$Dist::Zilla::Role::ConfigDumper::VERSION = '5.047';
+$Dist::Zilla::Role::ConfigDumper::VERSION = '6.005';
 use Moose::Role;
 
 use namespace::autoclean;
@@ -21,11 +21,11 @@ Dist::Zilla::Role::ConfigDumper - something that can dump its (public, simplifie
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

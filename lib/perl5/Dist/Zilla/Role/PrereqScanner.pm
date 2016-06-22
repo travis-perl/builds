@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::PrereqScanner;
 # ABSTRACT: automatically extract prereqs from your modules
-$Dist::Zilla::Role::PrereqScanner::VERSION = '5.047';
+$Dist::Zilla::Role::PrereqScanner::VERSION = '6.005';
 use Moose::Role;
 with(
   'Dist::Zilla::Role::FileFinderUser' => {
@@ -186,7 +186,7 @@ Dist::Zilla::Role::PrereqScanner - automatically extract prereqs from your modul
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 ATTRIBUTES
 
@@ -230,7 +230,7 @@ The role was provided by Olivier Mengué (DOLMEN) and Philippe Bruhat (BOOK) at 
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -249,7 +249,7 @@ __END__
 #pod
 #pod =head1 CREDITS
 #pod
-#pod The role was provided by Olivier MenguÃ© (DOLMEN) and Philippe Bruhat (BOOK) at Perl QA Hackathon 2016
+#pod The role was provided by Olivier Mengué (DOLMEN) and Philippe Bruhat (BOOK) at Perl QA Hackathon 2016
 #pod (but it is just a refactor of the AutoPrereqs plugin).
 #pod
 #pod =cut

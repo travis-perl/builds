@@ -1,13 +1,13 @@
 package Dist::Zilla::Role::MintingProfile::ShareDir;
 # ABSTRACT: something that keeps its minting profile in a sharedir
-$Dist::Zilla::Role::MintingProfile::ShareDir::VERSION = '5.047';
+$Dist::Zilla::Role::MintingProfile::ShareDir::VERSION = '6.005';
 use Moose::Role;
 with 'Dist::Zilla::Role::MintingProfile';
 
 use namespace::autoclean;
 
 use File::ShareDir;
-use Path::Class;
+use Dist::Zilla::Path;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -19,8 +19,8 @@ use Path::Class;
 sub profile_dir {
   my ($self, $profile_name) = @_;
 
-  my $profile_dir = dir( File::ShareDir::module_dir($self->meta->name) )
-                  ->subdir( $profile_name );
+  my $profile_dir = path( File::ShareDir::module_dir($self->meta->name) )
+                  ->child( $profile_name );
 
   return $profile_dir if -d $profile_dir;
 
@@ -41,7 +41,7 @@ Dist::Zilla::Role::MintingProfile::ShareDir - something that keeps its minting p
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -50,7 +50,7 @@ C<profile_dir> method that looks in the I<module>'s L<ShareDir|File::ShareDir>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

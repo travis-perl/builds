@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::new;
 # ABSTRACT: mint a new dist
-$Dist::Zilla::App::Command::new::VERSION = '5.047';
+$Dist::Zilla::App::Command::new::VERSION = '6.005';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -109,7 +109,7 @@ Dist::Zilla::App::Command::new - mint a new dist
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -145,7 +145,7 @@ in the F<~/.dzil/config.ini> file, for example:
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

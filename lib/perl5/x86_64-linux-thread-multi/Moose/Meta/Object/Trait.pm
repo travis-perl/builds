@@ -1,5 +1,5 @@
 package Moose::Meta::Object::Trait;
-our $VERSION = '2.1801';
+our $VERSION = '2.1804';
 
 use Scalar::Util qw(blessed);
 
@@ -40,7 +40,7 @@ Moose::Meta::Object::Trait - Some overrides for L<Class::MOP::Object> functional
 
 =head1 VERSION
 
-version 2.1801
+version 2.1804
 
 =head1 DESCRIPTION
 

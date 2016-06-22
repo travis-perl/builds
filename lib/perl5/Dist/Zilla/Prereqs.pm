@@ -1,10 +1,11 @@
 package Dist::Zilla::Prereqs;
 # ABSTRACT: the prerequisites of a Dist::Zilla distribution
-$Dist::Zilla::Prereqs::VERSION = '5.047';
+$Dist::Zilla::Prereqs::VERSION = '6.005';
 use Moose;
 use MooseX::Types::Moose qw(Bool HashRef);
 
 use CPAN::Meta::Prereqs 2.120630; # add_string_requirement
+use String::RewritePrefix;
 use CPAN::Meta::Requirements 2.121; # requirements_for_module
 
 use namespace::autoclean;
@@ -141,7 +142,7 @@ Dist::Zilla::Prereqs - the prerequisites of a Dist::Zilla distribution
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -201,7 +202,7 @@ If not given, phase and type default to runtime and requires, respectively.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

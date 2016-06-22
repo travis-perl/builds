@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MetaTests;
 # ABSTRACT: common extra tests for META.yml
-$Dist::Zilla::Plugin::MetaTests::VERSION = '5.047';
+$Dist::Zilla::Plugin::MetaTests::VERSION = '6.005';
 use Moose;
 extends 'Dist::Zilla::Plugin::InlineFiles';
 with 'Dist::Zilla::Role::PrereqSource';
@@ -54,7 +54,7 @@ Dist::Zilla::Plugin::MetaTests - common extra tests for META.yml
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -77,7 +77,7 @@ L<MetaConfig|Dist::Zilla::Plugin::MetaConfig>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

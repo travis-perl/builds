@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use DateTime::Locale::Data;
 use DateTime::Locale::FromData;
@@ -368,7 +368,7 @@ DateTime::Locale - Localization support for DateTime.pm
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
 
@@ -517,6 +517,12 @@ button at L<http://www.urth.org/~autarch/fs-donation.html>.
 =head1 AUTHOR
 
 Dave Rolsky <autarch@urth.org>
+
+=head1 CONTRIBUTOR
+
+=for stopwords Karen Etheridge
+
+Karen Etheridge <ether@cpan.org>
 
 =head1 COPYRIGHT AND LICENCE
 

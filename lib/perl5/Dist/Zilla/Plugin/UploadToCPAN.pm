@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::UploadToCPAN;
 # ABSTRACT: upload the dist to CPAN
-$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '5.047';
+$Dist::Zilla::Plugin::UploadToCPAN::VERSION = '6.005';
 use Moose;
 with qw(Dist::Zilla::Role::BeforeRelease Dist::Zilla::Role::Releaser);
 
@@ -284,7 +284,7 @@ Dist::Zilla::Plugin::UploadToCPAN - upload the dist to CPAN
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -361,7 +361,7 @@ is not recommended in most cases.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

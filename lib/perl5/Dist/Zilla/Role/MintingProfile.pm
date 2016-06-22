@@ -1,12 +1,12 @@
 package Dist::Zilla::Role::MintingProfile;
 # ABSTRACT: something that can find a minting profile dir
-$Dist::Zilla::Role::MintingProfile::VERSION = '5.047';
+$Dist::Zilla::Role::MintingProfile::VERSION = '6.005';
 use Moose::Role;
 
 use namespace::autoclean;
 
+use Dist::Zilla::Path;
 use File::ShareDir;
-use Path::Class;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -31,7 +31,7 @@ requires 'profile_dir';
 
 around profile_dir => sub {
   my ($orig, $self, @args) = @_;
-  dir($self->$orig(@args));
+  path($self->$orig(@args));
 };
 
 1;
@@ -48,7 +48,7 @@ Dist::Zilla::Role::MintingProfile - something that can find a minting profile di
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -69,7 +69,7 @@ based on your profile with the:
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

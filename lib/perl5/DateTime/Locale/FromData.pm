@@ -6,7 +6,7 @@ use warnings;
 use DateTime::Locale::Util qw( parse_locale_code );
 use Params::Validate qw( validate_pos );
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 my @FormatLengths;
 
@@ -275,7 +275,7 @@ DateTime::Locale::FromData - Class for locale objects instantiated from pre-defi
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
 

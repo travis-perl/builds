@@ -1,5 +1,5 @@
 package DateTime::TimeZone;
-$DateTime::TimeZone::VERSION = '1.98';
+$DateTime::TimeZone::VERSION = '2.00';
 use 5.006;
 
 use strict;
@@ -566,7 +566,7 @@ DateTime::TimeZone - Time zone object base class and factory
 
 =head1 VERSION
 
-version 1.98
+version 2.00
 
 =head1 SYNOPSIS
 
@@ -875,7 +875,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alexey Molchanov Alfie John Daisuke Maki David Pinkowitz Iain Truskett Joshua Hoblitt Karen Etheridge karupanerura Peter Rabbitson
+=for stopwords Alexey Molchanov Alfie John Bron Gondwana Daisuke Maki David Pinkowitz Iain Truskett Joshua Hoblitt Karen Etheridge karupanerura Peter Rabbitson
 
 =over 4
 
@@ -886,6 +886,10 @@ Alexey Molchanov <alexey.molchanov@gmail.com>
 =item *
 
 Alfie John <alfiej@fastmail.fm>
+
+=item *
+
+Bron Gondwana <brong@fastmail.fm>
 
 =item *
 

@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::FakeRelease;
 # ABSTRACT: fake plugin to test release
-$Dist::Zilla::Plugin::FakeRelease::VERSION = '5.047';
+$Dist::Zilla::Plugin::FakeRelease::VERSION = '6.005';
 use Moose;
 with 'Dist::Zilla::Role::Releaser';
 
@@ -73,7 +73,7 @@ Dist::Zilla::Plugin::FakeRelease - fake plugin to test release
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -106,7 +106,7 @@ L<UploadToCPAN|Dist::Zilla::Plugin::UploadToCPAN>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

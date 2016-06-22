@@ -4,12 +4,13 @@ use Moo::_strictures;
 use Exporter qw(import);
 use Moo::_Utils qw(_getglob _install_coderef);
 use Scalar::Util qw(weaken);
+use Carp qw(croak);
 
-our $VERSION = '2.001001';
+our $VERSION = '2.002002';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(defer_sub undefer_sub undefer_all);
-our @EXPORT_OK = qw(undefer_package);
+our @EXPORT_OK = qw(undefer_package defer_info);
 
 our %DEFERRED;
 
@@ -59,17 +60,50 @@ sub defer_info {
 }
 
 sub defer_sub {
-  my ($target, $maker) = @_;
+  my ($target, $maker, $options) = @_;
+  my $package;
+  my $subname;
+  ($package, $subname) = $target =~ /^(.*)::([^:]+)$/
+    or croak "$target is not a fully qualified sub name!"
+    if $target;
+  $package ||= $options && $options->{package} || caller;
+  my @attributes = @{$options && $options->{attributes} || []};
+  my $deferred;
   my $undeferred;
-  my $deferred_info;
-  my $deferred = sub {
-    $undeferred ||= undefer_sub($deferred_info->[3]);
-    goto &$undeferred;
-  };
-  $deferred_info = [ $target, $maker, \$undeferred, $deferred ];
-  weaken($deferred_info->[3]);
+  my $deferred_info = [ $target, $maker, \$undeferred ];
+  if (@attributes || $target && !Moo::_Utils::_CAN_SUBNAME) {
+    my $code
+      =  q[#line ].(__LINE__+2).q[ "].__FILE__.qq["\n]
+      . qq[package $package;\n]
+      . ($target ? "sub $subname" : '+sub') . join(' ', map ":$_", @attributes)
+      . q[ {
+        package Sub::Defer;
+        # uncoverable subroutine
+        # uncoverable statement
+        $undeferred ||= undefer_sub($deferred_info->[3]);
+        goto &$undeferred; # uncoverable statement
+        $undeferred; # fake lvalue return
+      }]."\n"
+      . ($target ? "\\&$subname" : '');
+    my $e;
+    $deferred = do {
+      no warnings qw(redefine closure);
+      local $@;
+      eval $code or $e = $@; # uncoverable branch true
+    };
+    die $e if defined $e; # uncoverable branch true
+  }
+  else {
+    # duplicated from above
+    $deferred = sub {
+      $undeferred ||= undefer_sub($deferred_info->[3]);
+      goto &$undeferred;
+    };
+    _install_coderef($target, $deferred)
+      if $target;
+  }
+  weaken($deferred_info->[3] = $deferred);
   weaken($DEFERRED{$deferred} = $deferred_info);
-  _install_coderef($target => $deferred) if defined $target;
   return $deferred;
 }
 
@@ -135,7 +169,7 @@ Exported by default.
 
  undefer_all();
 
-This will undefer all defered subs in one go.  This can be very useful in a
+This will undefer all deferred subs in one go.  This can be very useful in a
 forking environment where child processes would each have to undefer the same
 subs.  By calling this just before you start forking children you can undefer
 all currently deferred subs in the parent so that the children do not have to
@@ -149,7 +183,7 @@ Exported by default.
 
   undefer_package($package);
 
-This undefers all defered subs in a package.
+This undefers all deferred subs in a package.
 
 Not exported by default.
 

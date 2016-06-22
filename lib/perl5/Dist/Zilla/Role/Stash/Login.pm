@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::Stash::Login;
 # ABSTRACT: a stash with username/password credentials
-$Dist::Zilla::Role::Stash::Login::VERSION = '5.047';
+$Dist::Zilla::Role::Stash::Login::VERSION = '6.005';
 use Moose::Role;
 with 'Dist::Zilla::Role::Stash';
 
@@ -29,7 +29,7 @@ Dist::Zilla::Role::Stash::Login - a stash with username/password credentials
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 OVERVIEW
 
@@ -37,7 +37,7 @@ A Login stash must provide a C<username> and C<password> method.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

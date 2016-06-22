@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::MakeMaker;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '5.047';
+$Dist::Zilla::Plugin::MakeMaker::VERSION = '6.005';
 use Moose;
 
 use namespace::autoclean;
@@ -181,7 +181,7 @@ PREAMBLE
 sub write_makefile_args {
   my ($self) = @_;
 
-  (my $name = $self->zilla->name) =~ s/-/::/g;
+  my $name = $self->zilla->name =~ s/-/::/gr;
 
   my @exe_files = map { $_->name }
     @{ $self->zilla->find_files(':ExecFiles') };
@@ -192,7 +192,7 @@ sub write_makefile_args {
   my %test_dirs;
   for my $file (@{ $self->zilla->files }) {
     next unless $file->name =~ m{\At/.+\.t\z};
-    (my $dir = $file->name) =~ s{/[^/]+\.t\z}{/*.t}g;
+    my $dir = $file->name =~ s{/[^/]+\.t\z}{/*.t}gr;
 
     $test_dirs{ $dir } = 1;
   }
@@ -367,7 +367,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -413,7 +413,7 @@ L<TestRunner|Dist::Zilla::Role::TestRunner>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

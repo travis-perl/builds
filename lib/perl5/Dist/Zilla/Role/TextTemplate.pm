@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::TextTemplate;
 # ABSTRACT: something that renders a Text::Template template string
-$Dist::Zilla::Role::TextTemplate::VERSION = '5.047';
+$Dist::Zilla::Role::TextTemplate::VERSION = '6.005';
 use Moose::Role;
 
 use namespace::autoclean;
@@ -83,7 +83,7 @@ Dist::Zilla::Role::TextTemplate - something that renders a Text::Template templa
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -113,7 +113,7 @@ C<new> routine.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

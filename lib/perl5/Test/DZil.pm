@@ -2,8 +2,7 @@ use strict;
 use warnings;
 package Test::DZil;
 # ABSTRACT: tools for testing Dist::Zilla plugins
-$Test::DZil::VERSION = '5.047';
-use Dist::Zilla::Tester;
+$Test::DZil::VERSION = '6.005';
 use Params::Util qw(_HASH0);
 use JSON::MaybeXS;
 use Scalar::Util qw(blessed);
@@ -39,6 +38,18 @@ use Sub::Exporter -setup => {
 #pod L<Dist::Zilla::Dist::Minter>, respectively, with the L<Dist::Zilla::Tester>
 #pod behavior added.
 #pod
+#pod =cut
+
+sub Builder {
+  require Dist::Zilla::Tester;
+  Dist::Zilla::Tester::builder();
+}
+
+sub Minter {
+  require Dist::Zilla::Tester;
+  Dist::Zilla::Tester::minter();
+}
+
 #pod =func is_filelist
 #pod
 #pod   is_filelist( \@files_we_have, \@files_we_want, $desc );
@@ -240,7 +251,7 @@ Test::DZil - tools for testing Dist::Zilla plugins
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -339,7 +350,7 @@ The starter config may change slightly over time, but is something like this:
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

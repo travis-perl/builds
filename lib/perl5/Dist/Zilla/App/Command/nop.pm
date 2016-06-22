@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::nop;
 # ABSTRACT: initialize dzil, then exit
-$Dist::Zilla::App::Command::nop::VERSION = '5.047';
+$Dist::Zilla::App::Command::nop::VERSION = '6.005';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -44,7 +44,7 @@ Dist::Zilla::App::Command::nop - initialize dzil, then exit
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -58,7 +58,7 @@ overthink it, okay?
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -12,7 +12,8 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::CommitBuild;
 # ABSTRACT: checkin build results on separate branch
-$Dist::Zilla::Plugin::Git::CommitBuild::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 use Git::Wrapper 0.021 ();      # need -STDIN
 use IPC::Open3;
@@ -210,7 +211,7 @@ Dist::Zilla::Plugin::Git::CommitBuild - checkin build results on separate branch
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 SYNOPSIS
 
@@ -286,11 +287,24 @@ source commit from which the build was generated.
 =for Pod::Coverage after_build
     after_release
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 

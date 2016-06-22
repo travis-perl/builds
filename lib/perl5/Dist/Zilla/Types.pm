@@ -1,6 +1,6 @@
 package Dist::Zilla::Types;
 # ABSTRACT: dzil-specific type library
-$Dist::Zilla::Types::VERSION = '5.047';
+$Dist::Zilla::Types::VERSION = '6.005';
 use namespace::autoclean;
 
 #pod =head1 OVERVIEW
@@ -15,11 +15,18 @@ use namespace::autoclean;
 
 use MooseX::Types -declare => [qw(
   License OneZero YesNoStr ReleaseStatus 
+  Path
   _Filename
 )];
-use MooseX::Types::Moose qw(Str Int);
+use MooseX::Types::Moose qw(Str Int Defined);
 
 subtype License, as class_type('Software::License');
+
+subtype Path, as class_type('Path::Tiny');
+coerce Path, from Defined, via {
+  require Dist::Zilla::Path;
+  Dist::Zilla::Path::path($_);
+};
 
 subtype OneZero, as Str, where { $_ eq '0' or $_ eq '1' };
 
@@ -47,7 +54,7 @@ Dist::Zilla::Types - dzil-specific type library
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 OVERVIEW
 
@@ -59,7 +66,7 @@ that's what you want.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

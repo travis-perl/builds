@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PodCoverageTests;
 # ABSTRACT: a author test for Pod coverage
-$Dist::Zilla::Plugin::PodCoverageTests::VERSION = '5.047';
+$Dist::Zilla::Plugin::PodCoverageTests::VERSION = '6.005';
 use Moose;
 extends 'Dist::Zilla::Plugin::InlineFiles';
 with 'Dist::Zilla::Role::PrereqSource';
@@ -53,7 +53,7 @@ Dist::Zilla::Plugin::PodCoverageTests - a author test for Pod coverage
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -73,7 +73,7 @@ C<develop requires> dependencies.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

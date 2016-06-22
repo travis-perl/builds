@@ -1,13 +1,12 @@
 package Dist::Zilla::MintingProfile::Default;
 # ABSTRACT: Default minting profile provider
-$Dist::Zilla::MintingProfile::Default::VERSION = '5.047';
+$Dist::Zilla::MintingProfile::Default::VERSION = '6.005';
 use Moose;
 with 'Dist::Zilla::Role::MintingProfile::ShareDir';
 
 use namespace::autoclean;
 
 use Dist::Zilla::Util;
-use Path::Class;
 
 #pod =head1 DESCRIPTION
 #pod
@@ -26,7 +25,7 @@ around profile_dir => sub {
   # shouldn't look in user's config when testing
   if (!$ENV{DZIL_TESTING}) {
     my $profile_dir = Dist::Zilla::Util->_global_config_root
-                    ->subdir('profiles', $profile_name);
+                    ->child('profiles', $profile_name);
 
     return $profile_dir if -d $profile_dir;
   }
@@ -49,7 +48,7 @@ Dist::Zilla::MintingProfile::Default - Default minting profile provider
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -60,7 +59,7 @@ if not found it looks among the default profiles shipped with Dist::Zilla.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

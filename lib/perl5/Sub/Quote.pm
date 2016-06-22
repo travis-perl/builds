@@ -5,25 +5,40 @@ sub _clean_eval { eval $_[0] }
 use Moo::_strictures;
 
 use Sub::Defer qw(defer_sub);
+use Moo::_Utils qw(_install_coderef);
 use Scalar::Util qw(weaken);
 use Exporter qw(import);
+use Carp qw(croak);
+BEGIN { our @CARP_NOT = qw(Sub::Defer) }
 use B ();
 BEGIN {
   *_HAVE_PERLSTRING = defined &B::perlstring ? sub(){1} : sub(){0};
 }
 
-our $VERSION = '2.001001';
+our $VERSION = '2.002002';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(quote_sub unquote_sub quoted_from_sub qsub);
-our @EXPORT_OK = qw(quotify capture_unroll inlinify);
+our @EXPORT_OK = qw(quotify capture_unroll inlinify sanitize_identifier);
 
 our %QUOTED;
 
 sub quotify {
+  no warnings 'numeric';
   ! defined $_[0]     ? 'undef()'
+  # numeric detection
+  : (length( (my $dummy = '') & $_[0] )
+    && 0 + $_[0] eq $_[0]
+    && $_[0] * 0 == 0
+  ) ? $_[0]
   : _HAVE_PERLSTRING  ? B::perlstring($_[0])
   : qq["\Q$_[0]\E"];
+}
+
+sub sanitize_identifier {
+  my $name = shift;
+  $name =~ s/([_\W])/sprintf('_%x', ord($1))/ge;
+  $name;
 }
 
 sub capture_unroll {
@@ -32,7 +47,7 @@ sub capture_unroll {
     '',
     map {
       /^([\@\%\$])/
-        or die "capture key should start with \@, \% or \$: $_";
+        or croak "capture key should start with \@, \% or \$: $_";
       (' ' x $indent).qq{my ${_} = ${1}{${from}->{${\quotify $_}}};\n};
     } keys %$captures
   );
@@ -79,84 +94,113 @@ sub quote_sub {
     my $subname = $name;
     my $package = $subname =~ s/(.*)::// ? $1 : caller;
     $name = join '::', $package, $subname;
-    die "package name $package too long!"
+    croak "package name $package too long!"
       if length $package > 252;
-    die "sub name $subname too long!"
+    croak "sub name $subname too long!"
       if length $subname > 252;
   }
-  my ($package, $hints, $bitmask, $hintshash) = (caller(0))[0,8,9,10];
-  my $context
-    ="# BEGIN quote_sub PRELUDE\n"
-    ."package $package;\n"
-    ."BEGIN {\n"
-    ."  \$^H = ".quotify($hints).";\n"
-    ."  \${^WARNING_BITS} = ".quotify($bitmask).";\n"
-    ."  \%^H = (\n"
-    . join('', map
-     "    ".quotify($_)." => ".quotify($hintshash->{$_}).",",
-      keys %$hintshash)
-    ."  );\n"
-    ."}\n"
-    ."# END quote_sub PRELUDE\n";
-  $code = "$context$code";
-  my $quoted_info;
-  my $unquoted;
-  my $deferred = defer_sub +($options->{no_install} ? undef : $name) => sub {
-    $unquoted if 0;
-    unquote_sub($quoted_info->[4]);
+  my @caller = caller(0);
+  my $attributes = $options->{attributes};
+  my $quoted_info = {
+    name     => $name,
+    code     => $code,
+    captures => $captures,
+    package      => (exists $options->{package}      ? $options->{package}      : $caller[0]),
+    hints        => (exists $options->{hints}        ? $options->{hints}        : $caller[8]),
+    warning_bits => (exists $options->{warning_bits} ? $options->{warning_bits} : $caller[9]),
+    hintshash    => (exists $options->{hintshash}    ? $options->{hintshash}    : $caller[10]),
+    ($attributes ? (attributes => $attributes) : ()),
   };
-  $quoted_info = [ $name, $code, $captures, \$unquoted, $deferred ];
-  weaken($quoted_info->[3]);
-  weaken($quoted_info->[4]);
-  weaken($QUOTED{$deferred} = $quoted_info);
-  return $deferred;
+  my $unquoted;
+  weaken($quoted_info->{unquoted} = \$unquoted);
+  if ($options->{no_defer}) {
+    my $fake = \my $var;
+    local $QUOTED{$fake} = $quoted_info;
+    my $sub = unquote_sub($fake);
+    _install_coderef($name, $sub) if $name && !$options->{no_install};
+    return $sub;
+  }
+  else {
+    my $deferred = defer_sub +($options->{no_install} ? undef : $name) => sub {
+      $unquoted if 0;
+      unquote_sub($quoted_info->{deferred});
+    }, ($attributes ? { attributes => $attributes } : ());
+    weaken($quoted_info->{deferred} = $deferred);
+    weaken($QUOTED{$deferred} = $quoted_info);
+    return $deferred;
+  }
+}
+
+sub _context {
+  my $info = shift;
+  $info->{context} ||= do {
+    my ($package, $hints, $warning_bits, $hintshash)
+      = @{$info}{qw(package hints warning_bits hintshash)};
+
+    $info->{context}
+      ="# BEGIN quote_sub PRELUDE\n"
+      ."package $package;\n"
+      ."BEGIN {\n"
+      ."  \$^H = ".quotify($hints).";\n"
+      ."  \${^WARNING_BITS} = ".quotify($warning_bits).";\n"
+      ."  \%^H = (\n"
+      . join('', map
+      "    ".quotify($_)." => ".quotify($hintshash->{$_}).",\n",
+        keys %$hintshash)
+      ."  );\n"
+      ."}\n"
+      ."# END quote_sub PRELUDE\n";
+  };
 }
 
 sub quoted_from_sub {
   my ($sub) = @_;
   my $quoted_info = $QUOTED{$sub||''} or return undef;
-  my ($name, $code, $captured, $unquoted, $deferred) = @{$quoted_info};
+  my ($name, $code, $captures, $unquoted, $deferred)
+    = @{$quoted_info}{qw(name code captures unquoted deferred)};
+  $code = _context($quoted_info) . $code;
   $unquoted &&= $$unquoted;
   if (($deferred && $deferred eq $sub)
       || ($unquoted && $unquoted eq $sub)) {
-    return [ $name, $code, $captured, $unquoted, $deferred ];
+    return [ $name, $code, $captures, $unquoted, $deferred ];
   }
   return undef;
 }
 
 sub unquote_sub {
   my ($sub) = @_;
-  my $quoted = $QUOTED{$sub} or return undef;
-  my $unquoted = $quoted->[3];
+  my $quoted_info = $QUOTED{$sub} or return undef;
+  my $unquoted = $quoted_info->{unquoted};
   unless ($unquoted && $$unquoted) {
-    my ($name, $code, $captures) = @$quoted;
-    my $package;
+    my ($name, $code, $captures, $package, $attributes)
+      = @{$quoted_info}{qw(name code captures package attributes)};
 
     ($package, $name) = $name =~ /(.*)::(.*)/
       if $name;
 
-    my $make_sub = "{\n";
-
     my %captures = $captures ? %$captures : ();
     $captures{'$_UNQUOTED'} = \$unquoted;
-    $captures{'$_QUOTED'} = \$quoted;
-    $make_sub .= capture_unroll("\$_[1]", \%captures, 2);
+    $captures{'$_QUOTED'} = \$quoted_info;
 
-    $make_sub .= (
-      $name
+    my $make_sub
+      = "{\n"
+      . capture_unroll("\$_[1]", \%captures, 2)
+      . "  package ${package};\n"
+      . (
+        $name
           # disable the 'variable $x will not stay shared' warning since
           # we're not letting it escape from this scope anyway so there's
           # nothing trying to share it
-        ? "  no warnings 'closure';\n  package ${package};\n  sub ${name} {\n"
-        : "  \$\$_UNQUOTED = sub {\n"
-    );
-    $make_sub .= "  (\$_QUOTED,\$_UNQUOTED) if 0;\n";
-    $make_sub .= $code;
-    $make_sub .= "  }".($name ? '' : ';')."\n";
-    if ($name) {
-      $make_sub .= "  \$\$_UNQUOTED = \\&${name}\n";
-    }
-    $make_sub .= "}\n1;\n";
+          ? "  no warnings 'closure';\n  sub ${name} "
+          : "  \$\$_UNQUOTED = sub "
+      )
+      . ($attributes ? join('', map ":$_ ", @$attributes) : '') . "{\n"
+      . "  (\$_QUOTED,\$_UNQUOTED) if 0;\n"
+      . _context($quoted_info)
+      . $code
+      . "  }".($name ? "\n  \$\$_UNQUOTED = \\&${name}" : '') . ";\n"
+      . "}\n"
+      . "1;\n";
     $ENV{SUB_QUOTE_DEBUG} && warn $make_sub;
     {
       no strict 'refs';
@@ -168,9 +212,9 @@ sub unquote_sub {
         $e = $@;
       }
       unless ($success) {
-        die "Eval went very, very wrong:\n\n${make_sub}\n\n$e";
+        croak "Eval went very, very wrong:\n\n${make_sub}\n\n$e";
       }
-      weaken($QUOTED{$$unquoted} = $quoted);
+      weaken($QUOTED{$$unquoted} = $quoted_info);
     }
   }
   $$unquoted;
@@ -182,8 +226,8 @@ sub qsub ($) {
 
 sub CLONE {
   %QUOTED = map { defined $_ ? (
-    $_->[3] && ${$_->[3]} ? (${ $_->[3] } => $_) : (),
-    $_->[4] ? ($_->[4] => $_) : (),
+    $_->{unquoted} && ${$_->{unquoted}} ? (${ $_->{unquoted} } => $_) : (),
+    $_->{deferred} ? ($_->{deferred} => $_) : (),
   ) : () } values %QUOTED;
   weaken($_) for values %QUOTED;
 }
@@ -241,14 +285,27 @@ including the sigil.  The values should be references to the values.  The
 variables will contain copies of the values.  See the L</SYNOPSIS>'s
 C<Silly::dagron> for an example using captures.
 
+Exported by default.
+
 =head3 options
 
 =over 2
 
-=item * no_install
+=item C<no_install>
 
 B<Boolean>.  Set this option to not install the generated coderef into the
 passed subroutine name on undefer.
+
+=item C<no_defer>
+
+B<Boolean>.  Prevents a Sub::Defer wrapper from being generated for the quoted
+sub.  If the sub will most likely be called at some point, setting this is a
+good idea.  For a sub that will most likely be inlined, it is not recommended.
+
+=item C<package>
+
+The package that the quoted sub will be evaluated in.  If not specified, the
+sub calling C<quote_sub> will be used.
 
 =back
 
@@ -259,6 +316,8 @@ passed subroutine name on undefer.
 Forcibly replace subroutine with actual code.
 
 If $sub is not a quoted sub, this is a no-op.
+
+Exported by default.
 
 =head2 quoted_from_sub
 
@@ -271,6 +330,8 @@ sub has already been unquoted.
 
 Note that $sub can be either the original quoted version or the compiled
 version for convenience.
+
+Exported by default.
 
 =head2 inlinify
 
@@ -322,6 +383,17 @@ Arguments: $code
 
 Works exactly like L</quote_sub>, but includes a prototype to only accept a
 single parameter.  This makes it easier to include in hash structures or lists.
+
+Exported by default.
+
+=head2 sanitize_identifier
+
+ my $var_name = '$variable_for_' . sanitize_identifier('@name');
+ quote_sub qq{ print \$${var_name} }, { $var_name => \$value };
+
+Arguments: $identifier
+
+Sanitizes a value so that it can be used in an identifier.
 
 =head1 CAVEATS
 

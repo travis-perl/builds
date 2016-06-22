@@ -1,13 +1,13 @@
 package Dist::Zilla::Plugin::DistINI;
 # ABSTRACT: a plugin to add a dist.ini to newly-minted dists
-$Dist::Zilla::Plugin::DistINI::VERSION = '5.047';
+$Dist::Zilla::Plugin::DistINI::VERSION = '6.005';
 use Moose;
 with qw(Dist::Zilla::Role::FileGatherer);
 
 use Dist::Zilla::File::FromCode;
 
 use MooseX::Types::Moose qw(ArrayRef Str);
-use Path::Tiny;
+use Dist::Zilla::Path;
 
 use namespace::autoclean;
 
@@ -67,7 +67,7 @@ sub gather_files {
   my $postlude = '';
 
   for (@{ $self->append_file }) {
-    my $fn = $self->zilla->root->file($_);
+    my $fn = $self->zilla->root->child($_);
 
     $postlude .= path($fn)->slurp_utf8;
   }
@@ -116,7 +116,7 @@ Dist::Zilla::Plugin::DistINI - a plugin to add a dist.ini to newly-minted dists
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -160,7 +160,7 @@ like this:
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

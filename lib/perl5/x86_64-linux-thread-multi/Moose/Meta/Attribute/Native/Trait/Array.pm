@@ -1,5 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait::Array;
-our $VERSION = '2.1801';
+our $VERSION = '2.1804';
 
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
@@ -24,7 +24,7 @@ Moose::Meta::Attribute::Native::Trait::Array - Helper trait for ArrayRef attribu
 
 =head1 VERSION
 
-version 2.1801
+version 2.1804
 
 =head1 SYNOPSIS
 

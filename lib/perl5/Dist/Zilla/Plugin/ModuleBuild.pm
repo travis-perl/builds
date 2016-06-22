@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::ModuleBuild;
 # ABSTRACT: build a Build.PL that uses Module::Build
-$Dist::Zilla::Plugin::ModuleBuild::VERSION = '5.047';
+$Dist::Zilla::Plugin::ModuleBuild::VERSION = '6.005';
 use Moose;
 with (
   'Dist::Zilla::Role::BuildPL',
@@ -159,7 +159,7 @@ sub module_build_args {
     recommends         => $prereqs->requirements_for(qw(runtime   recommends)),
   );
 
-  (my $name = $self->zilla->name) =~ s/-/::/g;
+  my $name = $self->zilla->name =~ s/-/::/gr;
 
   return {
     module_name   => $name,
@@ -268,7 +268,7 @@ Dist::Zilla::Plugin::ModuleBuild - build a Build.PL that uses Module::Build
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -313,7 +313,7 @@ L<BuildPL|Dist::Zilla::Role::BuildPL>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -12,7 +12,8 @@ use warnings;
 
 package Dist::Zilla::Plugin::Git::Push;
 # ABSTRACT: push current branch
-$Dist::Zilla::Plugin::Git::Push::VERSION = '2.036';
+
+our $VERSION = '2.039';
 
 use Moose;
 use MooseX::Has::Sugar;
@@ -119,7 +120,7 @@ Dist::Zilla::Plugin::Git::Push - push current branch
 
 =head1 VERSION
 
-version 2.036
+version 2.039
 
 =head1 SYNOPSIS
 
@@ -158,11 +159,24 @@ C<Will push to %s (not checked)> message.
     before_release
     mvp_multivalue_args
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-Git>
+(or L<bug-Dist-Zilla-Plugin-Git@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-Git@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://www.listbox.com/subscribe/?list_id=139292>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#distzilla> on C<irc.perl.org>|irc://irc.perl.org/#distzilla>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Jerome Quelin
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2009 by Jerome Quelin.
 

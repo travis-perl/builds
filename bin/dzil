@@ -30,7 +30,7 @@ dzil - do stuff with your dist
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 OVERVIEW
 
@@ -39,7 +39,7 @@ by running C<dzil commands>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

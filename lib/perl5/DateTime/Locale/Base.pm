@@ -3,11 +3,11 @@ package DateTime::Locale::Base;
 use strict;
 use warnings;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 use Carp qw( carp );
 use DateTime::Locale;
-use List::MoreUtils ();
+use List::Util 1.45 ();
 use Params::Validate qw( validate_pos );
 
 BEGIN {
@@ -93,8 +93,7 @@ sub available_formats {
     # The various parens seem to be necessary to force uniq() to see
     # the caller's list context. Go figure.
     my @uniq
-        = List::MoreUtils::uniq(
-        map { keys %{ $_->_available_formats() || {} } }
+        = List::Util::uniq( map { keys %{ $_->_available_formats() || {} } }
             _self_and_super_path( ref $self ) );
 
     # Doing the sort in the same expression doesn't work under 5.6.x.
@@ -487,7 +486,7 @@ DateTime::Locale::Base - Base class for individual locale objects
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 SYNOPSIS
 

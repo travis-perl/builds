@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::AutoVersion;
 # ABSTRACT: take care of numbering versions so you don't have to
-$Dist::Zilla::Plugin::AutoVersion::VERSION = '5.047';
+$Dist::Zilla::Plugin::AutoVersion::VERSION = '6.005';
 use Moose;
 with(
   'Dist::Zilla::Role::VersionProvider',
@@ -122,7 +122,7 @@ Dist::Zilla::Plugin::AutoVersion - take care of numbering versions so you don't 
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -165,7 +165,7 @@ L<TextTemplate|Dist::Zilla::Role::TextTemplate>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

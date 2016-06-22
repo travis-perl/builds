@@ -1,6 +1,6 @@
 package Dist::Zilla::Role::Stash::Authors;
 # ABSTRACT: a stash that provides a list of author strings
-$Dist::Zilla::Role::Stash::Authors::VERSION = '5.047';
+$Dist::Zilla::Role::Stash::Authors::VERSION = '6.005';
 use Moose::Role;
 with 'Dist::Zilla::Role::Stash';
 
@@ -29,7 +29,7 @@ Dist::Zilla::Role::Stash::Authors - a stash that provides a list of author strin
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 OVERVIEW
 
@@ -38,7 +38,7 @@ author strings, generally in the form "Name <email>".
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

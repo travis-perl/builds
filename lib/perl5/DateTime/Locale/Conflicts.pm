@@ -15,7 +15,7 @@ use Dist::CheckConflicts
         Carp
         Dist::CheckConflicts
         Exporter
-        List::MoreUtils
+        List::Util
         Params::Validate
         strict
         warnings

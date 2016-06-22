@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::PkgDist;
 # ABSTRACT: add a $DIST to your packages
-$Dist::Zilla::Plugin::PkgDist::VERSION = '5.047';
+$Dist::Zilla::Plugin::PkgDist::VERSION = '6.005';
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -101,7 +101,7 @@ sub munge_perl {
   }
 
   # the document is no longer correct; it must be reparsed before it can be used again
-  $file->encoded_content($document->serialize);
+  $file->content($document->serialize);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -119,7 +119,7 @@ Dist::Zilla::Plugin::PkgDist - add a $DIST to your packages
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -139,7 +139,7 @@ typically used when doing monkey patching or other tricky things.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

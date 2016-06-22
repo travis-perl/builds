@@ -1,6 +1,6 @@
 package Dist::Zilla::MVP::Assembler;
 # ABSTRACT: Dist::Zilla-specific subclass of Config::MVP::Assembler
-$Dist::Zilla::MVP::Assembler::VERSION = '5.047';
+$Dist::Zilla::MVP::Assembler::VERSION = '6.005';
 use Moose;
 extends 'Config::MVP::Assembler';
 with 'Config::MVP::Assembler::WithBundles' => { -version => '2.200010' };
@@ -84,7 +84,7 @@ Dist::Zilla::MVP::Assembler - Dist::Zilla-specific subclass of Config::MVP::Asse
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 DESCRIPTION
 
@@ -108,7 +108,7 @@ C<plugin_name> or C<zilla>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

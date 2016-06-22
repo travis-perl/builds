@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::ModuleShareDirs;
 # ABSTRACT: install a directory's contents as module-based "ShareDir" content
-$Dist::Zilla::Plugin::ModuleShareDirs::VERSION = '5.047';
+$Dist::Zilla::Plugin::ModuleShareDirs::VERSION = '6.005';
 use Moose;
 
 use namespace::autoclean;
@@ -77,7 +77,7 @@ Dist::Zilla::Plugin::ModuleShareDirs - install a directory's contents as module-
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -89,7 +89,7 @@ In your F<dist.ini>:
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::App::Command::listdeps;
 # ABSTRACT: print your distribution's prerequisites
-$Dist::Zilla::App::Command::listdeps::VERSION = '5.047';
+$Dist::Zilla::App::Command::listdeps::VERSION = '6.005';
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -47,8 +47,6 @@ use Dist::Zilla::App -command;
 #pod API.
 #pod
 #pod =cut
-
-use Try::Tiny;
 
 sub abstract { "print your distribution's prerequisites" }
 
@@ -108,22 +106,21 @@ sub extract_dependencies {
     $req->add_requirements( $prereqs->requirements_for($phase, 'recommends') );
   }
 
-  require Class::Load;
-
   my @required = grep { $_ ne 'perl' } $req->required_modules;
   if ($missing) {
-    my $is_required = sub {
-      my $mod = shift;
-      # it is required if it's not already installed
-      return 1 unless Class::Load::try_load_class($mod);
-
-      # guard against libs with -1 in $VERSION and other insanity
-      my $version;
-      return unless try { $version = $mod->VERSION; 1; };
-
-      return !$req->accepts_module($mod => $version);
-    };
-    @required = grep { $is_required->($_) } @required;
+    require Module::Runtime;
+    @required =
+      grep {
+        # Keep modules that can't be loaded or that don't have a $VERSION
+        # matching our requirements
+        ! eval {
+          my $m = $_;
+          # Will die if module is not installed
+          Module::Runtime::require_module($m);
+          # Returns true if $VERSION matches, so we will exclude the module
+          $req->accepts_module($m => $m->VERSION)
+        }
+      } @required;
   }
 
   my $versions = $req->as_string_hash;
@@ -177,7 +174,7 @@ Dist::Zilla::App::Command::listdeps - print your distribution's prerequisites
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -222,7 +219,7 @@ API.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

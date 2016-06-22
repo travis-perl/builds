@@ -1,6 +1,6 @@
 package Dist::Zilla::Plugin::Prereqs;
 # ABSTRACT: list simple prerequisites
-$Dist::Zilla::Plugin::Prereqs::VERSION = '5.047';
+$Dist::Zilla::Plugin::Prereqs::VERSION = '6.005';
 use Moose;
 with 'Dist::Zilla::Role::PrereqSource';
 
@@ -136,7 +136,7 @@ around BUILDARGS => sub {
 
   my %other;
   for my $dkey (@dashed) {
-    (my $key = $dkey) =~ s/^-//;
+    my $key = $dkey =~ s/^-//r;
 
     $other{ $key } = delete $copy{ $dkey };
   }
@@ -216,7 +216,7 @@ Dist::Zilla::Plugin::Prereqs - list simple prerequisites
 
 =head1 VERSION
 
-version 5.047
+version 6.005
 
 =head1 SYNOPSIS
 
@@ -343,7 +343,7 @@ The CPAN Meta specification: L<CPAN::Meta/PREREQUISITES>.
 
 =head1 AUTHOR
 
-Ricardo SIGNES 🎃 <rjbs@cpan.org>
+Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

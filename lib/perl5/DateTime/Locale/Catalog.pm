@@ -3,7 +3,7 @@ package DateTime::Locale::Catalog;
 use strict;
 use warnings;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 1;
 
@@ -21,7 +21,7 @@ DateTime::Locale::Catalog - Provides a catalog of all valid locale names
 
 =head1 VERSION
 
-version 1.03
+version 1.04
 
 =head1 DESCRIPTION
 
