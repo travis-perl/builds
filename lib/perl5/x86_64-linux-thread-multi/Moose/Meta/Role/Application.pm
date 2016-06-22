@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Application;
-our $VERSION = '2.1801';
+our $VERSION = '2.1804';
 
 use strict;
 use warnings;
@@ -112,7 +112,7 @@ Moose::Meta::Role::Application - A base class for role application
 
 =head1 VERSION
 
-version 2.1801
+version 2.1804
 
 =head1 DESCRIPTION
 

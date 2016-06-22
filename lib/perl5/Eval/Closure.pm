@@ -2,7 +2,7 @@ package Eval::Closure;
 BEGIN {
   $Eval::Closure::AUTHORITY = 'cpan:DOY';
 }
-$Eval::Closure::VERSION = '0.13';
+$Eval::Closure::VERSION = '0.14';
 use strict;
 use warnings;
 # ABSTRACT: safely and cleanly create closures via string eval
@@ -13,7 +13,6 @@ use Exporter 'import';
 use Carp;
 use overload ();
 use Scalar::Util qw(reftype);
-use Try::Tiny;
 
 use constant HAS_LEXICAL_SUBS => $] >= 5.018;
 
@@ -81,11 +80,11 @@ sub _validate_env {
     for my $var (keys %$env) {
         if (HAS_LEXICAL_SUBS) {
             croak("Environment key '$var' should start with \@, \%, \$, or \&")
-                unless $var =~ /^([\@\%\$\&])/;
+                if index('$@%&', substr($var, 0, 1)) < 0;
         }
         else {
             croak("Environment key '$var' should start with \@, \%, or \$")
-                unless $var =~ /^([\@\%\$])/;
+                if index('$@%', substr($var, 0, 1)) < 0;
         }
         croak("Environment values must be references, not $env->{$var}")
             unless ref($env->{$var});
@@ -103,28 +102,36 @@ sub _line_directive {
 sub _clean_eval_closure {
     my ($source, $captures, $alias) = @_;
 
-    my @capture_keys = sort keys %$captures;
+    my @capture_keys = keys %$captures;
 
     if ($ENV{EVAL_CLOSURE_PRINT_SOURCE}) {
         _dump_source(_make_compiler_source($source, $alias, @capture_keys));
     }
 
     my ($compiler, $e) = _make_compiler($source, $alias, @capture_keys);
-    my $code;
-    if (defined $compiler) {
-        $code = $compiler->(@$captures{@capture_keys});
-    }
+    return (undef, $e) unless defined $compiler;
 
-    if (defined($code) && (!ref($code) || ref($code) ne 'CODE')) {
-        $e = "The 'source' parameter must return a subroutine reference, "
-           . "not $code";
-        undef $code;
+    my $code = $compiler->(@$captures{@capture_keys});
+
+    if (!defined $code) {
+        return (
+            undef,
+            "The 'source' parameter must return a subroutine reference, "
+            . "not undef"
+        )
+    }
+    if (!ref($code) || ref($code) ne 'CODE') {
+        return (
+            undef,
+            "The 'source' parameter must return a subroutine reference, not "
+            . ref($code)
+        )
     }
 
     if ($alias) {
         require Devel::LexAlias;
         Devel::LexAlias::lexalias($code, $_, $captures->{$_})
-            for grep !/^\&/, keys %$captures;
+            for grep substr($_, 0, 1) ne '&', @capture_keys;
     }
 
     return ($code, $e);
@@ -133,7 +140,7 @@ sub _clean_eval_closure {
 sub _make_compiler {
     my $source = _make_compiler_source(@_);
 
-    return @{ _clean_eval($source) };
+    _clean_eval($source)
 }
 
 sub _clean_eval {
@@ -141,7 +148,7 @@ sub _clean_eval {
     local $SIG{__DIE__};
     my $compiler = eval $_[0];
     my $e = $@;
-    [ $compiler, $e ];
+    ( $compiler, $e )
 }
 
 $Eval::Closure::SANDBOX_ID = 0;
@@ -182,7 +189,8 @@ sub _dump_source {
     my ($source) = @_;
 
     my $output;
-    if (try { require Perl::Tidy }) {
+    local $@;
+    if (eval { require Perl::Tidy; 1 }) {
         Perl::Tidy::perltidy(
             source      => \$source,
             destination => \$output,
@@ -211,7 +219,7 @@ Eval::Closure - safely and cleanly create closures via string eval
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 SYNOPSIS
 
@@ -363,7 +371,7 @@ Jesse Luehrs <doy@tozt.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Jesse Luehrs.
+This software is copyright (c) 2016 by Jesse Luehrs.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

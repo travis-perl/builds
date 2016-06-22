@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Method::Conflicting;
-our $VERSION = '2.1801';
+our $VERSION = '2.1804';
 
 use strict;
 use warnings;
@@ -35,7 +35,7 @@ Moose::Meta::Role::Method::Conflicting - A Moose metaclass for conflicting metho
 
 =head1 VERSION
 
-version 2.1801
+version 2.1804
 
 =head1 DESCRIPTION
 

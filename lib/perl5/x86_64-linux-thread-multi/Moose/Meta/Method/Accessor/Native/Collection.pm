@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Collection;
-our $VERSION = '2.1801';
+our $VERSION = '2.1804';
 
 use strict;
 use warnings;
@@ -89,7 +89,7 @@ sub _check_new_members_only {
     return 1
         if $self->_is_root_type( $tc->parent )
             && ( $tc->isa('Moose::Meta::TypeConstraint::Parameterized')
-                 || $tc->isa('Specio::Constraint::Parameterized') );
+                 || !$tc->can('parameterize') );
 
     return 0;
 }

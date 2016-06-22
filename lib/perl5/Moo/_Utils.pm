@@ -8,7 +8,6 @@ sub _getstash { \%{"$_[0]::"} }
 use Moo::_strictures;
 
 BEGIN {
-  *lt_5_8_3 = ( $] < 5.008003 or $ENV{MOO_TEST_PRE_583} ) ? sub(){1} : sub(){0};
   my ($su, $sn);
   $su = $INC{'Sub/Util.pm'} && defined &Sub::Util::set_subname
     or $sn = $INC{'Sub/Name.pm'}
@@ -25,17 +24,14 @@ use Module::Runtime qw(use_package_optimistically module_notional_filename);
 
 use Devel::GlobalDestruction ();
 use Exporter qw(import);
-use Moo::_mro;
 use Config;
+use Carp qw(croak);
 
 our @EXPORT = qw(
     _getglob _install_modifier _load_module _maybe_load_module
     _getstash _install_coderef _name_coderef
-    _unimport_coderefs _in_global_destruction _set_loaded
+    _unimport_coderefs _set_loaded
 );
-
-sub _in_global_destruction ();
-*_in_global_destruction = \&Devel::GlobalDestruction::in_global_destruction;
 
 sub _install_modifier {
   my ($into, $type, $name, $code) = @_;
@@ -49,11 +45,9 @@ sub _install_modifier {
   Class::Method::Modifiers::install_modifier(@_);
 }
 
-our %MAYBE_LOADED;
-
 sub _load_module {
   my $module = $_[0];
-  my $file = module_notional_filename($module);
+  my $file = eval { module_notional_filename($module) } or croak $@;
   use_package_optimistically($module);
   return 1
     if $INC{$file};
@@ -66,9 +60,10 @@ sub _load_module {
   return 1
     if $INC{"Moose.pm"} && Class::MOP::class_of($module)
     or Mouse::Util->can('find_meta') && Mouse::Util::find_meta($module);
-  die $error;
+  croak $error;
 }
 
+our %MAYBE_LOADED;
 sub _maybe_load_module {
   my $module = $_[0];
   return $MAYBE_LOADED{$module}

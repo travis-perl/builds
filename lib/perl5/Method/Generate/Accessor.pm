@@ -1,14 +1,18 @@
 package Method::Generate::Accessor;
 
 use Moo::_strictures;
-use Moo::_Utils qw(_maybe_load_module _install_coderef);
+use Moo::_Utils qw(_load_module _maybe_load_module _install_coderef);
 use Moo::Object ();
-our @ISA = qw(Moo::Object);
-use Sub::Quote qw(quote_sub quoted_from_sub quotify);
+BEGIN { our @ISA = qw(Moo::Object) }
+use Sub::Quote qw(quote_sub quoted_from_sub quotify sanitize_identifier);
 use Scalar::Util 'blessed';
+use Carp qw(croak);
+BEGIN { our @CARP_NOT = qw(Moo::_Utils) }
 use overload ();
-use Module::Runtime qw(use_module);
 BEGIN {
+  *_CAN_WEAKEN_READONLY = (
+    "$]" < 5.008_003 or $ENV{MOO_TEST_PRE_583}
+  ) ? sub(){0} : sub(){1};
   our $CAN_HAZ_XS =
     !$ENV{MOO_XS_DISABLE}
       &&
@@ -21,20 +25,30 @@ BEGIN {
     (eval { Class::XSAccessor->VERSION('1.17') })
   ;
 }
+BEGIN {
+  package
+    Method::Generate::Accessor::_Generated;
+  $Carp::Internal{+__PACKAGE__} = 1;
+}
 
 my $module_name_only = qr/\A$Module::Runtime::module_name_rx\z/;
 
 sub _die_overwrite
 {
   my ($pkg, $method, $type) = @_;
-  die "You cannot overwrite a locally defined method ($method) with "
+  croak "You cannot overwrite a locally defined method ($method) with "
     . ( $type || 'an accessor' );
 }
 
 sub generate_method {
   my ($self, $into, $name, $spec, $quote_opts) = @_;
+  $quote_opts = {
+    no_defer => 1,
+    package => 'Method::Generate::Accessor::_Generated',
+    %{ $quote_opts||{} },
+  };
   $spec->{allow_overwrite}++ if $name =~ s/^\+//;
-  die "Must have an is" unless my $is = $spec->{is};
+  croak "Must have an is" unless my $is = $spec->{is};
   if ($is eq 'ro') {
     $spec->{reader} = $name unless exists $spec->{reader};
   } elsif ($is eq 'rw') {
@@ -48,7 +62,7 @@ sub generate_method {
     $spec->{reader} = $name unless exists $spec->{reader};
     $spec->{writer} = "_set_${name}" unless exists $spec->{writer};
   } elsif ($is ne 'bare') {
-    die "Unknown is ${is}";
+    croak "Unknown is ${is}";
   }
   if (exists $spec->{builder}) {
     if(ref $spec->{builder}) {
@@ -58,7 +72,7 @@ sub generate_method {
       $spec->{builder} = 1;
     }
     $spec->{builder} = '_build_'.$name if ($spec->{builder}||0) eq 1;
-    die "Invalid builder for $into->$name - not a valid method name"
+    croak "Invalid builder for $into->$name - not a valid method name"
       if $spec->{builder} !~ $module_name_only;
   }
   if (($spec->{predicate}||0) eq 1) {
@@ -77,7 +91,7 @@ sub generate_method {
     } elsif (blessed $isa and $isa->can('coerce')) {
       $spec->{coerce} = sub { $isa->coerce(@_) };
     } else {
-      die "Invalid coercion for $into->$name - no appropriate type constraint";
+      croak "Invalid coercion for $into->$name - no appropriate type constraint";
     }
   }
 
@@ -115,9 +129,10 @@ sub generate_method {
       $self->{captures} = {};
       $methods{$reader} =
         quote_sub "${into}::${reader}"
-          => '    die "'.$reader.' is a read-only accessor" if @_ > 1;'."\n"
+          => '    Carp::croak("'.$reader.' is a read-only accessor") if @_ > 1;'."\n"
              .$self->_generate_get($name, $spec)
           => delete $self->{captures}
+          => $quote_opts
         ;
     }
   }
@@ -138,6 +153,7 @@ sub generate_method {
         quote_sub "${into}::${accessor}"
           => $self->_generate_getset($name, $spec)
           => delete $self->{captures}
+          => $quote_opts
         ;
     }
   }
@@ -157,6 +173,7 @@ sub generate_method {
         quote_sub "${into}::${writer}"
           => $self->_generate_set($name, $spec)
           => delete $self->{captures}
+          => $quote_opts
         ;
     }
   }
@@ -169,8 +186,10 @@ sub generate_method {
       );
     } else {
       $methods{$pred} =
-        quote_sub "${into}::${pred}" =>
-          '    '.$self->_generate_simple_has('$_[0]', $name, $spec)."\n"
+        quote_sub "${into}::${pred}"
+          => $self->_generate_simple_has('$_[0]', $name, $spec)."\n"
+          => {}
+          => $quote_opts
         ;
     }
   }
@@ -181,8 +200,10 @@ sub generate_method {
     _die_overwrite($into, $cl, 'a clearer')
       if !$spec->{allow_overwrite} && defined &{"${into}::${cl}"};
     $methods{$cl} =
-      quote_sub "${into}::${cl}" =>
-        $self->_generate_simple_clear('$_[0]', $name, $spec)."\n"
+      quote_sub "${into}::${cl}"
+        => $self->_generate_simple_clear('$_[0]', $name, $spec)."\n"
+        => {}
+        => $quote_opts
       ;
   }
   if (my $hspec = $spec->{handles}) {
@@ -194,9 +215,11 @@ sub generate_method {
         map [ $_ => ref($hspec->{$_}) ? @{$hspec->{$_}} : $hspec->{$_} ],
           keys %$hspec;
       } elsif (!ref($hspec)) {
-        map [ $_ => $_ ], use_module('Moo::Role')->methods_provided_by(use_module($hspec))
+        require Moo::Role;
+        _load_module $hspec;
+        map [ $_ => $_ ], Moo::Role->methods_provided_by($hspec)
       } else {
-        die "You gave me a handles of ${hspec} and I have no idea why";
+        croak "You gave me a handles of ${hspec} and I have no idea why";
       }
     };
     foreach my $delegation_spec (@specs) {
@@ -205,20 +228,23 @@ sub generate_method {
         if !$spec->{allow_overwrite} && defined &{"${into}::${proxy}"};
       $self->{captures} = {};
       $methods{$proxy} =
-        quote_sub "${into}::${proxy}" =>
-          $self->_generate_delegation($asserter, $target, \@args),
-          delete $self->{captures}
+        quote_sub "${into}::${proxy}"
+          => $self->_generate_delegation($asserter, $target, \@args)
+          => delete $self->{captures}
+          => $quote_opts
         ;
     }
   }
   if (my $asserter = $spec->{asserter}) {
-    $self->{captures} = {};
-
-
+    _die_overwrite($into, $asserter, 'an asserter')
+      if !$spec->{allow_overwrite} && defined &{"${into}::${asserter}"};
+    local $self->{captures} = {};
     $methods{$asserter} =
-      quote_sub "${into}::${asserter}" =>
-        $self->_generate_asserter($name, $spec),
-        delete $self->{captures};
+      quote_sub "${into}::${asserter}"
+        => $self->_generate_asserter($name, $spec)
+        => delete $self->{captures}
+        => $quote_opts
+      ;
   }
   \%methods;
 }
@@ -462,7 +488,7 @@ sub _generate_call_code {
     }
     my $code = $quoted->[1];
     if (my $captures = $quoted->[2]) {
-      my $cap_name = qq{\$${type}_captures_for_}.$self->_sanitize_name($name);
+      my $cap_name = qq{\$${type}_captures_for_}.sanitize_identifier($name);
       $self->{captures}->{$cap_name} = \$captures;
       Sub::Quote::inlinify($code, $values,
         Sub::Quote::capture_unroll($cap_name, $captures, 6), $local);
@@ -470,17 +496,13 @@ sub _generate_call_code {
       Sub::Quote::inlinify($code, $values, undef, $local);
     }
   } else {
-    my $cap_name = qq{\$${type}_for_}.$self->_sanitize_name($name);
+    my $cap_name = qq{\$${type}_for_}.sanitize_identifier($name);
     $self->{captures}->{$cap_name} = \$sub;
     "${cap_name}->(${values})";
   }
 }
 
-sub _sanitize_name {
-  my ($self, $name) = @_;
-  $name =~ s/([_\W])/sprintf('_%x', ord($1))/ge;
-  $name;
-}
+sub _sanitize_name { sanitize_identifier($_[1]) }
 
 sub generate_populate_set {
   my $self = shift;
@@ -557,21 +579,23 @@ sub _generate_simple_set {
     #
     # but requires Internal functions and is just too damn crazy
     # so simply throw a better exception
-    my $weak_simple = "do { Scalar::Util::weaken(${simple}); no warnings 'void'; $get }";
-    Moo::_Utils::lt_5_8_3() ? <<"EOC" : $weak_simple;
-      eval { Scalar::Util::weaken($simple); 1 }
-        ? do { no warnings 'void'; $get }
-        : do {
-          if( \$@ =~ /Modification of a read-only value attempted/) {
-            require Carp;
-            Carp::croak( sprintf (
-              'Reference to readonly value in "%s" can not be weakened on Perl < 5.8.3',
-              $name_str,
-            ) );
-          } else {
-            die \$@;
+    my $weak_simple = _CAN_WEAKEN_READONLY
+      ? "do { Scalar::Util::weaken(${simple}); no warnings 'void'; $get }"
+      : <<"EOC"
+        ( eval { Scalar::Util::weaken($simple); 1 }
+          ? do { no warnings 'void'; $get }
+          : do {
+            if( \$@ =~ /Modification of a read-only value attempted/) {
+              require Carp;
+              Carp::croak( sprintf (
+                'Reference to readonly value in "%s" can not be weakened on Perl < 5.8.3',
+                $name_str,
+              ) );
+            } else {
+              die \$@;
+            }
           }
-        }
+        )
 EOC
   } else {
     $simple;
@@ -589,9 +613,8 @@ sub _generate_asserter {
 
   "do {\n"
    ."  my \$val = ".$self->_generate_get($name, $spec).";\n"
-   ."  unless (".$self->_generate_simple_has('$_[0]', $name, $spec).") {\n"
-   .qq!    die "Attempted to access '${name}' but it is not set";\n!
-   ."  }\n"
+   ."  ".$self->_generate_simple_has('$_[0]', $name, $spec)."\n"
+   ."    or Carp::croak(\"Attempted to access '${name}' but it is not set\");\n"
    ."  \$val;\n"
    ."}\n";
 }
@@ -629,11 +652,11 @@ sub _validate_codulatable {
   $invalid .= " $appended" if $appended;
 
   unless (ref $value and (ref $value eq 'CODE' or blessed($value))) {
-    die "$invalid or code-convertible object";
+    croak "$invalid or code-convertible object";
   }
 
   unless (eval { \&$value }) {
-    die "$invalid and could not be converted to a coderef: $@";
+    croak "$invalid and could not be converted to a coderef: $@";
   }
 
   1;

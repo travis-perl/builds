@@ -13,7 +13,7 @@ Moose::Cookbook::Basics::Company_Subtypes - Demonstrates the use of subtypes and
 
 =head1 VERSION
 
-version 2.1801
+version 2.1804
 
 =head1 SYNOPSIS
 
@@ -268,10 +268,23 @@ parameters that were passed to the method.
 A more detailed example of usage can be found in
 F<t/recipes/basics_company_subtypes.t>.
 
-=for testing-SETUP use Test::Requires {
+=begin testing-SETUP
+
+# we have to do this silliness because Test::Inline already added a plan for us.
+BEGIN {
+    if ("$]" <= '5.010') {
+        diag 'this test requires Regexp::Common (therefore perl 5.010)';
+        pass;
+        exit 0;
+    }
+}
+
+use Test::Requires {
     'Locale::US'     => '0',
     'Regexp::Common' => '0',
 };
+
+=end testing-SETUP
 
 =head1 CONCLUSION
 
