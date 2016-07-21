@@ -3,7 +3,7 @@
 # See AutoSplit.pm.
 package Memoize::ExpireLRU;
 
-#line 294 "blib/lib/Memoize/ExpireLRU.pm (autosplit into blib/lib/auto/Memoize/ExpireLRU/ShowStats.al)"
+#line 293 "blib/lib/Memoize/ExpireLRU.pm (autosplit into blib/lib/auto/Memoize/ExpireLRU/ShowStats.al)"
 sub ShowStats () {
     ## Utility routine to show statistics
     my($k) = 0;

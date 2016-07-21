@@ -3,7 +3,7 @@
 # See AutoSplit.pm.
 package Memoize::ExpireLRU;
 
-#line 271 "blib/lib/Memoize/ExpireLRU.pm (autosplit into blib/lib/auto/Memoize/ExpireLRU/DumpCache.al)"
+#line 270 "blib/lib/Memoize/ExpireLRU.pm (autosplit into blib/lib/auto/Memoize/ExpireLRU/DumpCache.al)"
 sub DumpCache ( $ ) {
     ## Utility routine to display the caches of the given instance
     my($Instance, $self, $p) = shift;
