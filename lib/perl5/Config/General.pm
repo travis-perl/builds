@@ -32,7 +32,7 @@ use Carp::Heavy;
 use Carp;
 use Exporter;
 
-$Config::General::VERSION = "2.61";
+$Config::General::VERSION = "2.62";
 
 use vars  qw(@ISA @EXPORT_OK);
 use base qw(Exporter);
@@ -95,7 +95,9 @@ sub new {
               NormalizeBlock        => 0,
               NormalizeOption       => 0,
               NormalizeValue        => 0,
-              Plug                  => {}
+              Plug                  => {},
+              UseApacheIfDefine     => 0,
+              Define                => {}
              };
 
   # create the class instance
@@ -174,13 +176,13 @@ sub _process {
       # open the file and read the contents in
       $self->{configfile} = $self->{ConfigFile};
       if ( file_name_is_absolute($self->{ConfigFile}) ) {
-	# look if this is an absolute path and save the basename if it is absolute
-	my ($volume, $path, undef) = splitpath($self->{ConfigFile});
-	$path =~ s#/$##; # remove eventually existing trailing slash
-	if (! $self->{ConfigPath}) {
-	  $self->{ConfigPath} = [];
-	}
-	unshift @{$self->{ConfigPath}}, catpath($volume, $path, q());
+        # look if this is an absolute path and save the basename if it is absolute
+        my ($volume, $path, undef) = splitpath($self->{ConfigFile});
+        $path =~ s#/$##; # remove eventually existing trailing slash
+        if (! $self->{ConfigPath}) {
+          $self->{ConfigPath} = [];
+        }
+        unshift @{$self->{ConfigPath}}, catpath($volume, $path, q());
       }
       $self->_open($self->{configfile});
       # now, we parse immediately, getall simply returns the whole hash
@@ -234,7 +236,6 @@ sub _blessvars {
     # pre-compile the variable regexp
     $self->{regex} = $self->_set_regex();
   }
-#  return $self;
 }
 
 
@@ -246,18 +247,18 @@ sub _splitpolicy {
     if ($self->{SplitPolicy} eq 'whitespace') {
       $self->{SplitDelimiter} = '\s+';
       if (!$self->{StoreDelimiter}) {
-	$self->{StoreDelimiter} = q(   );
+        $self->{StoreDelimiter} = q(   );
       }
     }
     elsif ($self->{SplitPolicy} eq 'equalsign') {
       $self->{SplitDelimiter} = '\s*=\s*';
       if (!$self->{StoreDelimiter}) {
-	$self->{StoreDelimiter} = ' = ';
+        $self->{StoreDelimiter} = ' = ';
       }
     }
     elsif ($self->{SplitPolicy} eq 'custom') {
       if (! $self->{SplitDelimiter} ) {
-	croak "Config::General: SplitPolicy set to 'custom' but no SplitDelimiter set.\n";
+        croak "Config::General: SplitPolicy set to 'custom' but no SplitDelimiter set.\n";
       }
     }
     else {
@@ -304,10 +305,9 @@ sub _prepare {
 
   # handle options which contains values we need (strings, hashrefs or the like)
   if (exists $conf{-String} ) {
-    #if (ref(\$conf{-String}) eq 'SCALAR') {
     if (not ref $conf{-String}) {
       if ( $conf{-String}) {
-	$self->{StringContent} = $conf{-String};
+        $self->{StringContent} = $conf{-String};
       }
       delete $conf{-String};
     }
@@ -386,6 +386,33 @@ sub _prepare {
     $self->{SlashIsDirectory}   = 1;
     $self->{SplitPolicy}        = 'whitespace';
     $self->{CComments}          = 0;
+    $self->{UseApacheIfDefine}  = 1;
+  }
+
+  if ($self->{UseApacheIfDefine}) {
+    if (exists $conf{-Define}) {
+      my $ref = ref($conf{-Define});
+
+      if ($ref eq '') {
+        $self->{Define} = {$conf{-Define} => 1};
+      }
+      elsif ($ref eq 'SCALAR') {
+        $self->{Define} = {${$conf{-Define}} = 1};
+      }
+      elsif ($ref eq 'ARRAY') {
+        my %h = map { $_ => 1 } @{$conf{-Define}};
+        $self->{Define} = \%h;
+      }
+      elsif ($ref eq 'HASH') {
+        $self->{Define} = $conf{-Define};
+      }
+      else {
+        croak qq{Config::General: Unsupported ref '$ref' for 'Define'};
+      }
+
+      delete $conf{-Define};
+    }
+
   }
 }
 
@@ -443,18 +470,13 @@ sub _open {
       }
     }
 
-    if (@include == 1) {
-      $configfile = $include[0];
+    # Multiple results or no expansion results (which is fine,
+    # include foo/* shouldn't fail if there isn't anything matching)
+    # rt.cpan.org#79869: local $this->{IncludeGlob};
+    for (@include) {
+      $this->_open($_);
     }
-    else {
-      # Multiple results or no expansion results (which is fine,
-      # include foo/* shouldn't fail if there isn't anything matching)
-      # rt.cpan.org#79869: local $this->{IncludeGlob};
-      for (@include) {
-        $this->_open($_);
-      }
-      return;
-    }
+    return;
   }
 
   if (!-e $configfile) {
@@ -576,6 +598,10 @@ sub _read {
   ($cont, $fh, @stuff) = $this->_hook('pre_read', $fh, @stuff);
   return if(!$cont);
 
+  if ($this->{UseApacheIfDefine}) {
+    $this->_process_apache_ifdefine(\@stuff);
+  }
+
   foreach (@stuff) {
     if ($this->{AutoLaunder}) {
       if (m/^(.*)$/) {
@@ -642,8 +668,6 @@ sub _read {
     # Remove comments and empty lines
     s/(?<!\\)#.*$//; # .+ => .* bugfix rt.cpan.org#44600
     next if /^\s*#/;
-    #next if /^\s*$/;
-
 
     # look for multiline option, indicated by a trailing backslash
     if (/(?<!\\)\\$/) {
@@ -789,7 +813,44 @@ sub _read {
 }
 
 
+sub _process_apache_ifdefine {
+  #
+  # Loop trough config lines and exclude all those entries
+  # for which there's no IFDEF but which reside inside an IFDEF.
+  #
+  # Called from _read(), if UseApacheIfDefine is enabled, returns
+  # the modified array.
+  my($this, $rawlines) = @_;
 
+  my @filtered;
+  my $includeFlag = 1;
+  my $blockLevel  = 0;
+
+  foreach (@{$rawlines}) {
+    if (/^<\s*IfDefine\s+([!]*)("[^"]+"|\S+)\s*>/i) {
+      # new IFDEF block, mark following content to be included if
+      # the DEF is known, otherwise skip it til end of IFDEF
+      my ($negate, $define) = ($1 eq '!',$2);
+
+      $blockLevel++;
+      $includeFlag &= ((not $negate) & (exists $this->{Define}{$define}));
+    } elsif (/^<\s*\/IfDefine\s*>/i) {
+      $blockLevel--;
+      $includeFlag = $blockLevel == 0;
+    } elsif ($includeFlag && /\s*Define\s+("[^"]+"|\S+)/i) {
+      # inline Define, add it to our list
+      $this->{Define}{$1} = 1;
+    } elsif ($includeFlag) {
+      push @filtered, $_;
+    }
+  }
+
+  if ($blockLevel) {
+    croak qq(Config::General: Block <IfDefine> has no EndBlock statement!\n);
+  }
+
+  @$rawlines = @filtered;       # replace caller array
+}
 
 
 sub _parse {
@@ -805,12 +866,11 @@ sub _parse {
     $chunk++;
     $_ =~ s/^\s+//;                                        # strip spaces @ end and begin
     $_ =~ s/\s+$//;
-    ###### bad $_ =~ s/^\x{ef}\x{bb}\x{bf}//; # strip utf BOM, if any, fix rt.cpan.org#113671
 
-#
-# build option value assignment, split current input
-# using whitespace, equal sign or optionally here-doc
-# separator EOFseparator
+    #
+    # build option value assignment, split current input
+    # using whitespace, equal sign or optionally here-doc
+    # separator EOFseparator
     my ($option,$value);
     if (/$this->{EOFseparator}/) {
       ($option,$value) = split /\s*$this->{EOFseparator}\s*/, $_, 2;   # separated by heredoc-finding in _open()
@@ -1133,12 +1193,12 @@ sub _parse_value {
     if (exists $this->{FlagBitsFlags}->{$option}) {
       my %__flags = map { $_ => 1 } split /\s*\|\s*/, $value;
       foreach my $flag (keys %{$this->{FlagBitsFlags}->{$option}}) {
-	if (exists $__flags{$flag}) {
-	  $__flags{$flag} = $this->{FlagBitsFlags}->{$option}->{$flag};
-	}
-	else {
-	  $__flags{$flag} = undef;
-	}
+        if (exists $__flags{$flag}) {
+          $__flags{$flag} = $this->{FlagBitsFlags}->{$option}->{$flag};
+        }
+        else {
+          $__flags{$flag} = undef;
+        }
       }
       $value = \%__flags;
     }
@@ -1150,7 +1210,7 @@ sub _parse_value {
   }
 
   ($cont, $option, $value) = $this->_hook('post_parse_value', $option, $value);
-  
+
   return $value;
 }
 
@@ -1166,21 +1226,6 @@ sub _hook {
   return (1, @arguments);
 }
 
-
-
-
-
-
-
-
-sub NoMultiOptions {
-  #
-  # turn AllowMultiOptions off, still exists for backward compatibility.
-  # Since we do parsing from within new(), we must
-  # call it again if one turns NoMultiOptions on!
-  #
-  croak q(Config::General: The NoMultiOptions() method is deprecated. Set 'AllowMultiOptions' to 'no' instead!);
-}
 
 
 sub save {
@@ -1220,18 +1265,18 @@ sub save_file {
     if ($this->{UTF8}) {
       $fh = IO::File->new;
       open($fh, ">:utf8", $file)
-	or croak "Config::General: Could not open $file in UTF8 mode!($!)\n";
+        or croak "Config::General: Could not open $file in UTF8 mode!($!)\n";
     }
     else {
       $fh = IO::File->new( "$file", 'w')
-	or croak "Config::General: Could not open $file!($!)\n";
+        or croak "Config::General: Could not open $file!($!)\n";
     }
     if (!$config) {
       if (exists $this->{config}) {
-	$config_string = $this->_store(0, $this->{config});
+        $config_string = $this->_store(0, $this->{config});
       }
       else {
-	croak "Config::General: No config hash supplied which could be saved to disk!\n";
+        croak "Config::General: No config hash supplied which could be saved to disk!\n";
       }
     }
     else {
@@ -1341,10 +1386,10 @@ sub _write_scalar {
     while (!$delimiter) {
       # create a unique here-doc identifier
       if ($line =~ /$tmplimiter/s) {
-	$tmplimiter .= '%';
+        $tmplimiter .= '%';
       }
       else {
-	$delimiter = $tmplimiter;
+        $delimiter = $tmplimiter;
       }
     }
     my @lines = split /\n/, $line;
@@ -1432,7 +1477,6 @@ sub _hashref {
 }
 
 
-
 #
 # Procedural interface
 #
@@ -1487,9 +1531,8 @@ sub SaveConfigString {
 
 
 # keep this one
-1;
+  1;
 __END__
-
 
 
 
@@ -1965,6 +2008,35 @@ Please note that this is a new option (incorporated in version 2.30),
 it may lead to various unexpected side effects or other failures.
 You've been warned.
 
+=item B<-UseApacheIfDefine>
+
+Enables support for Apache <IfDefine> ... </IfDefine>. See -Define.
+
+=item B<-Define>
+
+Defines the symbols to be used for conditional configuration files.
+Allowed arguments: scalar, scalar ref, array ref or hash ref.
+
+Examples:
+
+ -Define => 'TEST'
+ -Define => \$testOrProduction
+ -Define => [qw(TEST VERBOSE)]
+ -Define => {TEST => 1, VERBOSE => 1}
+
+Sample configuration:
+
+  <Logging>
+    <IfDefine TEST>
+       Level Debug
+       include test/*.cfg
+    </IfDef>
+    <IfDefine !TEST>
+      Level Notice
+       include production/*.cfg
+    </IfDefine>
+  </Logging>
+
 =item B<-ApacheCompatible>
 
 Over the past years a lot of options has been incorporated
@@ -1986,6 +2058,7 @@ The following options will be set:
  SlashIsDirectory   = 1
  SplitPolicy        = 'whitespace'
  CComments          = 0
+ UseApacheIfDefine  = 1
 
 Take a look into the particular documentation sections what
 those options are doing.
@@ -2129,80 +2202,80 @@ A block start and end cannot be on the same line.
 
 An example:
 
-<database>
-host   = muli
-user   = moare
-dbname = modb
-dbpass = D4r_9Iu
-</database>
+ <database>
+  host   = muli
+  user   = moare
+  dbname = modb
+  dbpass = D4r_9Iu
+ </database>
 
 Blocks can also be nested. Here is a more complicated example:
 
-user   = hans
-server = mc200
-db     = maxis
-passwd = D3rf$
-<jonas>
-user    = tom
-db      = unknown
-host    = mila
-<tablestructure>
-index   int(100000)
-name    char(100)
-prename char(100)
-city    char(100)
-status  int(10)
-allowed moses
-allowed ingram
-allowed joice
-</tablestructure>
-</jonas>
+ user   = hans
+ server = mc200
+ db     = maxis
+ passwd = D3rf$
+ <jonas>
+  user    = tom
+  db      = unknown
+  host    = mila
+  <tablestructure>
+   index   int(100000)
+   name    char(100)
+   prename char(100)
+   city    char(100)
+   status  int(10)
+   allowed moses
+   allowed ingram
+   allowed joice
+  </tablestructure>
+ </jonas>
 
 The hash which the method B<getall> returns look like that:
 
-print Data::Dumper(\%hash);
-$VAR1 = {
-'passwd' => 'D3rf$',
-'jonas'  => {
-'tablestructure' => {
-'prename' => 'char(100)',
-'index'   => 'int(100000)',
-'city'    => 'char(100)',
-'name'    => 'char(100)',
-'status'  => 'int(10)',
-'allowed' => [
-'moses',
-'ingram',
-'joice',
-]
-},
-'host'           => 'mila',
-'db'             => 'unknown',
-'user'           => 'tom'
-},
-'db'     => 'maxis',
-'server' => 'mc200',
-'user'   => 'hans'
-};
+  print Data::Dumper(\%hash);
+  $VAR1 = {
+           'passwd' => 'D3rf$',
+           'jonas'  => {
+                        'tablestructure' => {
+                                             'prename' => 'char(100)',
+                                             'index'   => 'int(100000)',
+                                             'city'    => 'char(100)',
+                                             'name'    => 'char(100)',
+                                             'status'  => 'int(10)',
+                                             'allowed' => [
+                                                           'moses',
+                                                           'ingram',
+                                                           'joice',
+                                                          ]
+                                            },
+                        'host'           => 'mila',
+                        'db'             => 'unknown',
+                        'user'           => 'tom'
+                       },
+           'db'     => 'maxis',
+           'server' => 'mc200',
+           'user'   => 'hans'
+          };
 
 If you have turned on B<-LowerCaseNames> (see new()) then blocks as in the
 following example:
 
-<Dir>
-<AttriBUTES>
-Owner  root
-</attributes>
-</dir>
+ <Dir>
+  <AttriBUTES>
+   Owner  root
+  </attributes>
+ </dir>
 
 would produce the following hash structure:
 
-$VAR1 = {
-'dir' => {
-'attributes' => {
-'owner  => "root",
-}
-}
-};
+  $VAR1 = {
+           'dir' => {
+                     'attributes' => {
+                                      'owner'  => "root",
+                                     }
+                    }
+          };
 
 As you can see, the keys inside the config hash are normalized.
 
@@ -2225,28 +2298,29 @@ one or more hashrefs with the right part of the block as key containing everythi
 inside the block(which may again be nested!). As examples says more than words:
 
 # given the following sample
-<Directory /usr/frisco>
-Limit Deny
-Options ExecCgi Index
-</Directory>
-<Directory /usr/frik>
-Limit DenyAll
-Options None
-</Directory>
+ <Directory /usr/frisco>
+  Limit Deny
+  Options ExecCgi Index
+ </Directory>
+ <Directory /usr/frik>
+  Limit DenyAll
+  Options None
+ </Directory>
 
 # you will get:
-$VAR1 = {
-'Directory' => {
-'/usr/frik' => {
-'Options' => 'None',
-'Limit' => 'DenyAll'
-},
-'/usr/frisco' => {
-'Options' => 'ExecCgi Index',
-'Limit' => 'Deny'
-}
-}
-};
+
+  $VAR1 = {
+           'Directory' => {
+                           '/usr/frik' => {
+                                           'Options' => 'None',
+                                           'Limit' => 'DenyAll'
+                                          },
+                           '/usr/frisco' => {
+                                             'Options' => 'ExecCgi Index',
+                                             'Limit' => 'Deny'
+                                            }
+                          }
+          };
 
 You cannot have more than one named block with the same name because it will
 be stored in a hashref and therefore be overwritten if a block occurs once more.
@@ -2262,28 +2336,28 @@ Sometimes you may need blocknames which have whitespace in their names.
 With named blocks this is no problem, as the module only looks for the
 first whitespace:
 
-<person hugo gera>
-</person>
+ <person hugo gera>
+ </person>
 
 would be parsed to:
 
-$VAR1 = {
-'person' => {
-'hugo gera' => {
-},
-}
-};
+  $VAR1 = {
+           'person' => {
+                        'hugo gera' => {
+                                       },
+                       }
+          };
 
 The problem occurs, if you want to have a simple block containing whitespace:
 
-<hugo gera>
-</hugo gera>
+ <hugo gera>
+ </hugo gera>
 
 This would be parsed as a named block, which is not what you wanted. In this
 very case you may use quotation marks to indicate that it is not a named block:
 
-<"hugo gera">
-</"hugo gera">
+ <"hugo gera">
+ </"hugo gera">
 
 The save() method of the module inserts automatically quotation marks in such
 cases.
@@ -2297,12 +2371,12 @@ explicit empty blocks.
 Normally you would write this in your config to define an empty
 block:
 
-<driver Apache>
-</driver>
+ <driver Apache>
+ </driver>
 
 To save writing you can also write:
 
-<driver Apache/>
+ <driver Apache/>
 
 which is the very same as above. This works for normal blocks and
 for named blocks.
@@ -2312,47 +2386,48 @@ for named blocks.
 =head1 IDENTICAL OPTIONS (ARRAYS)
 
 You may have more than one line of the same option with different values.
-
 Example:
-log  log1
-log  log2
-log  log2
+
+ log  log1
+ log  log2
+ log  log2
 
 You will get a scalar if the option occurred only once or an array if it occurred
 more than once. If you expect multiple identical options, then you may need to
 check if an option occurred more than once:
 
-$allowed = $hash{jonas}->{tablestructure}->{allowed};
-if(ref($allowed) eq "ARRAY") {
-@ALLOWED = @{$allowed};
-else {
-@ALLOWED = ($allowed);
-}
+  $allowed = $hash{jonas}->{tablestructure}->{allowed};
+  if (ref($allowed) eq "ARRAY") {
+    @ALLOWED = @{$allowed};
+    else {
+      @ALLOWED = ($allowed);
+    }
+  }
 
 The same applies to blocks and named blocks too (they are described in more detail
 below). For example, if you have the following config:
 
-<dir blah>
-user max
-</dir>
-<dir blah>
-user hannes
-</dir>
+ <dir blah>
+  user max
+ </dir>
+ <dir blah>
+  user hannes
+ </dir>
 
 then you would end up with a data structure like this:
 
-$VAR1 = {
-'dir' => {
-'blah' => [
-{
-'user' => 'max'
-},
-{
-'user' => 'hannes'
-}
-]
-}
-};
+  $VAR1 = {
+           'dir' => {
+                     'blah' => [
+                                {
+                                 'user' => 'max'
+                                },
+                                {
+                                 'user' => 'hannes'
+                                }
+                               ]
+                    }
+          };
 
 As you can see, the two identical blocks are stored in a hash which contains
 an array(-reference) of hashes.
@@ -2363,16 +2438,17 @@ both identical blocks, then you need to turn the B<new()> parameter B<-MergeDupl
 on (see above). The parsed structure of the example above would then look like
 this:
 
-$VAR1 = {
-'dir' => {
-'blah' => {
-'user' => [
-'max',
-'hannes'
-]
-}
-}
-};
+
+  $VAR1 = {
+           'dir' => {
+                     'blah' => {
+                                'user' => [
+                                           'max',
+                                           'hannes'
+                                          ]
+                               }
+                    }
+          };
 
 As you can see, there is only one hash "dir->{blah}" containing multiple
 "user" entries. As you can also see, turning on  B<-MergeDuplicateBlocks>
@@ -2390,7 +2466,7 @@ You may also force a single config line to get parsed into an array by
 turning on the option B<-ForceArray> and by surrounding the value of the
 config entry by []. Example:
 
-hostlist = [ foo.bar ]
+ hostlist = [ foo.bar ]
 
 Will be a singlevalue array entry if the option is turned on. If you want
 it to remain to be an array you have to turn on B<-ForceArray> during save too.
@@ -2403,9 +2479,9 @@ of the line. The Config::General module will concatenate those lines to one sing
 
 Example:
 
-command = cat /var/log/secure/tripwire | \
-mail C<-s> "report from tripwire" \
-honey@myotherhost.nl
+ command = cat /var/log/secure/tripwire | \
+ mail C<-s> "report from tripwire" \
+ honey@myotherhost.nl
 
 command will become:
 "cat /var/log/secure/tripwire | mail C<-s> 'report from twire' honey@myotherhost.nl"
@@ -2419,12 +2495,12 @@ identifier must follow a "<<".
 
 Example:
 
-message <<EOF
-we want to
-remove the
-homedir of
-root.
-EOF
+ message <<EOF
+  we want to
+  remove the
+  homedir of
+  root.
+ EOF
 
 Everything between the two "EOF" strings will be in the option I<message>.
 
@@ -2435,19 +2511,19 @@ amount of spaces from every line inside the here-document.
 
 Example:
 
-message <<EOF
-we want to
-remove the
-homedir of
-root.
-EOF
+ message <<EOF
+    we want to
+    remove the
+    homedir of
+    root.
+    EOF
 
 After parsing, message will become:
 
-we want to
-remove the
-homedir of
-root.
+ we want to
+ remove the
+ homedir of
+ root.
 
 because there were the string "     " in front of EOF, which were cut from every
 line inside the here-document.
@@ -2459,12 +2535,12 @@ line inside the here-document.
 You can include an external file at any position in your config file using the following statement
 in your config file:
 
-<<include externalconfig.rc>>
+ <<include externalconfig.rc>>
 
 If you turned on B<-UseApacheInclude> (see B<new()>), then you can also use the following
 statement to include an external file:
 
-include externalconfig.rc
+ include externalconfig.rc
 
 This file will be inserted at the position where it was found as if the contents of this file
 were directly at this position.
@@ -2478,22 +2554,23 @@ working directory. Under some circumstances it maybe possible to
 open included files from the directory, where the configfile resides. You need to turn on
 the option B<-IncludeRelative> (see B<new()>) if you want that. An example:
 
-my $conf = Config::General(
--ConfigFile => "/etc/crypt.d/server.cfg"
--IncludeRelative => 1
-);
+ my $conf = Config::General(
+  -ConfigFile => "/etc/crypt.d/server.cfg"
+  -IncludeRelative => 1
+ );
 
 /etc/crypt.d/server.cfg:
-<<include acl.cfg>>
+
+ <<include acl.cfg>>
 
 In this example Config::General will try to include I<acl.cfg> from I</etc/crypt.d>:
 
-/etc/crypt.d/acl.cfg
+ /etc/crypt.d/acl.cfg
 
 The default behavior (if B<-IncludeRelative> is B<not> set!) will be to open just I<acl.cfg>,
 wherever it is, i.e. if you did a chdir("/usr/local/etc"), then Config::General will include:
 
-/usr/local/etc/acl.cfg
+ /usr/local/etc/acl.cfg
 
 Include statements can be case insensitive (added in version 1.25).
 
@@ -2506,21 +2583,21 @@ so make sure, you're not including the same file from within itself!
 
 Example:
 
-# main.cfg
-<object billy>
-class=Some::Class
-<printers>
-include printers.cfg
-</printers>
-# ...
-</object>
-<object bob>
-class=Another::Class
-<printers>
-include printers.cfg
-</printers>
-# ...
-</object>
+ # main.cfg
+ <object billy>
+  class=Some::Class
+ <printers>
+  include printers.cfg
+ </printers>
+ # ...
+ </object>
+  <object bob>
+   class=Another::Class
+  <printers>
+  include printers.cfg
+  </printers>
+  # ...
+ </object>
 
 Now C<printers.cfg> will be include in both the C<billy> and C<bob> objects.
 
@@ -2536,18 +2613,18 @@ tab stops in front of the #.
 
 A comment can also occur after a config statement. Example:
 
-username = max  # this is the comment
+ username = max  # this is the comment
 
 If you want to comment out a large block you can use C-style comments. A B</*> signals
 the begin of a comment block and the B<*/> signals the end of the comment block.
 Example:
 
-user  = max # valid option
-db    = tothemax
-/*
-user  = andors
-db    = toand
-*/
+ user  = max # valid option
+ db    = tothemax
+ /*
+ user  = andors
+ db    = toand
+ */
 
 In this example the second options of user and db will be ignored. Please beware of the fact,
 if the Module finds a B</*> string which is the start of a comment block, but no matching
@@ -2556,7 +2633,7 @@ end block, it will ignore the whole rest of the config file!
 B<NOTE:> If you require the B<#> character (number sign) to remain in the option value, then
 you can use a backslash in front of it, to escape it. Example:
 
-bgcolor = \#ffffcc
+ bgcolor = \#ffffcc
 
 In this example the value of $config{bgcolor} will be "#ffffcc", Config::General will not treat
 the number sign as the begin of a comment because of the leading backslash.
@@ -2572,26 +2649,25 @@ and parsing.
 
 The general aproach works like this:
 
-sub ck {
-my($file, $base) = @_;
-print "_open() tries $file ... ";
-if($file =~ /blah/) {
-print "ignored\n";
-return (0);
-}
-else {
-print "allowed\n";
-return (1, @_);
-}
-}
+  sub ck {
+    my($file, $base) = @_;
+    print "_open() tries $file ... ";
+    if ($file =~ /blah/) {
+      print "ignored\n";
+      return (0);
+    } else {
+      print "allowed\n";
+      return (1, @_);
+    }
+  }
  
-my %c = ParseConfig(
--IncludeGlob => 1,
--UseApacheInclude => 1,
--ConfigFile => shift,
--Plug => { pre_open => *ck }
-);
- 
+  my %c = ParseConfig(
+                      -IncludeGlob      => 1,
+                      -UseApacheInclude => 1,
+                      -ConfigFile       => shift,
+                      -Plug             => { pre_open => *ck }
+                     );
+
 Output:
 
  _open() tries cfg ... allowed
@@ -2789,7 +2865,7 @@ Thomas Linden <tlinden |AT| cpan.org>
 
 =head1 VERSION
 
-2.61
+2.62
 
 =cut
 
