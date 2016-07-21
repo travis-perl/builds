@@ -1,4 +1,4 @@
-=head2 Wed Jun 22 00:08:16 2016: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Thu Jul 21 00:07:22 2016: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Jun 22 00:08:17 2016: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Thu Jul 21 00:07:24 2016: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Jun 22 00:08:19 2016: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Thu Jul 21 00:07:25 2016: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -64,51 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Wed Jun 22 00:08:33 2016: C<Module> L<Net::SSLeay|Net::SSLeay>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.74>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Jun 22 00:08:34 2016: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.027>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Wed Jun 22 00:08:35 2016: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Thu Jul 21 00:07:27 2016: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -130,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Wed Jun 22 00:08:36 2016: C<Module> L<YAML|YAML>
+=head2 Thu Jul 21 00:07:28 2016: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -144,7 +100,51 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.15>
+C<VERSION: 1.18>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jul 21 00:07:38 2016: C<Module> L<Net::SSLeay|Net::SSLeay>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.74>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Jul 21 00:07:39 2016: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.033>
 
 =item *
 

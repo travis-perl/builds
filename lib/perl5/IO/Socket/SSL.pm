@@ -13,7 +13,7 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '2.027';
+our $VERSION = '2.033';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
@@ -30,9 +30,15 @@ BEGIN {
 }
 
 
+# results from commonly used constant functions from Net::SSLeay for fast access
+my $Net_SSLeay_ERROR_WANT_READ   = Net::SSLeay::ERROR_WANT_READ();
+my $Net_SSLeay_ERROR_WANT_WRITE  = Net::SSLeay::ERROR_WANT_WRITE();
+my $Net_SSLeay_VERIFY_NONE       = Net::SSLeay::VERIFY_NONE();
+my $Net_SSLeay_VERIFY_PEER       = Net::SSLeay::VERIFY_PEER();
 
-use constant SSL_VERIFY_NONE => Net::SSLeay::VERIFY_NONE();
-use constant SSL_VERIFY_PEER => Net::SSLeay::VERIFY_PEER();
+
+use constant SSL_VERIFY_NONE => &Net::SSLeay::VERIFY_NONE;
+use constant SSL_VERIFY_PEER => &Net::SSLeay::VERIFY_PEER;
 use constant SSL_VERIFY_FAIL_IF_NO_PEER_CERT => Net::SSLeay::VERIFY_FAIL_IF_NO_PEER_CERT();
 use constant SSL_VERIFY_CLIENT_ONCE => Net::SSLeay::VERIFY_CLIENT_ONCE();
 
@@ -54,6 +60,7 @@ my $can_alpn;        # do we support ALPN
 my $can_ecdh;        # do we support ECDH key exchange
 my $can_ocsp;        # do we support OCSP
 my $can_ocsp_staple; # do we support OCSP stapling
+my $can_tckt_keycb;  # TLS ticket key callback
 BEGIN {
     $can_client_sni = Net::SSLeay::OPENSSL_VERSION_NUMBER() >= 0x01000000;
     $can_server_sni = defined &Net::SSLeay::get_servername;
@@ -67,6 +74,7 @@ BEGIN {
     $can_ocsp        = defined &Net::SSLeay::OCSP_cert2ids;
     $can_ocsp_staple = $can_ocsp
 	&& defined &Net::SSLeay::set_tlsext_status_type;
+    $can_tckt_keycb  = defined &Net::SSLeay::CTX_set_tlsext_ticket_getkey_cb;
 }
 
 my $algo2digest = do {
@@ -266,9 +274,9 @@ use vars qw(@ISA $SSL_ERROR @EXPORT);
     # the usual way of problems. Like with EWOULDBLOCK, EINPROGRESS..
     # these are especially important for non-blocking sockets
 
-    my $x = Net::SSLeay::ERROR_WANT_READ();
+    my $x = $Net_SSLeay_ERROR_WANT_READ;
     use constant SSL_WANT_READ  => dualvar( \$x, 'SSL wants a read first' );
-    my $y = Net::SSLeay::ERROR_WANT_WRITE();
+    my $y = $Net_SSLeay_ERROR_WANT_WRITE;
     use constant SSL_WANT_WRITE => dualvar( \$y, 'SSL wants a write first' );
 
     @EXPORT = qw(
@@ -608,9 +616,9 @@ sub configure_SSL {
 sub _skip_rw_error {
     my ($self,$ssl,$rv) = @_;
     my $err = Net::SSLeay::get_error($ssl,$rv);
-    if ( $err == Net::SSLeay::ERROR_WANT_READ()) {
+    if ( $err == $Net_SSLeay_ERROR_WANT_READ) {
 	$SSL_ERROR = SSL_WANT_READ;
-    } elsif ( $err == Net::SSLeay::ERROR_WANT_WRITE()) {
+    } elsif ( $err == $Net_SSLeay_ERROR_WANT_WRITE) {
 	$SSL_ERROR = SSL_WANT_WRITE;
     } else {
 	return $err;
@@ -727,14 +735,16 @@ sub connect_SSL {
 	    $DEBUG>=2 && DEBUG("request OCSP stapling");
 	}
 
-	my $session = $ctx->session_cache( $arg_hash->{SSL_session_key} ?
-	    ( $arg_hash->{SSL_session_key},1 ) :
-	    ( 
-		$arg_hash->{PeerAddr} || $arg_hash->{PeerHost}, 
-		$arg_hash->{PeerPort} || $arg_hash->{PeerService}
-	    )
-	);
-	Net::SSLeay::set_session($ssl, $session) if ($session);
+	if ($ctx->{session_cache}
+	    and my $session = $ctx->{session_cache}->get_session(
+		$arg_hash->{SSL_session_key} || do {
+		    my $host = $arg_hash->{PeerAddr} || $arg_hash->{PeerHost};
+		    my $port = $arg_hash->{PeerPort} || $arg_hash->{PeerService};
+		    $port ? "$host:$port" : $host;
+		}
+	    )) {
+	    Net::SSLeay::set_session($ssl, $session);
+	}
     }
 
     $ssl ||= ${*$self}{'_SSL_object'};
@@ -848,16 +858,16 @@ sub connect_SSL {
 	return $self->fatal_ssl_error();
     }
 
-    if ( $ctx->has_session_cache
+    if ( $ctx->{session_cache}
 	and my $session = Net::SSLeay::get1_session($ssl)) {
 	my $arg_hash = ${*$self}{'_SSL_arguments'};
-	$arg_hash->{PeerAddr} || $arg_hash->{PeerHost} || $self->_update_peer;
-	$ctx->session_cache( $arg_hash->{SSL_session_key} ?
-	    ( $arg_hash->{SSL_session_key},1 ) :
-	    ( 
-		$arg_hash->{PeerAddr} || $arg_hash->{PeerHost},
-		$arg_hash->{PeerPort} || $arg_hash->{PeerService}
-	    ),
+	$ctx->{session_cache}->add_session(
+	    $arg_hash->{SSL_session_key} || do {
+		my $host = $arg_hash->{PeerAddr} || $arg_hash->{PeerHost}
+		    || self->_update_peer;
+		my $port = $arg_hash->{PeerPort} || $arg_hash->{PeerService};
+		$port ? "$host:$port" : $host;
+	    },
 	    $session
 	);
     }
@@ -870,6 +880,7 @@ sub connect_SSL {
 # called if PeerAddr is not set in ${*$self}{'_SSL_arguments'}
 # this can be the case if start_SSL is called with a normal IO::Socket::INET
 # so that PeerAddr|PeerPort are not set from args
+# returns PeerAddr
 sub _update_peer {
     my $self = shift;
     my $arg_hash = ${*$self}{'_SSL_arguments'};
@@ -879,12 +890,12 @@ sub _update_peer {
 	if( CAN_IPV6 && $af == AF_INET6 ) {
 	    my (undef, $host, $port) = _getnameinfo($sockaddr,
 		NI_NUMERICHOST | NI_NUMERICSERV);
-	    $arg_hash->{PeerAddr} = $host;
 	    $arg_hash->{PeerPort} = $port;
+	    $arg_hash->{PeerAddr} = $host;
 	} else {
 	    my ($port,$addr) = sockaddr_in( $sockaddr);
-	    $arg_hash->{PeerAddr} = inet_ntoa( $addr );
 	    $arg_hash->{PeerPort} = $port;
+	    $arg_hash->{PeerAddr} = inet_ntoa( $addr );
 	}
     }
 }
@@ -1042,7 +1053,7 @@ sub accept_SSL {
 
 sub _generic_read {
     my ($self, $read_func, undef, $length, $offset) = @_;
-    my $ssl = $self->_get_ssl_object || return;
+    my $ssl =  ${*$self}{_SSL_object} || return;
     my $buffer=\$_[2];
 
     $SSL_ERROR = $! = undef;
@@ -1103,7 +1114,7 @@ sub peek {
 sub _generic_write {
     my ($self, $write_all, undef, $length, $offset) = @_;
 
-    my $ssl = $self->_get_ssl_object || return;
+    my $ssl =  ${*$self}{_SSL_object} || return;
     my $buffer = \$_[2];
 
     my $buf_len = length($$buffer);
@@ -1355,9 +1366,9 @@ sub stop_SSL {
 		    last if $wait<=0;
 		    vec(my $vec = '',fileno($self),1) = 1;
 		    my $err = Net::SSLeay::get_error($ssl,$rv);
-		    if ( $err == Net::SSLeay::ERROR_WANT_READ()) {
+		    if ( $err == $Net_SSLeay_ERROR_WANT_READ) {
 			select($vec,undef,undef,$wait)
-		    } elsif ( $err == Net::SSLeay::ERROR_WANT_READ()) {
+		    } elsif ( $err == $Net_SSLeay_ERROR_WANT_READ) {
 			select(undef,$vec,undef,$wait)
 		    } else {
 			last;
@@ -1441,7 +1452,7 @@ sub pending {
 sub start_SSL {
     my ($class,$socket) = (shift,shift);
     return $class->_internal_error("Not a socket",9) if ! ref($socket);
-    my $arg_hash = (ref($_[0]) eq 'HASH') ? $_[0] : {@_};
+    my $arg_hash = @_ == 1 ? $_[0] : {@_};
     my %to = exists $arg_hash->{Timeout} ? ( Timeout => delete $arg_hash->{Timeout} ) :();
     my $original_class = ref($socket);
     if ( ! $original_class ) {
@@ -2125,6 +2136,10 @@ use constant SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER => 2;
 use constant FILETYPE_PEM => Net::SSLeay::FILETYPE_PEM();
 use constant FILETYPE_ASN1 => Net::SSLeay::FILETYPE_ASN1();
 
+my $DEFAULT_SSL_OP = &Net::SSLeay::OP_ALL
+    | &Net::SSLeay::OP_SINGLE_DH_USE
+    | ($can_ecdh && &Net::SSLeay::OP_SINGLE_ECDH_USE);
+
 # Note that the final object will actually be a reference to the scalar
 # (C-style pointer) returned by Net::SSLeay::CTX_*_new() so that
 # it can be blessed.
@@ -2180,7 +2195,7 @@ sub new {
     }
 
     my $verify_mode = $arg_hash->{SSL_verify_mode} || 0;
-    if ( $verify_mode != Net::SSLeay::VERIFY_NONE()) {
+    if ( $verify_mode != $Net_SSLeay_VERIFY_NONE) {
 	for (qw(SSL_ca_file SSL_ca_path)) {
 	    $CHECK_SSL_PATH->($_ => $arg_hash->{$_} || next);
 	}
@@ -2236,9 +2251,15 @@ sub new {
 	};
     }
 
-    my $ssl_op = Net::SSLeay::OP_ALL();
-    $ssl_op |= &Net::SSLeay::OP_SINGLE_DH_USE;
-    $ssl_op |= &Net::SSLeay::OP_SINGLE_ECDH_USE if $can_ecdh;
+    if ($is_server) {
+	if ($arg_hash->{SSL_ticket_keycb} && !$can_tckt_keycb) {
+	    warn "Ticket Key Callback is not supported - ignoring option SSL_ticket_keycb\n";
+	    delete $arg_hash->{SSL_ticket_keycb};
+	}
+    }
+
+
+    my $ssl_op = $DEFAULT_SSL_OP;
 
     my $ver;
     for (split(/\s*:\s*/,$arg_hash->{SSL_version})) {
@@ -2268,7 +2289,7 @@ sub new {
 
     # For SNI in server mode we need a separate context for each certificate.
     my %ctx;
-    if ($arg_hash->{'SSL_server'}) {
+    if ($is_server) {
 	my %sni;
 	for my $opt (qw(SSL_key SSL_key_file SSL_cert SSL_cert_file)) {
 	    my $val  = $arg_hash->{$opt} or next;
@@ -2306,8 +2327,9 @@ sub new {
 	# client session caching will fail
 	# if user does not provide explicit id just use the stringification
 	# of the context
-	if ( my $id = $arg_hash->{SSL_session_id_context}
-	    || ( $arg_hash->{SSL_verify_mode} & 0x01 ) && "$ctx" ) {
+	if($arg_hash->{SSL_server} and my $id = 
+	    $arg_hash->{SSL_session_id_context} || 
+	    ( $arg_hash->{SSL_verify_mode} & 0x01 ) && "$ctx" ) {
 	    Net::SSLeay::CTX_set_session_id_context($ctx,$id,length($id));
 	}
 
@@ -2341,6 +2363,12 @@ sub new {
 	    }
 	}
 
+	if ($arg_hash->{SSL_ticket_keycb}) {
+	    my $cb = $arg_hash->{SSL_ticket_keycb};
+	    ($cb,my $arg) = ref($cb) eq 'CODE' ? ($cb):@$cb;
+	    Net::SSLeay::CTX_set_tlsext_ticket_getkey_cb($ctx,$cb,$arg);
+	}
+
 	# Try to apply SSL_ca even if SSL_verify_mode is 0, so that they can be
 	# used to verify OCSP responses.
 	# If applying fails complain only if verify_mode != VERIFY_NONE.
@@ -2364,7 +2392,7 @@ sub new {
 		$ctx, $file || '', $dir || '')) {
 		return IO::Socket::SSL->error(
 		    "Invalid certificate authority locations")
-		    if $verify_mode != Net::SSLeay::VERIFY_NONE();
+		    if $verify_mode != $Net_SSLeay_VERIFY_NONE;
 	    }
 	} elsif ( my %ca = IO::Socket::SSL::default_ca()) {
 	    # no CA path given, continue with system defaults
@@ -2372,14 +2400,13 @@ sub new {
 	    $dir = join($OPENSSL_LIST_SEPARATOR,@$dir) if ref($dir);
 	    if (! Net::SSLeay::CTX_load_verify_locations( $ctx,
 		$ca{SSL_ca_file} || '',$dir || '')
-		&& $verify_mode != Net::SSLeay::VERIFY_NONE()) {
+		&& $verify_mode != $Net_SSLeay_VERIFY_NONE) {
 		return IO::Socket::SSL->error(
 		    "Invalid default certificate authority locations")
 	    }
 	}
 
-	if ($arg_hash->{SSL_server}
-	    && ($verify_mode & Net::SSLeay::VERIFY_PEER())) {
+	if ($is_server && ($verify_mode & $Net_SSLeay_VERIFY_PEER)) {
 	    if ($arg_hash->{SSL_client_ca}) {
 		for (@{$arg_hash->{SSL_client_ca}}) {
 		    return IO::Socket::SSL->error(
@@ -2448,7 +2475,13 @@ sub new {
 		}
 		PKCS12: while ($cert) {
 		    Net::SSLeay::CTX_use_certificate($ctx,$cert) or last;
-		    for my $ca (@chain) {
+		    # Net::SSLeay::P_PKCS12_load_file is implemented using
+		    # OpenSSL PKCS12_parse which according to the source code
+		    # returns the chain with the last CA certificate first (i.e.
+		    # reverse order as in the PKCS12 file). This is not
+		    # documented but given the age of this function we'll assume
+		    # that this will stay this way in the future.
+		    while (my $ca = pop @chain) {
 			Net::SSLeay::CTX_add_extra_chain_cert($ctx,$ca)
 			    or last PKCS12;
 		    }
@@ -2734,17 +2767,6 @@ sub new {
 }
 
 
-sub session_cache {
-    my $self = shift;
-    my $cache = $self->{session_cache} || return;
-    my ($addr,$port,$session) = @_;
-    $port ||= $addr =~s{:(\w+)$}{} && $1; # host:port
-    my $key = "$addr:$port";
-    return defined($session)
-	? $cache->add_session($key, $session)
-	: $cache->get_session($key);
-}
-
 sub has_session_cache {
     return defined shift->{session_cache};
 }
@@ -2782,6 +2804,23 @@ sub new {
     return bless { _maxsize => $size }, $class;
 }
 
+
+sub del_session {
+    my ($self, $key) = @_;
+    my $val = $self->{$key} or return;
+    Net::SSLeay::SESSION_free($val->{session});
+    $val->{prev}{next} = $val->{next};
+    $val->{next}{prev} = $val->{prev};
+    if ($val != $self->{_head}) {
+	# keep head
+    } elsif ($val == $val->{next}) {
+	# single element in cache, drop it
+	$self->{_head} = undef
+    } else {
+	# point to next element in cache
+	$self->{_head} = $val->{next}
+    }
+}
 
 sub get_session {
     my ($self, $key) = @_;
