@@ -204,7 +204,7 @@ sub composed_stats_class {
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90105';
+our $VERSION = '5.90111';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -2466,9 +2466,6 @@ sub prepare {
     # VERY ugly and probably shouldn't rely on ->finalize actually working
     catch {
         # failed prepare is always due to an invalid request, right?
-        $c->response->status(400);
-        $c->response->content_type('text/plain');
-        $c->response->body('Bad Request');
         # Note we call finalize and then die here, which escapes
         # finalize being called in the enclosing block..
         # It in fact couldn't be called, as we don't return $c..
@@ -2476,8 +2473,20 @@ sub prepare {
         # breaking compat for people doing crazy things (we should set
         # the 400 and just return the ctx here IMO, letting finalize get called
         # above...
-        $c->finalize;
-        die $_;
+        if ( $c->_handle_http_exception($_) ) {
+            foreach my $err (@{$c->error}) {
+                $c->log->error($err);
+            }
+            $c->clear_errors;
+            $c->log->_flush if $c->log->can('_flush');
+            $_->can('rethrow') ? $_->rethrow : croak $_;
+        } else {
+            $c->response->status(400);
+            $c->response->content_type('text/plain');
+            $c->response->body('Bad Request');
+            $c->finalize;
+            die $_;
+        }
     };
 
     $c->log_request;
@@ -3562,15 +3571,44 @@ sub setup_encoding {
 
 =head2 handle_unicode_encoding_exception
 
-Hook to let you customize how encoding errors are handled.  By default
-we just throw an exception.  Receives a hashref of debug information.
-Example:
+Hook to let you customize how encoding errors are handled. By default
+we just throw an exception and the default error page will pick it up.
+Receives a hashref of debug information. Example of call (from the
+Catalyst internals):
 
-    $c->handle_unicode_encoding_exception({
+  my $decoded_after_fail = $c->handle_unicode_encoding_exception({
         param_value => $value,
         error_msg => $_,
-            encoding_step => 'params',
-        });
+        encoding_step => 'params',
+   });
+
+The calling code expects to receive a decoded string or an exception.
+
+You can override this for custom handling of unicode errors. By
+default we just die. If you want a custom response here, one approach
+is to throw an HTTP style exception, instead of returning a decoded
+string or throwing a generic exception.
+
+    sub handle_unicode_encoding_exception {
+      my ($c, $params) = @_;
+      HTTP::Exception::BAD_REQUEST->throw(status_message=>$params->{error_msg});
+    }
+
+Alternatively you can 'catch' the error, stash it and write handling code later
+in your application:
+
+    sub handle_unicode_encoding_exception {
+      my ($c, $params) = @_;
+      $c->stash(BAD_UNICODE_DATA=>$params);
+      # return a dummy string.
+      return 1;
+    }
+
+<B>NOTE:</b> Please keep in mind that once an error like this occurs,
+the request setup is still ongoing, which means the state of C<$c> and
+related context parts like the request and response may not be setup
+up correctly (since we haven't finished the setup yet). If you throw
+an exception the setup is aborted.
 
 =cut
 
@@ -3611,16 +3649,17 @@ sub _handle_unicode_decoding {
 }
 
 sub _handle_param_unicode_decoding {
-    my ( $self, $value ) = @_;
+    my ( $self, $value, $check ) = @_;
     return unless defined $value; # not in love with just ignoring undefs - jnap
     return $value if blessed($value); #don't decode when the value is an object.
 
     my $enc = $self->encoding;
+    $check ||= $self->_encode_check;
     return try {
-      $enc->decode( $value, $self->_encode_check );
+      $enc->decode( $value, $check);
     }
     catch {
-        $self->handle_unicode_encoding_exception({
+        return $self->handle_unicode_encoding_exception({
             param_value => $value,
             error_msg => $_,
             encoding_step => 'params',
@@ -4321,8 +4360,16 @@ evil clients, this might cause you trouble.  If you find the changes introduced
 in Catalyst version 5.90080+ break some of your query code, you may disable 
 the UTF-8 decoding globally using this configuration.
 
-This setting takes precedence over C<default_query_encoding> and
-C<decode_query_using_global_encoding>
+This setting takes precedence over C<default_query_encoding>
+
+=item *
+
+C<do_not_check_query_encoding>
+
+Catalyst versions 5.90080 - 5.90106 would decode query parts of an incoming
+request but would not raise an exception when the decoding failed due to
+incorrect unicode.  It now does, but if this change is giving you trouble
+you may disable it by setting this configuration to true.
 
 =item *
 
@@ -4332,15 +4379,6 @@ By default we decode query and keywords in your request URL using UTF-8, which
 is our reading of the relevant specifications.  This setting allows one to
 specify a fixed value for how to decode your query.  You might need this if
 you are doing a lot of custom encoding of your URLs and not using UTF-8.
-
-This setting take precedence over C<decode_query_using_global_encoding>.
-
-=item *
-
-C<decode_query_using_global_encoding>
-
-Setting this to true will default your query decoding to whatever your
-general global encoding is (the default is UTF-8).
 
 =item *
 
