@@ -15,14 +15,14 @@
 #
 ###########################################################################
 package Memoize::ExpireLRU;
-
+$Memoize::ExpireLRU::VERSION = '0.56';
+use 5.006;
+use warnings;
 use strict;
 use AutoLoader qw(AUTOLOAD);
 use Carp;
-use vars qw($DEBUG $VERSION);
 
-$DEBUG = 0;
-$VERSION = '0.55';
+our $DEBUG = 0;
 
 # Usage:  memoize func ,
 # 		TIE => [
@@ -42,9 +42,8 @@ $VERSION = '0.55';
 ##
 #############################################
 
-use vars qw(@AllTies $EndDebug);
-
-$EndDebug = 0;
+our @AllTies;
+our $EndDebug = 0;
 
 1;
 
@@ -114,7 +113,7 @@ sub EXISTS {
 	if (!defined($i)) {
 	    print STDERR "Cache trashed (unable to find $key)\n";
 	    DumpCache($self->{INSTANCE});
-	    ShowStats;
+	    ShowStats();
 	    die "Aborting...";
 	}
 
@@ -323,7 +322,7 @@ EOS
 
 =head1 NAME
 
-Memoize - Expiry plug-in for Memoize that adds LRU cache expiration
+Memoize::ExpireLRU - Expiry plug-in for Memoize that adds LRU cache expiration
 
 =head1 SYNOPSIS
 
@@ -334,15 +333,16 @@ Memoize - Expiry plug-in for Memoize that adds LRU cache expiration
 		    CACHESIZE => n,
 	           ]);
 
-Note that one need not C<use> this module. It will be found by the
-Memoize module.
+Note that one need not C<use> this module.
+It will be found by the L<Memoize> module.
 
-The argument to CACHESIZE must be an integer. Normally, this is all
-that is needed. Additional options are available:
+The argument to C<CACHESIZE> must be an integer.
+Normally, this is all that is needed.
+Additional options are available:
 
 	TUNECACHESIZE => m,
-	INSTANCE => 'descriptive_name',
-	TIE => '[DB_File, $filename, O_RDWR | O_CREATE, 0666]'
+	INSTANCE      => 'descriptive_name',
+	TIE           => '[DB_File, $filename, O_RDWR | O_CREATE, 0666]'
 
 =head1 DESCRIPTION
 
@@ -380,16 +380,27 @@ test caches have been enabled; Memoize::ExpireLRU::DumpCache takes the
 instance name of a memoized function as a parameter, and returns a
 string describing the current state of that instance.
 
+
+=head1 SEE ALSO
+
+L<Memoize>
+
+
+=head1 REPOSITORY
+
+L<https://github.com/neilb/Memoize-ExpireLRU>
+
+
 =head1 AUTHOR
 
 Brent B. Powers (B2Pi), Powers@B2Pi.com
 
-Copyright(c) 1999 Brent B. Powers. All rights reserved. This program
-is free software, you may redistribute it and/or modify it under the
-same terms as Perl itself.
 
-=head1 SEE ALSO
+=head1 COPYRIGHT AND LICENSE
 
-Memoize
+This software is copyright (c) 1999 by Brent B. Powers.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
