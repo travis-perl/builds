@@ -1,5 +1,5 @@
 package DateTime::TimeZone::OlsonDB;
-$DateTime::TimeZone::OlsonDB::VERSION = '2.00';
+$DateTime::TimeZone::OlsonDB::VERSION = '2.01';
 use strict;
 use warnings;
 
@@ -40,6 +40,8 @@ sub parse_file {
         chomp;
         $self->_parse_line($_);
     }
+
+    close $fh or die $!;
 }
 
 sub _parse_line {
@@ -65,6 +67,7 @@ sub _parse_line {
     }
 }
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _parse_rule {
     my $self = shift;
     my $rule = shift;
@@ -127,6 +130,7 @@ sub _parse_link {
 
     undef $self->{in_zone};
 }
+## use critic
 
 sub links { %{ $_[0]->{links} } }
 
@@ -248,6 +252,7 @@ sub utc_datetime_for_time_spec {
     # 's'tandard time - ignore DS offset
     my $is_std = $p{spec} =~ s/s$//;
 
+    ## no critic (NamingConventions::ProhibitAmbiguousNames)
     my ( $hour, $minute, $second ) = split /:/, $p{spec};
     $minute = 0 unless defined $minute;
     $second = 0 unless defined $second;
@@ -310,7 +315,7 @@ DateTime::TimeZone::OlsonDB - An object to represent an Olson time zone database
 
 =head1 VERSION
 
-version 2.00
+version 2.01
 
 =head1 SYNOPSIS
 

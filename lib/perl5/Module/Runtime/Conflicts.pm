@@ -1,11 +1,11 @@
 use strict;
 use warnings;
-package Module::Runtime::Conflicts; # git description: v0.001-10-gca2cd12
+package Module::Runtime::Conflicts; # git description: v0.002-9-gc4cd9f2
+# vim: set ts=8 sts=4 sw=4 tw=115 et :
 # ABSTRACT: Provide information on conflicts for Module::Runtime
 # KEYWORDS: conflicts breaks modules prerequisites upgrade
-# vim: set ts=8 sts=4 sw=4 tw=78 et :
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 use Module::Runtime ();
 use Dist::CheckConflicts
@@ -39,7 +39,7 @@ Module::Runtime::Conflicts - Provide information on conflicts for Module::Runtim
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -55,14 +55,6 @@ or
 This module provides conflicts checking for L<Module::Runtime>, which had a
 recent release that broke some versions of L<Moose>. It is called from
 L<Moose::Conflicts> and C<moose-outdated>.
-
-=head1 SUPPORT
-
-=for stopwords irc
-
-Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Module-Runtime-Conflicts>
-(or L<bug-Module-Runtime-Conflicts@rt.cpan.org|mailto:bug-Module-Runtime-Conflicts@rt.cpan.org>).
-I am also usually active on irc, as 'ether' at C<irc.perl.org>.
 
 =head1 SEE ALSO
 
@@ -86,11 +78,24 @@ L<Dist::Zilla::Plugin::Test::CheckBreaks>
 
 =back
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Module-Runtime-Conflicts>
+(or L<bug-Module-Runtime-Conflicts@rt.cpan.org|mailto:bug-Module-Runtime-Conflicts@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/cpan-workers.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#toolchain> on C<irc.perl.org>|irc://irc.perl.org/#toolchain>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 Karen Etheridge <ether@cpan.org>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2014 by Karen Etheridge.
 

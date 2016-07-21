@@ -1,6 +1,6 @@
-package Dist::Zilla::Role::Chrome;
+package Dist::Zilla::Role::Chrome 6.006;
 # ABSTRACT: something that provides a user interface for Dist::Zilla
-$Dist::Zilla::Role::Chrome::VERSION = '6.005';
+
 use Moose::Role;
 
 use namespace::autoclean;
@@ -25,7 +25,7 @@ Dist::Zilla::Role::Chrome - something that provides a user interface for Dist::Z
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 AUTHOR
 

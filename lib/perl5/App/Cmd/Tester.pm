@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package App::Cmd::Tester;
-$App::Cmd::Tester::VERSION = '0.330';
+$App::Cmd::Tester::VERSION = '0.331';
 # ABSTRACT: for capturing the result of running an app
 
 #pod =head1 SYNOPSIS
@@ -53,6 +53,11 @@ $App::Cmd::Tester::VERSION = '0.330';
 #pod   error  - the exception thrown by running the application, or undef
 #pod   run_rv - the return value of the run method (generally irrelevant)
 #pod   exit_code - the numeric exit code that would've been issued (0 is 'okay')
+#pod
+#pod The output is captured using L<IO::TieCombine>, which I<can> ensure that the
+#pod ordering is preserved in the combined output, but I<can't> capture the output
+#pod of external programs.  You can reverse these tradeoffs by using
+#pod L<App::Cmd::Tester::CaptureExternal> instead.
 #pod
 #pod =cut
 
@@ -134,7 +139,7 @@ sub _run_with_capture {
 
 {
   package App::Cmd::Tester::Result;
-$App::Cmd::Tester::Result::VERSION = '0.330';
+$App::Cmd::Tester::Result::VERSION = '0.331';
 sub new {
     my ($class, $arg) = @_;
     bless $arg => $class;
@@ -150,7 +155,7 @@ sub new {
 
 {
   package App::Cmd::Tester::Exited;
-$App::Cmd::Tester::Exited::VERSION = '0.330';
+$App::Cmd::Tester::Exited::VERSION = '0.331';
 sub throw {
     my ($class, $code) = @_;
     $code = 0 unless defined $code;
@@ -173,7 +178,7 @@ App::Cmd::Tester - for capturing the result of running an app
 
 =head1 VERSION
 
-version 0.330
+version 0.331
 
 =head1 SYNOPSIS
 
@@ -227,6 +232,11 @@ the following data:
   run_rv - the return value of the run method (generally irrelevant)
   exit_code - the numeric exit code that would've been issued (0 is 'okay')
 
+The output is captured using L<IO::TieCombine>, which I<can> ensure that the
+ordering is preserved in the combined output, but I<can't> capture the output
+of external programs.  You can reverse these tradeoffs by using
+L<App::Cmd::Tester::CaptureExternal> instead.
+
 =for Pod::Coverage result_class
 
 =head1 AUTHOR
@@ -235,7 +245,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

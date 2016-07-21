@@ -3,7 +3,7 @@ use warnings;
 use 5.006;
 
 package App::Cmd;
-$App::Cmd::VERSION = '0.330';
+$App::Cmd::VERSION = '0.331';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: write command line apps with less suffering
@@ -742,7 +742,7 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.330
+version 0.331
 
 =head1 SYNOPSIS
 
@@ -1044,7 +1044,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Adam Prime ambs Andreas Hernitscheck A. Sinan Unur Chris 'BinGOs' Williams David Golden Steinbrunner Denis Ibaev Diab Jerius Glenn Fowler Ingy dot Net Jakob Voss Jérôme Quelin John SJ Anderson Karen Etheridge Kent Fredric Matthew Astley mokko Olivier Mengué Ricardo SIGNES Ryan C. Thompson Salvatore Bonaccorso Sergey Romanov Stephen Caldwell Yuval Kogman
+=for stopwords Adam Prime ambs Andreas Hernitscheck A. Sinan Unur Chris 'BinGOs' Williams David Golden Steinbrunner Davor Cubranic Denis Ibaev Diab Jerius Glenn Fowler Ingy dot Net Jakob Voss Jérôme Quelin John SJ Anderson Karen Etheridge Kent Fredric Matthew Astley mokko Olivier Mengué Ricardo SIGNES Ryan C. Thompson Salvatore Bonaccorso Sergey Romanov Stephen Caldwell Yuval Kogman
 
 =over 4
 
@@ -1075,6 +1075,10 @@ David Golden <dagolden@cpan.org>
 =item *
 
 David Steinbrunner <dsteinbrunner@pobox.com>
+
+=item *
+
+Davor Cubranic <cubranic@stat.ubc.ca>
 
 =item *
 
@@ -1156,7 +1160,7 @@ Yuval Kogman <nuffin@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

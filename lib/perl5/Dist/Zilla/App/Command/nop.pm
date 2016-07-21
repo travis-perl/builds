@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-package Dist::Zilla::App::Command::nop;
+package Dist::Zilla::App::Command::nop 6.006;
 # ABSTRACT: initialize dzil, then exit
-$Dist::Zilla::App::Command::nop::VERSION = '6.005';
+
 use Dist::Zilla::App -command;
 
 #pod =head1 SYNOPSIS
@@ -44,7 +44,7 @@ Dist::Zilla::App::Command::nop - initialize dzil, then exit
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 SYNOPSIS
 

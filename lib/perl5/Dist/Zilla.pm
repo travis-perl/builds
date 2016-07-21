@@ -1,6 +1,6 @@
-package Dist::Zilla;
+package Dist::Zilla 6.006;
 # ABSTRACT: distribution builder; installer not included!
-$Dist::Zilla::VERSION = '6.005';
+
 use Moose 0.92; # role composition fixes
 with 'Dist::Zilla::Role::ConfigDumper';
 
@@ -588,7 +588,13 @@ sub _build_distmeta {
 
   require CPAN::Meta::Merge;
   my $meta_merge = CPAN::Meta::Merge->new(default_version => 2);
-  my $meta = {
+  my $meta = {};
+
+  for (@{ $self->plugins_with(-MetaProvider) }) {
+    $meta = $meta_merge->merge($meta, $_->metadata);
+  }
+
+  $meta = $meta_merge->merge($meta, {
     'meta-spec' => {
       version => 2,
       url     => 'https://metacpan.org/pod/CPAN::Meta::Spec',
@@ -605,11 +611,7 @@ sub _build_distmeta {
     generated_by   => $self->_metadata_generator_id
                     . ' version '
                     . ($self->VERSION // '(undef)'),
-  };
-
-  for (@{ $self->plugins_with(-MetaProvider) }) {
-    $meta = $meta_merge->merge($meta, $_->metadata);
-  }
+  });
 
   return $meta;
 }
@@ -888,7 +890,7 @@ Dist::Zilla - distribution builder; installer not included!
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

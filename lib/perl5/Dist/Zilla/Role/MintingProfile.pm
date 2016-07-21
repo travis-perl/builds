@@ -1,6 +1,6 @@
-package Dist::Zilla::Role::MintingProfile;
+package Dist::Zilla::Role::MintingProfile 6.006;
 # ABSTRACT: something that can find a minting profile dir
-$Dist::Zilla::Role::MintingProfile::VERSION = '6.005';
+
 use Moose::Role;
 
 use namespace::autoclean;
@@ -48,7 +48,7 @@ Dist::Zilla::Role::MintingProfile - something that can find a minting profile di
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

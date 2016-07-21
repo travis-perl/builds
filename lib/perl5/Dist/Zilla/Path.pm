@@ -2,9 +2,9 @@ use strict;
 use warnings;
 use utf8;
 
-package Dist::Zilla::Path;
+package Dist::Zilla::Path 6.006;
 # ABSTRACT: a helper to get Path::Tiny objects
-$Dist::Zilla::Path::VERSION = '6.005';
+
 use parent 'Path::Tiny';
 
 use Path::Tiny 0.052 qw();  # issue 427
@@ -62,7 +62,7 @@ Dist::Zilla::Path - a helper to get Path::Tiny objects
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 AUTHOR
 

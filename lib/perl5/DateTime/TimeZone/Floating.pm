@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Floating;
-$DateTime::TimeZone::Floating::VERSION = '2.00';
+$DateTime::TimeZone::Floating::VERSION = '2.01';
 use strict;
 use warnings;
 
@@ -9,6 +9,7 @@ sub new {
     return shift->instance;
 }
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _new_instance {
     my $class = shift;
 
@@ -17,13 +18,12 @@ sub _new_instance {
         offset => 0
     }, $class;
 }
+## use critic
 
 sub is_floating {1}
 
 sub STORABLE_thaw {
-    my $self       = shift;
-    my $cloning    = shift;
-    my $serialized = shift;
+    my $self = shift;
 
     my $class = ref $self || $self;
 
@@ -56,7 +56,7 @@ DateTime::TimeZone::Floating - A time zone that is always local
 
 =head1 VERSION
 
-version 2.00
+version 2.01
 
 =head1 SYNOPSIS
 

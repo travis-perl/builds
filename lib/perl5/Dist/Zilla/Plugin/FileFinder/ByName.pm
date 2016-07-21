@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::FileFinder::ByName;
+package Dist::Zilla::Plugin::FileFinder::ByName 6.006;
 # ABSTRACT: FileFinder matching on pathnames
-$Dist::Zilla::Plugin::FileFinder::ByName::VERSION = '6.005';
+
 use Moose;
 with 'Dist::Zilla::Role::FileFinder';
 
@@ -95,16 +95,12 @@ sub mvp_multivalue_args { qw(dirs files matches skips) }
 
 sub _join_re {
   my $list = shift;
-
-  return undef if @$list == 0;
-
-  my $re = qr/(?:$list->[0])/;
-
-  for my $i (1 .. $#$list) {
-    $re = qr/$re|(?:$list->[$i])/;
-  }
-
-  $re;
+  return undef unless @$list;
+  # Special case to avoid stringify+compile
+  return $list->[0] if @$list == 1;
+  # Wrap each element to ensure that alternations are isolated
+  my $re = join('|', map { "(?:$_)" } @$list);
+  qr/$re/
 }
 
 sub find_files {
@@ -180,7 +176,7 @@ Dist::Zilla::Plugin::FileFinder::ByName - FileFinder matching on pathnames
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 SYNOPSIS
 

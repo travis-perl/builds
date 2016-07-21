@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-package Dist::Zilla::Util;
+package Dist::Zilla::Util 6.006;
 # ABSTRACT: random snippets of code that Dist::Zilla wants
-$Dist::Zilla::Util::VERSION = '6.005';
+
 use Carp ();
 use Encode ();
 
@@ -145,7 +145,7 @@ Dist::Zilla::Util - random snippets of code that Dist::Zilla wants
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 METHODS
 

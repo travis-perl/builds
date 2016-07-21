@@ -1,6 +1,6 @@
-package Dist::Zilla::Role::File;
+package Dist::Zilla::Role::File 6.006;
 # ABSTRACT: something that can act like a file
-$Dist::Zilla::Role::File::VERSION = '6.005';
+
 use Moose::Role;
 
 use Dist::Zilla::Types qw(_Filename);
@@ -185,7 +185,7 @@ Dist::Zilla::Role::File - something that can act like a file
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

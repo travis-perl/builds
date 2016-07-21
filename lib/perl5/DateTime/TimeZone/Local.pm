@@ -1,5 +1,5 @@
 package DateTime::TimeZone::Local;
-$DateTime::TimeZone::Local::VERSION = '2.00';
+$DateTime::TimeZone::Local::VERSION = '2.01';
 use strict;
 use warnings;
 
@@ -48,6 +48,7 @@ sub TimeZone {
         return $subclass if $subclass->can('Methods');
 
         return $subclass if try {
+            ## no critic (Variables::RequireInitializationForLocalVars)
             local $SIG{__DIE__};
             require_module($subclass);
         };
@@ -66,6 +67,7 @@ sub FromEnv {
     foreach my $var ( $class->EnvVars() ) {
         if ( $class->_IsValidName( $ENV{$var} ) ) {
             my $tz = try {
+                ## no critic (Variables::RequireInitializationForLocalVars)
                 local $SIG{__DIE__};
                 DateTime::TimeZone->new( name => $ENV{$var} );
             };
@@ -102,7 +104,7 @@ DateTime::TimeZone::Local - Determine the local system's time zone
 
 =head1 VERSION
 
-version 2.00
+version 2.01
 
 =head1 SYNOPSIS
 

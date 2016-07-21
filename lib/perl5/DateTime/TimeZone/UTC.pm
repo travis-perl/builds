@@ -1,5 +1,5 @@
 package DateTime::TimeZone::UTC;
-$DateTime::TimeZone::UTC::VERSION = '2.00';
+$DateTime::TimeZone::UTC::VERSION = '2.01';
 use strict;
 use warnings;
 
@@ -9,11 +9,13 @@ sub new {
     return shift->instance;
 }
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _new_instance {
     my $class = shift;
 
     return bless { name => 'UTC' }, $class;
 }
+## use critic
 
 sub is_dst_for_datetime {0}
 
@@ -42,7 +44,7 @@ DateTime::TimeZone::UTC - The UTC time zone
 
 =head1 VERSION
 
-version 2.00
+version 2.01
 
 =head1 SYNOPSIS
 

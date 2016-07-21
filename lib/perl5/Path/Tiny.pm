@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.094';
+our $VERSION = '0.096';
 
 # Dependencies
 use Config;
@@ -1982,12 +1982,11 @@ sub touchpath {
 #pod
 #pod     path("/tmp")->visit( \&callback, \%options );
 #pod
-#pod Wraps the L</iterator> method to execute a callback for each directory entry.
-#pod It returns a hash reference with any state accumulated during
-#pod iteration.
+#pod Executes a callback for each child of a directory.  It returns a hash
+#pod reference with any state accumulated during iteration.
 #pod
-#pod The options are the same as for L</iterator>: C<recurse> and
-#pod C<follow_symlinks>.  Both default to false.
+#pod The options are the same as for L</iterator> (which it uses internally):
+#pod C<recurse> and C<follow_symlinks>.  Both default to false.
 #pod
 #pod The callback function will receive a C<Path::Tiny> object as the first argument
 #pod and a hash reference to accumulate state as the second argument.  For example:
@@ -2094,7 +2093,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.094
+version 0.096
 
 =head1 SYNOPSIS
 
@@ -2972,12 +2971,11 @@ Current API available since 0.022.
 
     path("/tmp")->visit( \&callback, \%options );
 
-Wraps the L</iterator> method to execute a callback for each directory entry.
-It returns a hash reference with any state accumulated during
-iteration.
+Executes a callback for each child of a directory.  It returns a hash
+reference with any state accumulated during iteration.
 
-The options are the same as for L</iterator>: C<recurse> and
-C<follow_symlinks>.  Both default to false.
+The options are the same as for L</iterator> (which it uses internally):
+C<recurse> and C<follow_symlinks>.  Both default to false.
 
 The callback function will receive a C<Path::Tiny> object as the first argument
 and a hash reference to accumulate state as the second argument.  For example:
@@ -3202,7 +3200,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Efros Chris Williams David Golden Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop Ollis James Hunt John Karr Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Nigel Gregoire Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
+=for stopwords Alex Efros Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop Ollis James Hunt John Karr Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Nigel Gregoire Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
 
 =over 4
 
@@ -3213,10 +3211,6 @@ Alex Efros <powerman@powerman.name>
 =item *
 
 Chris Williams <bingos@cpan.org>
-
-=item *
-
-David Golden <xdg@xdg.me>
 
 =item *
 

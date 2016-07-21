@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command;
-$App::Cmd::Command::VERSION = '0.330';
+$App::Cmd::Command::VERSION = '0.331';
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 
@@ -287,7 +287,7 @@ App::Cmd::Command - a base class for App::Cmd commands
 
 =head1 VERSION
 
-version 0.330
+version 0.331
 
 =head1 METHODS
 
@@ -394,7 +394,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

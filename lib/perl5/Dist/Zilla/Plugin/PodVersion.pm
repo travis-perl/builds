@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::PodVersion;
+package Dist::Zilla::Plugin::PodVersion 6.006;
 # ABSTRACT: add a VERSION head1 to each Perl document
-$Dist::Zilla::Plugin::PodVersion::VERSION = '6.005';
+
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -98,7 +98,7 @@ Dist::Zilla::Plugin::PodVersion - add a VERSION head1 to each Perl document
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

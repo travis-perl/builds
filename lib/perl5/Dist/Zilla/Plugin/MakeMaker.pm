@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::MakeMaker;
+package Dist::Zilla::Plugin::MakeMaker 6.006;
 # ABSTRACT: build a Makefile.PL that uses ExtUtils::MakeMaker
-$Dist::Zilla::Plugin::MakeMaker::VERSION = '6.005';
+
 use Moose;
 
 use namespace::autoclean;
@@ -367,7 +367,7 @@ Dist::Zilla::Plugin::MakeMaker - build a Makefile.PL that uses ExtUtils::MakeMak
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

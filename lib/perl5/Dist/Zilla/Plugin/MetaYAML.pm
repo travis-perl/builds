@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::MetaYAML;
+package Dist::Zilla::Plugin::MetaYAML 6.006;
 # ABSTRACT: produce a META.yml
-$Dist::Zilla::Plugin::MetaYAML::VERSION = '6.005';
+
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
@@ -73,6 +73,9 @@ sub gather_files {
 
       my $converter = CPAN::Meta::Converter->new($distmeta);
       my $output    = $converter->convert(version => $self->version);
+      $output->{x_serialization_backend} = sprintf '%s version %s',
+            'YAML::Tiny', YAML::Tiny->VERSION;
+
       my $yaml = try {
         YAML::Tiny->new($output)->write_string; # text!
       }
@@ -117,7 +120,7 @@ Dist::Zilla::Plugin::MetaYAML - produce a META.yml
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

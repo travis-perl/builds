@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Simple;
-$App::Cmd::Simple::VERSION = '0.330';
+$App::Cmd::Simple::VERSION = '0.331';
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' }
 
@@ -66,6 +66,17 @@ use Sub::Install;
 #pod after the first.)
 #pod
 #pod If not overridden, it returns an empty list.
+#pod
+#pod =head2 usage_desc
+#pod
+#pod This method should be overridden to provide the top level usage line.
+#pod It's a one-line summary of how the command is to be invoked, and
+#pod should be given in the format used for the C<$usage_desc> parameter to
+#pod C<describe_options> in Getopt::Long::Descriptive.
+#pod
+#pod If not overriden, it returns something that prints out like:
+#pod
+#pod   yourapp [-?h] [long options...]
 #pod
 #pod =head2 validate_args
 #pod
@@ -213,7 +224,7 @@ App::Cmd::Simple - a helper for building one-command App::Cmd applications
 
 =head1 VERSION
 
-version 0.330
+version 0.331
 
 =head1 SYNOPSIS
 
@@ -271,6 +282,17 @@ after the first.)
 
 If not overridden, it returns an empty list.
 
+=head2 usage_desc
+
+This method should be overridden to provide the top level usage line.
+It's a one-line summary of how the command is to be invoked, and
+should be given in the format used for the C<$usage_desc> parameter to
+C<describe_options> in Getopt::Long::Descriptive.
+
+If not overriden, it returns something that prints out like:
+
+  yourapp [-?h] [long options...]
+
 =head2 validate_args
 
   $cmd->validate_args(\%opt, \@args);
@@ -313,7 +335,7 @@ Ricardo Signes <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo Signes.
+This software is copyright (c) 2016 by Ricardo Signes.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

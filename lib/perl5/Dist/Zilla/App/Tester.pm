@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-package Dist::Zilla::App::Tester;
+package Dist::Zilla::App::Tester 6.006;
 # ABSTRACT: testing library for Dist::Zilla::App
-$Dist::Zilla::App::Tester::VERSION = '6.005';
+
 use parent 'App::Cmd::Tester::CaptureExternal';
 use App::Cmd::Tester 0.306 (); # result_class, ->app
 
@@ -43,9 +43,9 @@ sub test_dzil {
 }
 
 {
-  package Dist::Zilla::App::Tester::Result;
-$Dist::Zilla::App::Tester::Result::VERSION = '6.005';
-BEGIN { our @ISA = qw(App::Cmd::Tester::Result); }
+  package Dist::Zilla::App::Tester::Result 6.006;
+
+  BEGIN { our @ISA = qw(App::Cmd::Tester::Result); }
 
   sub tempdir {
     my ($self) = @_;
@@ -78,6 +78,39 @@ BEGIN { our @ISA = qw(App::Cmd::Tester::Result); }
   }
 }
 
+#pod =head1 DESCRIPTION
+#pod
+#pod This module exports only one function, C<test_dzil>.
+#pod
+#pod =head2 C<test_dzil>
+#pod
+#pod This function is used to test L<Dist::Zilla::App>.
+#pod It receives two mandatory options. The first is the path to a Dist::Zilla-based
+#pod distribution. The second, an array reference to a list of arguments. 
+#pod
+#pod The third optional argument is a hash reference, with further options. At the moment
+#pod the only supported option is c<tempdir>.
+#pod
+#pod It returns a L<Dist::Zilla::App::Tester::Result>, that inherits from 
+#pod L<App::Cmd::Tester::Result>. Typical methods called from this result are:
+#pod
+#pod =over 4 
+#pod
+#pod =item C<output>
+#pod
+#pod The output of running dzil;
+#pod
+#pod =item C<tempdir>
+#pod
+#pod The folder used for temporary files.
+#pod
+#pod =item C<build_dir>
+#pod
+#pod The folder where the distribution was built.
+#pod
+#pod =back
+#pod
+#pod =cut
 
 1;
 
@@ -93,7 +126,39 @@ Dist::Zilla::App::Tester - testing library for Dist::Zilla::App
 
 =head1 VERSION
 
-version 6.005
+version 6.006
+
+=head1 DESCRIPTION
+
+This module exports only one function, C<test_dzil>.
+
+=head2 C<test_dzil>
+
+This function is used to test L<Dist::Zilla::App>.
+It receives two mandatory options. The first is the path to a Dist::Zilla-based
+distribution. The second, an array reference to a list of arguments. 
+
+The third optional argument is a hash reference, with further options. At the moment
+the only supported option is c<tempdir>.
+
+It returns a L<Dist::Zilla::App::Tester::Result>, that inherits from 
+L<App::Cmd::Tester::Result>. Typical methods called from this result are:
+
+=over 4 
+
+=item C<output>
+
+The output of running dzil;
+
+=item C<tempdir>
+
+The folder used for temporary files.
+
+=item C<build_dir>
+
+The folder where the distribution was built.
+
+=back
 
 =head1 AUTHOR
 

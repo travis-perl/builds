@@ -1,8 +1,8 @@
 use strict;
 use warnings;
-package Dist::Zilla::Util::AuthorDeps;
+package Dist::Zilla::Util::AuthorDeps 6.006;
 # ABSTRACT: Utils for listing your distribution's author dependencies
-$Dist::Zilla::Util::AuthorDeps::VERSION = '6.005';
+
 use Dist::Zilla::Util;
 use Path::Tiny;
 use List::Util 1.45 ();
@@ -139,7 +139,7 @@ Dist::Zilla::Util::AuthorDeps - Utils for listing your distribution's author dep
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 AUTHOR
 

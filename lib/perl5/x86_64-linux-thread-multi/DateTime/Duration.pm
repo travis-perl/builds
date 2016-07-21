@@ -3,7 +3,7 @@ package DateTime::Duration;
 use strict;
 use warnings;
 
-our $VERSION = '1.28';
+our $VERSION = '1.34';
 
 use Carp ();
 use DateTime;
@@ -255,7 +255,7 @@ sub multiply {
 }
 
 sub compare {
-    my ( $class, $dur1, $dur2, $dt ) = @_;
+    my ( undef, $dur1, $dur2, $dt ) = @_;
 
     $dt ||= DateTime->now;
 
@@ -321,7 +321,7 @@ DateTime::Duration - Duration objects for date math
 
 =head1 VERSION
 
-version 1.28
+version 1.34
 
 =head1 SYNOPSIS
 

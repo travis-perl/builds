@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::PkgVersion;
+package Dist::Zilla::Plugin::PkgVersion 6.006;
 # ABSTRACT: add a $VERSION to your packages
-$Dist::Zilla::Plugin::PkgVersion::VERSION = '6.005';
+
 use Moose;
 with(
   'Dist::Zilla::Role::FileMunger',
@@ -332,7 +332,7 @@ Dist::Zilla::Plugin::PkgVersion - add a $VERSION to your packages
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 SYNOPSIS
 

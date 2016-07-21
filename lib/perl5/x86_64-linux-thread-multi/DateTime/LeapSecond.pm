@@ -3,7 +3,7 @@ package DateTime::LeapSecond;
 use strict;
 use warnings;
 
-our $VERSION = '1.28';
+our $VERSION = '1.34';
 
 use vars qw( @RD @LEAP_SECONDS %RD_LENGTH );
 
@@ -109,6 +109,7 @@ sub _initialize {
             2009  Jan. 1  +1
             2012  Jun. 1  +1
             2015  Jul. 1  +1
+            2017  Jan. 1  +1
             )
     );
 }
@@ -131,7 +132,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.28
+version 1.34
 
 =head1 SYNOPSIS
 

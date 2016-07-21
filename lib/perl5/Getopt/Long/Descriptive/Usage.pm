@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Getopt::Long::Descriptive::Usage;
 # ABSTRACT: the usage description for GLD
-$Getopt::Long::Descriptive::Usage::VERSION = '0.099';
+$Getopt::Long::Descriptive::Usage::VERSION = '0.100';
 use List::Util qw(max);
 
 #pod =head1 SYNOPSIS
@@ -146,21 +146,19 @@ sub _option_length {
     }
 
     # Was the last option a "short" one?
-    if ($length - $last_pos == 2) {
+    if ($length - $last_pos == 1) {
         $number_shortopts++;
     }
 
     # We got $number_opts options, each with an argument length of
     # $arglen.  Plus each option (after the first) needs 3 a char
     # spacing.  $length gives us the total length of all options and 1
-    # char spacing per option (after the first).  It does not account
-    # for argument length and we want (at least) one additional char
-    # for space before the description.  So the result should be:
+    # char spacing per option (after the first).  So the result should be:
 
     my $number_longopts = $number_opts - $number_shortopts;
     my $total_arglen = $number_opts * $arglen;
     my $total_optsep = 2 * $number_longopts + $number_shortopts;
-    my $total = $length + $total_optsep + $total_arglen + 1;
+    my $total = $length + $total_optsep + $total_arglen;
     return $total;
 }
 
@@ -195,9 +193,9 @@ sub _parse_assignment {
     }
 
     $argument = substr $assign_spec, 1, 2;
-    if ($argument eq 'i' or $argument eq 'o') {
+    if ($argument =~ m/^i/ or $argument =~ m/^o/) {
         $result = 'INT';
-    } elsif ($argument eq 'f') {
+    } elsif ($argument =~ m/^f/) {
         $result = 'NUM';
     }
     if (length($assign_spec) > 2) {
@@ -275,7 +273,7 @@ Getopt::Long::Descriptive::Usage - the usage description for GLD
 
 =head1 VERSION
 
-version 0.099
+version 0.100
 
 =head1 SYNOPSIS
 

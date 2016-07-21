@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Getopt::Long::Descriptive;
 # ABSTRACT: Getopt::Long, but simpler and more powerful
-$Getopt::Long::Descriptive::VERSION = '0.099';
+$Getopt::Long::Descriptive::VERSION = '0.100';
 use Carp qw(carp croak);
 use File::Basename ();
 use Getopt::Long 2.33;
@@ -23,7 +23,7 @@ use Getopt::Long::Descriptive::Usage;
 #pod     [ 'port|p=i',   "the port to connect to",   { default  => 79 } ],
 #pod     [],
 #pod     [ 'verbose|v',  "print extra stuff"            ],
-#pod     [ 'help',       "print usage message and exit" ],
+#pod     [ 'help',       "print usage message and exit", { shortcircuit => 1 } ],
 #pod   );
 #pod
 #pod   print($usage->text), exit if $opt->help;
@@ -659,7 +659,7 @@ Getopt::Long::Descriptive - Getopt::Long, but simpler and more powerful
 
 =head1 VERSION
 
-version 0.099
+version 0.100
 
 =head1 SYNOPSIS
 
@@ -671,7 +671,7 @@ version 0.099
     [ 'port|p=i',   "the port to connect to",   { default  => 79 } ],
     [],
     [ 'verbose|v',  "print extra stuff"            ],
-    [ 'help',       "print usage message and exit" ],
+    [ 'help',       "print usage message and exit", { shortcircuit => 1 } ],
   );
 
   print($usage->text), exit if $opt->help;
@@ -942,6 +942,70 @@ Hans Dieter Pearcey <hdp@cpan.org>
 =item *
 
 Ricardo Signes <rjbs@cpan.org>
+
+=back
+
+=head1 CONTRIBUTORS
+
+=for stopwords Arthur Axel 'fREW' Schmidt Dave Rolsky Diab Jerius Hans Dieter Pearcey Harley Pig hdp@cpan.org Karen Etheridge Niels Thykier Olaf Alders Roman Hubacek Smylers Thomas Neumann zhouzhen1
+
+=over 4
+
+=item *
+
+Arthur Axel 'fREW' Schmidt <frioux@gmail.com>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
+
+=item *
+
+Diab Jerius <djerius@cfa.harvard.edu>
+
+=item *
+
+Hans Dieter Pearcey <hdp@pobox.com>
+
+=item *
+
+Hans Dieter Pearcey <hdp@weftsoar.net>
+
+=item *
+
+Harley Pig <harleypig@gmail.com>
+
+=item *
+
+hdp@cpan.org <hdp@cpan.org@fc0e91e4-031c-0410-8307-be39b06d7656>
+
+=item *
+
+Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Niels Thykier <niels@thykier.net>
+
+=item *
+
+Olaf Alders <olaf@wundersolutions.com>
+
+=item *
+
+Roman Hubacek <roman.hubacek@centrum.cz>
+
+=item *
+
+Smylers <SMYLERS@cpan.fsck.com>
+
+=item *
+
+Thomas Neumann <blacky+perl@fluffbunny.de>
+
+=item *
+
+zhouzhen1 <zhouzhen1@gmail.com>
 
 =back
 

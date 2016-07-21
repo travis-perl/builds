@@ -1,6 +1,6 @@
-package Dist::Zilla::Role::ReleaseStatusProvider;
+package Dist::Zilla::Role::ReleaseStatusProvider 6.006;
 # ABSTRACT: something that provides a release status for the dist
-$Dist::Zilla::Role::ReleaseStatusProvider::VERSION = '6.005';
+
 use Moose::Role;
 with 'Dist::Zilla::Role::Plugin';
 
@@ -38,7 +38,7 @@ Dist::Zilla::Role::ReleaseStatusProvider - something that provides a release sta
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 

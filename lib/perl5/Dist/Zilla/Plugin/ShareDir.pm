@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::ShareDir;
+package Dist::Zilla::Plugin::ShareDir 6.006;
 # ABSTRACT: install a directory's contents as "ShareDir" content
-$Dist::Zilla::Plugin::ShareDir::VERSION = '6.005';
+
 use Moose;
 
 use namespace::autoclean;
@@ -56,7 +56,7 @@ Dist::Zilla::Plugin::ShareDir - install a directory's contents as "ShareDir" con
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 SYNOPSIS
 

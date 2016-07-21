@@ -1,6 +1,6 @@
-package Dist::Zilla::Dist::Builder;
+package Dist::Zilla::Dist::Builder 6.006;
 # ABSTRACT: dist zilla subclass for building dists
-$Dist::Zilla::Dist::Builder::VERSION = '6.005';
+
 use Moose 0.92; # role composition fixes
 extends 'Dist::Zilla';
 
@@ -874,7 +874,7 @@ Dist::Zilla::Dist::Builder - dist zilla subclass for building dists
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 ATTRIBUTES
 

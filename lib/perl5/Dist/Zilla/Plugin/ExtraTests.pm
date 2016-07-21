@@ -1,6 +1,6 @@
-package Dist::Zilla::Plugin::ExtraTests;
+package Dist::Zilla::Plugin::ExtraTests 6.006;
 # ABSTRACT: rewrite ./xt tests to ./t tests with skips
-$Dist::Zilla::Plugin::ExtraTests::VERSION = '6.005';
+
 use Moose;
 with 'Dist::Zilla::Role::FileMunger';
 
@@ -58,8 +58,8 @@ sub _rewrite {
   splice @lines, $after, 0, qq|
 BEGIN {
   unless (\$ENV{$env}) {
-    require Test::More;
-    Test::More::plan(skip_all => 'these tests are for $msg');
+    print "1..0 # SKIP these tests are for $msg\\n";
+    exit
   }
 }
 |;
@@ -82,7 +82,7 @@ Dist::Zilla::Plugin::ExtraTests - rewrite ./xt tests to ./t tests with skips
 
 =head1 VERSION
 
-version 6.005
+version 6.006
 
 =head1 DESCRIPTION
 
