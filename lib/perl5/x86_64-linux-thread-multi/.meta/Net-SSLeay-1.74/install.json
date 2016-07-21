@@ -1,1 +1,1 @@
-{"pathname":"M/MI/MIKEM/Net-SSLeay-1.74.tar.gz","target":"Net::SSLeay","dist":"Net-SSLeay-1.74","name":"Net::SSLeay","version":"1.74","provides":{"Net::SSLeay":{"version":"1.74","file":"lib/Net/SSLeay.pm"},"Net::SSLeay::Handle":{"file":"lib/Net/SSLeay/Handle.pm","version":"0.61"}}}
+{"target":"Net::SSLeay","version":"1.74","dist":"Net-SSLeay-1.74","provides":{"Net::SSLeay":{"file":"lib/Net/SSLeay.pm","version":"1.74"},"Net::SSLeay::Handle":{"file":"lib/Net/SSLeay/Handle.pm","version":"0.61"}},"pathname":"M/MI/MIKEM/Net-SSLeay-1.74.tar.gz","name":"Net::SSLeay"}
