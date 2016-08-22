@@ -204,7 +204,7 @@ sub composed_stats_class {
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90111';
+our $VERSION = '5.90112';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -3654,6 +3654,9 @@ sub _handle_param_unicode_decoding {
     return $value if blessed($value); #don't decode when the value is an object.
 
     my $enc = $self->encoding;
+
+    return $value unless $enc; # don't decode if no encoding is specified
+
     $check ||= $self->_encode_check;
     return try {
       $enc->decode( $value, $check);

@@ -32,7 +32,7 @@ use Carp::Heavy;
 use Carp;
 use Exporter;
 
-$Config::General::VERSION = "2.62";
+$Config::General::VERSION = "2.63";
 
 use vars  qw(@ISA @EXPORT_OK);
 use base qw(Exporter);
@@ -454,9 +454,18 @@ sub _open {
     $configfile = $basefile;
   }
 
-  if ($this->{IncludeGlob} and $configfile =~ /[*?\[\{\\]/) {
+  my $glob = qr/[*?\[\{\\]/;
+  if ($^O =~ /win/i) {
+    # fix for rt.cpan.org#116340: do only consider a backslash
+    # as meta escape char, but not if it appears on it's own,
+    # as it happens on windows platforms.
+    $glob = qr/(\\[*?\[\{\\]|[*?\[\{])/;
+  }
+
+  if ($this->{IncludeGlob} and $configfile =~ /$glob/) {
     # Something like: *.conf (or maybe dir/*.conf) was included; expand it and
     # pass each expansion through this method again.
+    local $_;
     my @include = grep { -f $_ } bsd_glob($configfile, GLOB_BRACE | GLOB_QUOTE);
 
     # applied patch by AlexK fixing rt.cpan.org#41030
@@ -473,8 +482,8 @@ sub _open {
     # Multiple results or no expansion results (which is fine,
     # include foo/* shouldn't fail if there isn't anything matching)
     # rt.cpan.org#79869: local $this->{IncludeGlob};
-    for (@include) {
-      $this->_open($_);
+    foreach my $file (@include) {
+      $this->_open($file);
     }
     return;
   }
@@ -2865,7 +2874,7 @@ Thomas Linden <tlinden |AT| cpan.org>
 
 =head1 VERSION
 
-2.62
+2.63
 
 =cut
 
