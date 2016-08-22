@@ -13,7 +13,7 @@ Moose::Cookbook::Roles::Restartable_AdvancedComposition - Advanced Role Composit
 
 =head1 VERSION
 
-version 2.1804
+version 2.1805
 
 =head1 SYNOPSIS
 

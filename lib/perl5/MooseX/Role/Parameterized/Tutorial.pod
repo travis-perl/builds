@@ -13,7 +13,7 @@ MooseX::Role::Parameterized::Tutorial - why and how
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 MOTIVATION
 
@@ -134,7 +134,7 @@ can now also choose type, default value, whether it's required, B<traits>, etc.
             isa    => $p->type,
             ...
         );
-    }
+    };
 
 =item Inform a role of your class' attributes and methods
 
@@ -150,7 +150,7 @@ instrument, or which attributes to dump to a file.
     role {
         my $p = shift;
         around $p->instrument_method => sub { ... };
-    }
+    };
 
 =item Arbitrary execution choices
 
@@ -170,7 +170,7 @@ states.
             if ($p->save_intermediate) { ... }
             ...
         };
-    }
+    };
 
 =item Deciding a backend
 
@@ -193,7 +193,7 @@ L<Storable>. Which backend to use can be a parameter.
             method thaw   => \&YAML::Load;
         }
         ...
-    }
+    };
 
 =item Additional validation
 
@@ -219,9 +219,20 @@ names. Since parameterized roles have direct access to its consumer, you can ins
             or confess "Your push parameter must be a scalar";
 
         ...
-    }
+    };
 
 =back
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-Parameterized>
+(or L<bug-MooseX-Role-Parameterized@rt.cpan.org|mailto:bug-MooseX-Role-Parameterized@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

@@ -1,8 +1,8 @@
-package Try::Tiny; # git description: v0.23-3-g5ee27f1
+package Try::Tiny; # git description: v0.26-7-g2ae317a
 use 5.006;
 # ABSTRACT: minimal try/catch with proper preservation of $@
 
-our $VERSION = '0.24';
+our $VERSION = '0.27';
 
 use strict;
 use warnings;
@@ -28,6 +28,8 @@ BEGIN {
             : sub { $_[1] };
   *_HAS_SUBNAME = ($su || $sn) ? sub(){1} : sub(){0};
 }
+
+my %_finally_guards;
 
 # Need to prototype as @ not $$ because of the way Perl evaluates the prototype.
 # Keeping it at $$ means you only ever get 1 sub because we need to eval in a list
@@ -72,6 +74,15 @@ sub try (&;@) {
   _subname("${caller}::try {...} " => $try)
     if _HAS_SUBNAME;
 
+  # set up scope guards to invoke the finally blocks at the end.
+  # this should really be a function scope lexical variable instead of
+  # file scope + local but that causes issues with perls < 5.20 due to
+  # perl rt#119311
+  local $_finally_guards{guards} = [
+    map { Try::Tiny::ScopeGuard->_new($_) }
+    @finally
+  ];
+
   # save the value of $@ so we can set $@ back to it in the beginning of the eval
   # and restore $@ after the eval finishes
   my $prev_error = $@;
@@ -99,14 +110,12 @@ sub try (&;@) {
   $error = $@;
   $@ = $prev_error;
 
-  # set up a scope guard to invoke the finally block at the end
-  my @guards =
-    map { Try::Tiny::ScopeGuard->_new($_, $failed ? $error : ()) }
-    @finally;
-
   # at this point $failed contains a true value if the eval died, even if some
   # destructor overwrote $@ as the eval was unwinding.
   if ( $failed ) {
+    # pass $error to the finally blocks
+    push @$_, $error for @{$_finally_guards{guards}};
+
     # if we got an error, invoke the catch block.
     if ( $catch ) {
       # This works like given($error), but is backwards compatible and
@@ -158,7 +167,7 @@ sub finally (&;@) {
   package # hide from PAUSE
     Try::Tiny::ScopeGuard;
 
-  use constant UNSTABLE_DOLLARAT => ($] < '5.013002') ? 1 : 0;
+  use constant UNSTABLE_DOLLARAT => ("$]" < '5.013002') ? 1 : 0;
 
   sub _new {
     shift;
@@ -199,7 +208,7 @@ Try::Tiny - minimal try/catch with proper preservation of $@
 
 =head1 VERSION
 
-version 0.24
+version 0.27
 
 =head1 SYNOPSIS
 
@@ -669,10 +678,6 @@ Or read the source:
 
 L<http://web.archive.org/web/20100305133605/http://nothingmuch.woobling.org/talks/yapc_asia_2009/try_tiny.yml>
 
-=head1 VERSION CONTROL
-
-L<http://github.com/doy/try-tiny/>
-
 =head1 SUPPORT
 
 Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Try-Tiny>
@@ -694,7 +699,7 @@ Jesse Luehrs <doy@tozt.net>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Peter Rabbitson Ricardo Signes Mark Fowler Graham Knop Dagfinn Ilmari Mannsåker Paul Howarth Rudolf Leermakers anaxagoras awalker chromatic Alex cm-perl Andrew Yates David Lowe Glenn Hans Dieter Pearcey Jonathan Yu Marc Mims Stosberg
+=for stopwords Karen Etheridge Peter Rabbitson Ricardo Signes Mark Fowler Graham Knop Lukas Mai Dagfinn Ilmari Mannsåker Rudolf Leermakers anaxagoras awalker chromatic Alex cm-perl Andrew Yates David Lowe Glenn Hans Dieter Pearcey Jonathan Yu Marc Mims Stosberg Paul Howarth
 
 =over 4
 
@@ -720,11 +725,11 @@ Graham Knop <haarg@haarg.org>
 
 =item *
 
-Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+Lukas Mai <l.mai@web.de>
 
 =item *
 
-Paul Howarth <paul@city-fan.org>
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
 
 =item *
 
@@ -777,6 +782,10 @@ Marc Mims <marc@questright.com>
 =item *
 
 Mark Stosberg <mark@stosberg.com>
+
+=item *
+
+Paul Howarth <paul@city-fan.org>
 
 =back
 

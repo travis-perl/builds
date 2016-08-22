@@ -1,5 +1,6 @@
-package Sub::Name; # git description: v0.14-11-g2e37020
-# ABSTRACT: (re)name a sub
+package Sub::Name; # git description: v0.18-3-gdaff102
+# ABSTRACT: (Re)name a sub
+# KEYWORDS: subroutine function utility name rename symbol
 
 #pod =pod
 #pod
@@ -53,7 +54,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.15';
+our $VERSION = '0.19';
 
 use Exporter 5.57 'import';
 
@@ -76,11 +77,11 @@ __END__
 
 =head1 NAME
 
-Sub::Name - (re)name a sub
+Sub::Name - (Re)name a sub
 
 =head1 VERSION
 
-version 0.15
+version 0.19
 
 =head1 SYNOPSIS
 
@@ -139,13 +140,17 @@ Matthijs van Duin <xmath@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Florian Ragwitz Matthijs van Duin Reini Urban Dagfinn Ilmari Mannsåker gfx J.R. Mash
+=for stopwords Karen Etheridge Leon Timmermans Florian Ragwitz Matthijs van Duin Reini Urban gfx Dagfinn Ilmari Mannsåker Aristotle Pagaltzis J.R. Mash
 
 =over 4
 
 =item *
 
 Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Leon Timmermans <fawaka@gmail.com>
 
 =item *
 
@@ -161,11 +166,15 @@ Reini Urban <rurban@cpanel.net>
 
 =item *
 
+gfx <gfuji@cpan.org>
+
+=item *
+
 Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
 
 =item *
 
-gfx <gfuji@cpan.org>
+Aristotle Pagaltzis <pagaltzis@gmx.de>
 
 =item *
 

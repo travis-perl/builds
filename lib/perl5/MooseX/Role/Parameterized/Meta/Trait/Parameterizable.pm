@@ -1,6 +1,8 @@
 package MooseX::Role::Parameterized::Meta::Trait::Parameterizable;
 # ABSTRACT: trait for parameterizable roles
-$MooseX::Role::Parameterized::Meta::Trait::Parameterizable::VERSION = '1.08';
+
+our $VERSION = '1.09';
+
 use Moose::Role;
 use MooseX::Role::Parameterized::Meta::Role::Parameterized;
 use MooseX::Role::Parameterized::Parameters;
@@ -46,6 +48,7 @@ sub _build_parameters_metaclass {
     );
 }
 
+my $package_counter = 0;
 sub generate_role {
     my $self     = shift;
     my %args     = @_;
@@ -60,19 +63,16 @@ sub generate_role {
     my $parameterized_role_metaclass = $self->parameterized_role_metaclass;
     use_module($parameterized_role_metaclass);
 
-    my $role;
-    if ($args{package}) {
-        $role = $parameterized_role_metaclass->create(
-            $args{package},
-            genitor    => $self,
-            parameters => $parameters,
-        );
-    } else {
-        $role = $parameterized_role_metaclass->create_anon_role(
-            genitor    => $self,
-            parameters => $parameters,
-        );
+    my $package = $args{package};
+    unless ($package) {
+        $package_counter++;
+        $package = $self->name . '::__ANON__::SERIAL::' . $package_counter;
     }
+    my $role = $parameterized_role_metaclass->create(
+        $package,
+        genitor    => $self,
+        parameters => $parameters,
+    );
 
     local $MooseX::Role::Parameterized::CURRENT_METACLASS = $role;
 
@@ -156,7 +156,7 @@ MooseX::Role::Parameterized::Meta::Trait::Parameterizable - trait for parameteri
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 DESCRIPTION
 
@@ -236,6 +236,17 @@ A consumer metaobject, if available.
 
 Overrides L<Moose::Meta::Role/apply> to automatically generate the
 parameterized role.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-Parameterized>
+(or L<bug-MooseX-Role-Parameterized@rt.cpan.org|mailto:bug-MooseX-Role-Parameterized@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

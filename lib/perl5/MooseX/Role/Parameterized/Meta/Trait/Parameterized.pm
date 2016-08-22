@@ -1,6 +1,8 @@
 package MooseX::Role::Parameterized::Meta::Trait::Parameterized;
 # ABSTRACT: trait for parameterized roles
-$MooseX::Role::Parameterized::Meta::Trait::Parameterized::VERSION = '1.08';
+
+our $VERSION = '1.09';
+
 use Moose::Role;
 use MooseX::Role::Parameterized::Parameters;
 use Moose::Util 'find_meta';
@@ -50,7 +52,7 @@ MooseX::Role::Parameterized::Meta::Trait::Parameterized - trait for parameterize
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 DESCRIPTION
 
@@ -73,6 +75,17 @@ metaobject that generated this role.
 
 Returns the L<MooseX::Role::Parameterized::Parameters> object that represents
 the specific parameter values for this parameterized role.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-Parameterized>
+(or L<bug-MooseX-Role-Parameterized@rt.cpan.org|mailto:bug-MooseX-Role-Parameterized@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

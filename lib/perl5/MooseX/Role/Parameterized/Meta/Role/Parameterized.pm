@@ -1,6 +1,8 @@
 package MooseX::Role::Parameterized::Meta::Role::Parameterized;
 # ABSTRACT: metaclass for parameterized roles
-$MooseX::Role::Parameterized::Meta::Role::Parameterized::VERSION = '1.08';
+
+our $VERSION = '1.09';
+
 use Moose;
 extends 'Moose::Meta::Role';
 with 'MooseX::Role::Parameterized::Meta::Trait::Parameterized';
@@ -22,13 +24,24 @@ MooseX::Role::Parameterized::Meta::Role::Parameterized - metaclass for parameter
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 DESCRIPTION
 
 This is the metaclass for parameterized roles; that is, parameterizable roles
 with their parameters bound. See
 L<MooseX::Role::Parameterized::Meta::Trait::Parameterized> which has all the guts.
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-Parameterized>
+(or L<bug-MooseX-Role-Parameterized@rt.cpan.org|mailto:bug-MooseX-Role-Parameterized@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 
