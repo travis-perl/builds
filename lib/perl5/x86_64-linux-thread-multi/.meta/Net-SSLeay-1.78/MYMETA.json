@@ -4,7 +4,7 @@
       "Maintained by Mike McCauley and Florian Ragwitz since November 2005"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -46,10 +46,12 @@
       "bugtracker" : {
          "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=net-ssleay"
       },
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
       "repository" : {
-         "type" : "svn",
-         "url" : "svn://svn.debian.org/svn/net-ssleay"
+         "url" : "http://svn.debian.org/wsvn/net-ssleay"
       }
    },
-   "version" : "1.74"
+   "version" : "1.78"
 }
