@@ -1,4 +1,4 @@
-=head2 Thu Jul 21 00:12:08 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Mon Aug 22 00:10:26 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -20,29 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Jul 21 00:12:10 2016: C<Module> L<Role::Tiny|Role::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.000003>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Thu Jul 21 00:12:11 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Mon Aug 22 00:10:27 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -64,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Jul 21 00:12:11 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Mon Aug 22 00:10:27 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -86,7 +64,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Jul 21 00:12:12 2016: C<Module> L<Moo|Moo>
+=head2 Mon Aug 22 00:10:27 2016: C<Module> L<Role::Tiny|Role::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.000003>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Aug 22 00:10:29 2016: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Jul 21 00:12:13 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Mon Aug 22 00:10:31 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Jul 21 00:12:13 2016: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Mon Aug 22 00:10:31 2016: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
