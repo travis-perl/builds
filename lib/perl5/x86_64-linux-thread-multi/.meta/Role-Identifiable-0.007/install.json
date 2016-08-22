@@ -1,0 +1,1 @@
+{"target":"Role::Identifiable::HasIdent","version":"0.007","name":"Role::Identifiable","pathname":"R/RJ/RJBS/Role-Identifiable-0.007.tar.gz","dist":"Role-Identifiable-0.007","provides":{"Role::Identifiable::HasIdent":{"version":"0.007","file":"lib/Role/Identifiable/HasIdent.pm"},"Role::Identifiable::HasTags":{"file":"lib/Role/Identifiable/HasTags.pm","version":"0.007"}}}
