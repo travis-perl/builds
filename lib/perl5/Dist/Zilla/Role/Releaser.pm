@@ -1,4 +1,4 @@
-package Dist::Zilla::Role::Releaser 6.006;
+package Dist::Zilla::Role::Releaser 6.007;
 # ABSTRACT: something that makes a release of the dist
 
 use Moose::Role;
@@ -29,7 +29,7 @@ Dist::Zilla::Role::Releaser - something that makes a release of the dist
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

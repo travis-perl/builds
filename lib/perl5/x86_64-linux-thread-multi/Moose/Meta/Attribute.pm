@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute;
-our $VERSION = '2.1804';
+our $VERSION = '2.1805';
 
 use B ();
 use Scalar::Util 'blessed';
@@ -1284,7 +1284,7 @@ Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 VERSION
 
-version 2.1804
+version 2.1805
 
 =head1 DESCRIPTION
 

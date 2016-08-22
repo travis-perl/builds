@@ -5,7 +5,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '2.56';
+our $VERSION = '2.57';
 
 use base qw( Log::Dispatch::Base );
 
@@ -286,7 +286,7 @@ Log::Dispatch - Dispatches messages to one or more outputs
 
 =head1 VERSION
 
-version 2.56
+version 2.57
 
 =head1 SYNOPSIS
 
@@ -457,6 +457,11 @@ Adds a callback (like those given during construction). It is added to the end
 of the list of callbacks. Note that this can also be called on individual
 output objects.
 
+=head2 $dispatch->remove_callback( $code )
+
+Remove the given callback from the list of callbacks. Note that this can also
+be called on individual output objects.
+
 =head2 $dispatch->callbacks()
 
 Returns a list of the callbacks in a given output.
@@ -485,7 +490,7 @@ a warning if C<$^W> is true.
 
 =head2 $dispatch->remove($)
 
-Removes the object that matches the name given to the remove method.
+Removes the output object that matches the name given to the remove method.
 The return value is the object being removed or undef if no object
 matched this.
 
@@ -691,9 +696,13 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Graham Ollis Gregory Oschwald Jonathan Swartz Karen Etheridge Konrad Bucheli Olaf Alders Olivier Mengué Rohan Carly Ross Attrill Salvador Fandiño Steve Bertrand Whitney Jackson
+=for stopwords Doug Bell Graham Ollis Gregory Oschwald Jonathan Swartz Karen Etheridge Konrad Bucheli Olaf Alders Olivier Mengué Rohan Carly Ross Attrill Salvador Fandiño Steve Bertrand Whitney Jackson
 
 =over 4
+
+=item *
+
+Doug Bell <madcityzen@gmail.com>
 
 =item *
 
@@ -745,7 +754,7 @@ Whitney Jackson <whitney.jackson@baml.com>
 
 =back
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

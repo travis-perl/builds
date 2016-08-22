@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::ConfirmRelease 6.006;
+package Dist::Zilla::Plugin::ConfirmRelease 6.007;
 # ABSTRACT: prompt for confirmation before releasing
 
 use Moose;
@@ -53,7 +53,7 @@ Dist::Zilla::Plugin::ConfirmRelease - prompt for confirmation before releasing
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

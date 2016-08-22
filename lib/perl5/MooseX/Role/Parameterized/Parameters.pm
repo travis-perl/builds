@@ -1,6 +1,8 @@
 package MooseX::Role::Parameterized::Parameters;
 # ABSTRACT: base class for parameters
-$MooseX::Role::Parameterized::Parameters::VERSION = '1.08';
+
+our $VERSION = '1.09';
+
 use Moose;
 __PACKAGE__->meta->make_immutable;
 no Moose;
@@ -19,7 +21,7 @@ MooseX::Role::Parameterized::Parameters - base class for parameters
 
 =head1 VERSION
 
-version 1.08
+version 1.09
 
 =head1 DESCRIPTION
 
@@ -32,6 +34,17 @@ subclasses.
 
 Each parameterized role gets their own instance of the anonymous subclass
 (owned by the parameterizable role).
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Role-Parameterized>
+(or L<bug-MooseX-Role-Parameterized@rt.cpan.org|mailto:bug-MooseX-Role-Parameterized@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 

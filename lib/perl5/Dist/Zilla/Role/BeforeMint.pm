@@ -1,4 +1,4 @@
-package Dist::Zilla::Role::BeforeMint 6.006;
+package Dist::Zilla::Role::BeforeMint 6.007;
 # ABSTRACT: something that runs before minting really begins
 
 use Moose::Role;
@@ -29,7 +29,7 @@ Dist::Zilla::Role::BeforeMint - something that runs before minting really begins
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

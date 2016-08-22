@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::MetaYAML 6.006;
+package Dist::Zilla::Plugin::MetaYAML 6.007;
 # ABSTRACT: produce a META.yml
 
 use Moose;
@@ -24,25 +24,6 @@ has filename => (
   is  => 'ro',
   isa => 'Str',
   default => 'META.yml',
-);
-
-#pod =attr version
-#pod
-#pod This parameter lets you pick what version of the spec to use when generating
-#pod the output.  It defaults to 1.4, the most commonly supported version at
-#pod present.
-#pod
-#pod B<This may change without notice in the future.>
-#pod
-#pod Once version 2 of the META file spec is more widely supported, this may default
-#pod to 2.
-#pod
-#pod =cut
-
-has version => (
-  is  => 'ro',
-  isa => 'Num',
-  default => '1.4',
 );
 
 sub gather_files {
@@ -72,7 +53,7 @@ sub gather_files {
       }
 
       my $converter = CPAN::Meta::Converter->new($distmeta);
-      my $output    = $converter->convert(version => $self->version);
+      my $output    = $converter->convert(version => '1.4');
       $output->{x_serialization_backend} = sprintf '%s version %s',
             'YAML::Tiny', YAML::Tiny->VERSION;
 
@@ -120,7 +101,7 @@ Dist::Zilla::Plugin::MetaYAML - produce a META.yml
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 
@@ -134,17 +115,6 @@ For more information on this file, see L<Module::Build::API> and L<CPAN::Meta>.
 
 If given, parameter allows you to specify an alternate name for the generated
 file.  It defaults, of course, to F<META.yml>.
-
-=head2 version
-
-This parameter lets you pick what version of the spec to use when generating
-the output.  It defaults to 1.4, the most commonly supported version at
-present.
-
-B<This may change without notice in the future.>
-
-Once version 2 of the META file spec is more widely supported, this may default
-to 2.
 
 =head1 SEE ALSO
 

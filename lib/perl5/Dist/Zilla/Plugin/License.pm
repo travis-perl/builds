@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::License 6.006;
+package Dist::Zilla::Plugin::License 6.007;
 # ABSTRACT: output a LICENSE file
 
 use Moose;
@@ -77,7 +77,7 @@ Dist::Zilla::Plugin::License - output a LICENSE file
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

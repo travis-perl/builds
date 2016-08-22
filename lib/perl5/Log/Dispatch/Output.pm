@@ -3,7 +3,7 @@ package Log::Dispatch::Output;
 use strict;
 use warnings;
 
-our $VERSION = '2.56';
+our $VERSION = '2.57';
 
 use Log::Dispatch;
 
@@ -181,7 +181,7 @@ Log::Dispatch::Output - Base class for all Log::Dispatch::* objects
 
 =head1 VERSION
 
-version 2.56
+version 2.57
 
 =head1 SYNOPSIS
 
@@ -281,6 +281,10 @@ level then it will croak.
 Adds a callback (like those given during construction). It is added to the end
 of the list of callbacks.
 
+=head2 $dispatch->remove_callback( $code )
+
+Remove the given callback from the list of callbacks.
+
 =head1 SUBCLASSING
 
 This class should be used as the base class for all logging objects
@@ -304,7 +308,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

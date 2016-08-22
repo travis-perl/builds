@@ -2,8 +2,9 @@ package Log::Dispatch::Base;
 
 use strict;
 use warnings;
+use Scalar::Util qw( refaddr );
 
-our $VERSION = '2.56';
+our $VERSION = '2.57';
 
 sub _get_callbacks {
     shift;
@@ -45,6 +46,20 @@ sub add_callback {
     return;
 }
 
+sub remove_callback {
+    my $self = shift;
+    my $cb   = shift;
+
+    Carp::carp("given value $cb is not a valid callback")
+        unless ref $cb eq 'CODE';
+
+    my $cb_id = refaddr $cb;
+    $self->{callbacks}
+        = [ grep { refaddr $_ ne $cb_id } @{ $self->{callbacks} } ];
+
+    return;
+}
+
 1;
 
 # ABSTRACT: Code shared by dispatch and output objects.
@@ -61,7 +76,7 @@ Log::Dispatch::Base - Code shared by dispatch and output objects.
 
 =head1 VERSION
 
-version 2.56
+version 2.57
 
 =head1 SYNOPSIS
 
@@ -78,6 +93,8 @@ does.
 
 =for Pod::Coverage add_callback
 
+=for Pod::Coverage remove_callback
+
 =head1 SUPPORT
 
 Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Log-Dispatch>
@@ -89,7 +106,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

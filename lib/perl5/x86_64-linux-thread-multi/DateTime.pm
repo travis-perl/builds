@@ -5,8 +5,9 @@ use 5.008001;
 use strict;
 use warnings;
 use warnings::register;
+use namespace::autoclean 0.19;
 
-our $VERSION = '1.34';
+our $VERSION = '1.36';
 
 use Carp;
 use DateTime::Duration;
@@ -1946,7 +1947,7 @@ sub set {
 
     if ( $p{locale} ) {
         carp 'You passed a locale to the set() method.'
-            . ' You should use set_locale() instead, as using set() may alter the local time near a DST bounday.';
+            . ' You should use set_locale() instead, as using set() may alter the local time near a DST boundary.';
     }
 
     my $new_dt = $self->_new_from_self(%p);
@@ -2193,7 +2194,7 @@ DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.34
+version 1.36
 
 =head1 SYNOPSIS
 
@@ -4411,7 +4412,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Karen Etheridge Michael Conrad Nick Tonkin Ovid Ricardo Signes Richard Bowen Ron Hill viviparous
+=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Karen Etheridge Michael Conrad Nick Tonkin Olaf Alders Ovid Ricardo Signes Richard Bowen Ron Hill viviparous
 
 =over 4
 
@@ -4466,6 +4467,10 @@ Michael Conrad <mike@nrdvana.net>
 =item *
 
 Nick Tonkin <1nickt@users.noreply.github.com>
+
+=item *
+
+Olaf Alders <olaf@wundersolutions.com>
 
 =item *
 

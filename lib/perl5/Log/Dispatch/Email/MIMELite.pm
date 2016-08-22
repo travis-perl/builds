@@ -3,7 +3,7 @@ package Log::Dispatch::Email::MIMELite;
 use strict;
 use warnings;
 
-our $VERSION = '2.56';
+our $VERSION = '2.57';
 
 use Log::Dispatch::Email;
 
@@ -46,7 +46,7 @@ Log::Dispatch::Email::MIMELite - Subclass of Log::Dispatch::Email that uses the 
 
 =head1 VERSION
 
-version 2.56
+version 2.57
 
 =head1 SYNOPSIS
 
@@ -81,7 +81,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

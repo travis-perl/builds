@@ -1,5 +1,5 @@
 package Class::MOP;
-our $VERSION = '2.1804';
+our $VERSION = '2.1805';
 
 use strict;
 use warnings;
@@ -20,7 +20,7 @@ use Class::MOP::Attribute;
 use Class::MOP::Method;
 
 BEGIN {
-    *IS_RUNNING_ON_5_10 = ($] < 5.009_005)
+    *IS_RUNNING_ON_5_10 = ("$]" < 5.009_005)
         ? sub () { 0 }
         : sub () { 1 };
 
@@ -796,7 +796,7 @@ Class::MOP - A Meta Object Protocol for Perl 5
 
 =head1 VERSION
 
-version 2.1804
+version 2.1805
 
 =head1 DESCRIPTION
 

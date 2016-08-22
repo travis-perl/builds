@@ -1,4 +1,4 @@
-package Dist::Zilla::Role::FileFinderUser 6.006;
+package Dist::Zilla::Role::FileFinderUser 6.007;
 # ABSTRACT: something that uses FileFinder plugins
 
 use MooseX::Role::Parameterized 1.01;
@@ -178,7 +178,7 @@ Dist::Zilla::Role::FileFinderUser - something that uses FileFinder plugins
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

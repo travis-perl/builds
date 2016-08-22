@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::AutoVersion 6.006;
+package Dist::Zilla::Plugin::AutoVersion 6.007;
 # ABSTRACT: take care of numbering versions so you don't have to
 
 use Moose;
@@ -122,7 +122,7 @@ Dist::Zilla::Plugin::AutoVersion - take care of numbering versions so you don't 
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

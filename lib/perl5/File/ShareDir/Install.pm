@@ -1,4 +1,5 @@
-package File::ShareDir::Install;
+package File::ShareDir::Install; # git description: v0.10-8-gf7e9d47
+# ABSTRACT: Install shared files
 
 use 5.008;
 use strict;
@@ -9,7 +10,7 @@ use Carp;
 use File::Spec;
 use IO::Dir;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 our @DIRS;
 our %ALREADY;
@@ -27,7 +28,7 @@ sub install_share
 {
     my $dir  = @_ ? pop : 'share';
     my $type = @_ ? shift : 'dist';
-    unless ( defined $type and 
+    unless ( defined $type and
             ( $type =~ /^(module|dist)$/ ) ) {
         confess "Illegal or invalid share dir type '$type'";
     }
@@ -48,7 +49,7 @@ sub delete_share
 {
     my $dir  = @_ ? pop : '';
     my $type = @_ ? shift : 'dist';
-    unless ( defined $type and 
+    unless ( defined $type and
             ( $type =~ /^(module|dist)$/ ) ) {
         confess "Illegal or invalid share dir type '$type'";
     }
@@ -60,7 +61,7 @@ sub delete_share
     my $def = _mk_def( "delete-$type" );
     _add_module( $def, $_[0] );
     _add_dir( $def, $dir );
-}   
+}
 
 
 
@@ -69,8 +70,8 @@ sub delete_share
 sub _mk_def
 {
     my( $type ) = @_;
-    return { type=>$type, 
-             dotfiles => $INCLUDE_DOTFILES, 
+    return { type=>$type,
+             dotfiles => $INCLUDE_DOTFILES,
              dotdirs => $INCLUDE_DOTDIRS
            };
 }
@@ -111,12 +112,12 @@ sub _add_dir
         push @DIRS, { %$def };
         $DIRS[-1]{dir} = $d;
     }
-}   
+}
 
 
 #####################################################################
 # Build the postamble section
-sub postamble 
+sub postamble
 {
     my $self = shift;
 
@@ -138,13 +139,13 @@ sub __postamble_share_dir
 
     if( $def->{type} eq 'delete-dist' ) {
         $idir = File::Spec->catdir( _dist_dir(), $dir );
-    } 
+    }
     elsif( $def->{type} eq 'delete-module' ) {
         $idir = File::Spec->catdir( _module_dir( $def ), $dir );
     }
-    elsif ( $def->{type} eq 'dist' ) {    
+    elsif ( $def->{type} eq 'dist' ) {
         $idir = _dist_dir();
-    } 
+    }
     else {                                  # delete-share and share
         $idir = _module_dir( $def );
     }
@@ -176,8 +177,8 @@ CODE
 # We depend on the Makefile for most of the info
 sub _dist_dir
 {
-    return File::Spec->catdir( '$(INST_LIB)', 
-                                    qw( auto share dist ), 
+    return File::Spec->catdir( '$(INST_LIB)',
+                                    qw( auto share dist ),
                                     '$(DISTNAME)'
                                   );
 }
@@ -189,8 +190,8 @@ sub _module_dir
     my( $def ) = @_;
     my $module = $def->{module};
     $module =~ s/::/-/g;
-    return  File::Spec->catdir( '$(INST_LIB)', 
-                                    qw( auto share module ), 
+    return  File::Spec->catdir( '$(INST_LIB)',
+                                    qw( auto share module ),
                                     $module
                                   );
 }
@@ -209,7 +210,7 @@ sub _scan_share_dir
         }
         elsif( -d $full ) {
             if( $def->{dotdirs} ) {
-                next if $entry eq '.' or $entry eq '..' or 
+                next if $entry eq '.' or $entry eq '..' or
                         $entry =~ /^\.(svn|git|cvs)$/;
             }
             else {
@@ -234,11 +235,20 @@ sub _CLASS ($) {
 }
 
 1;
+
 __END__
+
+=pod
+
+=encoding UTF-8
 
 =head1 NAME
 
 File::ShareDir::Install - Install shared files
+
+=head1 VERSION
+
+version 0.11
 
 =head1 SYNOPSIS
 
@@ -249,7 +259,7 @@ File::ShareDir::Install - Install shared files
     install_share dist => 'dist-share';
     install_share module => 'My::Module' => 'other-share';
 
-    WriteMakefile( ... );       # As you normaly would
+    WriteMakefile( ... );       # As you normally would
 
     package MY;
     use File::ShareDir::Install qw(postamble);
@@ -283,7 +293,7 @@ The first 2 forms are equivalent; the files are installed in a per-distribution
 directory.  For example C</usr/lib/perl5/site_perl/auto/share/dist/My-Dist>.  The
 name of that directory can be recovered with L<File::ShareDir/dist_dir>.
 
-The last form installs files in a per-module directory.  For example 
+The last form installs files in a per-module directory.  For example
 C</usr/lib/perl5/site_perl/auto/share/module/My-Dist-Package>.  The name of that
 directory can be recovered with L<File::ShareDir/module_dir>.
 
@@ -307,8 +317,8 @@ C<share2/info.txt> will be installed into your C<dist_dir()>.
     delete_share $list;
     delete_share dist => $list;
     delete_share module => $module, $list;
-    
-Remove previously installed files or directories.  
+
+Remove previously installed files or directories.
 
 Unlike L</install_share>, the last parameter is a list of files or
 directories that were previously installed.  These files and directories will
@@ -331,7 +341,7 @@ You can also selectively remove some files from installation.
 
 =head2 postamble
 
-This function must be exported into the MY package.  You will normaly do this
+This function must be exported into the MY package.  You will normally do this
 with the following.
 
     package MY;
@@ -351,26 +361,26 @@ If you need to overload postamble, use the following.
 
 =head1 CONFIGURATION
 
-2 variables control the handling of dot-files and dot-directories.
+Two variables control the handling of dot-files and dot-directories.
 
 A dot-file has a filename that starts with a period (.).  For example
-C<.htaccess>. A dot-directory (or dot-dir) is a directory that starts with a
+C<.htaccess>. A dot-directory is a directory that starts with a
 period (.).  For example C<.config/>.  Not all filesystems support the use
 of dot-files.
 
 =head2 $INCLUDE_DOTFILES
 
-If set to a true value, dot-files will be copied.  Default is false.  
+If set to a true value, dot-files will be copied.  Default is false.
 
 =head2 $INCLUDE_DOTDIRS
 
-If set to a true value, the files inside dot-directories will be copied. 
+If set to a true value, the files inside dot-directories will be copied.
 Known version control directories are still ignored.  Default is false.
 
 =head2 Note
 
 These variables only influence subsequent calls to C<install_share()>.  This allows
-you to control the behaviour for each directory.  
+you to control the behaviour for each directory.
 
 For example:
 
@@ -384,24 +394,30 @@ The directory C<share1> will have files in its dot-directories installed,
 but not dot-files.  The directory C<share2> will have files in its dot-files
 installed, but dot-directories will be ignored.
 
-
-
-
 =head1 SEE ALSO
 
 L<File::ShareDir>, L<Module::Install>.
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=File-ShareDir-Install>
+(or L<bug-File-ShareDir-Install@rt.cpan.org|mailto:bug-File-ShareDir-Install@rt.cpan.org>).
+
 =head1 AUTHOR
 
-Philip Gwyn, E<lt>gwyn-AT-cpan.orgE<gt>
+Philip Gwyn <gwyn@cpan.org>
+
+=head1 CONTRIBUTOR
+
+=for stopwords Karen Etheridge
+
+Karen Etheridge <ether@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2009-2014 by Philip Gwyn
+This software is copyright (c) 2009 by Philip Gwyn.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.8 or,
-at your option, any later version of Perl 5 you may have available.
-
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

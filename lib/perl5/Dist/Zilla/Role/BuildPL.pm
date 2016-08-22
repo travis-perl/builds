@@ -1,4 +1,4 @@
-package Dist::Zilla::Role::BuildPL 6.006;
+package Dist::Zilla::Role::BuildPL 6.007;
 # ABSTRACT: Common ground for Build.PL based builders
 
 use Moose::Role;
@@ -69,7 +69,7 @@ Dist::Zilla::Role::BuildPL - Common ground for Build.PL based builders
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

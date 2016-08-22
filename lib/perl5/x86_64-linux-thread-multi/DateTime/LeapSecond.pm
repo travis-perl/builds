@@ -2,10 +2,11 @@ package DateTime::LeapSecond;
 
 use strict;
 use warnings;
+use namespace::autoclean;
 
-our $VERSION = '1.34';
+our $VERSION = '1.36';
 
-use vars qw( @RD @LEAP_SECONDS %RD_LENGTH );
+our ( @RD, @LEAP_SECONDS, %RD_LENGTH );
 
 use DateTime;
 
@@ -132,7 +133,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.34
+version 1.36
 
 =head1 SYNOPSIS
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package Dist::Zilla::App::Command::nop 6.006;
+package Dist::Zilla::App::Command::nop 6.007;
 # ABSTRACT: initialize dzil, then exit
 
 use Dist::Zilla::App -command;
@@ -44,7 +44,7 @@ Dist::Zilla::App::Command::nop - initialize dzil, then exit
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::PruneCruft 6.006;
+package Dist::Zilla::Plugin::PruneCruft 6.007;
 # ABSTRACT: prune stuff that you probably don't mean to include
 
 use Moose;
@@ -114,7 +114,7 @@ Dist::Zilla::Plugin::PruneCruft - prune stuff that you probably don't mean to in
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 SYNOPSIS
 

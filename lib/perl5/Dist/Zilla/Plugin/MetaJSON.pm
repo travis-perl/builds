@@ -1,8 +1,9 @@
-package Dist::Zilla::Plugin::MetaJSON 6.006;
+package Dist::Zilla::Plugin::MetaJSON 6.007;
 # ABSTRACT: produce a META.json
 
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
+use Moose::Util::TypeConstraints;
 
 use namespace::autoclean;
 
@@ -36,9 +37,15 @@ has filename => (
 #pod
 #pod =cut
 
+my $version_type = subtype(
+    as 'Num',
+    where { $_ >= 2 },
+    message { "MetaJSON version must be 2 or greater" },
+);
+
 has version => (
   is  => 'ro',
-  isa => 'Num',
+  isa => $version_type,
   default => '2',
 );
 
@@ -115,7 +122,7 @@ Dist::Zilla::Plugin::MetaJSON - produce a META.json
 
 =head1 VERSION
 
-version 6.006
+version 6.007
 
 =head1 DESCRIPTION
 

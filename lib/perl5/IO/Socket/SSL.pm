@@ -13,7 +13,7 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '2.033';
+our $VERSION = '2.036';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
@@ -71,7 +71,9 @@ BEGIN {
 	# http://rt.openssl.org/Ticket/Display.html?id=2975
 	( Net::SSLeay::OPENSSL_VERSION_NUMBER() != 0x1000104f
 	|| length(pack("P",0)) == 4 );
-    $can_ocsp        = defined &Net::SSLeay::OCSP_cert2ids;
+    $can_ocsp        = defined &Net::SSLeay::OCSP_cert2ids
+	# OCSP got broken in 1.75..1.77
+	&& ($Net::SSLeay::VERSION < 1.75 || $Net::SSLeay::VERSION > 1.77);
     $can_ocsp_staple = $can_ocsp
 	&& defined &Net::SSLeay::set_tlsext_status_type;
     $can_tckt_keycb  = defined &Net::SSLeay::CTX_set_tlsext_ticket_getkey_cb;
@@ -580,33 +582,12 @@ sub configure_SSL {
 
     # add user defined defaults, maybe after filtering
     $FILTER_SSL_ARGS->($is_server,$arg_hash) if $FILTER_SSL_ARGS;
-    my %defaults = (
-	%$GLOBAL_SSL_ARGS,
-	$is_server ? %$GLOBAL_SSL_SERVER_ARGS : %$GLOBAL_SSL_CLIENT_ARGS,
-    );
-    if ( $defaults{SSL_reuse_ctx} ) {
-	# ignore default context if there are args to override it
-	delete $defaults{SSL_reuse_ctx}
-	    if grep { m{^SSL_(?!verifycn_name|hostname)$} } keys %$arg_hash;
-    }
-    %$arg_hash = ( %defaults, %$arg_hash ) if %defaults;
 
-    my $ctx = $arg_hash->{'SSL_reuse_ctx'};
-    if ($ctx) {
-	if ($ctx->isa('IO::Socket::SSL::SSL_Context') and
-	    $ctx->{context}) {
-	    # valid context
-	} elsif ( $ctx = ${*$ctx}{_SSL_ctx} ) {
-	    # reuse context from existing SSL object
-	}
-    }
-
-    # create context
-    # this will fill in defaults in $arg_hash
-    $ctx ||= IO::Socket::SSL::SSL_Context->new($arg_hash) || return;
+    # this adds defaults to $arg_hash as a side effect!
+    ${*$self}{'_SSL_ctx'} = IO::Socket::SSL::SSL_Context->new($arg_hash)
+	or return;
 
     ${*$self}{'_SSL_arguments'} = $arg_hash;
-    ${*$self}{'_SSL_ctx'} = $ctx;
     ${*$self}{'_SSL_opened'} = 1 if $is_server;
 
     return $self;
@@ -2148,10 +2129,30 @@ sub new {
     #DEBUG( "$class @_" );
     my $arg_hash = (ref($_[0]) eq 'HASH') ? $_[0] : {@_};
 
+    my $is_server = $arg_hash->{SSL_server};
+    my %defaults = $is_server
+	? (%DEFAULT_SSL_SERVER_ARGS, %$GLOBAL_SSL_ARGS, %$GLOBAL_SSL_SERVER_ARGS) 
+	: (%DEFAULT_SSL_CLIENT_ARGS, %$GLOBAL_SSL_ARGS, %$GLOBAL_SSL_CLIENT_ARGS);
+    if ( $defaults{SSL_reuse_ctx} ) {
+	# ignore default context if there are args to override it
+	delete $defaults{SSL_reuse_ctx}
+	    if grep { m{^SSL_(?!verifycn_name|hostname)$} } keys %$arg_hash;
+    }
+    %$arg_hash = ( %defaults, %$arg_hash ) if %defaults;
+
+    if (my $ctx = $arg_hash->{'SSL_reuse_ctx'}) {
+	if ($ctx->isa('IO::Socket::SSL::SSL_Context') and
+	    $ctx->{context}) {
+	    # valid context
+	} elsif ( $ctx = ${*$ctx}{_SSL_ctx} ) {
+	    # reuse context from existing SSL object
+	}
+	return $ctx
+    }
+
     # common problem forgetting to set SSL_use_cert
     # if client cert is given by user but SSL_use_cert is undef, assume that it
     # should be set
-    my $is_server = $arg_hash->{SSL_server};
     if ( ! $is_server && ! defined $arg_hash->{SSL_use_cert}
 	&& ( grep { $arg_hash->{$_} } qw(SSL_cert SSL_cert_file))
 	&& ( grep { $arg_hash->{$_} } qw(SSL_key SSL_key_file)) ) {
@@ -2170,11 +2171,8 @@ sub new {
     }
 
     # add library defaults
-    %$arg_hash = (
-	SSL_use_cert => $is_server,
-	$is_server ? %DEFAULT_SSL_SERVER_ARGS : %DEFAULT_SSL_CLIENT_ARGS,
-	%$arg_hash
-    );
+    $arg_hash->{SSL_use_cert} = $is_server if ! defined $arg_hash->{SSL_use_cert};
+
 
     # Avoid passing undef arguments to Net::SSLeay
     defined($arg_hash->{$_}) or delete($arg_hash->{$_}) for(keys %$arg_hash);

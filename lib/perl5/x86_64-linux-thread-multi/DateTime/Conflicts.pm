@@ -24,9 +24,9 @@ use Dist::CheckConflicts
         base
         constant
         integer
+        namespace::autoclean
         overload
         strict
-        vars
         warnings
         warnings::register
     ) ],
