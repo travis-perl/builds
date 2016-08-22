@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Capture::Tiny;
 # ABSTRACT: Capture STDOUT and STDERR from Perl, XS or external programs
-our $VERSION = '0.42';
+our $VERSION = '0.44';
 use Carp ();
 use Exporter ();
 use IO::Handle ();
@@ -436,7 +436,7 @@ Capture::Tiny - Capture STDOUT and STDERR from Perl, XS or external programs
 
 =head1 VERSION
 
-version 0.42
+version 0.44
 
 =head1 SYNOPSIS
 
@@ -704,6 +704,11 @@ less so.  If Capture::Tiny detects that a fork has occurred within a
 capture, it will shortcut in the child process and return empty strings for
 captures.  Other problems may occur in the child or parent, as well.
 Forking in a capture block is not recommended.
+
+=head3 Dropping privileges during a capture
+
+If you drop privileges during a capture, temporary files created to
+facilitate the capture may not be cleaned up afterwards.
 
 =head2 No support for Perl 5.8.0
 
