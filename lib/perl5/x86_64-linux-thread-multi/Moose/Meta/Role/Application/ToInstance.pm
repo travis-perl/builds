@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Application::ToInstance;
-our $VERSION = '2.1804';
+our $VERSION = '2.1805';
 
 use strict;
 use warnings;
@@ -17,7 +17,7 @@ __PACKAGE__->meta->add_attribute('rebless_params' => (
     Class::MOP::_definition_context(),
 ));
 
-use constant _NEED_OVERLOAD_HACK_FOR_OBJECTS => $] < 5.008009;
+use constant _NEED_OVERLOAD_HACK_FOR_OBJECTS => "$]" < 5.008009;
 
 sub apply {
     my ( $self, $role, $object, $args ) = @_;
@@ -64,7 +64,7 @@ Moose::Meta::Role::Application::ToInstance - Compose a role into an instance
 
 =head1 VERSION
 
-version 2.1804
+version 2.1805
 
 =head1 DESCRIPTION
 

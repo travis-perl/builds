@@ -1,5 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait::String;
-our $VERSION = '2.1804';
+our $VERSION = '2.1805';
 
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';
@@ -24,7 +24,7 @@ Moose::Meta::Attribute::Native::Trait::String - Helper trait for Str attributes
 
 =head1 VERSION
 
-version 2.1804
+version 2.1805
 
 =head1 SYNOPSIS
 
