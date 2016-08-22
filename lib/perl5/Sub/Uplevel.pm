@@ -3,7 +3,7 @@ use 5.006;
 use strict;
 # ABSTRACT: apparently run a function in a higher stack frame
 
-our $VERSION = '0.25';
+our $VERSION = '0.2600';
 
 # Frame check global constant
 our $CHECK_FRAMES;
@@ -241,10 +241,10 @@ sub _uplevel_caller (;$) { ## no critic Prototypes
     # We *must* use CORE::caller here since we need the real stack not what 
     # some other override says the stack looks like, just in case that other
     # override breaks things in some horrible way
-
+    my $test_caller;
     for ( my $up = 0; $up <= $height + $adjust; $up++ ) {
-        my @caller = CORE::caller($up + 1); 
-        if( defined $caller[0] && $caller[0] eq __PACKAGE__ ) {
+        $test_caller = scalar CORE::caller($up + 1);
+        if( $test_caller && $test_caller eq __PACKAGE__ ) {
             # add one for each uplevel call seen
             # and look into the uplevel stack for the offset
             $adjust += 1 + $Up_Frames[$saw_uplevel];
@@ -349,7 +349,7 @@ Sub::Uplevel - apparently run a function in a higher stack frame
 
 =head1 VERSION
 
-version 0.25
+version 0.2600
 
 =head1 SYNOPSIS
 
@@ -542,7 +542,7 @@ Tcl's uplevel() at http://www.scriptics.com/man/tcl8.4/TclCmd/uplevel.htm
 =head2 Bugs / Feature Requests
 
 Please report any bugs or feature requests through the issue tracker
-at L<https://github.com/dagolden/Sub-Uplevel/issues>.
+at L<https://github.com/Perl-Toolchain-Gang/Sub-Uplevel/issues>.
 You will be notified automatically of any progress on your issue.
 
 =head2 Source Code
@@ -550,9 +550,9 @@ You will be notified automatically of any progress on your issue.
 This is open source software.  The code repository is available for
 public review and contribution under the terms of the license.
 
-L<https://github.com/dagolden/Sub-Uplevel>
+L<https://github.com/Perl-Toolchain-Gang/Sub-Uplevel>
 
-  git clone https://github.com/dagolden/Sub-Uplevel.git
+  git clone https://github.com/Perl-Toolchain-Gang/Sub-Uplevel.git
 
 =head1 AUTHORS
 
@@ -570,7 +570,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Adam Kennedy Alexandr Ciornii Michael Gray
+=for stopwords Adam Kennedy Alexandr Ciornii David Golden J. Nick Koston Michael Gray
 
 =over 4
 
@@ -584,13 +584,21 @@ Alexandr Ciornii <alexchorny@gmail.com>
 
 =item *
 
+David Golden <xdg@xdg.me>
+
+=item *
+
+J. Nick Koston <nick@cpanel.net>
+
+=item *
+
 Michael Gray <mg13@sanger.ac.uk>
 
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Michael Schwern and David Golden.
+This software is copyright (c) 2016 by Michael Schwern and David Golden.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

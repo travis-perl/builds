@@ -4,7 +4,7 @@
       "Ken Williams <kwilliams@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4218",
+   "generated_by" : "Module::Build version 0.422",
    "license" : [
       "perl_5"
    ],
@@ -62,5 +62,5 @@
          "url" : "git://github.com/kenahoo/Path-Class.git"
       }
    },
-   "version" : "0.36"
+   "version" : "0.37"
 }
