@@ -4,7 +4,7 @@
       "Stevan Little, <stevan@iinteractive.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.1, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.1001, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -65,5 +65,6 @@
          "web" : "http://git.shadowcat.co.uk/gitweb/gitweb.cgi?p=gitmo/Class-C3.git"
       }
    },
-   "version" : "0.31"
+   "version" : "0.32",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }

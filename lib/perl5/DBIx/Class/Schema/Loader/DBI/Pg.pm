@@ -5,7 +5,7 @@ use warnings;
 use base 'DBIx::Class::Schema::Loader::DBI::Component::QuotedDefault';
 use mro 'c3';
 
-our $VERSION = '0.07045';
+our $VERSION = '0.07046';
 
 =head1 NAME
 
@@ -340,6 +340,22 @@ EOF
     }
 
     return $result;
+}
+
+sub _view_definition {
+    my ($self, $view) = @_;
+
+    my $def =  $self->schema->storage->dbh->selectrow_array(<<'EOF', {}, $view->schema, $view->name);
+SELECT pg_catalog.pg_get_viewdef(oid)
+FROM pg_catalog.pg_class
+WHERE relnamespace = (SELECT OID FROM pg_catalog.pg_namespace WHERE nspname = ?)
+AND relname = ?
+EOF
+    # The definition is returned as a complete statement including the
+    # trailing semicolon, but that's not allowed in CREATE VIEW, so
+    # strip it out
+    $def =~ s/\s*;\s*\z//;
+    return $def;
 }
 
 =head1 SEE ALSO

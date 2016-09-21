@@ -30,7 +30,7 @@ use List::Util qw/all any none/;
 use File::Temp 'tempfile';
 use namespace::clean;
 
-our $VERSION = '0.07045';
+our $VERSION = '0.07046';
 
 __PACKAGE__->mk_group_ro_accessors('simple', qw/
                                 schema
@@ -565,7 +565,7 @@ Only load matching tables.
 
 Exclude matching tables.
 
-These can be specified either as a regex (preferrably on the C<qr//>
+These can be specified either as a regex (preferably on the C<qr//>
 form), or as an arrayref of arrayrefs.  Regexes are matched against
 the (unqualified) table name, while arrayrefs are matched according to
 L</moniker_parts>.
@@ -1985,7 +1985,8 @@ sub _dump_to_dir {
 
         my @attr = qw/resultset_namespace default_resultset_class/;
 
-        unshift @attr, 'result_namespace' unless (not $self->result_namespace) || $self->result_namespace eq 'Result';
+        unshift @attr, 'result_namespace'
+            if $self->result_namespace && $self->result_namespace ne 'Result';
 
         for my $attr (@attr) {
             if ($self->$attr) {
@@ -2252,9 +2253,16 @@ sub _parse_generated_file {
 
             $gen .= $pre_md5;
             $real_md5 = Digest::MD5::md5_base64(encode 'UTF-8', $gen);
-            croak "Checksum mismatch in '$fn', the auto-generated part of the file has been modified outside of this loader.  Aborting.\nIf you want to overwrite these modifications, set the 'overwrite_modifications' loader option.\n"
-                if !$self->overwrite_modifications && $real_md5 ne $mark_md5;
-
+            if ($real_md5 ne $mark_md5) {
+                if ($self->overwrite_modifications) {
+                    # Setting this to something that is not a valid MD5 forces
+                    # the file to be rewritten.
+                    $real_md5 = 'not an MD5';
+                }
+                else {
+                    croak "Checksum mismatch in '$fn', the auto-generated part of the file has been modified outside of this loader.  Aborting.\nIf you want to overwrite these modifications, set the 'overwrite_modifications' loader option.\n";
+                }
+            }
             last;
         }
         else {
@@ -2570,6 +2578,8 @@ sub _table_is_view {
     return 0;
 }
 
+sub _view_definition { undef }
+
 # Set up metadata (cols, pks, etc)
 sub _setup_src_meta {
     my ($self, $table) = @_;
@@ -2580,10 +2590,16 @@ sub _setup_src_meta {
     my $table_class   = $self->classes->{$table->sql_name};
     my $table_moniker = $self->monikers->{$table->sql_name};
 
+    # Must come before ->table
     $self->_dbic_stmt($table_class, 'table_class', 'DBIx::Class::ResultSource::View')
-        if $self->_table_is_view($table);
+        if my $is_view = $self->_table_is_view($table);
 
     $self->_dbic_stmt($table_class, 'table', $table->dbic_name);
+
+    # Must come after ->table
+    if ($is_view and my $view_def = $self->_view_definition($table)) {
+        $self->_dbic_stmt($table_class, 'result_source_instance->view_definition', $view_def);
+    }
 
     my $cols     = $self->_table_columns($table);
     my $col_info = $self->__columns_info_for($table);

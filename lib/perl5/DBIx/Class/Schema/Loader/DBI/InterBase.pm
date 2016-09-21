@@ -9,7 +9,7 @@ use List::Util 'first';
 use namespace::clean;
 use DBIx::Class::Schema::Loader::Table ();
 
-our $VERSION = '0.07045';
+our $VERSION = '0.07046';
 
 sub _supports_db_schema { 0 }
 
@@ -308,6 +308,16 @@ EOF
     }
 
     return $result;
+}
+
+sub _view_definition {
+    my ($self, $view) = @_;
+
+    return scalar $self->schema->storage->dbh->selectrow_array(<<'EOF', {}, $view->name);
+SELECT rdb$view_source
+FROM rdb$relations
+WHERE rdb$relation_name = ?
+EOF
 }
 
 =head1 SEE ALSO
