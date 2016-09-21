@@ -1,1 +1,1 @@
-{"dist":"Cookie-Baker-0.06","provides":{"Cookie::Baker":{"file":"lib/Cookie/Baker.pm","version":"0.06"}},"version":"0.06","pathname":"K/KA/KAZEBURO/Cookie-Baker-0.06.tar.gz","name":"Cookie::Baker","target":"Cookie::Baker"}
+{"name":"Cookie::Baker","version":"0.06","provides":{"Cookie::Baker":{"version":"0.06","file":"lib/Cookie/Baker.pm"}},"pathname":"K/KA/KAZEBURO/Cookie-Baker-0.06.tar.gz","dist":"Cookie-Baker-0.06","target":"Cookie::Baker"}
