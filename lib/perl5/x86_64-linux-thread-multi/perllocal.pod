@@ -1,4 +1,4 @@
-=head2 Mon Aug 22 00:10:26 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Wed Sep 21 00:10:48 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:10:27 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Wed Sep 21 00:10:50 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.001011>
+C<VERSION: 0.001012>
 
 =item *
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:10:27 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Wed Sep 21 00:10:51 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:10:27 2016: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Wed Sep 21 00:10:51 2016: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:10:29 2016: C<Module> L<Moo|Moo>
+=head2 Wed Sep 21 00:10:52 2016: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:10:31 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Wed Sep 21 00:10:53 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:10:31 2016: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Wed Sep 21 00:10:53 2016: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
