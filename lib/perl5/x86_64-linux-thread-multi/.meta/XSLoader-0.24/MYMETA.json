@@ -36,22 +36,26 @@
          }
       }
    },
+   "provides" : {
+      "XSLoader" : {
+         "file" : "XSLoader_pm.PL",
+         "version" : "0.24"
+      }
+   },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
+         "mailto" : "perlbug@perl.org",
          "web" : "https://rt.perl.org/rt3/Search/Results.html?Query=Queue='perl5' AND Content LIKE 'module=XSLoader' AND (Status='open' OR Status='new' OR Status='stalled')"
       },
       "homepage" : "https://metacpan.org/module/XSLoader",
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ],
       "repository" : {
          "type" : "git",
          "url" : "git://perl5.git.perl.org/perl.git"
       },
-      "x_Irc" : "irc://irc.perl.org/#p5p",
-      "x_Mailinglist" : "http://lists.perl.org/list/perl5-porters.html"
+      "x_IRC" : "irc://irc.perl.org/#p5p",
+      "x_MailingList" : "http://lists.perl.org/list/perl5-porters.html"
    },
-   "version" : "0.22",
+   "version" : "0.24",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }

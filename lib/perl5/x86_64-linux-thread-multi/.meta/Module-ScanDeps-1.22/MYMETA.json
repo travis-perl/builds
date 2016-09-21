@@ -54,8 +54,8 @@
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
-         "url" : "https://www.openfoundry.org/svn/par/Module-ScanDeps/trunk"
+         "url" : "https://github.com/rschupp/Module-ScanDeps"
       }
    },
-   "version" : "1.21"
+   "version" : "1.22"
 }
