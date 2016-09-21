@@ -8,7 +8,7 @@ use Try::Tiny;
 use DBIx::Class::Schema::Loader::Utils qw/sigwarn_silencer/;
 use namespace::clean;
 
-our $VERSION = '0.07045';
+our $VERSION = '0.07046';
 
 =head1 NAME
 
@@ -407,6 +407,16 @@ sub _dbh_column_info {
     local $dbh->{LongTruncOk} = 1;
 
     return $self->next::method(@_);
+}
+
+sub _view_definition {
+    my ($self, $view) = @_;
+
+    return scalar $self->schema->storage->dbh->selectrow_array(<<'EOF', {}, $view->schema, $view->name);
+SELECT text
+FROM all_views
+WHERE owner = ? AND view_name = ?
+EOF
 }
 
 =head1 SEE ALSO
