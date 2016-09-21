@@ -1,4 +1,4 @@
-=head2 Mon Aug 22 00:03:59 2016: C<Module> L<String::Truncate|String::Truncate>
+=head2 Wed Sep 21 00:03:25 2016: C<Module> L<String::Truncate|String::Truncate>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:03:59 2016: C<Module> L<Pod::Elemental|Pod::Elemental>
+=head2 Wed Sep 21 00:03:26 2016: C<Module> L<Pod::Elemental|Pod::Elemental>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:03:59 2016: C<Module> L<Pod::Weaver|Pod::Weaver>
+=head2 Wed Sep 21 00:03:26 2016: C<Module> L<Pod::Weaver|Pod::Weaver>
 
 =over 4
 
@@ -56,7 +56,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 4.013>
+C<VERSION: 4.014>
 
 =item *
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:01 2016: C<Module> L<Pod::Elemental::PerlMunger|Pod::Elemental::PerlMunger>
+=head2 Wed Sep 21 00:03:27 2016: C<Module> L<Pod::Elemental::PerlMunger|Pod::Elemental::PerlMunger>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:01 2016: C<Module> L<Dist::Zilla::Plugin::PodWeaver|Dist::Zilla::Plugin::PodWeaver>
+=head2 Wed Sep 21 00:03:28 2016: C<Module> L<Dist::Zilla::Plugin::PodWeaver|Dist::Zilla::Plugin::PodWeaver>
 
 =over 4
 
@@ -108,51 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:03 2016: C<Module> L<Version::Next|Version::Next>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.000>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Aug 22 00:04:03 2016: C<Module> L<Dist::Zilla::Plugin::Config::Git|Dist::Zilla::Plugin::Config::Git>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.92>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Aug 22 00:04:04 2016: C<Module> L<MooseX::Has::Sugar|MooseX::Has::Sugar>
+=head2 Wed Sep 21 00:03:30 2016: C<Module> L<MooseX::Has::Sugar|MooseX::Has::Sugar>
 
 =over 4
 
@@ -174,7 +130,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:05 2016: C<Module> L<IPC::System::Simple|IPC::System::Simple>
+=head2 Wed Sep 21 00:03:30 2016: C<Module> L<Dist::Zilla::Plugin::Config::Git|Dist::Zilla::Plugin::Config::Git>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.92>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Sep 21 00:03:31 2016: C<Module> L<Version::Next|Version::Next>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.000>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Sep 21 00:03:31 2016: C<Module> L<IPC::System::Simple|IPC::System::Simple>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:06 2016: C<Module> L<MooseX::Types::Stringlike|MooseX::Types::Stringlike>
+=head2 Wed Sep 21 00:03:32 2016: C<Module> L<MooseX::Types::Stringlike|MooseX::Types::Stringlike>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:08 2016: C<Module> L<List::Util|List::Util>
+=head2 Wed Sep 21 00:03:34 2016: C<Module> L<List::Util|List::Util>
 
 =over 4
 
@@ -240,51 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:09 2016: C<Module> L<Devel::CheckBin|Devel::CheckBin>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.04>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Aug 22 00:04:09 2016: C<Module> L<Sort::Versions|Sort::Versions>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.62>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Aug 22 00:04:10 2016: C<Module> L<File::chdir|File::chdir>
+=head2 Wed Sep 21 00:03:35 2016: C<Module> L<File::chdir|File::chdir>
 
 =over 4
 
@@ -306,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:10 2016: C<Module> L<Git::Wrapper|Git::Wrapper>
+=head2 Wed Sep 21 00:03:36 2016: C<Module> L<Devel::CheckBin|Devel::CheckBin>
 
 =over 4
 
@@ -320,7 +276,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.045>
+C<VERSION: 0.04>
 
 =item *
 
@@ -328,7 +284,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:11 2016: C<Module> L<Dist::Zilla::Plugin::Git|Dist::Zilla::Plugin::Git>
+=head2 Wed Sep 21 00:03:37 2016: C<Module> L<Sort::Versions|Sort::Versions>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.62>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Sep 21 00:03:37 2016: C<Module> L<Git::Wrapper|Git::Wrapper>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.047>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Sep 21 00:03:37 2016: C<Module> L<Dist::Zilla::Plugin::Git|Dist::Zilla::Plugin::Git>
 
 =over 4
 
@@ -350,7 +350,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Aug 22 00:04:12 2016: C<Module> L<Pod::Elemental::Transformer::List|Pod::Elemental::Transformer::List>
+=head2 Wed Sep 21 00:03:38 2016: C<Module> L<Pod::Elemental::Transformer::List|Pod::Elemental::Transformer::List>
 
 =over 4
 

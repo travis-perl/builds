@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Pod::Weaver::PluginBundle::CorePrep;
 # ABSTRACT: a bundle for the most commonly-needed prep work for a pod document
-$Pod::Weaver::PluginBundle::CorePrep::VERSION = '4.013';
+$Pod::Weaver::PluginBundle::CorePrep::VERSION = '4.014';
 use Pod::Weaver::Plugin::H1Nester;
 
 sub mvp_bundle_config {
@@ -27,7 +27,7 @@ Pod::Weaver::PluginBundle::CorePrep - a bundle for the most commonly-needed prep
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 AUTHOR
 

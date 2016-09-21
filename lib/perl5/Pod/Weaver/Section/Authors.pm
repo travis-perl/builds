@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Authors;
 # ABSTRACT: a section listing authors
-$Pod::Weaver::Section::Authors::VERSION = '4.013';
+$Pod::Weaver::Section::Authors::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 
@@ -40,6 +40,9 @@ sub weave_section {
   # I think I might like to have header be a callback or something, so that you
   # can get pluralization for your own custom header. -- rjbs, 2015-03-17
   my $name = $self->header || ($multiple_authors ? 'AUTHORS' : 'AUTHOR');
+
+  $self->log_debug("adding $name section");
+  $self->log_debug("author = $_") for @{ $input->{authors} };
 
   my $authors = [ map {
     Pod::Elemental::Element::Pod5::Ordinary->new({
@@ -86,7 +89,7 @@ Pod::Weaver::Section::Authors - a section listing authors
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

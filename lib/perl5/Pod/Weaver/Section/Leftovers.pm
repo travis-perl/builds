@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Leftovers;
 # ABSTRACT: a place to put everything that nothing else used
-$Pod::Weaver::Section::Leftovers::VERSION = '4.013';
+$Pod::Weaver::Section::Leftovers::VERSION = '4.014';
 use Moose;
 with(
   'Pod::Weaver::Role::Section',
@@ -58,6 +58,7 @@ sub finalize_document {
     next unless $para->isa('Pod::Elemental::Element::Pod5::Region')
          and    $para->format_name eq $self->_marker;
 
+    $self->log_debug('splicing leftovers back into pod');
     splice @{ $document->children }, $i, 1, @$children;
     last INDEX;
   }
@@ -78,7 +79,7 @@ Pod::Weaver::Section::Leftovers - a place to put everything that nothing else us
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

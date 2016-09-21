@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Bugs;
 # ABSTRACT: a section for bugtracker info
-$Pod::Weaver::Section::Bugs::VERSION = '4.013';
+$Pod::Weaver::Section::Bugs::VERSION = '4.014';
 use Moose;
 use Text::Wrap ();
 with 'Pod::Weaver::Role::Section';
@@ -59,20 +59,29 @@ has header => (
 sub weave_section {
   my ($self, $document, $input) = @_;
 
-  return unless exists $input->{distmeta}{resources}{bugtracker};
+  unless (exists $input->{distmeta}{resources}{bugtracker}) {
+    $self->log_debug('skipping section because there is no resources.bugtracker');
+    return;
+  }
   my $bugtracker = $input->{distmeta}{resources}{bugtracker};
   my ($web,$mailto) = @{$bugtracker}{qw/web mailto/};
-  return unless defined $web || defined $mailto;
+
+  unless (defined $web || defined $mailto) {
+    $self->log_debug('skipping section because there is no web or mailto key under resources.bugtracker');
+  }
 
   my $text = "Please report any bugs or feature requests ";
 
+  my $name = $self->header;
   if (defined $web) {
-    $text .= "on the bugtracker website $web";
+    $self->log_debug("including $web as bugtracker in $name section");
+    $text .= "on the bugtracker website L<$web>";
     $text .= defined $mailto ? " or " : "\n";
   }
 
   if (defined $mailto) {
-    $text .= "by email to $mailto\.\n";
+    $self->log_debug("including $mailto as bugtracker in $name section");
+    $text .= "by email to L<$mailto|mailto:$mailto>\.\n";
   }
 
   local $Text::Wrap::huge = 'overflow';
@@ -88,7 +97,7 @@ HERE
   push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
-      content  => $self->header,
+      content  => $name,
       children => [
         Pod::Elemental::Element::Pod5::Ordinary->new({ content => $text }),
       ],
@@ -110,7 +119,7 @@ Pod::Weaver::Section::Bugs - a section for bugtracker info
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

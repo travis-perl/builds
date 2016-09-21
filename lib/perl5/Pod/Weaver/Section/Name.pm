@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Name;
 # ABSTRACT: add a NAME section with abstract (for your Perl module)
-$Pod::Weaver::Section::Name::VERSION = '4.013';
+$Pod::Weaver::Section::Name::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
@@ -96,6 +96,8 @@ sub weave_section {
   my $name = $docname;
   $name .= " - $abstract" if $abstract;
 
+  $self->log_debug(qq{setting NAME to "$name"});
+
   my $name_para = Pod::Elemental::Element::Nested->new({
     command  => 'head1',
     content  => $self->header,
@@ -122,7 +124,7 @@ Pod::Weaver::Section::Name - add a NAME section with abstract (for your Perl mod
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

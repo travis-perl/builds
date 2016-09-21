@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Collect;
 # ABSTRACT: a section that gathers up specific commands
-$Pod::Weaver::Section::Collect::VERSION = '4.013';
+$Pod::Weaver::Section::Collect::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::Transformer';
@@ -82,10 +82,16 @@ has __used_container => (is => 'rw');
 sub transform_document {
   my ($self, $document) = @_;
 
-  my $selector = s_command($self->command);
+  my $command = $self->command;
+  my $selector = s_command($command);
 
   my $children = $document->children;
-  return unless any { $selector->($_) } @$children;
+  unless (any { $selector->($_) } @$children) {
+    $self->log_debug("no $command commands in pod to collect");
+    return;
+  }
+
+  $self->log_debug("transforming $command commands into standard pod");
 
   my $nester = Pod::Elemental::Transformer::Nester->new({
      top_selector      => $selector,
@@ -120,7 +126,7 @@ sub transform_document {
   my @children = @{$container->children}; # rescue children
   $gatherer->transform_node($document); # insert host at position of first adopt-child and inject it with adopt-children
   foreach my $child (@{ $container->children }) {
-    $child->command( $self->new_command ) if $child->command eq $self->command;
+    $child->command( $self->new_command ) if $child->command eq $command;
   }
   unshift @{$container->children}, @children; # give original children back to host
 }
@@ -156,7 +162,7 @@ Pod::Weaver::Section::Collect - a section that gathers up specific commands
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

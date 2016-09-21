@@ -4,7 +4,7 @@ use warnings;
 
 package Git::Wrapper;
 #ABSTRACT: Wrap git(7) command-line interface
-$Git::Wrapper::VERSION = '0.045';
+$Git::Wrapper::VERSION = '0.047';
 our $DEBUG=0;
 
 # Prevent ANSI color with extreme prejudice
@@ -183,6 +183,8 @@ sub log {
 
   $opt->{no_abbrev_commit} = 1
     if $self->supports_log_no_abbrev_commit;
+  $opt->{no_expand_tabs} = 1
+    if $self->supports_log_no_expand_tabs;
 
   my $raw = defined $opt->{raw} && $opt->{raw};
 
@@ -220,9 +222,12 @@ sub log {
     if ($raw) {
       my @modifications;
 
-      # example output:
+      # example outputs:
+      #  regular:
       # :000000 100644 0000000000000000000000000000000000000000 ce013625030ba8dba906f756967f9e9ca394464a A     foo/bar
-      while(@out and $out[0] =~ m/^\:(\d{6}) (\d{6}) (\w{40}) (\w{40}) (\w{1})\t(.*)$/) {
+      #  with score value after file type (see https://github.com/genehack/Git-Wrapper/issues/70):
+      # :100644 100644 c659037... c659037... R100       foo bar
+      while(@out and $out[0] =~ m/^\:(\d{6}) (\d{6}) (\w{40}) (\w{40}) (\w{1}[0-9]*)\t(.*)$/) {
         push @modifications, Git::Wrapper::File::RawModification->new($6,$5,$1,$2,$3,$4);
         shift @out;
       }
@@ -287,6 +292,14 @@ sub supports_log_no_abbrev_commit {
 
   # The '--no-abbrev-commit' option to 'git log' was added in version 1.7.6
   return ( versioncmp( $self->version , '1.7.6' ) eq -1 ) ? 0 : 1;
+}
+
+sub supports_log_no_expand_tabs {
+  my $self = shift;
+
+  # The '--no-expand-tabs' option to git log was added in version 2.9.0
+  return 0 if ( versioncmp( $self->version , '2.9' ) eq -1 );
+  return 1;
 }
 
 sub supports_log_raw_dates {
@@ -402,7 +415,7 @@ Git::Wrapper - Wrap git(7) command-line interface
 
 =head1 VERSION
 
-version 0.045
+version 0.047
 
 =head1 SYNOPSIS
 
@@ -672,14 +685,17 @@ binary in the current $PATH.
 
 =head2 supports_log_no_abbrev_commit
 
+=head2 supports_log_no_expand_tabs
+
 =head2 supports_log_raw_dates
 
 =head2 supports_hash_object_filters
 
 These methods return a true or false value (1 or 0) indicating whether the git
 binary being used has support for these options. (The '--porcelain' option on
-'git status', the '--no-abbrev-commit' and '--date=raw' options on 'git log',
-and the '--no-filters' option on 'git hash-object' respectively.)
+'git status', the '--no-abbrev-commit', '--no-expand-tabs', and '--date=raw'
+options on 'git log', and the '--no-filters' option on 'git hash-object'
+respectively.)
 
 These are primarily for use in this distribution's test suite, but may also be
 useful when writing code using Git::Wrapper that might be run with different
@@ -813,7 +829,7 @@ methods described above (i.e., C<log>, C<status>, etc.). This can be useful
 in various situations, such as when you want to produce a particular log
 output format that isn't compatible with the way C<Git::Wrapper> constructs
 C<Git::Wrapper::Log>, or when you want raw C<git status> output that isn't
-parsed into a <Git::Wrapper::Status> object.
+parsed into a C<Git::Wrapper::Status> object.
 
 This method should be called with an initial string argument of the C<git>
 subcommand you want to run, followed by a hashref containing options and their

@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Version;
 # ABSTRACT: add a VERSION pod section
-$Pod::Weaver::Section::Version::VERSION = '4.013';
+$Pod::Weaver::Section::Version::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 with 'Pod::Weaver::Role::StringFromComment';
@@ -230,6 +230,8 @@ sub weave_section {
 
   my @content = $self->build_content($input);
 
+  $self->log_debug('adding ' . $self->header . ' section to pod');
+
   push @{ $document->children },
     Pod::Elemental::Element::Nested->new({
       command  => 'head1',
@@ -253,7 +255,7 @@ Pod::Weaver::Section::Version - add a VERSION pod section
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

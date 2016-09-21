@@ -1,6 +1,6 @@
 package Pod::Weaver;
 # ABSTRACT: weave together a Pod document from an outline
-$Pod::Weaver::VERSION = '4.013';
+$Pod::Weaver::VERSION = '4.014';
 use Moose;
 use namespace::autoclean;
 
@@ -198,7 +198,7 @@ sub new_from_config_sequence {
       $section->payload,
     );
 
-    # $self->log("initializing plugin $name ($plugin_class)");
+    $self->log_debug("initializing plugin $name ($plugin_class)");
 
     confess "arguments attempted to override 'plugin_name'"
       if defined $arg->{plugin_name};
@@ -232,7 +232,7 @@ Pod::Weaver - weave together a Pod document from an outline
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 SYNOPSIS
 
@@ -310,7 +310,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Peters Apocalypse Blabos de Blebe Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Dave Rolsky David E. Wheeler Golden Florian Ragwitz Jonathan "Duke" Leto Joshua Keroes Karen Etheridge Kent Fredric Marcel Gruenauer Randy Stauner Sam Graham Shlomi Fish
+=for stopwords Alex Peters Apocalypse Blabos de Blebe Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Dave Rolsky David E. Wheeler Golden Zurborg Florian Ragwitz Jonathan "Duke" Leto Joshua Keroes Karen Etheridge Kent Fredric Marcel Gruenauer Randy Stauner Sam Graham Shlomi Fish
 
 =over 4
 
@@ -353,6 +353,10 @@ David E. Wheeler <david@justatheory.com>
 =item *
 
 David Golden <dagolden@cpan.org>
+
+=item *
+
+David Zurborg <post@david-zurb.org>
 
 =item *
 
