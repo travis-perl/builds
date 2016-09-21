@@ -1,6 +1,6 @@
 package Pod::Weaver::Plugin::SingleEncoding;
 # ABSTRACT: ensure that there is exactly one =encoding of known value
-$Pod::Weaver::Plugin::SingleEncoding::VERSION = '4.013';
+$Pod::Weaver::Plugin::SingleEncoding::VERSION = '4.014';
 use Moose;
 with(
   'Pod::Weaver::Role::Dialect',
@@ -45,6 +45,9 @@ sub translate_dialect {
 
   my $want;
   $want = $self->encoding if $self->_has_encoding;
+  if ($want) {
+    $self->log_debug("enforcing encoding of $want in all pod");
+  }
 
   my $childs = $document->children;
   my $is_enc = s_command([ qw(encoding) ]);
@@ -82,6 +85,7 @@ sub finalize_document {
   my $is_pod = s_command([ qw(pod) ]); # ??
   for (0 .. $#$childs) {
     next if $is_pod->( $childs->[ $_ ] );
+    $self->log_debug('setting =encoding to ' . $self->encoding);
     splice @$childs, $_, 0, $encoding;
     last;
   }
@@ -104,7 +108,7 @@ Pod::Weaver::Plugin::SingleEncoding - ensure that there is exactly one =encoding
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

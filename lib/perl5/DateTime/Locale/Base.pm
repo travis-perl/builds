@@ -2,13 +2,15 @@ package DateTime::Locale::Base;
 
 use strict;
 use warnings;
+use namespace::autoclean;
 
-our $VERSION = '1.05';
+our $VERSION = '1.07';
 
 use Carp qw( carp );
 use DateTime::Locale;
 use List::Util 1.45 ();
-use Params::Validate qw( validate_pos );
+use Params::ValidationCompiler 0.13 qw( validation_for );
+use Specio::Declare;
 
 BEGIN {
     foreach my $field (
@@ -141,10 +143,16 @@ sub _available_formats { }
 
 sub default_date_format_length { $_[0]->{default_date_format_length} }
 
+my $length = enum( values => [qw( full long medium short )] );
+my $validator = validation_for(
+    name             => '_check_length_parameter',
+    name_is_optional => 1,
+    params           => [ { type => $length } ],
+);
+
 sub set_default_date_format_length {
     my $self = shift;
-    my ($l)
-        = validate_pos( @_, { regex => qr/^(?:full|long|medium|short)$/i } );
+    my ($l) = $validator->(@_);
 
     $self->{default_date_format_length} = lc $l;
 }
@@ -153,8 +161,7 @@ sub default_time_format_length { $_[0]->{default_time_format_length} }
 
 sub set_default_time_format_length {
     my $self = shift;
-    my ($l)
-        = validate_pos( @_, { regex => qr/^(?:full|long|medium|short)/i } );
+    my ($l) = $validator->(@_);
 
     $self->{default_time_format_length} = lc $l;
 }
@@ -459,8 +466,8 @@ sub STORABLE_freeze {
 }
 
 sub STORABLE_thaw {
-    my $self       = shift;
-    my $cloning    = shift;
+    my $self = shift;
+    shift;
     my $serialized = shift;
 
     my $obj = DateTime::Locale->load($serialized);
@@ -486,7 +493,7 @@ DateTime::Locale::Base - Base class for individual locale objects
 
 =head1 VERSION
 
-version 1.05
+version 1.07
 
 =head1 SYNOPSIS
 
@@ -810,7 +817,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

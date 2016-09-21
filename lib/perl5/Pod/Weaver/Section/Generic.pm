@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Generic;
 # ABSTRACT: a generic section, found by lifting sections
-$Pod::Weaver::Section::Generic::VERSION = '4.013';
+$Pod::Weaver::Section::Generic::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 
@@ -85,6 +85,8 @@ sub weave_section {
   confess "Couldn't find required Generic section for " . $self->header . " in file "
     . (defined $input->{filename} ? $input->{filename} : '') if $self->required and not @found;
 
+  $self->log_debug('adding ' . $self->header . ' back into pod');
+
   push @{ $document->children }, map { splice @$in_node, $_, 1 } reverse @found;
 }
 
@@ -103,7 +105,7 @@ Pod::Weaver::Section::Generic - a generic section, found by lifting sections
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

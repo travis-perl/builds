@@ -1,16 +1,18 @@
 package DateTime::Locale;
 
-use 5.008001;
+use 5.008004;
 
 use strict;
 use warnings;
+use namespace::autoclean;
 
-our $VERSION = '1.05';
+our $VERSION = '1.07';
 
 use DateTime::Locale::Data;
 use DateTime::Locale::FromData;
 use DateTime::Locale::Util qw( parse_locale_code );
-use Params::Validate qw( validate validate_pos SCALAR );
+use Params::ValidationCompiler 0.13 qw( validation_for );
+use Specio::Library::String;
 
 my %Class;
 my %DataForCode;
@@ -34,26 +36,8 @@ sub register {
 }
 
 sub _register {
-    my $class = shift;
-
-    my %p = validate(
-        @_, {
-            id => { type => SCALAR },
-
-            en_language  => { type => SCALAR },
-            en_script    => { type => SCALAR, optional => 1 },
-            en_territory => { type => SCALAR, optional => 1 },
-            en_variant   => { type => SCALAR, optional => 1 },
-
-            native_language  => { type => SCALAR, optional => 1 },
-            native_script    => { type => SCALAR, optional => 1 },
-            native_territory => { type => SCALAR, optional => 1 },
-            native_variant   => { type => SCALAR, optional => 1 },
-
-            class   => { type => SCALAR, optional => 1 },
-            replace => { type => SCALAR, default  => 0 },
-        }
-    );
+    shift;
+    my %p = @_;
 
     my $id = $p{id};
 
@@ -121,7 +105,7 @@ sub remove_alias {
 
     %LoadCache = ();
 
-    my ($alias) = validate_pos( @_, { type => SCALAR } );
+    my $alias = shift;
 
     return delete $UserDefinedAlias{$alias};
 }
@@ -186,57 +170,67 @@ my %POSIXAliases = (
     POSIX => 'en-US-POSIX',
 );
 
-sub load {
-    my $class = shift;
-    my ($code) = validate_pos( @_, { type => SCALAR } );
+{
+    my $validator = validation_for(
+        name             => '_check_load_params',
+        name_is_optional => 1,
+        params           => [
+            { type => t('NonEmptyStr') },
+        ],
+    );
 
-    # We used to use underscores in codes instead of dashes. We want to
-    # support both indefinitely.
-    $code =~ tr/_/-/;
+    sub load {
+        my $class = shift;
+        my ($code) = $validator->(@_);
 
-    # Strip off charset for LC_* codes : en_GB.UTF-8 etc
-    $code =~ s/\..*$//;
+        # We used to use underscores in codes instead of dashes. We want to
+        # support both indefinitely.
+        $code =~ tr/_/-/;
 
-    return $LoadCache{$code} if exists $LoadCache{$code};
+        # Strip off charset for LC_* codes : en_GB.UTF-8 etc
+        $code =~ s/\..*$//;
 
-    while ( exists $UserDefinedAlias{$code} ) {
-        $code = $UserDefinedAlias{$code};
+        return $LoadCache{$code} if exists $LoadCache{$code};
+
+        while ( exists $UserDefinedAlias{$code} ) {
+            $code = $UserDefinedAlias{$code};
+        }
+
+        $code = $DateTimeLanguageAliases{$code}
+            if exists $DateTimeLanguageAliases{$code};
+        $code = $POSIXAliases{$code} if exists $POSIXAliases{$code};
+        $code = $DateTime::Locale::Data::ISO639Aliases{$code}
+            if exists $DateTime::Locale::Data::ISO639Aliases{$code};
+
+        if ( exists $DateTime::Locale::Data::Codes{$code} ) {
+            return $class->_locale_object_for($code);
+        }
+
+        if ( exists $DateTime::Locale::Data::Names{$code} ) {
+            return $class->_locale_object_for(
+                $DateTime::Locale::Data::Names{$code} );
+        }
+
+        if ( exists $DateTime::Locale::Data::NativeNames{$code} ) {
+            return $class->_locale_object_for(
+                $DateTime::Locale::Data::NativeNames{$code} );
+        }
+
+        if ( my $locale = $class->_registered_locale_for($code) ) {
+            return $locale;
+        }
+
+        if ( my $guessed = $class->_guess_code($code) ) {
+            return $class->_locale_object_for($guessed);
+        }
+
+        die "Invalid locale code or name: $code\n";
     }
-
-    $code = $DateTimeLanguageAliases{$code}
-        if exists $DateTimeLanguageAliases{$code};
-    $code = $POSIXAliases{$code} if exists $POSIXAliases{$code};
-    $code = $DateTime::Locale::Data::ISO639Aliases{$code}
-        if exists $DateTime::Locale::Data::ISO639Aliases{$code};
-
-    if ( exists $DateTime::Locale::Data::Codes{$code} ) {
-        return $class->_locale_object_for($code);
-    }
-
-    if ( exists $DateTime::Locale::Data::Names{$code} ) {
-        return $class->_locale_object_for(
-            $DateTime::Locale::Data::Names{$code} );
-    }
-
-    if ( exists $DateTime::Locale::Data::NativeNames{$code} ) {
-        return $class->_locale_object_for(
-            $DateTime::Locale::Data::NativeNames{$code} );
-    }
-
-    if ( my $locale = $class->_registered_locale_for($code) ) {
-        return $locale;
-    }
-
-    if ( my $guessed = $class->_guess_code($code) ) {
-        return $class->_locale_object_for($guessed);
-    }
-
-    die "Invalid locale code or name: $code\n";
 }
 
 sub _guess_code {
-    my $class = shift;
-    my $code  = shift;
+    shift;
+    my $code = shift;
 
     my %codes = parse_locale_code($code);
 
@@ -368,7 +362,7 @@ DateTime::Locale - Localization support for DateTime.pm
 
 =head1 VERSION
 
-version 1.05
+version 1.07
 
 =head1 SYNOPSIS
 
@@ -524,7 +518,7 @@ Dave Rolsky <autarch@urth.org>
 
 Karen Etheridge <ether@cpan.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

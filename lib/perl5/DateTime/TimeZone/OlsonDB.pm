@@ -1,23 +1,23 @@
 package DateTime::TimeZone::OlsonDB;
-$DateTime::TimeZone::OlsonDB::VERSION = '2.01';
+
 use strict;
 use warnings;
+use namespace::autoclean;
 
-use vars qw( %MONTHS %DAYS $PLUS_ONE_DAY_DUR $MINUS_ONE_DAY_DUR );
+our $VERSION = '2.03';
 
 use DateTime::TimeZone::OlsonDB::Rule;
 use DateTime::TimeZone::OlsonDB::Zone;
-use Params::Validate qw( validate SCALAR );
 
 my $x = 1;
-%MONTHS = map { $_ => $x++ } qw( Jan Feb Mar Apr May Jun
+our %MONTHS = map { $_ => $x++ } qw( Jan Feb Mar Apr May Jun
     Jul Aug Sep Oct Nov Dec);
 
 $x = 1;
-%DAYS = map { $_ => $x++ } qw( Mon Tue Wed Thu Fri Sat Sun );
+our %DAYS = map { $_ => $x++ } qw( Mon Tue Wed Thu Fri Sat Sun );
 
-$PLUS_ONE_DAY_DUR  = DateTime::Duration->new( days => 1 );
-$MINUS_ONE_DAY_DUR = DateTime::Duration->new( days => -1 );
+our $PLUS_ONE_DAY_DUR  = DateTime::Duration->new( days => 1 );
+our $MINUS_ONE_DAY_DUR = DateTime::Duration->new( days => -1 );
 
 sub new {
     my $class = shift;
@@ -152,15 +152,9 @@ sub zone {
 
 sub expanded_zone {
     my $self = shift;
-    my %p    = validate(
-        @_, {
-            name           => { type => SCALAR },
-            expand_to_year => {
-                type    => SCALAR,
-                default => (localtime)[5] + 1910
-            },
-        }
-    );
+    my %p    = @_;
+
+    $p{expand_to_year} ||= (localtime)[5] + 1910;
 
     my $zone = $self->zone( $p{name} );
 
@@ -232,16 +226,7 @@ sub parse_day_spec {
 }
 
 sub utc_datetime_for_time_spec {
-    my %p = validate(
-        @_, {
-            spec            => { type => SCALAR },
-            year            => { type => SCALAR },
-            month           => { type => SCALAR },
-            day             => { type => SCALAR },
-            offset_from_utc => { type => SCALAR },
-            offset_from_std => { type => SCALAR },
-        },
-    );
+    my %p = @_;
 
     # 'w'all - ignore it, because that's the default
     $p{spec} =~ s/w$//;
@@ -315,7 +300,7 @@ DateTime::TimeZone::OlsonDB - An object to represent an Olson time zone database
 
 =head1 VERSION
 
-version 2.01
+version 2.03
 
 =head1 SYNOPSIS
 
@@ -359,7 +344,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

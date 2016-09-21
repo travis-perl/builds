@@ -1,6 +1,6 @@
 package Pod::Weaver::Plugin::Transformer;
 # ABSTRACT: apply arbitrary transformers
-$Pod::Weaver::Plugin::Transformer::VERSION = '4.013';
+$Pod::Weaver::Plugin::Transformer::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Dialect';
 
@@ -64,6 +64,7 @@ sub BUILDARGS {
 sub translate_dialect {
   my ($self, $pod_document) = @_;
 
+  $self->log_debug('applying transform');
   $self->transformer->transform_node( $pod_document );
 }
 
@@ -82,7 +83,7 @@ Pod::Weaver::Plugin::Transformer - apply arbitrary transformers
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

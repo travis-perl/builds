@@ -3,7 +3,7 @@
 
 package XSLoader;
 
-$VERSION = "0.22";
+$VERSION = "0.24";
 
 #use strict;
 
@@ -130,7 +130,7 @@ XSLoader - Dynamically load C libraries into Perl code
 
 =head1 VERSION
 
-Version 0.22
+Version 0.24
 
 =head1 SYNOPSIS
 

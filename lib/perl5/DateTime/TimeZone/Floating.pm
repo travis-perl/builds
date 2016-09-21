@@ -1,7 +1,10 @@
 package DateTime::TimeZone::Floating;
-$DateTime::TimeZone::Floating::VERSION = '2.01';
+
 use strict;
 use warnings;
+use namespace::autoclean;
+
+our $VERSION = '2.03';
 
 use parent 'Class::Singleton', 'DateTime::TimeZone::OffsetOnly';
 
@@ -56,7 +59,7 @@ DateTime::TimeZone::Floating - A time zone that is always local
 
 =head1 VERSION
 
-version 2.01
+version 2.03
 
 =head1 SYNOPSIS
 
@@ -85,7 +88,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

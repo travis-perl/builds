@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.18
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.19
 
 use Dist::CheckConflicts
     -dist      => 'DateTime::Locale',
@@ -16,7 +16,10 @@ use Dist::CheckConflicts
         Dist::CheckConflicts
         Exporter
         List::Util
-        Params::Validate
+        Params::ValidationCompiler
+        Specio::Declare
+        Specio::Library::String
+        namespace::autoclean
         strict
         warnings
     ) ],

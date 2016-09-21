@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.36';
+our $VERSION = '1.39';
 
 our ( @RD, @LEAP_SECONDS, %RD_LENGTH );
 
@@ -133,7 +133,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.36
+version 1.39
 
 =head1 SYNOPSIS
 
@@ -194,7 +194,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

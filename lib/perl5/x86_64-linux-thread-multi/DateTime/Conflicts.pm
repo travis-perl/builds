@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.18
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.19
 
 use Dist::CheckConflicts
     -dist      => 'DateTime',
@@ -17,15 +17,21 @@ use Dist::CheckConflicts
         DateTime::TimeZone
         Dist::CheckConflicts
         POSIX
-        Params::Validate
+        Params::ValidationCompiler
         Scalar::Util
+        Specio
+        Specio::Declare
+        Specio::Exporter
+        Specio::Library::Builtins
+        Specio::Library::Numeric
+        Specio::Library::String
         Try::Tiny
         XSLoader
         base
-        constant
         integer
         namespace::autoclean
         overload
+        parent
         strict
         warnings
         warnings::register

@@ -1,22 +1,22 @@
 package DateTime;
 
-use 5.008001;
+use 5.008004;
 
 use strict;
 use warnings;
 use warnings::register;
 use namespace::autoclean 0.19;
 
-our $VERSION = '1.36';
+our $VERSION = '1.39';
 
 use Carp;
 use DateTime::Duration;
 use DateTime::Helpers;
-use DateTime::Locale 1.05;
-use DateTime::TimeZone 2.00;
-use Params::Validate 1.03
-    qw( validate validate_pos UNDEF SCALAR BOOLEAN HASHREF OBJECT );
+use DateTime::Locale 1.06;
+use DateTime::TimeZone 2.02;
+use DateTime::Types;
 use POSIX qw(floor fmod);
+use Params::ValidationCompiler 0.13 qw( validation_for );
 use Try::Tiny;
 
 {
@@ -70,15 +70,15 @@ use overload (
 # or else weird crashes ensue
 require DateTime::Infinite;
 
-use constant MAX_NANOSECONDS => 1_000_000_000;    # 1E9 = almost 32 bits
+sub MAX_NANOSECONDS () {1_000_000_000}    # 1E9 = almost 32 bits
 
-use constant INFINITY     => ( 100**100**100**100 );
-use constant NEG_INFINITY => -1 * ( 100**100**100**100 );
-use constant NAN          => INFINITY - INFINITY;
+sub INFINITY ()     { 100**100**100**100 }
+sub NEG_INFINITY () { -1 * ( 100**100**100**100 ) }
+sub NAN ()          { INFINITY - INFINITY }
 
-use constant SECONDS_PER_DAY => 86400;
+sub SECONDS_PER_DAY () {86400}
 
-use constant duration_class => 'DateTime::Duration';
+sub duration_class () {'DateTime::Duration'}
 
 my ( @MonthLengths, @LeapYearMonthLengths );
 
@@ -107,103 +107,66 @@ BEGIN {
 
         return $DefaultLocale;
     }
-
-    # backwards compat
-    *DefaultLanguage = \&DefaultLocale;
 }
 __PACKAGE__->DefaultLocale('en-US');
 
-my $BasicValidate = {
-    year => {
-        type      => SCALAR,
-        callbacks => {
-            'is an integer' => sub { $_[0] =~ /^-?\d+$/ }
+{
+    my $validator = validation_for(
+        name             => '_check_new_params',
+        name_is_optional => 1,
+        params           => {
+            year  => { type => t('Year') },
+            month => {
+                type    => t('Month'),
+                default => 1,
+            },
+            day => {
+                type    => t('DayOfMonth'),
+                default => 1,
+            },
+            hour => {
+                type    => t('Hour'),
+                default => 0,
+            },
+            minute => {
+                type    => t('Minute'),
+                default => 0,
+            },
+            second => {
+                type    => t('Second'),
+                default => 0,
+            },
+            nanosecond => {
+                type    => t('Nanosecond'),
+                default => 0,
+            },
+            locale => {
+                type     => t('Locale'),
+                optional => 1,
+            },
+            formatter => {
+                type     => t('Formatter'),
+                optional => 1,
+            },
+            time_zone => {
+                type     => t('TimeZone'),
+                optional => 1,
+            },
         },
-    },
-    month => {
-        type      => SCALAR,
-        default   => 1,
-        callbacks => {
-            'an integer between 1 and 12' =>
-                sub { $_[0] =~ /^\d+$/ && $_[0] >= 1 && $_[0] <= 12 }
-        },
-    },
-    day => {
-        type      => SCALAR,
-        default   => 1,
-        callbacks => {
-            'an integer which is a possible valid day of month' =>
-                sub { $_[0] =~ /^\d+$/ && $_[0] >= 1 && $_[0] <= 31 }
-        },
-    },
-    hour => {
-        type      => SCALAR,
-        default   => 0,
-        callbacks => {
-            'an integer between 0 and 23' =>
-                sub { $_[0] =~ /^\d+$/ && $_[0] >= 0 && $_[0] <= 23 },
-        },
-    },
-    minute => {
-        type      => SCALAR,
-        default   => 0,
-        callbacks => {
-            'an integer between 0 and 59' =>
-                sub { $_[0] =~ /^\d+$/ && $_[0] >= 0 && $_[0] <= 59 },
-        },
-    },
-    second => {
-        type      => SCALAR,
-        default   => 0,
-        callbacks => {
-            'an integer between 0 and 61' =>
-                sub { $_[0] =~ /^\d+$/ && $_[0] >= 0 && $_[0] <= 61 },
-        },
-    },
-    nanosecond => {
-        type      => SCALAR,
-        default   => 0,
-        callbacks => {
-            'a positive integer' => sub { $_[0] =~ /^\d+$/ && $_[0] >= 0 },
-        }
-    },
-    locale => {
-        type    => SCALAR | OBJECT,
-        default => undef
-    },
-    language => {
-        type     => SCALAR | OBJECT,
-        optional => 1
-    },
-    formatter => {
-        type      => UNDEF | SCALAR | OBJECT,
-        optional  => 1,
-        callbacks => {
-            'can format_datetime' =>
-                sub { defined $_[0] ? $_[0]->can('format_datetime') : 1 },
-        },
-    },
-};
+    );
 
-my $NewValidate = {
-    %$BasicValidate,
-    time_zone => {
-        type     => SCALAR | OBJECT,
-        optional => 1,
-    },
-};
+    sub new {
+        my $class = shift;
+        my %p     = $validator->(@_);
 
-sub new {
-    my $class = shift;
-    my %p = validate( @_, $NewValidate );
+        Carp::croak(
+            "Invalid day of month (day = $p{day} - month = $p{month} - year = $p{year})\n"
+            )
+            if $p{day} > 28
+            && $p{day} > $class->_month_length( $p{year}, $p{month} );
 
-    Carp::croak(
-        "Invalid day of month (day = $p{day} - month = $p{month} - year = $p{year})\n"
-        )
-        if $p{day} > 28
-        && $p{day} > $class->_month_length( $p{year}, $p{month} );
-
-    return $class->_new(%p);
+        return $class->_new(%p);
+    }
 }
 
 sub _new {
@@ -224,8 +187,6 @@ sub _new {
     $p{time_zone}  = $class->_default_time_zone unless exists $p{time_zone};
 
     my $self = bless {}, $class;
-
-    $p{locale} = delete $p{language} if exists $p{language};
 
     $self->_set_locale( $p{locale} );
 
@@ -479,23 +440,29 @@ sub _calc_local_components {
 }
 
 {
-    my $float = qr/
-         ^ -? (?: [0-9]+ (?: \.[0-9]*)? | \. [0-9]+) (?: [eE][+-]?[0-9]+)? $
-    /x;
-    my $spec = {
-        epoch     => { regex => $float },
-        locale    => { type  => SCALAR | OBJECT, optional => 1 },
-        language  => { type  => SCALAR | OBJECT, optional => 1 },
-        time_zone => { type  => SCALAR | OBJECT, optional => 1 },
-        formatter => {
-            type     => SCALAR | OBJECT, can => 'format_datetime',
-            optional => 1
+    my $validator = validation_for(
+        name             => '_check_from_epoch_params',
+        name_is_optional => 1,
+        params           => {
+            epoch     => { type => t('Num') },
+            formatter => {
+                type     => t('Formatter'),
+                optional => 1
+            },
+            locale => {
+                type     => t('Locale'),
+                optional => 1
+            },
+            time_zone => {
+                type     => t('TimeZone'),
+                optional => 1
+            },
         },
-    };
+    );
 
     sub from_epoch {
         my $class = shift;
-        my %p = validate( @_, $spec );
+        my %p     = $validator->(@_);
 
         my %args;
 
@@ -573,22 +540,25 @@ sub _core_time {
 sub today { shift->now(@_)->truncate( to => 'day' ) }
 
 {
-    my $spec = {
-        object => {
-            type => OBJECT,
-            can  => 'utc_rd_values',
+    my $validator = validation_for(
+        name             => '_check_from_object_params',
+        name_is_optional => 1,
+        params           => {
+            object => { type => t('ConvertibleObject') },
+            locale => {
+                type     => t('Locale'),
+                optional => 1,
+            },
+            formatter => {
+                type     => t('Formatter'),
+                optional => 1,
+            },
         },
-        locale    => { type => SCALAR | OBJECT, optional => 1 },
-        language  => { type => SCALAR | OBJECT, optional => 1 },
-        formatter => {
-            type     => SCALAR | OBJECT, can => 'format_datetime',
-            optional => 1
-        },
-    };
+    );
 
     sub from_object {
         my $class = shift;
-        my %p = validate( @_, $spec );
+        my %p     = $validator->(@_);
 
         my $object = delete $p{object};
 
@@ -635,23 +605,56 @@ sub today { shift->now(@_)->truncate( to => 'day' ) }
     }
 }
 
-my $LastDayOfMonthValidate = {%$NewValidate};
-foreach ( keys %$LastDayOfMonthValidate ) {
-    my %copy = %{ $LastDayOfMonthValidate->{$_} };
+{
+    my $validator = validation_for(
+        name             => '_check_last_day_of_month_params',
+        name_is_optional => 1,
+        params           => {
+            year  => { type => t('Year') },
+            month => { type => t('Month') },
+            day   => {
+                type    => t('DayOfMonth'),
+                default => 1,
+            },
+            hour => {
+                type    => t('Hour'),
+                default => 0,
+            },
+            minute => {
+                type    => t('Minute'),
+                default => 0,
+            },
+            second => {
+                type    => t('Second'),
+                default => 0,
+            },
+            nanosecond => {
+                type    => t('Nanosecond'),
+                default => 0,
+            },
+            locale => {
+                type     => t('Locale'),
+                optional => 1,
+            },
+            formatter => {
+                type     => t('Formatter'),
+                optional => 1,
+            },
+            time_zone => {
+                type     => t('TimeZone'),
+                optional => 1,
+            },
+        },
+    );
 
-    delete $copy{default};
-    $copy{optional} = 1 unless $_ eq 'year' || $_ eq 'month';
+    sub last_day_of_month {
+        my $class = shift;
+        my %p     = $validator->(@_);
 
-    $LastDayOfMonthValidate->{$_} = \%copy;
-}
+        my $day = $class->_month_length( $p{year}, $p{month} );
 
-sub last_day_of_month {
-    my $class = shift;
-    my %p = validate( @_, $LastDayOfMonthValidate );
-
-    my $day = $class->_month_length( $p{year}, $p{month} );
-
-    return $class->_new( %p, day => $day );
+        return $class->_new( %p, day => $day );
+    }
 }
 
 sub _month_length {
@@ -662,49 +665,70 @@ sub _month_length {
     );
 }
 
-my $FromDayOfYearValidate = {%$NewValidate};
-foreach ( keys %$FromDayOfYearValidate ) {
-    next if $_ eq 'month' || $_ eq 'day';
-
-    my %copy = %{ $FromDayOfYearValidate->{$_} };
-
-    delete $copy{default};
-    $copy{optional} = 1 unless $_ eq 'year' || $_ eq 'month';
-
-    $FromDayOfYearValidate->{$_} = \%copy;
-}
-$FromDayOfYearValidate->{day_of_year} = {
-    type      => SCALAR,
-    callbacks => {
-        'is between 1 and 366' => sub { $_[0] >= 1 && $_[0] <= 366 }
-    }
-};
-
-sub from_day_of_year {
-    my $class = shift;
-    my %p = validate( @_, $FromDayOfYearValidate );
-
-    Carp::croak("$p{year} is not a leap year.\n")
-        if $p{day_of_year} == 366 && !$class->_is_leap_year( $p{year} );
-
-    my $month = 1;
-    my $day   = delete $p{day_of_year};
-
-    if ( $day > 31 ) {
-        my $length = $class->_month_length( $p{year}, $month );
-
-        while ( $day > $length ) {
-            $day -= $length;
-            $month++;
-            $length = $class->_month_length( $p{year}, $month );
-        }
-    }
-
-    return $class->_new(
-        %p,
-        month => $month,
-        day   => $day,
+{
+    my $validator = validation_for(
+        name             => '_check_from_day_of_year_params',
+        name_is_optional => 1,
+        params           => {
+            year        => { type => t('Year') },
+            day_of_year => { type => t('DayOfYear') },
+            hour        => {
+                type    => t('Hour'),
+                default => 0,
+            },
+            minute => {
+                type    => t('Minute'),
+                default => 0,
+            },
+            second => {
+                type    => t('Second'),
+                default => 0,
+            },
+            nanosecond => {
+                type    => t('Nanosecond'),
+                default => 0,
+            },
+            locale => {
+                type     => t('Locale'),
+                optional => 1,
+            },
+            formatter => {
+                type     => t('Formatter'),
+                optional => 1,
+            },
+            time_zone => {
+                type     => t('TimeZone'),
+                optional => 1,
+            },
+        },
     );
+
+    sub from_day_of_year {
+        my $class = shift;
+        my %p     = $validator->(@_);
+
+        Carp::croak("$p{year} is not a leap year.\n")
+            if $p{day_of_year} == 366 && !$class->_is_leap_year( $p{year} );
+
+        my $month = 1;
+        my $day   = delete $p{day_of_year};
+
+        if ( $day > 31 ) {
+            my $length = $class->_month_length( $p{year}, $month );
+
+            while ( $day > $length ) {
+                $day -= $length;
+                $month++;
+                $length = $class->_month_length( $p{year}, $month );
+            }
+        }
+
+        return $class->_new(
+            %p,
+            month => $month,
+            day   => $day,
+        );
+    }
 }
 
 sub formatter { $_[0]->{formatter} }
@@ -994,7 +1018,6 @@ sub locale {
     Carp::carp('locale() is a read-only accessor') if @_ > 1;
     return $_[0]->{locale};
 }
-*language = \&locale;
 
 sub utc_rd_values {
     @{ $_[0] }{ 'utc_rd_days', 'utc_rd_secs', 'rd_nanosecs' };
@@ -1702,11 +1725,17 @@ sub subtract {
 sub subtract_duration { return $_[0]->add_duration( $_[1]->inverse ) }
 
 {
-    my @spec = ( { isa => 'DateTime::Duration' } );
+    my $validator = validation_for(
+        name             => '_check_add_duration_params',
+        name_is_optional => 1,
+        params           => [
+            { type => t('Duration') },
+        ],
+    );
 
     sub add_duration {
         my $self = shift;
-        my ($dur) = validate_pos( @_, @spec );
+        my ($dur) = $validator->(@_);
 
         # simple optimization
         return $self if $dur->is_zero;
@@ -1929,32 +1958,61 @@ sub _normalize_nanoseconds {
     }
 }
 
-# Many of the same parameters as new() but all of them are optional,
-# and there are no defaults.
-my $SetValidate = {
-    map {
-        my %copy = %{ $BasicValidate->{$_} };
-        delete $copy{default};
-        $copy{optional} = 1;
-        $_ => \%copy
+{
+    my $validator = validation_for(
+        name             => '_check_set_params',
+        name_is_optional => 1,
+        params           => {
+            year => {
+                type     => t('Year'),
+                optional => 1,
+            },
+            month => {
+                type     => t('Month'),
+                optional => 1,
+            },
+            day => {
+                type     => t('DayOfMonth'),
+                optional => 1,
+            },
+            hour => {
+                type     => t('Hour'),
+                optional => 1,
+            },
+            minute => {
+                type     => t('Minute'),
+                optional => 1,
+            },
+            second => {
+                type     => t('Second'),
+                optional => 1,
+            },
+            nanosecond => {
+                type     => t('Nanosecond'),
+                optional => 1,
+            },
+            locale => {
+                type     => t('Locale'),
+                optional => 1,
+            },
+        },
+    );
+
+    sub set {
+        my $self = shift;
+        my %p    = $validator->(@_);
+
+        if ( $p{locale} ) {
+            carp 'You passed a locale to the set() method.'
+                . ' You should use set_locale() instead, as using set() may alter the local time near a DST boundary.';
         }
-        keys %$BasicValidate
-};
 
-sub set {
-    my $self = shift;
-    my %p = validate( @_, $SetValidate );
+        my $new_dt = $self->_new_from_self(%p);
 
-    if ( $p{locale} ) {
-        carp 'You passed a locale to the set() method.'
-            . ' You should use set_locale() instead, as using set() may alter the local time near a DST boundary.';
+        %$self = %$new_dt;
+
+        return $self;
     }
-
-    my $new_dt = $self->_new_from_self(%p);
-
-    %$self = %$new_dt;
-
-    return $self;
 }
 
 sub set_year       { $_[0]->set( year       => $_[1] ) }
@@ -1969,23 +2027,42 @@ sub set_nanosecond { $_[0]->set( nanosecond => $_[1] ) }
 # DST change where the same local time occurs twice then passing it through
 # _new() can actually change the underlying UTC time, which is bad.
 
-sub set_locale {
-    my $self = shift;
+{
+    my $validator = validation_for(
+        name             => '_check_set_locale_params',
+        name_is_optional => 1,
+        params           => [
+            { type => t( 'Maybe', of => t('Locale') ) },
+        ],
+    );
 
-    my ($locale) = validate_pos( @_, $BasicValidate->{locale} );
+    sub set_locale {
+        my $self = shift;
+        my ($locale) = $validator->(@_);
 
-    $self->_set_locale($locale);
+        $self->_set_locale($locale);
 
-    return $self;
+        return $self;
+    }
 }
 
-sub set_formatter {
-    my $self = shift;
-    my ($formatter) = validate_pos( @_, $BasicValidate->{formatter} );
+{
+    my $validator = validation_for(
+        name             => '_check_set_formatter_params',
+        name_is_optional => 1,
+        params           => [
+            { type => t( 'Maybe', of => t('Formatter') ) },
+        ],
+    );
 
-    $self->{formatter} = $formatter;
+    sub set_formatter {
+        my $self = shift;
+        my ($formatter) = $validator->(@_);
 
-    return $self;
+        $self->{formatter} = $formatter;
+
+        return $self;
+    }
 }
 
 {
@@ -1997,13 +2074,22 @@ sub set_formatter {
         second     => 0,
         nanosecond => 0,
     );
+
+    my $validator = validation_for(
+        name             => '_check_truncate_params',
+        name_is_optional => 1,
+        params           => {
+            to => { type => t('TruncationLevel') },
+        },
+    );
+
     my $re = join '|', 'year', 'week', 'local_week', 'quarter',
         grep { $_ ne 'nanosecond' } keys %TruncateDefault;
     my $spec = { to => { regex => qr/^(?:$re)$/ } };
 
     sub truncate {
         my $self = shift;
-        my %p = validate( @_, $spec );
+        my %p    = $validator->(@_);
 
         my %new;
         if ( $p{to} eq 'week' || $p{to} eq 'local_week' ) {
@@ -2140,11 +2226,7 @@ sub STORABLE_thaw {
     else {
         $tz = DateTime::TimeZone->new( name => delete $serialized{tz} );
 
-        $locale = DateTime::Locale->load(
-            exists $serialized{language}
-            ? delete $serialized{language}
-            : delete $serialized{locale}
-        );
+        $locale = DateTime::Locale->load( delete $serialized{locale} );
     }
 
     delete $serialized{version};
@@ -2194,7 +2276,7 @@ DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.36
+version 1.39
 
 =head1 SYNOPSIS
 
@@ -4494,7 +4576,7 @@ viviparous <viviparous@prc>
 
 =back
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is Copyright (c) 2016 by Dave Rolsky.
 

@@ -1,6 +1,6 @@
 package Git::Wrapper::Exception;
 # ABSTRACT: Exception class for Git::Wrapper
-$Git::Wrapper::Exception::VERSION = '0.045';
+$Git::Wrapper::Exception::VERSION = '0.047';
 use 5.006;
 use strict;
 use warnings;
@@ -39,7 +39,7 @@ Git::Wrapper::Exception - Exception class for Git::Wrapper
 
 =head1 VERSION
 
-version 0.045
+version 0.047
 
 =head1 SYNOPSIS
 
@@ -55,7 +55,7 @@ A new error object may be generated and thrown as follows:
 
 =head2 new
 
-The standard constuctor for this class.
+The standard constructor for this class.
 
 =head2 error
 

@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Region;
 # ABSTRACT: find a region and put its contents in place where desired
-$Pod::Weaver::Section::Region::VERSION = '4.013';
+$Pod::Weaver::Section::Region::VERSION = '4.014';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 
@@ -139,6 +139,8 @@ sub weave_section {
   confess "Couldn't find required Region for " . $self->region_name . " in file "
     . (defined $input->{filename} ? $input->{filename} : '') if $self->required and not @to_insert;
 
+  my $verb = $self->flatten ? 'flattening' : 'inserting';
+  $self->log_debug($verb . q{ } . $self->region_name . ' into pod');
   push @{ $document->children }, @to_insert;
 }
 
@@ -157,7 +159,7 @@ Pod::Weaver::Section::Region - find a region and put its contents in place where
 
 =head1 VERSION
 
-version 4.013
+version 4.014
 
 =head1 OVERVIEW
 

@@ -2,10 +2,11 @@ package DateTime::Locale::Util;
 
 use strict;
 use warnings;
+use namespace::autoclean -except => ['import'];
 
 use Exporter qw( import );
 
-our $VERSION = '1.05';
+our $VERSION = '1.07';
 
 our @EXPORT_OK = 'parse_locale_code';
 
@@ -62,7 +63,7 @@ DateTime::Locale::Util - Utility code for DateTime::Locale
 
 =head1 VERSION
 
-version 1.05
+version 1.07
 
 =head1 DESCRIPTION
 
@@ -82,7 +83,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

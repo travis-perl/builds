@@ -1,7 +1,10 @@
 package DateTime::TimeZone::Local::Unix;
-$DateTime::TimeZone::Local::Unix::VERSION = '2.01';
+
 use strict;
 use warnings;
+use namespace::autoclean;
+
+our $VERSION = '2.03';
 
 use Cwd 3;
 use Try::Tiny;
@@ -271,7 +274,7 @@ DateTime::TimeZone::Local::Unix - Determine the local system's time zone on Unix
 
 =head1 VERSION
 
-version 2.01
+version 2.03
 
 =head1 SYNOPSIS
 
@@ -342,7 +345,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

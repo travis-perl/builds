@@ -1,25 +1,14 @@
 package DateTime::TimeZone::OlsonDB::Change;
-$DateTime::TimeZone::OlsonDB::Change::VERSION = '2.01';
+
 use strict;
 use warnings;
+use namespace::autoclean;
 
-use Params::Validate qw( validate SCALAR UNDEF OBJECT );
+our $VERSION = '2.03';
 
 sub new {
     my $class = shift;
-    my %p     = validate(
-        @_, {
-            utc_start_datetime   => { type => UNDEF | OBJECT },
-            local_start_datetime => { type => UNDEF | OBJECT },
-            short_name           => { type => SCALAR },
-            observance           => { type => OBJECT },
-            rule                 => { type => OBJECT, default => undef },
-            type => {
-                type  => SCALAR,
-                regex => qr/^(?:observance|rule)$/
-            },
-        }
-    );
+    my %p     = @_;
 
     # These are almost always mutually exclusive, except when adding
     # an observance change and the last rule has no offset, but the

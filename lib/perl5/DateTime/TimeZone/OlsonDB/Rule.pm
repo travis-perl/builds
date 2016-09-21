@@ -1,28 +1,19 @@
 package DateTime::TimeZone::OlsonDB::Rule;
-$DateTime::TimeZone::OlsonDB::Rule::VERSION = '2.01';
+
 use strict;
 use warnings;
+use namespace::autoclean;
+
+our $VERSION = '2.03';
 
 use DateTime::Duration;
 use DateTime::TimeZone::OlsonDB;
 
-use Params::Validate qw( validate SCALAR );
-
 sub new {
     my $class = shift;
-    my %p     = validate(
-        @_, {
-            name   => { type => SCALAR },
-            from   => { type => SCALAR },
-            to     => { type => SCALAR },
-            type   => { type => SCALAR, default => undef },
-            in     => { type => SCALAR },
-            on     => { type => SCALAR },
-            at     => { type => SCALAR },
-            save   => { type => SCALAR },
-            letter => { type => SCALAR, default => q{} },
-        },
-    );
+    my %p     = @_;
+
+    $p{letter} ||= q{};
 
     my $save = $p{save};
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package CPAN::Uploader;
 # ABSTRACT: upload things to the CPAN
-$CPAN::Uploader::VERSION = '0.103012';
+$CPAN::Uploader::VERSION = '0.103013';
 #pod =head1 ORIGIN
 #pod
 #pod This code is mostly derived from C<cpan-upload-http> by Brad Fitzpatrick, which
@@ -48,6 +48,8 @@ sub upload_file {
 
   Carp::confess(q{don't supply %arg when calling upload_file on an object})
     if $arg and ref $self;
+
+  Carp::confess(q{attempted to upload a non-file}) unless -f $file;
 
   # class call with no args is no good
   Carp::confess(q{need to supply %arg when calling upload_file from the class})
@@ -285,7 +287,7 @@ CPAN::Uploader - upload things to the CPAN
 
 =head1 VERSION
 
-version 0.103012
+version 0.103013
 
 =head1 METHODS
 
@@ -418,7 +420,7 @@ Vincent Pit <perl@profvince.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

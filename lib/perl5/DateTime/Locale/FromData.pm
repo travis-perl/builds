@@ -2,11 +2,13 @@ package DateTime::Locale::FromData;
 
 use strict;
 use warnings;
+use namespace::autoclean;
 
 use DateTime::Locale::Util qw( parse_locale_code );
-use Params::Validate qw( validate_pos );
+use Params::ValidationCompiler 0.13 qw( validation_for );
+use Specio::Declare;
 
-our $VERSION = '1.05';
+our $VERSION = '1.07';
 
 my @FormatLengths;
 
@@ -133,18 +135,23 @@ sub _make_datetime_format {
     return $dt_format;
 }
 
+my $length = enum( values => [qw( full long medium short )] );
+my $validator = validation_for(
+    name             => '_check_length_parameter',
+    name_is_optional => 1,
+    params           => [ { type => $length } ],
+);
+
 sub set_default_date_format_length {
     my $self = shift;
-    my ($l)
-        = validate_pos( @_, { regex => qr/^(?:full|long|medium|short)$/i } );
+    my ($l) = $validator->(@_);
 
     $self->{default_date_format_length} = lc $l;
 }
 
 sub set_default_time_format_length {
     my $self = shift;
-    my ($l)
-        = validate_pos( @_, { regex => qr/^(?:full|long|medium|short)/i } );
+    my ($l) = $validator->(@_);
 
     $self->{default_time_format_length} = lc $l;
 }
@@ -275,7 +282,7 @@ DateTime::Locale::FromData - Class for locale objects instantiated from pre-defi
 
 =head1 VERSION
 
-version 1.05
+version 1.07
 
 =head1 SYNOPSIS
 
@@ -500,7 +507,7 @@ I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 COPYRIGHT AND LICENCE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2016 by Dave Rolsky.
 

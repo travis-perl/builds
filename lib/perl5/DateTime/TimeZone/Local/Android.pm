@@ -1,7 +1,10 @@
 package DateTime::TimeZone::Local::Android;
-$DateTime::TimeZone::Local::Android::VERSION = '2.01';
+
 use strict;
 use warnings;
+use namespace::autoclean;
+
+our $VERSION = '2.03';
 
 use Try::Tiny;
 
