@@ -1,6 +1,6 @@
 package Pod::Weaver;
 # ABSTRACT: weave together a Pod document from an outline
-$Pod::Weaver::VERSION = '4.014';
+$Pod::Weaver::VERSION = '4.015';
 use Moose;
 use namespace::autoclean;
 
@@ -232,7 +232,7 @@ Pod::Weaver - weave together a Pod document from an outline
 
 =head1 VERSION
 
-version 4.014
+version 4.015
 
 =head1 SYNOPSIS
 
@@ -310,7 +310,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Peters Apocalypse Blabos de Blebe Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Dave Rolsky David E. Wheeler Golden Zurborg Florian Ragwitz Jonathan "Duke" Leto Joshua Keroes Karen Etheridge Kent Fredric Marcel Gruenauer Randy Stauner Sam Graham Shlomi Fish
+=for stopwords Alex Peters Apocalypse Blabos de Blebe Caleb Cushing Christian Walde Christopher J. Madsen Chris Weyl Dave Houston Rolsky David E. Wheeler Golden Zurborg Doug Bell Florian Ragwitz Jonathan "Duke" Leto Joshua Keroes Karen Etheridge Kent Fredric Marcel Gruenauer Randy Stauner Sam Graham Shlomi Fish
 
 =over 4
 
@@ -344,6 +344,10 @@ Chris Weyl <cweyl@alumni.drew.edu>
 
 =item *
 
+Dave Houston <dave.houston@gmail.com>
+
+=item *
+
 Dave Rolsky <autarch@urth.org>
 
 =item *
@@ -357,6 +361,10 @@ David Golden <dagolden@cpan.org>
 =item *
 
 David Zurborg <post@david-zurb.org>
+
+=item *
+
+Doug Bell <doug@preaction.me>
 
 =item *
 

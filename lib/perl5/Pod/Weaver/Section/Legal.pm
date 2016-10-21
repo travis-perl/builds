@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Legal;
 # ABSTRACT: a section for the copyright and license
-$Pod::Weaver::Section::Legal::VERSION = '4.014';
+$Pod::Weaver::Section::Legal::VERSION = '4.015';
 use Moose;
 with 'Pod::Weaver::Role::Section';
 
@@ -51,6 +51,7 @@ sub weave_section {
 
   unless ($input->{license}) {
     $self->log_debug('no license specified, not adding a ' . $self->header . ' section');
+    return;
  }
 
   my $notice = $input->{license}->notice;
@@ -88,7 +89,7 @@ Pod::Weaver::Section::Legal - a section for the copyright and license
 
 =head1 VERSION
 
-version 4.014
+version 4.015
 
 =head1 OVERVIEW
 
