@@ -14,7 +14,7 @@ use warnings;
 
 our $VERSION      = "1.23";
 our $Perl_version = '5.022000';
-our $Base         = '/home/travis/.cpanm/work/1474416147.7790/Devel-Cover-1.23';
+our $Base         = '/home/travis/.cpanm/work/1477008158.8032/Devel-Cover-1.23';
 our @Inc          = qw( . /home/travis/perl5/perlbrew/perls/5.22.0/lib/5.22.0 /home/travis/perl5/perlbrew/perls/5.22.0/lib/5.22.0/x86_64-linux /home/travis/perl5/perlbrew/perls/5.22.0/lib/site_perl/5.22.0 /home/travis/perl5/perlbrew/perls/5.22.0/lib/site_perl/5.22.0/x86_64-linux );
 chomp (our $Perl  = <<'EOV');  # Careful with \\ in the path
 /home/travis/perl5/perlbrew/perls/5.22.0/bin/perl
