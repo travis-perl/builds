@@ -1,4 +1,4 @@
-package Dist::Zilla::Types 6.007;
+package Dist::Zilla::Types 6.008;
 # ABSTRACT: dzil-specific type library
 
 use namespace::autoclean;
@@ -54,7 +54,7 @@ Dist::Zilla::Types - dzil-specific type library
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 OVERVIEW
 

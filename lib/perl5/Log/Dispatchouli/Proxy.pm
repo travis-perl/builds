@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Log::Dispatchouli::Proxy;
 # ABSTRACT: a simple wrapper around Log::Dispatch
-$Log::Dispatchouli::Proxy::VERSION = '2.012';
+$Log::Dispatchouli::Proxy::VERSION = '2.015';
 use Params::Util qw(_ARRAY0 _HASH0);
 
 #pod =head1 DESCRIPTION
@@ -20,7 +20,7 @@ use Params::Util qw(_ARRAY0 _HASH0);
 #pod
 #pod * C<set_debug> will set a value for the proxy; if none is set, C<get_debug> will check the parent's setting; C<clear_debug> will clear any set value on this proxy
 #pod
-#pod * C<log_debug> messages will be redispatched to C<log> (bug to the 'debug' logging level) to prevent parent loggers from dropping them due to C<debug> setting differences
+#pod * C<log_debug> messages will be redispatched to C<log> (to the 'debug' logging level) to prevent parent loggers from dropping them due to C<debug> setting differences
 #pod
 #pod =end :list
 #pod
@@ -144,7 +144,7 @@ Log::Dispatchouli::Proxy - a simple wrapper around Log::Dispatch
 
 =head1 VERSION
 
-version 2.012
+version 2.015
 
 =head1 DESCRIPTION
 
@@ -167,7 +167,7 @@ C<set_debug> will set a value for the proxy; if none is set, C<get_debug> will c
 
 =item *
 
-C<log_debug> messages will be redispatched to C<log> (bug to the 'debug' logging level) to prevent parent loggers from dropping them due to C<debug> setting differences
+C<log_debug> messages will be redispatched to C<log> (to the 'debug' logging level) to prevent parent loggers from dropping them due to C<debug> setting differences
 
 =back
 
@@ -177,7 +177,7 @@ Ricardo SIGNES <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

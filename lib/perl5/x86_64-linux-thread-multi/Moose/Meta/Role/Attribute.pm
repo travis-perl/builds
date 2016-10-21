@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Attribute;
-our $VERSION = '2.1805';
+our $VERSION = '2.1806';
 
 use strict;
 use warnings;
@@ -87,7 +87,9 @@ sub attribute_for_class {
     my $metaclass = $self->original_role->applied_attribute_metaclass;
 
     return $metaclass->interpolate_class_and_new(
-        $self->name => %{ $self->original_options } );
+        $self->name    => %{ $self->original_options },
+        role_attribute => $self,
+    );
 }
 
 sub clone {
@@ -140,7 +142,7 @@ Moose::Meta::Role::Attribute - The Moose attribute metaclass for Roles
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 DESCRIPTION
 

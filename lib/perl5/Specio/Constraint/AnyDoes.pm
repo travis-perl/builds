@@ -3,7 +3,7 @@ package Specio::Constraint::AnyDoes;
 use strict;
 use warnings;
 
-our $VERSION = '0.25';
+our $VERSION = '0.30';
 
 use B ();
 use Role::Tiny::With;
@@ -62,7 +62,7 @@ Specio::Constraint::AnyDoes - A class for constraints which require a class name
 
 =head1 VERSION
 
-version 0.25
+version 0.30
 
 =head1 SYNOPSIS
 

@@ -1,4 +1,4 @@
-package Dist::Zilla::File::FromCode 6.007;
+package Dist::Zilla::File::FromCode 6.008;
 # ABSTRACT: a file whose content is (re-)built on demand
 
 use Moose;
@@ -116,7 +116,7 @@ Dist::Zilla::File::FromCode - a file whose content is (re-)built on demand
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 DESCRIPTION
 

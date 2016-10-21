@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package Dist::Zilla::App::Command::clean 6.007;
+package Dist::Zilla::App::Command::clean 6.008;
 # ABSTRACT: clean up after build, test, or install
 
 use Dist::Zilla::App -command;
@@ -50,7 +50,7 @@ Dist::Zilla::App::Command::clean - clean up after build, test, or install
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 SYNOPSIS
 

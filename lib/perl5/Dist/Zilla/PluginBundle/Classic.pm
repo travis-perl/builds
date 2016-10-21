@@ -1,4 +1,4 @@
-package Dist::Zilla::PluginBundle::Classic 6.007;
+package Dist::Zilla::PluginBundle::Classic 6.008;
 # ABSTRACT: the classic (old) default configuration for Dist::Zilla
 
 use Moose;
@@ -83,7 +83,7 @@ Dist::Zilla::PluginBundle::Classic - the classic (old) default configuration for
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 DESCRIPTION
 

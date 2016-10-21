@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Exporter';
 
-our $VERSION = '0.25';
+our $VERSION = '0.30';
 
 use Carp qw( croak );
 use Specio::Coercion;
@@ -337,7 +337,7 @@ Specio::Declare - Specio declaration subroutines
 
 =head1 VERSION
 
-version 0.25
+version 0.30
 
 =head1 SYNOPSIS
 
@@ -399,7 +399,7 @@ version 0.25
 
     enum(
         'Colors',
-        [qw( blue green red )],
+        values => [qw( blue green red )],
     );
 
     intersection(

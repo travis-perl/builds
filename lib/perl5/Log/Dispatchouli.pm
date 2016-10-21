@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Log::Dispatchouli;
 # ABSTRACT: a simple wrapper around Log::Dispatch
-$Log::Dispatchouli::VERSION = '2.012';
+$Log::Dispatchouli::VERSION = '2.015';
 use Carp ();
 use File::Spec ();
 use Log::Dispatch;
@@ -204,10 +204,8 @@ sub new {
         logopt    => 'pid',
         socket    => 'native',
         callbacks => sub {
-          my %arg = @_;
-          my $message = $arg{message};
-          $message =~ s/\n/<LF>/g;
-          return $message;
+          ( my $m = {@_}->{message} ) =~ s/\n/<LF>/g;
+          $m
         },
       ),
     );
@@ -233,7 +231,7 @@ sub new {
         name      => "std$dest",
         min_level => 'debug',
         stderr    => ($dest eq 'err' ? 1 : 0),
-        callbacks => sub { my %arg = @_; "$arg{message}\n"; },
+        callbacks => sub { +{@_}->{message} . "\n" },
         ($quiet_fatal{"std$dest"} ? (max_level => 'info') : ()),
       ),
     );
@@ -259,8 +257,8 @@ sub new {
 #pod
 #pod   $logger->log(\%arg, @messages);
 #pod
-#pod This method uses L<String::Flogger> on the input, then logs the result.  Each
-#pod message is flogged individually, then joined with spaces.
+#pod This method uses L<String::Flogger> on the input, then I<unconditionally> logs
+#pod the result.  Each message is flogged individually, then joined with spaces.
 #pod
 #pod If the first argument is a hashref, it will be used as extra arguments to
 #pod logging.  It may include a C<prefix> entry to preprocess the message by
@@ -594,12 +592,15 @@ sub clear_events {
 #pod
 #pod =cut
 
+sub proxy_class {
+  return 'Log::Dispatchouli::Proxy';
+}
+
 sub proxy {
   my ($self, $arg) = @_;
   $arg ||= {};
 
-  require Log::Dispatchouli::Proxy;
-  Log::Dispatchouli::Proxy->_new({
+  $self->proxy_class->_new({
     parent => $self,
     logger => $self,
     proxy_prefix => $arg->{proxy_prefix},
@@ -695,7 +696,7 @@ Log::Dispatchouli - a simple wrapper around Log::Dispatch
 
 =head1 VERSION
 
-version 2.012
+version 2.015
 
 =head1 SYNOPSIS
 
@@ -775,8 +776,8 @@ If the F<DISPATCHOULI_NOSYSLOG> env var is true, we don't log to syslog.
 
   $logger->log(\%arg, @messages);
 
-This method uses L<String::Flogger> on the input, then logs the result.  Each
-message is flogged individually, then joined with spaces.
+This method uses L<String::Flogger> on the input, then I<unconditionally> logs
+the result.  Each message is flogged individually, then joined with spaces.
 
 If the first argument is a hashref, it will be used as extra arguments to
 logging.  It may include a C<prefix> entry to preprocess the message by
@@ -1041,9 +1042,45 @@ L<String::Flogger>
 
 Ricardo SIGNES <rjbs@cpan.org>
 
+=head1 CONTRIBUTORS
+
+=for stopwords Christopher J. Madsen Dagfinn Ilmari Mannsåker George Hartzell Matt Phillips Olivier Mengué Randy Stauner Sawyer X
+
+=over 4
+
+=item *
+
+Christopher J. Madsen <perl@cjmweb.net>
+
+=item *
+
+Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>
+
+=item *
+
+George Hartzell <hartzell@alerce.com>
+
+=item *
+
+Matt Phillips <mattp@cpan.org>
+
+=item *
+
+Olivier Mengué <dolmen@cpan.org>
+
+=item *
+
+Randy Stauner <randy@magnificent-tears.com>
+
+=item *
+
+Sawyer X <xsawyerx@cpan.org>
+
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Ricardo SIGNES.
+This software is copyright (c) 2016 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

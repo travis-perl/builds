@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::Encoding 6.007;
+package Dist::Zilla::Plugin::Encoding 6.008;
 # ABSTRACT: set the encoding of arbitrary files
 
 use Moose;
@@ -123,7 +123,7 @@ Dist::Zilla::Plugin::Encoding - set the encoding of arbitrary files
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 SYNOPSIS
 

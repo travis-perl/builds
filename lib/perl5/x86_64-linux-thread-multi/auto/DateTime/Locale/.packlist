@@ -112,6 +112,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/de_BE.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/de_CH.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/de_DE.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/de_IT.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/de_LI.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/de_LU.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/dje.pod
@@ -504,6 +505,9 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/nb_SJ.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/nd.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/nd_ZW.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/nds.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/nds_DE.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/nds_NL.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/ne.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/ne_IN.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/Locale/ne_NP.pod

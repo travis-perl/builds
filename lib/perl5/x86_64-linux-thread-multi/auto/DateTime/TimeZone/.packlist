@@ -208,7 +208,6 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Pyongyang.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Qatar.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Qyzylorda.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Rangoon.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Riyadh.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Sakhalin.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Samarkand.pm
@@ -228,6 +227,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Ust_Nera.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Vladivostok.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Yakutsk.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Yangon.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Yekaterinburg.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Asia/Yerevan.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/DateTime/TimeZone/Atlantic/Azores.pm

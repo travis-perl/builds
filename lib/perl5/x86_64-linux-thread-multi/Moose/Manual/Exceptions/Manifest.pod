@@ -13,7 +13,7 @@ Moose::Manual::Exceptions::Manifest - Moose's Exception Types
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 DESCRIPTION
 
@@ -231,6 +231,10 @@ This class consumes the Moose::Exception::Role::Class role.
 This class has the following methods:
 
 =over 4
+
+=item * $exception->attribute_init_arg()
+
+Returns a Str value.
 
 =item * $exception->attribute_name()
 

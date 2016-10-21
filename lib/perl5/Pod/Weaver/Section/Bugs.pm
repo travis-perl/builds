@@ -1,6 +1,6 @@
 package Pod::Weaver::Section::Bugs;
 # ABSTRACT: a section for bugtracker info
-$Pod::Weaver::Section::Bugs::VERSION = '4.014';
+$Pod::Weaver::Section::Bugs::VERSION = '4.015';
 use Moose;
 use Text::Wrap ();
 with 'Pod::Weaver::Role::Section';
@@ -68,6 +68,7 @@ sub weave_section {
 
   unless (defined $web || defined $mailto) {
     $self->log_debug('skipping section because there is no web or mailto key under resources.bugtracker');
+    return;
   }
 
   my $text = "Please report any bugs or feature requests ";
@@ -119,7 +120,7 @@ Pod::Weaver::Section::Bugs - a section for bugtracker info
 
 =head1 VERSION
 
-version 4.014
+version 4.015
 
 =head1 OVERVIEW
 

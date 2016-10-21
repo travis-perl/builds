@@ -1,4 +1,4 @@
-package Dist::Zilla::Role::StubBuild 6.007;
+package Dist::Zilla::Role::StubBuild 6.008;
 # ABSTRACT: provides an empty BUILD methods
 
 use Moose::Role;
@@ -19,7 +19,7 @@ Dist::Zilla::Role::StubBuild - provides an empty BUILD methods
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 AUTHOR
 

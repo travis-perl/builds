@@ -3,7 +3,7 @@ package Specio::Constraint::Role::Interface;
 use strict;
 use warnings;
 
-our $VERSION = '0.25';
+our $VERSION = '0.30';
 
 use Carp qw( confess );
 use Eval::Closure qw( eval_closure );
@@ -12,7 +12,7 @@ use Specio::Exception;
 use Specio::PartialDump qw( partial_dump );
 use Specio::TypeChecks qw( is_CodeRef );
 
-use Role::Tiny;
+use Role::Tiny 1.003003;
 
 use Specio::Role::Inlinable;
 with 'Specio::Role::Inlinable';
@@ -61,6 +61,7 @@ use overload(
         },
         _coercions => {
             builder => '_build_coercions',
+            clone   => '_clone_coercions',
         },
 
         # Because types are cloned on import, we can't directly compare type
@@ -123,11 +124,11 @@ sub _wrap_message_generator {
     return sub { $generator->( $d, @_ ) };
 }
 
-sub coercions               { values %{ $_[0]->{coercions} } }
-sub coercion_from_type      { $_[0]->{coercions}{ $_[1] } }
-sub _has_coercion_from_type { exists $_[0]->{coercions}{ $_[1] } }
-sub _add_coercion           { $_[0]->{coercions}{ $_[1] } = $_[2] }
-sub has_coercions           { scalar keys %{ $_[0]->{coercions} } }
+sub coercions               { values %{ $_[0]->{_coercions} } }
+sub coercion_from_type      { $_[0]->{_coercions}{ $_[1] } }
+sub _has_coercion_from_type { exists $_[0]->{_coercions}{ $_[1] } }
+sub _add_coercion           { $_[0]->{_coercions}{ $_[1] } = $_[2] }
+sub has_coercions           { scalar keys %{ $_[0]->{_coercions} } }
 
 sub validate_or_die {
     my $self  = shift;
@@ -202,7 +203,7 @@ sub _build_generated_inline_sub {
     my $type = $self->_self_or_first_inlinable_ancestor;
 
     my $source
-        = 'sub { ' . $type->_inline_generator->( $self, '$_[0]' ) . '}';
+        = 'sub { ' . $type->_inline_generator->( $type, '$_[0]' ) . '}';
 
     return eval_closure(
         source      => $source,
@@ -377,7 +378,7 @@ sub inline_check {
     die 'Cannot inline' unless $self->can_be_inlined;
 
     my $type = $self->_self_or_first_inlinable_ancestor;
-    return $type->_inline_generator->( $self, @_ );
+    return $type->_inline_generator->( $type, @_ );
 }
 
 sub _subify {
@@ -423,21 +424,23 @@ sub _inline_throw_exception {
 sub coercion_sub {
     my $self = shift;
 
-    if (
-        defined &Sub::Quote::quote_sub && all { $_->can_be_inlined }
-        $self->coercions
-        ) {
+    if ( defined &Sub::Quote::quote_sub
+        && all { $_->can_be_inlined } $self->coercions ) {
+
         my $inline = q{};
         my %env;
 
         for my $coercion ( $self->coercions ) {
-            $inline
-                .= '$_[0] = '
-                . $coercion->inline_coercion('$_[0]') . ' if '
-                . $coercion->from->inline_check(' $_[0]') . ';';
+            $inline .= sprintf(
+                '$_[0] = %s if %s;' . "\n",
+                $coercion->inline_coercion('$_[0]'),
+                $coercion->from->inline_check('$_[0]')
+            );
 
             %env = ( %env, %{ $coercion->_inline_environment } );
         }
+
+        $inline .= sprintf( "%s;\n", '$_[0]' );
 
         return Sub::Quote::quote_sub( $inline, \%env );
     }
@@ -472,6 +475,22 @@ sub _build_description {
 }
 
 sub _build_coercions { {} }
+
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
+sub _clone_coercions {
+    my $self = shift;
+
+    my $coercions = $self->_coercions;
+    my %clones;
+
+    for my $name ( keys %{$coercions} ) {
+        my $coercion = $coercions->{$name};
+        $clones{$name} = $coercion->clone_with_new_to($self);
+    }
+
+    return \%clones;
+}
+## use critic
 
 sub _build_signature {
     my $self = shift;
@@ -564,7 +583,7 @@ Specio::Constraint::Role::Interface - The interface all type constraints should 
 
 =head1 VERSION
 
-version 0.25
+version 0.30
 
 =head1 DESCRIPTION
 

@@ -1,6 +1,6 @@
 package Pod::Weaver::Plugin::SingleEncoding;
 # ABSTRACT: ensure that there is exactly one =encoding of known value
-$Pod::Weaver::Plugin::SingleEncoding::VERSION = '4.014';
+$Pod::Weaver::Plugin::SingleEncoding::VERSION = '4.015';
 use Moose;
 with(
   'Pod::Weaver::Role::Dialect',
@@ -108,7 +108,7 @@ Pod::Weaver::Plugin::SingleEncoding - ensure that there is exactly one =encoding
 
 =head1 VERSION
 
-version 4.014
+version 4.015
 
 =head1 OVERVIEW
 

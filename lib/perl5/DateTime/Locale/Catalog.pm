@@ -3,7 +3,7 @@ package DateTime::Locale::Catalog;
 use strict;
 use warnings;
 
-our $VERSION = '1.07';
+our $VERSION = '1.09';
 
 1;
 
@@ -21,7 +21,7 @@ DateTime::Locale::Catalog - Provides a catalog of all valid locale names
 
 =head1 VERSION
 
-version 1.07
+version 1.09
 
 =head1 DESCRIPTION
 
@@ -93,11 +93,11 @@ The available locales are:
  asa-TZ           Asu Tanzania                              Kipare Tadhania
  ast              Asturian                                  asturianu
  ast-ES           Asturian Spain                            asturianu España
- az               Azerbaijani                               azərbaycan dili
- az-Cyrl          Azerbaijani                               азәрбајҹан дили
- az-Cyrl-AZ       Azerbaijani Azerbaijan Cyrillic           азәрбајҹан дили Азәрбајҹан Кирил
- az-Latn          Azerbaijani                               azərbaycan dili
- az-Latn-AZ       Azerbaijani Azerbaijan Latin              azərbaycan dili Azərbaycan latın
+ az               Azerbaijani                               azərbaycan
+ az-Cyrl          Azerbaijani                               азәрбајҹан
+ az-Cyrl-AZ       Azerbaijani Azerbaijan Cyrillic           азәрбајҹан Азәрбајҹан Кирил
+ az-Latn          Azerbaijani                               azərbaycan
+ az-Latn-AZ       Azerbaijani Azerbaijan Latin              azərbaycan Azərbaycan latın
  bas              Basaa                                     Ɓàsàa
  bas-CM           Basaa Cameroon                            Ɓàsàa Kàmɛ̀rûn
  be               Belarusian                                беларуская
@@ -110,9 +110,9 @@ The available locales are:
  bg-BG            Bulgarian Bulgaria                        български България
  bm               Bambara                                   bamanakan
  bm-ML            Bambara Mali                              bamanakan Mali
- bn               Bengali                                   বাংলা
- bn-BD            Bengali Bangladesh                        বাংলা বাংলাদেশ
- bn-IN            Bengali India                             বাংলা ভারত
+ bn               Bangla                                    বাংলা
+ bn-BD            Bangla Bangladesh                         বাংলা বাংলাদেশ
+ bn-IN            Bangla India                              বাংলা ভারত
  bo               Tibetan                                   བོད་སྐད་
  bo-CN            Tibetan China                             བོད་སྐད་ རྒྱ་ནག
  bo-IN            Tibetan India                             བོད་སྐད་ རྒྱ་གར་
@@ -136,10 +136,10 @@ The available locales are:
  cgg              Chiga                                     Rukiga
  cgg-UG           Chiga Uganda                              Rukiga Uganda
  chr              Cherokee                                  ᏣᎳᎩ
- chr-US           Cherokee United States                    ᏣᎳᎩ ᎠᎹᏰᏟ
+ chr-US           Cherokee United States                    ᏣᎳᎩ ᏌᏊ ᎢᏳᎾᎵᏍᏔᏅ ᏍᎦᏚᎩ
  ckb              Central Kurdish                           کوردیی ناوەندی
- ckb-IQ           Central Kurdish Iraq                      کوردیی ناوەندی IQ
- ckb-IR           Central Kurdish Iran                      کوردیی ناوەندی IR
+ ckb-IQ           Central Kurdish Iraq                      کوردیی ناوەندی عێراق
+ ckb-IR           Central Kurdish Iran                      کوردیی ناوەندی ئێران
  cs               Czech                                     čeština
  cs-CZ            Czech Czech Republic                      čeština Česká republika
  cu               Church Slavic                             cu
@@ -156,6 +156,7 @@ The available locales are:
  de-BE            German Belgium                            Deutsch Belgien
  de-CH            German Switzerland                        Deutsch Schweiz
  de-DE            German Germany                            Deutsch Deutschland
+ de-IT            German Italy                              Deutsch Italien
  de-LI            German Liechtenstein                      Deutsch Liechtenstein
  de-LU            German Luxembourg                         Deutsch Luxemburg
  dje              Zarma                                     Zarmaciine
@@ -490,7 +491,7 @@ The available locales are:
  lkt-US           Lakota United States                      Lakȟólʼiyapi Mílahaŋska Tȟamákȟočhe
  ln               Lingala                                   lingála
  ln-AO            Lingala Angola                            lingála Angóla
- ln-CD            Lingala Congo - Kinshasa                  lingála Repibiki demokratiki ya Kongó
+ ln-CD            Lingala Congo - Kinshasa                  lingála Republíki ya Kongó Demokratíki
  ln-CF            Lingala Central African Republic          lingála Repibiki ya Afríka ya Káti
  ln-CG            Lingala Congo - Brazzaville               lingála Kongo
  lo               Lao                                       ລາວ
@@ -537,8 +538,8 @@ The available locales are:
  mt-MT            Maltese Malta                             Malti Malta
  mua              Mundang                                   MUNDAŊ
  mua-CM           Mundang Cameroon                          MUNDAŊ kameruŋ
- my               Burmese                                   ဗမာ
- my-MM            Burmese Myanmar (Burma)                   ဗမာ မြန်မာ
+ my               Burmese                                   မြန်မာ
+ my-MM            Burmese Myanmar (Burma)                   မြန်မာ မြန်မာ (Burma)
  mzn              Mazanderani                               مازرونی
  mzn-IR           Mazanderani Iran                          مازرونی ایران
  naq              Nama                                      Khoekhoegowab
@@ -548,6 +549,9 @@ The available locales are:
  nb-SJ            Norwegian Bokmål Svalbard & Jan Mayen     norsk bokmål Svalbard og Jan Mayen
  nd               North Ndebele                             isiNdebele
  nd-ZW            North Ndebele Zimbabwe                    isiNdebele Zimbabwe
+ nds              Low German
+ nds-DE           Low German Germany                        DE
+ nds-NL           Low German Netherlands                    NL
  ne               Nepali                                    नेपाली
  ne-IN            Nepali India                              नेपाली भारत
  ne-NP            Nepali Nepal                              नेपाली नेपाल
@@ -572,14 +576,14 @@ The available locales are:
  om               Oromo                                     Oromoo
  om-ET            Oromo Ethiopia                            Oromoo Itoophiyaa
  om-KE            Oromo Kenya                               Oromoo Keeniyaa
- or               Oriya                                     ଓଡ଼ିଆ
- or-IN            Oriya India                               ଓଡ଼ିଆ ଭାରତ
+ or               Odia                                      ଓଡ଼ିଆ
+ or-IN            Odia India                                ଓଡ଼ିଆ ଭାରତ
  os               Ossetic                                   ирон
  os-GE            Ossetic Georgia                           ирон Гуырдзыстон
  os-RU            Ossetic Russia                            ирон Уӕрӕсе
  pa               Punjabi                                   ਪੰਜਾਬੀ
  pa-Arab          Punjabi                                   پنجابی
- pa-Arab-PK       Punjabi Pakistan Arabic                   پنجابی پکستان عربی
+ pa-Arab-PK       Punjabi Pakistan Arabic                   پنجابی پاکستان عربی
  pa-Guru          Punjabi                                   ਪੰਜਾਬੀ
  pa-Guru-IN       Punjabi India Gurmukhi                    ਪੰਜਾਬੀ ਭਾਰਤ ਗੁਰਮੁਖੀ
  pl               Polish                                    polski
@@ -722,8 +726,8 @@ The available locales are:
  uz               Uzbek                                     o‘zbek
  uz-Arab          Uzbek                                     اوزبیک
  uz-Arab-AF       Uzbek Afghanistan Arabic                  اوزبیک افغانستان عربی
- uz-Cyrl          Uzbek                                     Ўзбек
- uz-Cyrl-UZ       Uzbek Uzbekistan Cyrillic                 Ўзбек Ўзбекистон Кирил
+ uz-Cyrl          Uzbek                                     ўзбекча
+ uz-Cyrl-UZ       Uzbek Uzbekistan Cyrillic                 ўзбекча Ўзбекистон Кирил
  uz-Latn          Uzbek                                     o‘zbek
  uz-Latn-UZ       Uzbek Uzbekistan Latin                    o‘zbek Oʻzbekiston lotin
  vai              Vai                                       ꕙꔤ
@@ -759,8 +763,8 @@ The available locales are:
  zh-Hans-MO       Chinese Macau SAR China Simplified        中文 中国澳门特别行政区 简体
  zh-Hans-SG       Chinese Singapore Simplified              中文 新加坡 简体
  zh-Hant          Chinese                                   中文
- zh-Hant-HK       Chinese Hong Kong SAR China Traditional   中文 中華人民共和國香港特別行政區 繁體字
- zh-Hant-MO       Chinese Macau SAR China Traditional       中文 中華人民共和國澳門特別行政區 繁體字
+ zh-Hant-HK       Chinese Hong Kong SAR China Traditional   中文 中國香港特別行政區 繁體字
+ zh-Hant-MO       Chinese Macau SAR China Traditional       中文 中國澳門特別行政區 繁體字
  zh-Hant-TW       Chinese Taiwan Traditional                中文 台灣 繁體
  zu               Zulu                                      isiZulu
  zu-ZA            Zulu South Africa                         isiZulu i-South Africa

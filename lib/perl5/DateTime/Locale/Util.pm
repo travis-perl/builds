@@ -2,11 +2,11 @@ package DateTime::Locale::Util;
 
 use strict;
 use warnings;
-use namespace::autoclean -except => ['import'];
+use namespace::autoclean 0.19 -except => ['import'];
 
 use Exporter qw( import );
 
-our $VERSION = '1.07';
+our $VERSION = '1.09';
 
 our @EXPORT_OK = 'parse_locale_code';
 
@@ -63,7 +63,7 @@ DateTime::Locale::Util - Utility code for DateTime::Locale
 
 =head1 VERSION
 
-version 1.07
+version 1.09
 
 =head1 DESCRIPTION
 

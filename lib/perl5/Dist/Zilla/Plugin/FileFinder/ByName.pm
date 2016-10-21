@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::FileFinder::ByName 6.007;
+package Dist::Zilla::Plugin::FileFinder::ByName 6.008;
 # ABSTRACT: FileFinder matching on pathnames
 
 use Moose;
@@ -176,7 +176,7 @@ Dist::Zilla::Plugin::FileFinder::ByName - FileFinder matching on pathnames
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 SYNOPSIS
 

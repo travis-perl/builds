@@ -3,7 +3,7 @@ package Specio::Role::Inlinable;
 use strict;
 use warnings;
 
-our $VERSION = '0.25';
+our $VERSION = '0.30';
 
 use Eval::Closure qw( eval_closure );
 
@@ -92,7 +92,7 @@ Specio::Role::Inlinable - A role for things which can be inlined (type constrain
 
 =head1 VERSION
 
-version 0.25
+version 0.30
 
 =head1 DESCRIPTION
 

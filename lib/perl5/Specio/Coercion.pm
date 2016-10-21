@@ -3,7 +3,7 @@ package Specio::Coercion;
 use strict;
 use warnings;
 
-our $VERSION = '0.25';
+our $VERSION = '0.30';
 
 use Specio::OO;
 
@@ -104,6 +104,23 @@ sub _build_description {
     return $desc;
 }
 
+sub clone_with_new_to {
+    my $self   = shift;
+    my $new_to = shift;
+
+    my $from = $self->from;
+
+    local $self->{from} = undef;
+    local $self->{to}   = undef;
+
+    my $clone = $self->clone;
+
+    $clone->{from} = $from;
+    $clone->{to}   = $new_to;
+
+    return $clone;
+}
+
 __PACKAGE__->_ooify;
 
 1;
@@ -122,7 +139,7 @@ Specio::Coercion - A class representing a coercion from one type to another
 
 =head1 VERSION
 
-version 0.25
+version 0.30
 
 =head1 SYNOPSIS
 
@@ -145,7 +162,7 @@ Coercions can be implemented either as a simple subroutine reference or as an
 inline generator subroutine. Using an inline generator is faster but more
 complicated.
 
-=for Pod::Coverage BUILD
+=for Pod::Coverage BUILD clone_with_new_to
 
 =head1 API
 

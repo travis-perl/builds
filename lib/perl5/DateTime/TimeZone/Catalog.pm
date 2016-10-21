@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.03';
+our $VERSION = '2.06';
 
 our @ALL =
 qw(
@@ -224,7 +224,6 @@ qw(
   Asia/Pyongyang
   Asia/Qatar
   Asia/Qyzylorda
-  Asia/Rangoon
   Asia/Riyadh
   Asia/Sakhalin
   Asia/Samarkand
@@ -244,6 +243,7 @@ qw(
   Asia/Ust-Nera
   Asia/Vladivostok
   Asia/Yakutsk
+  Asia/Yangon
   Asia/Yekaterinburg
   Asia/Yerevan
   Atlantic/Azores
@@ -601,7 +601,6 @@ our %CATEGORIES =
     Pyongyang
     Qatar
     Qyzylorda
-    Rangoon
     Riyadh
     Sakhalin
     Samarkand
@@ -621,6 +620,7 @@ our %CATEGORIES =
     Ust-Nera
     Vladivostok
     Yakutsk
+    Yangon
     Yekaterinburg
     Yerevan
 ) ],
@@ -1275,7 +1275,7 @@ our %ZONES_BY_COUNTRY =
     Africa/Bamako
 ) ],
   'mm' => [ qw(
-    Asia/Rangoon
+    Asia/Yangon
 ) ],
   'mn' => [ qw(
     Asia/Ulaanbaatar
@@ -1763,6 +1763,7 @@ our %LINKS =
   'Asia/Macao' => 'Asia/Macau',
   'Asia/Muscat' => 'Asia/Dubai',
   'Asia/Phnom_Penh' => 'Asia/Bangkok',
+  'Asia/Rangoon' => 'Asia/Yangon',
   'Asia/Saigon' => 'Asia/Ho_Chi_Minh',
   'Asia/Tel_Aviv' => 'Asia/Jerusalem',
   'Asia/Thimbu' => 'Asia/Thimphu',
@@ -1884,7 +1885,7 @@ our %LINKS =
 
 ;
 
-sub OlsonVersion { '2016f' }
+sub OlsonVersion { '2016h' }
 
 
 1;
@@ -2115,7 +2116,6 @@ so that applications can easily present a list of timezones.
   Asia/Pyongyang
   Asia/Qatar
   Asia/Qyzylorda
-  Asia/Rangoon
   Asia/Riyadh
   Asia/Samarkand
   Asia/Seoul
@@ -2129,6 +2129,7 @@ so that applications can easily present a list of timezones.
   Asia/Tokyo
   Asia/Ulaanbaatar
   Asia/Urumqi
+  Asia/Yangon
   Asia/Yerevan
   Asia/Anadyr
   Asia/Barnaul
@@ -2987,7 +2988,7 @@ so that applications can easily present a list of timezones.
 
 =head3 Myanmar (MM)
 
-  Asia/Rangoon
+  Asia/Yangon
 
 =head3 Namibia (NA)
 
@@ -3533,6 +3534,7 @@ A linked zone is an alias from one name to another.
   Asia/Macao => Asia/Macau
   Asia/Muscat => Asia/Dubai
   Asia/Phnom_Penh => Asia/Bangkok
+  Asia/Rangoon => Asia/Yangon
   Asia/Saigon => Asia/Ho_Chi_Minh
   Asia/Tel_Aviv => Asia/Jerusalem
   Asia/Thimbu => Asia/Thimphu

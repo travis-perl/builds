@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::MetaConfig 6.007;
+package Dist::Zilla::Plugin::MetaConfig 6.008;
 # ABSTRACT: summarize Dist::Zilla configuration into distmeta
 
 use Moose;
@@ -36,7 +36,7 @@ sub metadata {
   };
 
   $dump->{perl} = {
-    version => $],
+    version => "$]",
   };
 
   for my $plugin (@{ $self->zilla->plugins }) {
@@ -74,7 +74,7 @@ Dist::Zilla::Plugin::MetaConfig - summarize Dist::Zilla configuration into distm
 
 =head1 VERSION
 
-version 6.007
+version 6.008
 
 =head1 DESCRIPTION
 
