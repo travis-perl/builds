@@ -44,7 +44,7 @@
       },
       "develop" : {
          "recommends" : {
-            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.118"
+            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.120"
          },
          "requires" : {
             "Devel::PPPort" : "3.33",
@@ -100,7 +100,7 @@
             "Dist::Zilla::Plugin::Readme" : "0",
             "Dist::Zilla::Plugin::ReadmeAnyFromPod" : "0.142180",
             "Dist::Zilla::Plugin::RewriteVersion::Transitional" : "0.004",
-            "Dist::Zilla::Plugin::Run::AfterBuild" : "0.038",
+            "Dist::Zilla::Plugin::Run::AfterBuild" : "0.041",
             "Dist::Zilla::Plugin::Run::AfterRelease" : "0.038",
             "Dist::Zilla::Plugin::RunExtraTests" : "0.024",
             "Dist::Zilla::Plugin::StaticInstall" : "0.005",
@@ -119,7 +119,7 @@
             "Dist::Zilla::Plugin::Test::ReportPrereqs" : "0.022",
             "Dist::Zilla::Plugin::TestRelease" : "0",
             "Dist::Zilla::Plugin::UploadToCPAN" : "0",
-            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.095",
+            "Dist::Zilla::PluginBundle::Author::ETHER" : "0.119",
             "File::Spec" : "0",
             "IO::Handle" : "0",
             "IPC::Open3" : "0",
@@ -160,8 +160,8 @@
             "B" : "0",
             "B::Deparse" : "0",
             "Carp" : "0",
+            "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
-            "Module::Metadata" : "0",
             "Test::More" : "0.88",
             "if" : "0"
          },
@@ -174,7 +174,7 @@
    "provides" : {
       "Sub::Name" : {
          "file" : "lib/Sub/Name.pm",
-         "version" : "0.19"
+         "version" : "0.21"
       }
    },
    "release_status" : "stable",
@@ -191,10 +191,10 @@
       },
       "x_IRC" : "irc://irc.perl.org/#toolchain"
    },
-   "version" : "0.19",
+   "version" : "0.21",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : 5.025003
+         "version" : 5.025005
       },
       "plugins" : [
          {
@@ -457,7 +457,7 @@
                }
             },
             "name" : "@Author::ETHER/Test::PodSpelling",
-            "version" : "2.007002"
+            "version" : "2.007003"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::Pod::No404s",
@@ -523,92 +523,92 @@
                      {
                         "class" : "Pod::Weaver::Plugin::EnsurePod5",
                         "name" : "@Author::ETHER/EnsurePod5",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Plugin::H1Nester",
                         "name" : "@Author::ETHER/H1Nester",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Plugin::SingleEncoding",
                         "name" : "@Author::ETHER/SingleEncoding",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Plugin::Transformer",
                         "name" : "@Author::ETHER/List",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Plugin::Transformer",
                         "name" : "@Author::ETHER/Verbatim",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Region",
                         "name" : "@Author::ETHER/header",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Name",
                         "name" : "@Author::ETHER/Name",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Version",
                         "name" : "@Author::ETHER/Version",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Region",
                         "name" : "@Author::ETHER/prelude",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Generic",
                         "name" : "SYNOPSIS",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Generic",
                         "name" : "DESCRIPTION",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Generic",
                         "name" : "OVERVIEW",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Collect",
                         "name" : "ATTRIBUTES",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Collect",
                         "name" : "METHODS",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Collect",
                         "name" : "FUNCTIONS",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Collect",
                         "name" : "TYPES",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Leftovers",
                         "name" : "@Author::ETHER/Leftovers",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Region",
                         "name" : "@Author::ETHER/postlude",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::GenerateSection",
@@ -623,7 +623,7 @@
                      {
                         "class" : "Pod::Weaver::Section::Authors",
                         "name" : "@Author::ETHER/Authors",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Contributors",
@@ -633,12 +633,12 @@
                      {
                         "class" : "Pod::Weaver::Section::Legal",
                         "name" : "@Author::ETHER/Legal",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::Region",
                         "name" : "@Author::ETHER/footer",
-                        "version" : "4.013"
+                        "version" : "4.014"
                      },
                      {
                         "class" : "Pod::Weaver::Section::AllowOverride",
@@ -763,7 +763,7 @@
             "class" : "Dist::Zilla::Plugin::Git::Contributors",
             "config" : {
                "Dist::Zilla::Plugin::Git::Contributors" : {
-                  "git --version" : "2.9.2",
+                  "git --version" : "2.10.0",
                   "include_authors" : 0,
                   "include_releaser" : 1,
                   "order_by" : "commits",
@@ -773,7 +773,7 @@
                }
             },
             "name" : "@Author::ETHER/Git::Contributors",
-            "version" : "0.024"
+            "version" : "0.028"
          },
          {
             "class" : "Dist::Zilla::Plugin::StaticInstall",
@@ -833,7 +833,7 @@
                   "eval" : [
                      "if ('%d' =~ /^%n-[.[:xdigit:]]+$/) { unlink '.latest'; symlink '%d', '.latest'; }"
                   ],
-                  "fatal_errors" : 1,
+                  "fatal_errors" : 0,
                   "quiet" : 1
                }
             },
@@ -891,7 +891,7 @@
          {
             "class" : "Dist::Zilla::Plugin::CheckPrereqsIndexed",
             "name" : "@Author::ETHER/CheckPrereqsIndexed",
-            "version" : "0.018"
+            "version" : "0.020"
          },
          {
             "class" : "Dist::Zilla::Plugin::TestRelease",
@@ -992,7 +992,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "v0.19",
+                  "tag" : "v0.21",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v%t"
                },
@@ -1238,12 +1238,13 @@
       "Karen Etheridge <ether@cpan.org>",
       "Leon Timmermans <fawaka@gmail.com>",
       "Florian Ragwitz <rafl@debian.org>",
-      "Matthijs van Duin <xmath-no-spam@nospam.cpan.org>",
       "Reini Urban <rurban@cpanel.net>",
+      "Matthijs van Duin <xmath-no-spam@nospam.cpan.org>",
       "gfx <gfuji@cpan.org>",
       "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>",
       "Aristotle Pagaltzis <pagaltzis@gmx.de>",
-      "J.R. Mash <jmash.code@gmail.com>"
+      "J.R. Mash <jmash.code@gmail.com>",
+      "Alexander Bluhm <alexander.bluhm@gmx.net>"
    ],
    "x_serialization_backend" : "Cpanel::JSON::XS version 3.0217"
 }

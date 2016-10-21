@@ -1,5 +1,5 @@
 package Moose::Exporter;
-our $VERSION = '2.1805';
+our $VERSION = '2.1806';
 
 use strict;
 use warnings;
@@ -693,7 +693,7 @@ sub _make_unimport_sub {
     my $meta_lookup       = shift;
 
     return sub {
-        my $caller = scalar caller();
+        my $caller = _get_caller(@_);
         Moose::Exporter->_remove_keywords(
             $caller,
             [ keys %{$exports} ],
@@ -796,7 +796,7 @@ Moose::Exporter - make an import() and unimport() just like Moose.pm
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,5 @@
 package Moose::Meta::Role;
-our $VERSION = '2.1805';
+our $VERSION = '2.1806';
 
 use strict;
 use warnings;
@@ -753,7 +753,7 @@ Moose::Meta::Role - The Moose Role metaclass
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 DESCRIPTION
 
@@ -955,8 +955,8 @@ object, then add it to the required method list.
 These methods act like their counterparts in L<Class::MOP::Class> and
 L<Moose::Meta::Class>.
 
-However, method modifiers are simply stored internally, and are not
-applied until the role itself is applied to a class.
+However, method modifiers are simply stored internally, and are not applied
+until the role itself is applied to a class or object.
 
 =head3 $metarole->add_after_method_modifier($method_name, $method)
 

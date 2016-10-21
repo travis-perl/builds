@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute;
-our $VERSION = '2.1805';
+our $VERSION = '2.1806';
 
 use B ();
 use Scalar::Util 'blessed';
@@ -25,6 +25,12 @@ Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 __PACKAGE__->meta->add_attribute('traits' => (
     reader    => 'applied_traits',
     predicate => 'has_applied_traits',
+    Class::MOP::_definition_context(),
+));
+
+__PACKAGE__->meta->add_attribute('role_attribute' => (
+    reader    => 'role_attribute',
+    predicate => 'has_role_attribute',
     Class::MOP::_definition_context(),
 ));
 
@@ -481,11 +487,16 @@ sub initialize_instance_slot {
         return if $self->is_lazy;
         # and die if it's required and doesn't have a default value
         my $class_name = blessed( $instance );
-        throw_exception(AttributeIsRequired => attribute_name => $self->name,
-                                               class_name     => $class_name,
-                                               params         => $params,
-                       )
-            if $self->is_required && !$self->has_default && !$self->has_builder;
+        throw_exception(
+            'AttributeIsRequired',
+            attribute_name => $self->name,
+            ( defined $init_arg ? ( attribute_init_arg => $init_arg ) : () ),
+            class_name => $class_name,
+            params     => $params,
+            )
+            if $self->is_required
+            && !$self->has_default
+            && !$self->has_builder;
 
         # if nothing was in the %params, we can use the
         # attribute's default value (if it has one)
@@ -542,9 +553,16 @@ sub set_value {
 
     my $class_name = blessed( $instance );
     if ($self->is_required and not @args) {
-        throw_exception( AttributeIsRequired => attribute_name => $self->name,
-                                                class_name     => $class_name,
-                       );
+        throw_exception(
+            'AttributeIsRequired',
+            attribute_name => $self->name,
+            (
+                defined $self->init_arg
+                ? ( attribute_init_arg => $self->init_arg )
+                : ()
+            ),
+            class_name => $class_name,
+        );
     }
 
     $value = $self->_coerce_and_verify( $value, $instance );
@@ -620,16 +638,25 @@ sub _inline_check_required {
 
     return unless $self->is_required;
 
-    my $attr_name = quotemeta($self->name);
+    my $throw_params = sprintf( <<'EOF', quotemeta( $self->name ) );
+attribute_name => "%s",
+class_name     => $class_name,
+EOF
+    $throw_params .= sprintf(
+        'attribute_init_arg => "%s",',
+        quotemeta( $self->init_arg )
+    ) if defined $self->init_arg;
 
-    return (
-        'if (@_ < 2) {',
-            $self->_inline_throw_exception( AttributeIsRequired =>
-                                            'attribute_name      => "'.$attr_name.'",'.
-                                            'class_name          => $class_name'
-            ) . ';',
-        '}',
+    my $throw = $self->_inline_throw_exception(
+        'AttributeIsRequired',
+        $throw_params
     );
+
+    return sprintf( <<'EOF', $throw );
+if ( @_ < 2 ) {
+    %s;
+}
+EOF
 }
 
 sub _inline_tc_code {
@@ -1284,7 +1311,7 @@ Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 DESCRIPTION
 
@@ -1445,6 +1472,10 @@ becomes:
 Note the doubled underscore in the builder name. Internally, Moose
 simply prepends the attribute name with "_build_" to come up with the
 builder name.
+
+=item * role_attribute => $role_attribute
+
+If provided, this should be a L<Moose::Meta::Role::Attribute> object.
 
 =back
 
@@ -1654,6 +1685,15 @@ the constructor, if any.
 =item B<< $attr->has_documentation >>
 
 Returns true if this attribute has any documentation.
+
+=item B<< $attr->role_attribute >>
+
+Returns the L<Moose::Meta::Role::Attribute> object from which this attribute
+was created, if any. This may return C<undef>.
+
+=item B<< $attr->has_role_attribute >>
+
+Returns true if this attribute has an associated role attribute.
 
 =item B<< $attr->applied_traits >>
 
