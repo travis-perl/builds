@@ -3,13 +3,13 @@ use strict;
 no warnings;
 use Carp ();
 use parent qw(Plack::Middleware);
-use Scalar::Util qw(blessed);
+use Scalar::Util qw(blessed reftype);
 use Plack::Util;
 
 sub wrap {
     my($self, $app) = @_;
 
-    unless (ref $app eq 'CODE' or overload::Method($app, '&{}')) {
+    unless (reftype $app eq 'CODE' or overload::Method($app, '&{}')) {
         die("PSGI app should be a code reference: ", (defined $app ? $app : "undef"));
     }
 
@@ -130,16 +130,16 @@ sub validate_res {
             die('Response headers MUST NOT contain a key named Status');
         }
         if ($key =~ /[:\r\n]|[-_]$/) {
-            die("Response headers MUST NOT contain a key with : or newlines, or that end in - or _: $key");
+            die("Response headers MUST NOT contain a key with : or newlines, or that end in - or _. Header: $key");
         }
         unless ($key =~ /^[a-zA-Z][0-9a-zA-Z\-_]*$/) {
-            die("Response headers MUST consist only of letters, digits, _ or - and MUST start with a letter: $key");
+            die("Response headers MUST consist only of letters, digits, _ or - and MUST start with a letter. Header: $key");
         }
         if ($val =~ /[\000-\037]/) {
-            die("Response headers MUST NOT contain characters below octal \037: $val");
+            die("Response headers MUST NOT contain characters below octal \037. Header: $key. Value: $val");
         }
-        if (!defined $val) {
-            die("Response headers MUST be a defined string");
+        unless (defined $val) {
+            die("Response headers MUST be a defined string. Header: $key");
         }
     }
 
