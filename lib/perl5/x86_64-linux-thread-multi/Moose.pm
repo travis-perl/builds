@@ -1,7 +1,7 @@
 use strict;
 use warnings;
-package Moose; # git description: 2.1804-7-g10686ac
-our $VERSION = '2.1805';
+package Moose; # git description: 2.1805-10-gfc116c9
+our $VERSION = '2.1806';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use 5.008003;
@@ -298,7 +298,7 @@ Moose - A postmodern object system for Perl 5
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 SYNOPSIS
 
@@ -455,6 +455,10 @@ exception will be thrown.
 
 If your role takes options or arguments, they can be passed along in the
 hash reference as well.
+
+You should only use one C<with>, even if you are consuming multiple roles. If
+you consume roles using multiple C<with> statements Moose cannot detect method
+conflicts between those roles.
 
 =head2 has $name|@$names =E<gt> %options
 

@@ -1,5 +1,5 @@
 package Moose::Util::TypeConstraints;
-our $VERSION = '2.1805';
+our $VERSION = '2.1806';
 
 use Carp ();
 use Scalar::Util qw( blessed );
@@ -770,7 +770,7 @@ Moose::Util::TypeConstraints - Type constraint system for Moose
 
 =head1 VERSION
 
-version 2.1805
+version 2.1806
 
 =head1 SYNOPSIS
 
@@ -895,7 +895,7 @@ name> which is a role, like C<'MyApp::Role::Comparable'>.
 
 =head2 Type Constraint Naming
 
-Type name declared via this module can only contain alphanumeric
+Type names declared via this module can only contain alphanumeric
 characters, colons (:), and periods (.).
 
 Since the types created by this module are global, it is suggested

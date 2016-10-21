@@ -7,12 +7,16 @@ use base qw/Exporter/;
 use URI::Escape;
 
 BEGIN {
-    our $VERSION = "0.06";
+    our $VERSION = "0.07";
     our @EXPORT = qw/bake_cookie crush_cookie/;
     my $use_pp = $ENV{COOKIE_BAKER_PP};
     if (!$use_pp) {
         eval {
             require Cookie::Baker::XS;
+            if ( $Cookie::Baker::XS::VERSION < $VERSION ) {
+                warn "Cookie::Baker::XS $VERSION is require. fallback to PP version";
+                die;
+            }
         };
         $use_pp = !!$@;
     }
@@ -88,7 +92,14 @@ sub pp_crush_cookie {
         # trim leading trailing whitespace
         $pair =~ s/^\s+//; $pair =~ s/\s+$//;
 
-        my ($key, $value) = map URI::Escape::uri_unescape($_), split( "=", $pair, 2 );
+        my ($key, $value) = split( "=", $pair, 2 );
+
+        $key = URI::Escape::uri_unescape($key);
+
+        # Values can be quoted
+        $value = "" unless defined $value;
+        $value =~ s/\A"(.*)"\z/$1/;
+        $value = URI::Escape::uri_unescape($value);
 
         # Take the first one like CGI.pm or rack do
         $results{$key} = $value unless exists $results{$key};
