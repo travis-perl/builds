@@ -225,7 +225,7 @@ sub _parse_qualifiers {
             $self->die('YAML_PARSE_ERR_MANY_IMPLICIT') if $implicit;
             $implicit = 1;
         }
-        elsif ($preface =~ s/^\&([^ ,:]+)\s*//) {
+        elsif ($preface =~ s/^\&([^ ,:]*)\s*//) {
             $token = $1;
             $self->die('YAML_PARSE_ERR_BAD_ANCHOR')
               unless $token =~ /^[a-zA-Z0-9]+$/;
@@ -233,7 +233,7 @@ sub _parse_qualifiers {
             $self->die('YAML_PARSE_ERR_ANCHOR_ALIAS') if $alias;
             $anchor = $token;
         }
-        elsif ($preface =~ s/^\*([^ ,:]+)\s*//) {
+        elsif ($preface =~ s/^\*([^ ,:]*)\s*//) {
             $token = $1;
             $self->die('YAML_PARSE_ERR_BAD_ALIAS')
               unless $token =~ /^[a-zA-Z0-9]+$/;
@@ -470,7 +470,7 @@ sub _parse_inline_mapping {
 
     $self->die('YAML_PARSE_ERR_INLINE_MAP')
       unless $self->{inline} =~ s/^\{\s*//;
-    while (not $self->{inline} =~ s/^\s*\}//) {
+    while (not $self->{inline} =~ s/^\s*\}\s*//) {
         my $key = $self->_parse_inline();
         $self->die('YAML_PARSE_ERR_INLINE_MAP')
           unless $self->{inline} =~ s/^\: \s*//;
@@ -497,7 +497,7 @@ sub _parse_inline_seq {
 
     $self->die('YAML_PARSE_ERR_INLINE_SEQUENCE')
       unless $self->{inline} =~ s/^\[\s*//;
-    while (not $self->{inline} =~ s/^\s*\]//) {
+    while (not $self->{inline} =~ s/^\s*\]\s*//) {
         my $value = $self->_parse_inline();
         push @$node, $value;
         next if $self->inline =~ /^\s*\]/;

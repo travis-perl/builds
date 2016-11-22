@@ -1,4 +1,4 @@
-=head2 Fri Oct 21 00:02:40 2016: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Tue Nov 22 00:02:51 2016: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Fri Oct 21 00:02:41 2016: C<Module> L<YAML|YAML>
+=head2 Tue Nov 22 00:02:52 2016: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.18>
+C<VERSION: 1.19>
 
 =item *
 
