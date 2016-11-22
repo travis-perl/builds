@@ -6,7 +6,7 @@ sub _getstash { \%{"$_[0]::"} }
 use strict;
 use warnings;
 
-our $VERSION = '2.000003';
+our $VERSION = '2.000005';
 $VERSION = eval $VERSION;
 
 our %INFO;
@@ -171,7 +171,7 @@ sub create_class_with_roles {
       join "\n",
         map {
           "Method name conflict for '$_' between roles "
-          ."'".join(' and ', sort values %{$conflicts{$_}})."'"
+          ."'".join("' and '", sort values %{$conflicts{$_}})."'"
           .", cannot apply these simultaneously to an object."
         } keys %conflicts;
     croak $fail;
@@ -345,8 +345,9 @@ sub _concrete_methods_of {
   my $not_methods = { reverse %{$info->{not_methods}||{}} };
   $info->{methods} ||= +{
     # grab all code entries that aren't in the not_methods list
-    map {
-      my $code = *{$stash->{$_}}{CODE};
+    map {;
+      no strict 'refs';
+      my $code = exists &{"${role}::$_"} ? \&{"${role}::$_"} : undef;
       ( ! $code or exists $not_methods->{$code} ) ? () : ($_ => $code)
     } grep !ref($stash->{$_}), keys %$stash
   };

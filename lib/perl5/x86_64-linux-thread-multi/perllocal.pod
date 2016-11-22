@@ -1,4 +1,70 @@
-=head2 Fri Oct 21 00:11:33 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Tue Nov 22 00:11:15 2016: C<Module> L<Role::Tiny|Role::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.000005>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov 22 00:11:16 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.001013>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov 22 00:11:17 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Nov 22 00:11:19 2016: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -20,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Oct 21 00:11:35 2016: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Tue Nov 22 00:11:19 2016: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -34,7 +100,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.000003>
+C<VERSION: 2.002005>
 
 =item *
 
@@ -42,73 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Oct 21 00:11:36 2016: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.001012>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Oct 21 00:11:36 2016: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Oct 21 00:11:37 2016: C<Module> L<Moo|Moo>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.002004>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Oct 21 00:11:38 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Tue Nov 22 00:11:21 2016: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Oct 21 00:11:38 2016: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Tue Nov 22 00:11:21 2016: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
