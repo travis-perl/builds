@@ -4,7 +4,7 @@
       "Arthur Axel \"fREW\" Schmidt <Sub-Exporter-Progressive@afoolishmanifesto.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.047, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 6.008, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -50,5 +50,6 @@
          "web" : "https://github.com/frioux/Sub-Exporter-Progressive"
       }
    },
-   "version" : "0.001012"
+   "version" : "0.001013",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0213"
 }

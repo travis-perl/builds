@@ -22,7 +22,7 @@ BEGIN {
   );
 }
 
-our $VERSION = '2.002004';
+our $VERSION = '2.002005';
 $VERSION = eval $VERSION;
 
 require Moo::sification;
@@ -125,7 +125,6 @@ sub _set_superclasses {
   elsif (!$target->isa('Moo::Object')) {
     Moo->_constructor_maker_for($target);
   }
-  no warnings 'once'; # piss off. -- mst
   $Moo::HandleMoose::MOUSE{$target} = [
     grep defined, map Mouse::Util::find_meta($_), @_
   ] if Mouse::Util->can('find_meta');
@@ -443,8 +442,13 @@ superclasses.
   my $meta = Foo::Bar->meta;
   my @methods = $meta->get_method_list;
 
-Returns a L<Moose metaclass|Moose::Meta::Class> object for the class.  The
-metaclass will only be built on demand, loading Moose in the process.
+Returns an object that will behave as if it is a
+L<Moose metaclass|Moose::Meta::Class> object for the class. If you call
+anything other than C<make_immutable> on it, the object will be transparently
+upgraded to a genuine L<Moose::Meta::Class> instance, loading Moose in the
+process if required. C<make_immutable> itself is a no-op, since we generate
+metaclasses that are already immutable, and users converting from Moose had
+an unfortunate tendency to accidentally load Moose by calling it.
 
 =head1 LIFECYCLE METHODS
 
