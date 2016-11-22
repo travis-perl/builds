@@ -78,9 +78,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Fri Oct 21 00:02:15 UTC 2016
+## Configuration time: Tue Nov 22 00:02:04 UTC 2016
 ## Configured by     : travis
-## Target system     : linux testing-gce-e1d06eba-da67-44a7-a982-dda89ae0cfe7 3.13.0-92-generic #139~precise1-ubuntu smp wed jun 29 21:30:37 utc 2016 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-gce-8eef056d-6e07-4e65-8911-0402950c68df 3.13.0-92-generic #139~precise1-ubuntu smp wed jun 29 21:30:37 utc 2016 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -202,8 +202,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-gce-e1d06eba-da67-44a7-a982-dda89ae0cfe7.(none)'
-cf_time='Fri Oct 21 00:02:15 UTC 2016'
+cf_email='travis@testing-gce-8eef056d-6e07-4e65-8911-0402950c68df.(none)'
+cf_time='Tue Nov 22 00:02:04 UTC 2016'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1046,8 +1046,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.(none)'
-myhostname='testing-gce-e1d06eba-da67-44a7-a982-dda89ae0cfe7'
-myuname='linux testing-gce-e1d06eba-da67-44a7-a982-dda89ae0cfe7 3.13.0-92-generic #139~precise1-ubuntu smp wed jun 29 21:30:37 utc 2016 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-gce-8eef056d-6e07-4e65-8911-0402950c68df'
+myuname='linux testing-gce-8eef056d-6e07-4e65-8911-0402950c68df 3.13.0-92-generic #139~precise1-ubuntu smp wed jun 29 21:30:37 utc 2016 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1086,7 +1086,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@testing-gce-e1d06eba-da67-44a7-a982-dda89ae0cfe7.(none)'
+perladmin='travis@testing-gce-8eef056d-6e07-4e65-8911-0402950c68df.(none)'
 perllibs='-lpthread -lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl'
 pg='pg'
