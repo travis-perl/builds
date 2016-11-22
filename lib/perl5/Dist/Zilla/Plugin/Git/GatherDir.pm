@@ -7,9 +7,9 @@
 # the same terms as the Perl 5 programming language system itself.
 #
 package Dist::Zilla::Plugin::Git::GatherDir;
-# ABSTRACT: gather all tracked files in a Git working directory
+# ABSTRACT: Gather all tracked files in a Git working directory
 
-our $VERSION = '2.039';
+our $VERSION = '2.041';
 
 use Moose;
 extends 'Dist::Zilla::Plugin::GatherDir' => { -version => 4.200016 }; # exclude_match
@@ -225,11 +225,11 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Git::GatherDir - gather all tracked files in a Git working directory
+Dist::Zilla::Plugin::Git::GatherDir - Gather all tracked files in a Git working directory
 
 =head1 VERSION
 
-version 2.039
+version 2.041
 
 =head1 SYNOPSIS
 

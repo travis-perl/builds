@@ -9,7 +9,7 @@
 package Dist::Zilla::Role::Git::Repo;
 # ABSTRACT: Provide repository information for Git plugins
 
-our $VERSION = '2.039';
+our $VERSION = '2.041';
 
 use Moose::Role;
 use MooseX::Types::Moose qw(Str Maybe);
@@ -70,6 +70,7 @@ around dump_config => sub
 
     $config->{+__PACKAGE__} = {
         repo_root => $self->repo_root,
+        'git --version' => $self->git->version,
     };
 
     return $config;
@@ -98,7 +99,7 @@ Dist::Zilla::Role::Git::Repo - Provide repository information for Git plugins
 
 =head1 VERSION
 
-version 2.039
+version 2.041
 
 =head1 DESCRIPTION
 
