@@ -5,7 +5,7 @@ use warnings FATAL => 'all';
 use Scalar::Util qw(blessed);
 use Exporter 5.57 qw(import);
 
-our $VERSION = '1.000005';
+our $VERSION = '1.000006';
 
 our @EXPORT = qw($_call_if_object $_isa $_can $_does $_DOES);
 
@@ -15,6 +15,7 @@ our $_call_if_object = sub {
   # we gratuitously break modules like Scalar::Defer, which would be
   # un-perlish.
   return unless blessed($obj);
+  return $obj->isa(@_) if lc($method) eq 'does' and not $obj->can($method);
   return $obj->$method(@_);
 };
 
@@ -22,6 +23,11 @@ our ($_isa, $_can, $_does, $_DOES) = map {
   my $method = $_;
   sub { my $obj = shift; $obj->$_call_if_object($method => @_) }
 } qw(isa can does DOES);
+
+1;
+__END__
+
+=pod
 
 =head1 NAME
 

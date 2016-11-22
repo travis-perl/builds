@@ -30,7 +30,7 @@ BEGIN {
 	# This is not enforced yet, but will be some time in the next few
 	# releases once we can make sure it won't clash with custom
 	# Module::Install extensions.
-	$VERSION = '1.16';
+	$VERSION = '1.17';
 
 	# Storage for the pseudo-singleton
 	$MAIN    = undef;
@@ -243,6 +243,8 @@ sub new {
 	}
 	return $args{_self} if $args{_self};
 
+	$base_path = VMS::Filespec::unixify($base_path) if $^O eq 'VMS';
+
 	$args{dispatch} ||= 'Admin';
 	$args{prefix}   ||= 'inc';
 	$args{author}   ||= ($^O eq 'VMS' ? '_author' : '.author');
@@ -321,7 +323,7 @@ sub find_extensions {
 	my ($self, $path) = @_;
 
 	my @found;
-	File::Find::find( sub {
+	File::Find::find( {no_chdir => 1, wanted => sub {
 		my $file = $File::Find::name;
 		return unless $file =~ m!^\Q$path\E/(.+)\.pm\Z!is;
 		my $subpath = $1;
@@ -335,7 +337,7 @@ sub find_extensions {
 		# correctly.  Otherwise, root through the file to locate the case-preserved
 		# version of the package name.
 		if ( $subpath eq lc($subpath) || $subpath eq uc($subpath) ) {
-			my $content = Module::Install::_read($subpath . '.pm');
+			my $content = Module::Install::_read($File::Find::name);
 			my $in_pod  = 0;
 			foreach ( split /\n/, $content ) {
 				$in_pod = 1 if /^=\w/;
@@ -350,7 +352,7 @@ sub find_extensions {
 		}
 
 		push @found, [ $file, $pkg ];
-	}, $path ) if -d $path;
+	}}, $path ) if -d $path;
 
 	@found;
 }
@@ -372,8 +374,6 @@ sub _caller {
 	return $call;
 }
 
-# Done in evals to avoid confusing Perl::MinimumVersion
-eval( $] >= 5.006 ? <<'END_NEW' : <<'END_OLD' ); die $@ if $@;
 sub _read {
 	local *FH;
 	open( FH, '<', $_[0] ) or die "open($_[0]): $!";
@@ -382,16 +382,6 @@ sub _read {
 	close FH or die "close($_[0]): $!";
 	return $string;
 }
-END_NEW
-sub _read {
-	local *FH;
-	open( FH, "< $_[0]"  ) or die "open($_[0]): $!";
-	binmode FH;
-	my $string = do { local $/; <FH> };
-	close FH or die "close($_[0]): $!";
-	return $string;
-}
-END_OLD
 
 sub _readperl {
 	my $string = Module::Install::_read($_[0]);
@@ -412,8 +402,6 @@ sub _readpod {
 	return $string;
 }
 
-# Done in evals to avoid confusing Perl::MinimumVersion
-eval( $] >= 5.006 ? <<'END_NEW' : <<'END_OLD' ); die $@ if $@;
 sub _write {
 	local *FH;
 	open( FH, '>', $_[0] ) or die "open($_[0]): $!";
@@ -423,17 +411,6 @@ sub _write {
 	}
 	close FH or die "close($_[0]): $!";
 }
-END_NEW
-sub _write {
-	local *FH;
-	open( FH, "> $_[0]"  ) or die "open($_[0]): $!";
-	binmode FH;
-	foreach ( 1 .. $#_ ) {
-		print FH $_[$_] or die "print($_[0]): $!";
-	}
-	close FH or die "close($_[0]): $!";
-}
-END_OLD
 
 # _version is for processing module versions (eg, 1.03_05) not
 # Perl versions (eg, 5.8.1).

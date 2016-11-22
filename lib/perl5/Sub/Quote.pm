@@ -15,7 +15,7 @@ BEGIN {
   *_HAVE_PERLSTRING = defined &B::perlstring ? sub(){1} : sub(){0};
 }
 
-our $VERSION = '2.002004';
+our $VERSION = '2.002005';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(quote_sub unquote_sub quoted_from_sub qsub);
@@ -94,10 +94,14 @@ sub quote_sub {
     my $subname = $name;
     my $package = $subname =~ s/(.*)::// ? $1 : caller;
     $name = join '::', $package, $subname;
-    croak "package name $package too long!"
+    croak qq{package name "$package" too long!}
       if length $package > 252;
-    croak "sub name $subname too long!"
+    croak qq{package name "$package" is not valid!}
+      unless $package =~ /^[^\d\W]\w*(?:::\w+)*$/;
+    croak qq{sub name "$subname" too long!}
       if length $subname > 252;
+    croak qq{sub name "$subname" is not valid!}
+      unless $subname =~ /^[^\d\W]\w*$/;
   }
   my @caller = caller(0);
   my $attributes = $options->{attributes};

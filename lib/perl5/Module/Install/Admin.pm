@@ -6,7 +6,7 @@ use inc::Module::Install ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.16';
+	$VERSION = '1.17';
 	@ISA     = 'Module::Install';
 }
 
@@ -129,7 +129,8 @@ sub copy {
 	my ($self, $from, $to) = @_;
 
 	my @parts = split('/', $to);
-	File::Path::mkpath([ join('/', @parts[ 0 .. $#parts-1 ])]);
+	File::Path::mkpath([ join('/', @parts[ 0 .. $#parts-1 ])])
+	  if @parts > 1;
 
 	chomp $to;
 

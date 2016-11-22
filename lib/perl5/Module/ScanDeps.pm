@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @EXPORT @EXPORT_OK @ISA $CurrentPackage @IncludeLibs $ScanFileRE );
 
-$VERSION   = '1.22';
+$VERSION   = '1.23';
 @EXPORT    = qw( scan_deps scan_deps_runtime );
 @EXPORT_OK = qw( scan_line scan_chunk add_deps scan_deps_runtime path_to_inc_name );
 
@@ -364,6 +364,7 @@ my %Preload = (
         return( grep /^JSON\/(PP|XS)/, _glob_in_inc('JSON', 1) );
     },
     'List/MoreUtils.pm'                 => 'sub',
+    'List/SomeUtils.pm'                 => 'sub',
     'Locale/Maketext/Lexicon.pm'        => 'sub',
     'Locale/Maketext/GutsLoader.pm'     => [qw( Locale/Maketext/Guts.pm )],
     'Log/Any.pm'                        => 'sub',
@@ -432,7 +433,8 @@ my %Preload = (
     'PDF/Writer.pm'                     => 'sub',
     'PDL/NiceSlice.pm'                  => 'sub',
     'Perl/Critic.pm'                    => 'sub', #not only Perl/Critic/Policy
-    'PerlIO.pm'                         => [ 'PerlIO/scalar.pm' ],
+    'PerlIO.pm'                         => [qw( PerlIO/scalar.pm )],
+    'Pod/Simple/Transcode.pm'           => [qw( Pod/Simple/TranscodeDumb.pm Pod/Simple/TranscodeSmart.pm )],
     'Pod/Usage.pm'                      => sub {  # from Pod::Usage (as of 1.61)
          $] >= 5.005_58 ? 'Pod/Text.pm' : 'Pod/PlainText.pm'
      },
