@@ -6,7 +6,7 @@ use Exporter;
 
 use vars qw(@ISA @EXPORT_OK %EXPORT_TAGS);
 
-our $VERSION = '1.76';
+our $VERSION = '1.79';
 
 @ISA = qw(Exporter);
 @EXPORT_OK = qw(os_is os_isnt die_if_os_is die_if_os_isnt die_unsupported list_platforms list_family_members);
@@ -166,12 +166,15 @@ should Just Work anyway.
 my ($re_Devel, $re_AssertOS);
 
 sub list_platforms {
+    # need to lazily load these cos the module gets use()d in Makefile.PL,
+    # at which point pre-reqs might not be installed. This function isn't
+    # used in Makefile.PL so we can live without 'em.
     eval " # only load these if needed
         use File::Find::Rule;
         use File::Spec;
     ";
-    
     die($@) if($@);
+    
     if (!$re_Devel) {
         my $case_flag = File::Spec->case_tolerant ? '(?i)' : '';
         $re_Devel    = qr/$case_flag ^Devel$/x;
