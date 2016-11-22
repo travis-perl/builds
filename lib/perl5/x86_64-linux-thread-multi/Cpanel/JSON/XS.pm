@@ -1,5 +1,5 @@
 package Cpanel::JSON::XS;
-our $VERSION = '3.0218';
+our $VERSION = '3.0224';
 our $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;
 
@@ -73,8 +73,8 @@ MAPPING section below to learn about those.
 =item * strict checking of JSON correctness
 
 There is no guessing, no generating of illegal JSON texts by default,
-and only JSON is accepted as input by default (the latter is a security
-feature).
+and only JSON is accepted as input by default. the latter is a security
+feature.
 
 =item * fast
 
@@ -124,13 +124,13 @@ B<Changes to JSON::XS>
   as integer.
 
 - different handling of inf/nan. Default now to null, optionally with
-  -DSTRINGIFY_INFNAN to "inf"/"nan". [#28, #32]
+  stringify_infnan() to "inf"/"nan". [#28, #32]
 
 - added C<binary> extension, non-JSON and non JSON parsable, allows
   C<\xNN> and C<\NNN> sequences.
 
 - 5.6.2 support; sacrificing some utf8 features (assuming bytes all-over),
-  no multi-byte unicode characters.
+  no multi-byte unicode characters with 5.6.
 
 - interop for true/false overloading. JSON::XS, JSON::PP and Mojo::JSON 
   representations for booleans are accepted and JSON::XS accepts
@@ -149,7 +149,9 @@ B<Changes to JSON::XS>
 
 - is_bool can be called as method, JSON::XS::is_bool not.
 
-- Performance Optimizations for threaded Perls
+- performance optimizations for threaded Perls
+
+- relaxed mode, allowing many popular extensions
 
 - additional fixes for:
 
@@ -162,6 +164,12 @@ B<Changes to JSON::XS>
 
   - #41 overloading of booleans, use the object not the reference.
 
+  - #62 -Dusequadmath conversion and no SEGV.
+
+  - #72 parsing of values followed \0, like 1\0 does fail.
+
+  - #72 parsing of illegal unicode or non-unicode characters.
+
 - public maintenance and bugtracker
 
 - use ppport.h, sanify XS.xs comment styles, harness C coding style
@@ -169,10 +177,17 @@ B<Changes to JSON::XS>
 - common::sense is optional. When available it is not used in the published
   production module, just during development and testing.
 
-- extended testsuite
+- extended testsuite, passes all http://seriot.ch/parsing_json.html tests.
+  In fact it is the only know JSON decoder which does so, while being the fastest.
 
-- support many more options and methods from JSON::PP
+- support many more options and methods from JSON::PP:
+  stringify_infnan, allow_unknown, allow_stringify, allow_barekey,
+  encode_stringify, allow_bignum, allow_singlequote, sort_by (partially),
+  escape_slash, convert_blessed, ...
+  optional decode_json(, allow_nonref) arg
 
+- support all 5 unicode BOM's: UTF-8, UTF-16LE, UTF-16BE, UTF-32LE, UTF-32BE,
+  encoding internally to UTF-8.
 
 =cut
 
@@ -294,6 +309,20 @@ If you have UTF-8 encoded data, it is no longer a Unicode string, but a
 Unicode string encoded in UTF-8, giving you a binary string.
 
 =item 5. A string containing "high" (> 255) character values is I<not> a UTF-8 string.
+
+=item 6. Unicode noncharacters only warn, as in core.
+
+The 66 Unicode noncharacters U+FDD0..U+FDEF, and U+*FFFE, U+*FFFF just warn,
+see L<http://www.unicode.org/versions/corrigendum9.html>.
+But illegal surrogate pairs fail to parse.
+
+=item 7. Raw non-Unicode characters above U+10FFFF are disallowed.
+
+Raw non-Unicode characters outside the valid unicode range fail to
+parse, because "A string is a sequence of zero or more Unicode
+characters" RFC 7159 section 1 and "JSON text SHALL be encoded in
+Unicode RFC 7159 section 8.1. We use now the UTF8_DISALLOW_SUPER
+flag when parsing unicode.
 
 =back
 
@@ -956,7 +985,7 @@ effect on C<encode> (yet).
 If no argument is given, the limit check will be deactivated (same as when
 C<0> is specified).
 
-See SECURITY CONSIDERATIONS, below, for more info on why this is useful.
+See L</SECURITY CONSIDERATIONS>, below, for more info on why this is useful.
 
 =item $json->stringify_infnan ([$infnan_mode = 1])
 
@@ -1265,7 +1294,26 @@ This is a complex example, but most of the complexity comes from the fact
 that we are trying to be correct (bear with me if I am wrong, I never ran
 the above example :).
 
+=head1 BOM
 
+Detect all unicode B<Byte Order Marks> on decode.
+Which are UTF-8, UTF-16LE, UTF-16BE, UTF-32LE and UTF-32BE.
+
+B<Warning>: With perls older than 5.20 you need load the Encode module
+before loading a multibyte BOM, i.e. >= UTF-16. Otherwise an error is
+thrown. This is an implementation limitation and might get fixed later.
+
+See L<https://tools.ietf.org/html/rfc7159#section-8.1>
+I<"JSON text SHALL be encoded in UTF-8, UTF-16, or UTF-32.">
+
+I<"Implementations MUST NOT add a byte order mark to the beginning of a
+JSON text", "implementations (...) MAY ignore the presence of a byte
+order mark rather than treating it as an error".>
+
+See also L<http://www.unicode.org/faq/utf_bom.html#BOM>.
+
+Beware that Cpanel::JSON::XS is currently the only JSON module which does accept
+and decode a BOM.
 
 =head1 MAPPING
 
@@ -1763,6 +1811,17 @@ output for these property strings, e.g.:
 This works because C<__proto__> is not valid outside of strings, so every
 occurrence of C<"__proto__"\s*:> must be a string used as property name.
 
+Unicode non-characters between U+FFFD and U+10FFFF are decoded either
+to the recommended U+FFFD REPLACEMENT CHARACTER (see Unicode PR #121:
+Recommended Practice for Replacement Characters), or in the binary or
+relaxed mode left as is, keeping the illegal non-characters as before.
+
+Raw non-Unicode characters outside the valid unicode range fail now to
+parse, because "A string is a sequence of zero or more Unicode
+characters" RFC 7159 section 1 and "JSON text SHALL be encoded in
+Unicode RFC 7159 section 8.1. We use now the UTF8_DISALLOW_SUPER
+flag when parsing unicode.
+
 If you know of other incompatibilities, please let me know.
 
 
@@ -1859,6 +1918,8 @@ JSON, C<Cpanel::JSON::XS> is incapable of generating invalid JSON
 output (modulo bugs, but C<JSON::XS> has found more bugs in the
 official JSON testsuite (1) than the official JSON testsuite has found
 in C<JSON::XS> (0)).
+C<Cpanel::JSON::XS> is currently the only known JSON decoder which passes all
+L<http://seriot.ch/parsing_json.html> tests, while being the fastest also.
 
 When you have trouble decoding JSON generated by this module using other
 decoders, then it is very likely that you have an encoding mismatch or the
@@ -1954,7 +2015,7 @@ will change.
 
 =head1 SECURITY CONSIDERATIONS
 
-JSON::XS and Cpanel::JSON::XS are not only fast, JSON is generally the
+JSON::XS and Cpanel::JSON::XS are not only fast. JSON is generally the
 most secure serializing format, because it is the only one besides
 Data::MessagePack, which does not deserialize objects per default. For
 all languages, not just perl.  The binary variant BSON (MongoDB) does
@@ -1964,8 +2025,8 @@ It is trivial for any attacker to create such serialized objects in
 JSON and trick perl into expanding them, thereby triggering certain
 methods. Watch L<https://www.youtube.com/watch?v=Gzx6KlqiIZE> for an
 exploit demo for "CVE-2015-1592 SixApart MovableType Storable Perl
-Code Execution" for a deserializer which expands
-objects. Deserializing even coderefs (methods, functions) or external
+Code Execution" for a deserializer which expands objects.
+Deserializing even coderefs (methods, functions) or external
 data would be considered the most dangerous.
 
 Security relevant overview of serializers regarding deserializing

@@ -3,7 +3,7 @@ package Log::Dispatch::File;
 use strict;
 use warnings;
 
-our $VERSION = '2.57';
+our $VERSION = '2.58';
 
 use Log::Dispatch::Output;
 
@@ -182,7 +182,7 @@ Log::Dispatch::File - Object for logging to files
 
 =head1 VERSION
 
-version 2.57
+version 2.58
 
 =head1 SYNOPSIS
 
@@ -274,10 +274,9 @@ which is probably not what you want.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Log-Dispatch>
-(or L<bug-log-dispatch@rt.cpan.org|mailto:bug-log-dispatch@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Log-Dispatch/issues>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 AUTHOR
 

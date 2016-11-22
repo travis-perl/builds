@@ -3,7 +3,7 @@ package Specio::Role::Inlinable;
 use strict;
 use warnings;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Eval::Closure qw( eval_closure );
 
@@ -19,7 +19,7 @@ requires '_build_description';
             predicate => '_has_inline_generator',
             init_arg  => 'inline_generator',
         },
-        _inline_environment => {
+        inline_environment => {
             is       => 'ro',
             isa      => 'HashRef',
             lazy     => 1,
@@ -38,7 +38,7 @@ requires '_build_description';
             isa      => 'Specio::DeclaredAt',
             required => 1,
         },
-        _description => {
+        description => {
             is       => 'ro',
             isa      => 'Str',
             init_arg => undef,
@@ -52,6 +52,14 @@ requires '_build_description';
         return $attrs;
     }
 }
+
+# These are here for backwards compatibility. Some other packages that I wrote
+# may call the private methods.
+
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
+sub _description        { $_[0]->description }
+sub _inline_environment { $_[0]->inline_environment }
+## use critic
 
 sub can_be_inlined {
     my $self = shift;
@@ -67,8 +75,8 @@ sub _build_generated_inline_sub {
 
     return eval_closure(
         source      => $source,
-        environment => $self->_inline_environment,
-        description => 'inlined sub for ' . $self->_description,
+        environment => $self->inline_environment,
+        description => 'inlined sub for ' . $self->description,
     );
 }
 
@@ -92,7 +100,7 @@ Specio::Role::Inlinable - A role for things which can be inlined (type constrain
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 DESCRIPTION
 
@@ -103,8 +111,7 @@ coercions. It is fully documented in the relevant classes.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Specio>
-(or L<bug-specio@rt.cpan.org|mailto:bug-specio@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 

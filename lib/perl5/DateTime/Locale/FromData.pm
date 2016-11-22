@@ -8,7 +8,7 @@ use DateTime::Locale::Util qw( parse_locale_code );
 use Params::ValidationCompiler 0.13 qw( validation_for );
 use Specio::Declare;
 
-our $VERSION = '1.09';
+our $VERSION = '1.11';
 
 my @FormatLengths;
 
@@ -282,7 +282,7 @@ DateTime::Locale::FromData - Class for locale objects instantiated from pre-defi
 
 =head1 VERSION
 
-version 1.09
+version 1.11
 
 =head1 SYNOPSIS
 
@@ -495,8 +495,7 @@ The CLDR version from which this locale was generated.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-Locale>
-(or L<bug-datetime-locale@rt.cpan.org|mailto:bug-datetime-locale@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-Locale/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.

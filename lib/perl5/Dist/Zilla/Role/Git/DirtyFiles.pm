@@ -11,9 +11,9 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Role::Git::DirtyFiles;
-# ABSTRACT: provide the allow_dirty & changelog attributes
+# ABSTRACT: Provide the allow_dirty & changelog attributes
 
-our $VERSION = '2.039';
+our $VERSION = '2.041';
 
 use Moose::Role;
 use MooseX::Types::Moose qw{ Any ArrayRef Str RegexpRef };
@@ -169,11 +169,11 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Role::Git::DirtyFiles - provide the allow_dirty & changelog attributes
+Dist::Zilla::Role::Git::DirtyFiles - Provide the allow_dirty & changelog attributes
 
 =head1 VERSION
 
-version 2.039
+version 2.041
 
 =head1 DESCRIPTION
 

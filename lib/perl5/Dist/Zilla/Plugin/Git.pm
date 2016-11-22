@@ -10,10 +10,10 @@ use 5.008;
 use strict;
 use warnings;
 
-package Dist::Zilla::Plugin::Git; # git description: v2.038-3-gf563d07
-# ABSTRACT: update your git repository after release
+package Dist::Zilla::Plugin::Git; # git description: v2.040-2-g789d3f3
+# ABSTRACT: Update your git repository after release
 
-our $VERSION = '2.039';
+our $VERSION = '2.041';
 
 use Dist::Zilla 2.100880;    # Need mvp_multivalue_args in Plugin role
 use namespace::autoclean;
@@ -27,11 +27,11 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Git - update your git repository after release
+Dist::Zilla::Plugin::Git - Update your git repository after release
 
 =head1 VERSION
 
-version 2.039
+version 2.041
 
 =head1 DESCRIPTION
 
@@ -152,7 +152,7 @@ Jerome Quelin
 
 =head1 CONTRIBUTORS
 
-=for stopwords Christopher J. Madsen Jérôme Quelin Kent Fredric Karen Etheridge Yanick Champoux Ricardo Signes David Golden Graham Knop Chris Weyl Mike Friedman Your Name Stephen R. Scaffidi Randy Stauner Apocalypse Doherty Barr Brian Phillips Matt Follett Michael Schout Brendan Byrd Nigel Metheringham Olivier Mengué Alessandro Ghedini Tatsuhiko Miyagawa Tuomas Jormola Alexandr Ciornii Harley Pig Jesse Luehrs Geoffrey Broadwell Steinbrunner
+=for stopwords Christopher J. Madsen Jérôme Quelin Karen Etheridge Kent Fredric Yanick Champoux Ricardo Signes David Golden Graham Knop Chris Weyl Mike Friedman Your Name Stephen R. Scaffidi Randy Stauner Apocalypse Doherty Barr Brian Phillips Matt Follett Michael Schout Brendan Byrd Nigel Metheringham Olivier Mengué Alessandro Ghedini Tatsuhiko Miyagawa Tuomas Jormola Alexandr Ciornii Harley Pig Jesse Luehrs Geoffrey Broadwell Steinbrunner
 
 =over 4
 
@@ -166,11 +166,11 @@ Jérôme Quelin <jquelin@gmail.com>
 
 =item *
 
-Kent Fredric <kentfredric@gmail.com>
+Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Karen Etheridge <ether@cpan.org>
+Kent Fredric <kentfredric@gmail.com>
 
 =item *
 

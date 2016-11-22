@@ -11,9 +11,9 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Plugin::Git::Init;
-# ABSTRACT: initialize git repository on dzil new
+# ABSTRACT: Initialize git repository on dzil new
 
-our $VERSION = '2.039';
+our $VERSION = '2.041';
 
 our %transform = (
   lc => sub { lc shift },
@@ -108,11 +108,11 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Git::Init - initialize git repository on dzil new
+Dist::Zilla::Plugin::Git::Init - Initialize git repository on dzil new
 
 =head1 VERSION
 
-version 2.039
+version 2.041
 
 =head1 SYNOPSIS
 

@@ -3,7 +3,7 @@ package DateTime::Locale::Catalog;
 use strict;
 use warnings;
 
-our $VERSION = '1.09';
+our $VERSION = '1.11';
 
 1;
 
@@ -21,7 +21,7 @@ DateTime::Locale::Catalog - Provides a catalog of all valid locale names
 
 =head1 VERSION
 
-version 1.09
+version 1.11
 
 =head1 DESCRIPTION
 
@@ -771,8 +771,7 @@ The available locales are:
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-Locale>
-(or L<bug-datetime-locale@rt.cpan.org|mailto:bug-datetime-locale@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-Locale/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.

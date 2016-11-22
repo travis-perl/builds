@@ -23,7 +23,7 @@ use Specio::TypeChecks qw(
 );
 use Storable qw( dclone );
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Exporter qw( import );
 
@@ -319,7 +319,7 @@ Specio::OO - A painfully poor reimplementation of Moo(se)
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 DESCRIPTION
 
@@ -330,8 +330,7 @@ reimplementation of a small slice of their features.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Specio>
-(or L<bug-specio@rt.cpan.org|mailto:bug-specio@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 

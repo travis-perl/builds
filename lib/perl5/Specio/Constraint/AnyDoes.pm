@@ -3,7 +3,7 @@ package Specio::Constraint::AnyDoes;
 use strict;
 use warnings;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use B ();
 use Role::Tiny::With;
@@ -62,7 +62,7 @@ Specio::Constraint::AnyDoes - A class for constraints which require a class name
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 SYNOPSIS
 
@@ -104,8 +104,7 @@ L<MooseX::Clone> roles.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Specio>
-(or L<bug-specio@rt.cpan.org|mailto:bug-specio@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 

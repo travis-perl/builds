@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.39';
+our $VERSION = '1.41';
 
 use Carp ();
 use DateTime;
@@ -344,7 +344,7 @@ DateTime::Duration - Duration objects for date math
 
 =head1 VERSION
 
-version 1.39
+version 1.41
 
 =head1 SYNOPSIS
 
@@ -622,13 +622,12 @@ http://datetime.perl.org/
 Support for this module is provided via the datetime@perl.org email
 list. See http://lists.perl.org/ for more details.
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime>
-(or L<bug-datetime@rt.cpan.org|mailto:bug-datetime@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime.pm/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 AUTHOR
 

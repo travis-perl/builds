@@ -3,7 +3,7 @@ package Specio::Constraint::Role::Interface;
 use strict;
 use warnings;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Carp qw( confess );
 use Eval::Closure qw( eval_closure );
@@ -119,7 +119,7 @@ sub _wrap_message_generator {
         };
     }
 
-    my $d = $self->_description;
+    my $d = $self->description;
 
     return sub { $generator->( $d, @_ ) };
 }
@@ -207,8 +207,8 @@ sub _build_generated_inline_sub {
 
     return eval_closure(
         source      => $source,
-        environment => $type->_inline_environment,
-        description => 'inlined sub for ' . $self->_description,
+        environment => $type->inline_environment,
+        description => 'inlined sub for ' . $self->description,
     );
 }
 
@@ -267,7 +267,7 @@ sub _constraint_with_parents {
 sub id {
     my $self = shift;
 
-    return $self->_description;
+    return $self->description;
 }
 
 sub add_coercion {
@@ -329,7 +329,7 @@ sub inline_coercion_and_check {
                 . $coercion->inline_coercion($arg_name) . ' if '
                 . $coercion->from->inline_check($arg_name) . ';';
 
-            %env = ( %env, %{ $coercion->_inline_environment } );
+            %env = ( %env, %{ $coercion->inline_environment } );
         }
     }
 
@@ -354,7 +354,7 @@ sub inline_coercion_and_check {
         my %env = (
             $type_var_name              => \$self,
             $message_generator_var_name => \( $self->_message_generator ),
-            %{ $self->_inline_environment },
+            %{ $self->inline_environment },
         );
 
         my $source = $self->inline_check( $_[0] );
@@ -437,7 +437,7 @@ sub coercion_sub {
                 $coercion->from->inline_check('$_[0]')
             );
 
-            %env = ( %env, %{ $coercion->_inline_environment } );
+            %env = ( %env, %{ $coercion->inline_environment } );
         }
 
         $inline .= sprintf( "%s;\n", '$_[0]' );
@@ -540,10 +540,6 @@ sub _compiled_type_coercion {
 }
 ## use critic
 
-sub inline_environment {
-    shift->_inline_environment;
-}
-
 sub has_message {
     1;
 }
@@ -583,7 +579,7 @@ Specio::Constraint::Role::Interface - The interface all type constraints should 
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 DESCRIPTION
 
@@ -606,8 +602,7 @@ This role does the L<Specio::Role::Inlinable> role.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Specio>
-(or L<bug-specio@rt.cpan.org|mailto:bug-specio@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 

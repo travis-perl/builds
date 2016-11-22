@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.06';
+our $VERSION = '2.08';
 
 use parent 'Class::Singleton', 'DateTime::TimeZone::OffsetOnly';
 
@@ -59,7 +59,7 @@ DateTime::TimeZone::Floating - A time zone that is always local
 
 =head1 VERSION
 
-version 2.06
+version 2.08
 
 =head1 SYNOPSIS
 
@@ -79,8 +79,7 @@ undef.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-TimeZone>
-(or L<bug-datetime-timezone@rt.cpan.org|mailto:bug-datetime-timezone@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-TimeZone/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 

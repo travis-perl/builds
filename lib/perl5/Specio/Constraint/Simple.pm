@@ -3,7 +3,7 @@ package Specio::Constraint::Simple;
 use strict;
 use warnings;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Role::Tiny::With;
 use Specio::OO;
@@ -28,7 +28,7 @@ Specio::Constraint::Simple - Class for simple (non-parameterized or specialized)
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 SYNOPSIS
 
@@ -167,9 +167,14 @@ This parameter is required.
 
 It is possible to create a type without a constraint of its own.
 
-=head2 $type->name, $type->parent
+=head2 $type->name
 
-Returns the value of these parameters as they were passed to the constructor.
+Returns the name of the type as it was passed the constructor.
+
+=head2 $type->parent
+
+Returns the parent type passed to the constructor. If the type has no parent
+this returns C<undef>.
 
 =head2 $type->is_anon
 
@@ -210,10 +215,20 @@ This returns true if the type was created with a C<constraint> or
 C<inline_generator> parameter. This is used internally to skip type checks for
 types that don't actually implement a constraint.
 
+=head2 $type->description
+
+This returns a string describing the type. This includes the type's name and
+where it was declared, so you end up with something like C<'type named Foo
+declared in package My::Lib (lib/My/Lib.pm) at line 42'>. If the type is
+anonymous the name will be "anonymous type".
+
 =head2 $type->id
 
 This is a unique id for the type as a string. This is useful if you need to
-make a hash key based on a type, for example.
+make a hash key based on a type, for example. This should be treated as an
+essentially arbitrary and opaque string, and could change at any time in the
+future. If you want something human-readable, use the C<< $type->description
+>> method.
 
 =head2 $type->add_coercion($coercion)
 
@@ -267,6 +282,12 @@ C<eval_closure> subroutine.
 Given a variable name, this returns a string of code that implements the
 constraint. If the type is not inlinable, this method throws an error.
 
+=head2 $type->inline_environment()
+
+This returns a hash defining the variables that need to be closed over when
+inlining the type. The keys are full variable names like C<'$foo'> or
+C<'@bar'>. The values are I<references> to a variable of the matching type.
+
 =head2 $type->coercion_sub
 
 This method returns a sub ref that takes a single argument and applied all
@@ -288,8 +309,7 @@ L<Specio::Role::Inlinable> roles.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Specio>
-(or L<bug-specio@rt.cpan.org|mailto:bug-specio@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 

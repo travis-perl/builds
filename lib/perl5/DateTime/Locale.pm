@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.09';
+our $VERSION = '1.11';
 
 use DateTime::Locale::Data;
 use DateTime::Locale::FromData;
@@ -362,7 +362,7 @@ DateTime::Locale - Localization support for DateTime.pm
 
 =head1 VERSION
 
-version 1.09
+version 1.11
 
 =head1 SYNOPSIS
 
@@ -483,8 +483,7 @@ http://datetime.perl.org/
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-Locale>
-(or L<bug-datetime-locale@rt.cpan.org|mailto:bug-datetime-locale@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-Locale/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.
@@ -512,11 +511,21 @@ button at L<http://www.urth.org/~autarch/fs-donation.html>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 CONTRIBUTOR
+=head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge
+=for stopwords Karen Etheridge Mohammad S Anwar
+
+=over 4
+
+=item *
 
 Karen Etheridge <ether@cpan.org>
+
+=item *
+
+Mohammad S Anwar <mohammad.anwar@yahoo.com>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -10,9 +10,9 @@ use strict;
 use warnings;
 
 package Dist::Zilla::Plugin::Git::NextVersion;
-# ABSTRACT: provide a version number by bumping the last git release tag
+# ABSTRACT: Provide a version number by bumping the last git release tag
 
-our $VERSION = '2.039';
+our $VERSION = '2.041';
 
 use Dist::Zilla 4 ();
 use version 0.80 ();
@@ -201,11 +201,11 @@ __END__
 
 =head1 NAME
 
-Dist::Zilla::Plugin::Git::NextVersion - provide a version number by bumping the last git release tag
+Dist::Zilla::Plugin::Git::NextVersion - Provide a version number by bumping the last git release tag
 
 =head1 VERSION
 
-version 2.039
+version 2.041
 
 =head1 SYNOPSIS
 

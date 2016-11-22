@@ -7,7 +7,7 @@ use warnings;
 use warnings::register;
 use namespace::autoclean 0.19;
 
-our $VERSION = '1.39';
+our $VERSION = '1.41';
 
 use Carp;
 use DateTime::Duration;
@@ -15,8 +15,9 @@ use DateTime::Helpers;
 use DateTime::Locale 1.06;
 use DateTime::TimeZone 2.02;
 use DateTime::Types;
-use POSIX qw(floor fmod);
+use POSIX qw( floor fmod );
 use Params::ValidationCompiler 0.13 qw( validation_for );
+use Scalar::Util qw( blessed );
 use Try::Tiny;
 
 {
@@ -1706,20 +1707,35 @@ sub _subtract_overload {
 sub add {
     my $self = shift;
 
-    return $self->add_duration( $self->duration_class->new(@_) );
+    return $self->add_duration( $self->_duration_object_from_args(@_) );
 }
 
 sub subtract {
     my $self = shift;
-    my %p    = @_;
 
     my %eom;
-    $eom{end_of_month} = delete $p{end_of_month}
-        if exists $p{end_of_month};
+    if ( @_ % 2 == 0 ) {
+        my %p = @_;
 
-    my $dur = $self->duration_class->new(@_)->inverse(%eom);
+        $eom{end_of_month} = delete $p{end_of_month}
+            if exists $p{end_of_month};
+    }
+
+    my $dur = $self->_duration_object_from_args(@_)->inverse(%eom);
 
     return $self->add_duration($dur);
+}
+
+# Syntactic sugar for add and subtract: use a duration object if it's
+# supplied, otherwise build a new one from the arguments.
+
+sub _duration_object_from_args {
+    my $self = shift;
+
+    return $_[0]
+        if @_ == 1 && blessed( $_[0] ) && $_[0]->isa( $self->duration_class );
+
+    return $self->duration_class->new(@_);
 }
 
 sub subtract_duration { return $_[0]->add_duration( $_[1]->inverse ) }
@@ -2276,7 +2292,7 @@ DateTime - A date and time object for Perl
 
 =head1 VERSION
 
-version 1.39
+version 1.41
 
 =head1 SYNOPSIS
 
@@ -3223,11 +3239,15 @@ C<DateTime.pm> can provide a different value.
 This method adds a C<DateTime::Duration> to the current datetime. See
 the L<DateTime::Duration|DateTime::Duration> docs for more details.
 
-=head3 $dt->add( DateTime::Duration->new parameters )
+=head3 $dt->add( parameters for DateTime::Duration )
 
 This method is syntactic sugar around the C<add_duration()> method. It
 simply creates a new C<DateTime::Duration> object using the parameters
 given, and then calls the C<add_duration()> method.
+
+=head3 $dt->add( $duration_object )
+
+A synonym of C<< $dt->add_duration( $duration_object ) >>.
 
 =head3 $dt->subtract_duration( $duration_object )
 
@@ -3239,6 +3259,10 @@ C<add_duration> method.
 
 Like C<add()>, this is syntactic sugar for the C<subtract_duration()>
 method.
+
+=head3 $dt->subtract( $duration_object )
+
+A synonym of C<< $dt->subtract_duration( $duration_object ) >>.
 
 =head3 $dt->subtract_datetime( $datetime )
 
@@ -3444,7 +3468,7 @@ regardless of the timezone of the objects involved, as does using
 C<subtract_datetime_absolute()>. Other methods of subtraction are not
 always reversible.
 
-=item * never do math on two objects where only is in the floating time zone
+=item * never do math on two objects where only one is in the floating time zone
 
 The date math code accounts for leap seconds whenever the C<DateTime> object
 is not in the floating time zone. If you try to do math where one object is in
@@ -4463,13 +4487,12 @@ L<http://datetime.perl.org/>
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime>
-(or L<bug-datetime@rt.cpan.org|mailto:bug-datetime@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime.pm/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 DONATIONS
 
@@ -4494,7 +4517,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Karen Etheridge Michael Conrad Nick Tonkin Olaf Alders Ovid Ricardo Signes Richard Bowen Ron Hill viviparous
+=for stopwords Ben Bennett Christian Hansen Daisuke Maki David E. Wheeler Doug Bell Flávio Soibelmann Glock Gregory Oschwald Iain Truskett Jason McIntosh Joshua Hoblitt Karen Etheridge Michael Conrad Nick Tonkin Olaf Alders Ovid Philippe Bruhat (BooK) Ricardo Signes Richard Bowen Ron Hill Sam Kington viviparous
 
 =over 4
 
@@ -4560,6 +4583,10 @@ Ovid <curtis_ovid_poe@yahoo.com>
 
 =item *
 
+Philippe Bruhat (BooK) <book@cpan.org>
+
+=item *
+
 Ricardo Signes <rjbs@cpan.org>
 
 =item *
@@ -4569,6 +4596,10 @@ Richard Bowen <bowen@cpan.org>
 =item *
 
 Ron Hill <rkhill@cpan.org>
+
+=item *
+
+Sam Kington <github@illuminated.co.uk>
 
 =item *
 

@@ -3,12 +3,16 @@ package Params::ValidationCompiler::Compiler;
 use strict;
 use warnings;
 
-our $VERSION = '0.13';
+our $VERSION = '0.19';
 
+use Carp qw( croak );
 use Eval::Closure qw( eval_closure );
+use List::Util 1.29 qw( pairkeys );
 use Params::ValidationCompiler::Exceptions;
 use Scalar::Util qw( blessed looks_like_number reftype );
 use overload ();
+
+our @CARP_NOT = ( 'Params::ValidationCompiler', __PACKAGE__ );
 
 BEGIN {
     ## no critic (Variables::RequireInitializationForLocalVars)
@@ -24,13 +28,14 @@ BEGIN {
 
     unless ($has_sub_util) {
         *set_subname = sub {
-            die
-                "Cannot name a generated validation subroutine. Please install Sub::Util.\n";
+            croak
+                'Cannot name a generated validation subroutine. Please install Sub::Util.';
         };
     }
 }
 
-my %known = map { $_ => 1 } qw( name name_is_optional params slurpy );
+my %known
+    = map { $_ => 1 } qw( name name_is_optional params slurpy named_to_list );
 
 # I'd rather use Moo here but I want to make things relatively high on the
 # CPAN river like DateTime use this distro, so reducing deps is important.
@@ -39,17 +44,33 @@ sub new {
     my %p     = @_;
 
     unless ( exists $p{params} ) {
-        die
-            qq{You must provide a "params" parameter when creating a parameter validator\n};
+        croak
+            q{You must provide a "params" parameter when creating a parameter validator};
     }
-    unless ( ref $p{params} eq 'HASH' || ref $p{params} eq 'ARRAY' ) {
+    if ( ref $p{params} eq 'HASH' ) {
+        croak q{The "params" hashref must contain at least one key-value pair}
+            unless %{ $p{params} };
+
+        croak
+            q{"named_to_list" must be used with arrayref params containing key-value pairs}
+            if $p{named_to_list};
+    }
+    elsif ( ref $p{params} eq 'ARRAY' ) {
+        croak q{The "params" arrayref must contain at least one element}
+            unless @{ $p{params} };
+    }
+    else {
         my $type
             = !defined $p{params} ? 'an undef'
             : ref $p{params} ? q{a } . ( lc ref $p{params} ) . q{ref}
             :                  'a scalar';
 
-        die
-            qq{The "params" parameter when creating a parameter validator must be a hashref or arrayref, you passed $type\n};
+        croak
+            qq{The "params" parameter when creating a parameter validator must be a hashref or arrayref, you passed $type};
+    }
+
+    if ( $p{named_to_list} && $p{slurpy} ) {
+        croak q{You cannot use "named_to_list" and "slurpy" together};
     }
 
     if ( exists $p{name} && ( !defined $p{name} || ref $p{name} ) ) {
@@ -58,14 +79,14 @@ sub new {
             ? 'an undef'
             : q{a } . ( lc ref $p{name} ) . q{ref};
 
-        die
-            qq{The "name" parameter when creating a parameter validator must be a scalar, you passed $type\n};
+        croak
+            qq{The "name" parameter when creating a parameter validator must be a scalar, you passed $type};
     }
 
     my @unknown = sort grep { !$known{$_} } keys %p;
     if (@unknown) {
-        die
-            "You passed unknown parameters when creating a parameter validator: [@unknown]\n";
+        croak
+            "You passed unknown parameters when creating a parameter validator: [@unknown]";
     }
 
     my $self = bless \%p, $class;
@@ -95,6 +116,48 @@ sub slurpy { $_[0]->{slurpy} }
 sub _source { $_[0]->{_source} }
 
 sub _env { $_[0]->{_env} }
+
+sub named_to_list { $_[0]->{named_to_list} }
+
+sub _any_type_has_coercion {
+    my $self = shift;
+
+    return $self->{_has_coercion} if exists $self->{_has_coercion};
+
+    for my $type ( $self->_types ) {
+
+        # Specio
+        if ( $type->can('has_coercions') && $type->has_coercions ) {
+            return $self->{_has_coercion} = 1;
+        }
+
+        # Moose and Type::Tiny
+        elsif ( $type->can('has_coercion') && $type->has_coercion ) {
+            return $self->{_has_coercion} = 1;
+        }
+    }
+
+    return $self->{_has_coercion} = 0;
+}
+
+sub _types {
+    my $self = shift;
+
+    if ( ref $self->params eq 'HASH' ) {
+        return map { $_->{type} || () }
+            grep { ref $_ } values %{ $self->params };
+    }
+    elsif ( ref $self->params eq 'ARRAY' ) {
+        if ( $self->named_to_list ) {
+            my %p = @{ $self->params };
+            return map { $_->{type} || () } grep { ref $_ } values %p;
+        }
+        else {
+            return
+                map { $_->{type} || () } grep { ref $_ } @{ $self->params };
+        }
+    }
+}
 
 sub subref {
     my $self = shift;
@@ -133,16 +196,50 @@ sub _compile {
         $self->_compile_named_args_check;
     }
     elsif ( ref $self->params eq 'ARRAY' ) {
-        $self->_compile_positional_args_check;
+        if ( $self->named_to_list ) {
+            $self->_compile_named_args_list_check;
+        }
+        else {
+            $self->_compile_positional_args_check;
+        }
     }
 }
 
 sub _compile_named_args_check {
     my $self = shift;
 
-    push @{ $self->_source }, $self->_set_named_args_hash;
+    $self->_compile_named_args_check_body( $self->params );
+    push @{ $self->_source }, 'return %args;';
 
-    my $params = $self->params;
+    return;
+}
+
+sub _compile_named_args_list_check {
+    my $self = shift;
+
+    $self->_compile_named_args_check_body( { @{ $self->params } } );
+
+    my @keys = map { B::perlstring($_) } pairkeys @{ $self->params };
+
+    # If we don't handle the one-key case specially we end up getting a
+    # warning like "Scalar value @args{"bar"} better written as $args{"bar"}
+    # at ..."
+    if ( @keys == 1 ) {
+        push @{ $self->_source }, "return \$args{$keys[0]};";
+    }
+    else {
+        my $keys_str = join q{, }, @keys;
+        push @{ $self->_source }, "return \@args{$keys_str};";
+    }
+
+    return;
+}
+
+sub _compile_named_args_check_body {
+    my $self   = shift;
+    my $params = shift;
+
+    push @{ $self->_source }, $self->_set_named_args_hash;
 
     for my $name ( sort keys %{$params} ) {
         my $spec = $params->{$name};
@@ -157,8 +254,9 @@ sub _compile_named_args_check {
             unless ( exists $spec->{optional} && $spec->{optional} )
             || exists $spec->{default};
 
-        $self->_add_default_assignment(
-            $access, $name,
+        $self->_add_named_default_assignment(
+            $access,
+            $name,
             $spec->{default}
         ) if exists $spec->{default};
 
@@ -168,14 +266,12 @@ sub _compile_named_args_check {
     }
 
     if ( $self->slurpy ) {
-        $self->_add_check_for_extra_hash_param_types( $self->slurpy )
+        $self->_add_check_for_extra_hash_param_types( $self->slurpy, $params )
             if ref $self->slurpy;
     }
     else {
-        $self->_add_check_for_extra_hash_params;
+        $self->_add_check_for_extra_hash_params($params);
     }
-
-    push @{ $self->_source }, 'return %args;';
 
     return;
 }
@@ -252,11 +348,12 @@ EOF
 }
 
 sub _add_check_for_extra_hash_param_types {
-    my $self = shift;
-    my $type = shift;
+    my $self   = shift;
+    my $type   = shift;
+    my $params = shift;
 
     $self->_env->{'%known'}
-        = { map { $_ => 1 } keys %{ $self->params } };
+        = { map { $_ => 1 } keys %{$params} };
 
     # We need to set the name argument to something that won't conflict with
     # names someone would actually use for a parameter.
@@ -275,10 +372,11 @@ EOF
 }
 
 sub _add_check_for_extra_hash_params {
-    my $self = shift;
+    my $self   = shift;
+    my $params = shift;
 
     $self->_env->{'%known'}
-        = { map { $_ => 1 } keys %{ $self->params } };
+        = { map { $_ => 1 } keys %{$params} };
     push @{ $self->_source }, <<'EOF';
 my @extra = grep { ! $known{$_} } keys %args;
 if ( @extra ) {
@@ -300,7 +398,7 @@ sub _compile_positional_args_check {
 
     my $first_optional_idx = -1;
     for my $i ( 0 .. $#specs ) {
-        next unless $specs[$i]{optional};
+        next unless $specs[$i]{optional} || exists $specs[$i]{default};
         $first_optional_idx = $i;
         last;
     }
@@ -317,14 +415,24 @@ sub _compile_positional_args_check {
     $self->_add_check_for_extra_positional_params( scalar @specs )
         unless $self->slurpy;
 
+    my $access_var = '$_';
+    my $return_var = '@_';
+    if ( $self->_any_type_has_coercion ) {
+        push @{ $self->_source }, 'my @copy = @_;';
+        $access_var = '$copy';
+        $return_var = '@copy';
+    }
+
     for my $i ( 0 .. $#specs ) {
         my $spec = $specs[$i];
 
-        my $name   = "Parameter $i";
-        my $access = "\$_[$i]";
+        my $name = "Parameter $i";
+        my $access = sprintf( '%s[%i]', $access_var, $i );
 
-        $self->_add_default_assignment(
-            $access, $name,
+        $self->_add_positional_default_assignment(
+            $i,
+            $access,
+            $name,
             $spec->{default}
         ) if exists $spec->{default};
 
@@ -339,7 +447,7 @@ sub _compile_positional_args_check {
         );
     }
 
-    push @{ $self->_source }, 'return @_;';
+    push @{ $self->_source }, sprintf( 'return %s;', $return_var );
 
     return;
 }
@@ -356,7 +464,7 @@ sub _munge_and_check_positional_params {
             $in_optional = 1;
         }
         elsif ($in_optional) {
-            die
+            croak
                 'Parameter list contains an optional parameter followed by a required parameter.';
         }
 
@@ -427,17 +535,44 @@ EOF
     return;
 }
 
-sub _add_default_assignment {
+sub _add_positional_default_assignment {
+    my $self     = shift;
+    my $position = shift;
+    my $access   = shift;
+    my $name     = shift;
+    my $default  = shift;
+
+    push @{ $self->_source }, "if ( \$#_ < $position ) {";
+    $self->_add_shared_default_assignment( $access, $name, $default );
+    push @{ $self->_source }, '}';
+
+    return;
+}
+
+sub _add_named_default_assignment {
     my $self    = shift;
     my $access  = shift;
     my $name    = shift;
     my $default = shift;
 
-    die 'Default must be either a plain scalar or a subroutine reference'
-        if ref $default && reftype($default) ne 'CODE';
-
     my $qname = B::perlstring($name);
     push @{ $self->_source }, "unless ( exists \$args{$qname} ) {";
+    $self->_add_shared_default_assignment( $access, $name, $default );
+    push @{ $self->_source }, '}';
+
+    return;
+}
+
+sub _add_shared_default_assignment {
+    my $self    = shift;
+    my $access  = shift;
+    my $name    = shift;
+    my $default = shift;
+
+    my $qname = B::perlstring($name);
+
+    croak 'Default must be either a plain scalar or a subroutine reference'
+        if ref $default && reftype($default) ne 'CODE';
 
     if ( ref $default ) {
         push @{ $self->_source }, "$access = \$defaults{$qname}->();";
@@ -458,8 +593,6 @@ sub _add_default_assignment {
         }
     }
 
-    push @{ $self->_source }, '}';
-
     return;
 }
 
@@ -470,7 +603,7 @@ sub _add_type_check {
     my $spec   = shift;
 
     my $type = $spec->{type};
-    die "Passed a type that is not an object for $name: $type"
+    croak "Passed a type that is not an object for $name: $type"
         unless blessed $type;
 
     push @{ $self->_source }, sprintf( 'if ( exists %s ) {', $access )
@@ -502,14 +635,19 @@ sub _type_check {
         # Moose
         : $type->can('can_be_inlined')
         ? $self->_add_moose_check( $access, $name, $type )
-        : die 'Unknown type object ' . ref $type;
+        : croak 'Unknown type object ' . ref $type;
 }
 
+# From reading through the Type::Tiny source, I can't see any cases where a
+# Type::Tiny type or coercion needs to provide any environment variables to
+# compile with.
 sub _add_type_tiny_check {
     my $self   = shift;
     my $access = shift;
     my $name   = shift;
     my $type   = shift;
+
+    my $qname = B::perlstring($name);
 
     my @source;
     if ( $type->has_coercion ) {
@@ -524,7 +662,7 @@ sub _add_type_tiny_check {
             push @source,
                 sprintf(
                 '%s = $tt_coercions{%s}->( %s );',
-                $access, $name, $access,
+                $access, $qname, $access,
                 );
         }
     }
@@ -536,8 +674,8 @@ sub _add_type_tiny_check {
     else {
         push @source,
             sprintf(
-            '$types{%s}->assert_valid( %s );', $name,
-            $access
+            '$types{%s}->assert_valid( %s );',
+            $qname, $access,
             );
         $self->_env->{'%types'}{$name} = $type;
     }
@@ -559,12 +697,24 @@ sub _add_specio_check {
         if ( $type->has_coercions ) {
             my ( $source, $env ) = $type->inline_coercion_and_check($access);
             push @source, sprintf( '%s = %s;', $access, $source );
-            $self->_env->{$_} = $env->{$_} for keys %{$env};
+            $self->_add_to_environment(
+                sprintf(
+                    'The inline_coercion_and_check for %s ',
+                    $type->_description
+                ),
+                $env,
+            );
         }
         else {
             my ( $source, $env ) = $type->inline_assert($access);
             push @source, $source . ';';
-            $self->_env->{$_} = $env->{$_} for keys %{$env};
+            $self->_add_to_environment(
+                sprintf(
+                    'The inline_assert for %s ',
+                    $type->_description
+                ),
+                $env,
+            );
         }
     }
     else {
@@ -580,6 +730,15 @@ sub _add_specio_check {
                     $c->inline_coercion($access),
                     $c->from->inline_check($access)
                     );
+                $self->_add_to_environment(
+                    sprintf(
+                        'The inline_coercion for %s ',
+                        $c->_description
+                    ),
+
+                    # This should really be public in Specio
+                    $c->_inline_environment,
+                );
             }
             else {
                 push @source,
@@ -598,9 +757,10 @@ sub _add_specio_check {
 
         push @source,
             sprintf(
-            '$types{%s}->validate_or_die(%s);', $name,
-            $access
+            '$types{%s}->validate_or_die(%s);',
+            $qname, $access,
             );
+
         $self->_env->{'%types'}{$name} = $type;
     }
 
@@ -613,6 +773,8 @@ sub _add_moose_check {
     my $name   = shift;
     my $type   = shift;
 
+    my $qname = B::perlstring($name);
+
     my @source;
 
     if ( $type->has_coercion ) {
@@ -620,7 +782,7 @@ sub _add_moose_check {
         push @source,
             sprintf(
             '%s = $moose_coercions{%s}->coerce( %s );',
-            $access, $name, $access,
+            $access, $qname, $access,
             );
     }
 
@@ -646,9 +808,8 @@ EOF
     my $check
         = $type->can_be_inlined
         ? $type->_inline_check($access)
-        : sprintf( '$types{%s}->check( %s )', $name, $access );
+        : sprintf( '$types{%s}->check( %s )', $qname, $access );
 
-    my $qname = B::perlstring($name);
     push @source, sprintf(
         $code,
         $check,
@@ -657,7 +818,32 @@ EOF
         $access,
     );
 
+    if ( $type->can_be_inlined ) {
+        $self->_add_to_environment(
+            sprintf( 'The %s type', $type->name ),
+            $type->_inline_environment,
+        );
+    }
+
     return @source;
+}
+
+sub _add_to_environment {
+    my $self    = shift;
+    my $what    = shift;
+    my $new_env = shift;
+
+    my $env = $self->_env;
+    for my $key ( keys %{$new_env} ) {
+        if ( exists $env->{$key} ) {
+            croak sprintf(
+                      '%s has an inline environment variable named %s'
+                    . ' that conflicts with a variable already in the environment',
+                $what, $key
+            );
+        }
+        $self->_env->{$key} = $new_env->{$key};
+    }
 }
 
 1;
@@ -676,7 +862,7 @@ Params::ValidationCompiler::Compiler - Object that implements the check subrouti
 
 =head1 VERSION
 
-version 0.13
+version 0.19
 
 =for Pod::Coverage .*
 
@@ -685,7 +871,7 @@ version 0.13
 Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Params-ValidationCompiler>
 (or L<bug-params-validationcompiler@rt.cpan.org|mailto:bug-params-validationcompiler@rt.cpan.org>).
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 AUTHOR
 

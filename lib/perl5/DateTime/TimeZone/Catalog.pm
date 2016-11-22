@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.06';
+our $VERSION = '2.08';
 
 our @ALL =
 qw(
@@ -193,6 +193,7 @@ qw(
   Asia/Dili
   Asia/Dubai
   Asia/Dushanbe
+  Asia/Famagusta
   Asia/Gaza
   Asia/Hebron
   Asia/Ho_Chi_Minh
@@ -570,6 +571,7 @@ our %CATEGORIES =
     Dili
     Dubai
     Dushanbe
+    Famagusta
     Gaza
     Hebron
     Ho_Chi_Minh
@@ -987,6 +989,7 @@ our %ZONES_BY_COUNTRY =
 ) ],
   'cy' => [ qw(
     Asia/Nicosia
+    Asia/Famagusta
 ) ],
   'cz' => [ qw(
     Europe/Prague
@@ -1885,7 +1888,7 @@ our %LINKS =
 
 ;
 
-sub OlsonVersion { '2016h' }
+sub OlsonVersion { '2016i' }
 
 
 1;
@@ -2093,6 +2096,7 @@ so that applications can easily present a list of timezones.
   Asia/Dili
   Asia/Dubai
   Asia/Dushanbe
+  Asia/Famagusta
   Asia/Gaza
   Asia/Hebron
   Asia/Ho_Chi_Minh
@@ -2584,7 +2588,8 @@ so that applications can easily present a list of timezones.
 
 =head3 Cyprus (CY)
 
-  Asia/Nicosia
+  Asia/Nicosia - Cyprus (most areas)
+  Asia/Famagusta - Northern Cyprus
 
 =head3 Czech Republic (CZ)
 

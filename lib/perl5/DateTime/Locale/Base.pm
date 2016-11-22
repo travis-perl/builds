@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.09';
+our $VERSION = '1.11';
 
 use Carp qw( carp );
 use DateTime::Locale;
@@ -493,7 +493,7 @@ DateTime::Locale::Base - Base class for individual locale objects
 
 =head1 VERSION
 
-version 1.09
+version 1.11
 
 =head1 SYNOPSIS
 
@@ -805,8 +805,7 @@ one exists.
 
 See L<DateTime::Locale>.
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=DateTime-Locale>
-(or L<bug-datetime-locale@rt.cpan.org|mailto:bug-datetime-locale@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-Locale/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.

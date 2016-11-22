@@ -7,7 +7,7 @@ use overload
     q{""}    => 'as_string',
     fallback => 1;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 use Devel::StackTrace;
 use Scalar::Util qw( blessed );
@@ -40,7 +40,8 @@ use Specio::OO;
 sub BUILD {
     my $self = shift;
 
-    $self->{stack_trace} = Devel::StackTrace->new;
+    $self->{stack_trace}
+        = Devel::StackTrace->new( ignore_package => __PACKAGE__ );
 
     return;
 }
@@ -80,7 +81,7 @@ Specio::Exception - A Throwable::Error subclass for type constraint failures
 
 =head1 VERSION
 
-version 0.30
+version 0.31
 
 =head1 DESCRIPTION
 
@@ -135,8 +136,7 @@ This class overloads stringification to call the C<as_string> method.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Specio>
-(or L<bug-specio@rt.cpan.org|mailto:bug-specio@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
 
 I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
 
