@@ -13,7 +13,7 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '2.038';
+our $VERSION = '2.039';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
@@ -33,6 +33,7 @@ BEGIN {
 # results from commonly used constant functions from Net::SSLeay for fast access
 my $Net_SSLeay_ERROR_WANT_READ   = Net::SSLeay::ERROR_WANT_READ();
 my $Net_SSLeay_ERROR_WANT_WRITE  = Net::SSLeay::ERROR_WANT_WRITE();
+my $Net_SSLeay_ERROR_SYSCALL     = Net::SSLeay::ERROR_SYSCALL();
 my $Net_SSLeay_VERIFY_NONE       = Net::SSLeay::VERIFY_NONE();
 my $Net_SSLeay_VERIFY_PEER       = Net::SSLeay::VERIFY_PEER();
 
@@ -407,8 +408,7 @@ my $CHECK_SSL_PATH = sub {
 
 	next if ref($path) eq 'SCALAR' && ! $$path;
 	if ($type eq 'SSL_ca_file') {
-	    die "SSL_ca_file $path does not exist" if ! -f $path;
-	    die "SSL_ca_file $path is not accessible: $!"
+	    die "SSL_ca_file $path can't be used: $!"
 		if ! open(my $fh,'<',$path);
 	} elsif ($type eq 'SSL_ca_path') {
 	    $path = [ split($OPENSSL_LIST_SEPARATOR,$path) ] if !ref($path);
@@ -1040,8 +1040,16 @@ sub _generic_read {
 
     $SSL_ERROR = $! = undef;
     my ($data,$rwerr) = $read_func->($ssl, $length);
-    if ( !defined($data)) {
+    while ( ! defined($data)) {
 	if ( my $err = $self->_skip_rw_error( $ssl, defined($rwerr) ? $rwerr:-1 )) {
+	    if ($err == $Net_SSLeay_ERROR_SYSCALL) {
+		# OpenSSL 1.1.0c+ : EOF can now result in SSL_read returning -1
+		if (not $!) {
+		    # SSL_ERROR_SYSCALL but not errno -> treat as EOF
+		    $data = '';
+		    last;
+		}
+	    }
 	    $self->error("SSL read error");
 	}
 	return;
@@ -2192,7 +2200,7 @@ sub new {
     for(qw(SSL_cert_file SSL_key_file)) {
 	 defined( my $file = $arg_hash->{$_} ) or next;
 	for my $f (ref($file) eq 'HASH' ? values(%$file):$file ) {
-	    die "$_ $f does not exist" if ! -f $f;
+	    die "$_ $f can't be used: $!" if ! open(my $fh,'<',$f)
 	}
     }
 
