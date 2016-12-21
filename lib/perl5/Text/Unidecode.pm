@@ -3,16 +3,18 @@
 require 5;
 use 5.8.0;
 package Text::Unidecode;
-$Last_Modified =' Time-stamp: "2015-10-21 06:43:24 MDT sburke@cpan.org"';
+$Last_Modified =' Time-stamp: "2016-11-26 05:01:56 MST"';
 use utf8;
 use strict;
 use integer; # vroom vroom!
-use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE $Last_Modified);
-$VERSION = '1.27';
+use vars qw($VERSION @ISA @EXPORT @Char $UNKNOWN $NULLMAP $TABLE_SIZE $Last_Modified
+   $Note_Broken_Tables %Broken_Table_Size %Broken_Table_Copy
+);
+$VERSION = '1.30';
 require Exporter;
 @ISA = ('Exporter');
 @EXPORT = ('unidecode');
-
+$Note_Broken_Tables = 0;
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 $UNKNOWN = '[?] ';
 $TABLE_SIZE = 256;
@@ -147,6 +149,11 @@ sub t {   # "t" is for "t"able.
     # As expected.  Fallthru.
 
   } else {
+    if($Note_Broken_Tables) {
+      $Broken_Table_Size{$bank} = scalar @$cb;
+      $Broken_Table_Copy{$bank} = [ @$cb ];
+    }
+
     if(@$cb > $TABLE_SIZE) {
       DEBUG and print "Bank $bank is too large-- it has ", scalar @$cb,
         " entries in it.  Pruning.\n";
@@ -689,7 +696,7 @@ you can call Unidecode on the output from that-- it is useful
 for, for example, turning ｆｕｌｌｗｉｄｔｈ characters into
 their normal (ASCII) forms.
 
-(Note, as of October 2015: I have titanic but tentative plans for
+(Note, as of August 2016: I have titanic but tentative plans for
 making the value of Unihan characters be something you could set
 parameters for at runtime, in changing the order of "Mandarin else
 Cantonese else..." in the value retrieval.  Currently that preference
@@ -699,11 +706,21 @@ should have the tone numbers on them; whether every Unihan value
 should have a terminal space; and maybe other clever stuff I haven't
 thought of yet.)
 
+
 =head1 CAVEATS
 
 If you get really implausible nonsense out of C<unidecode(...)>, make
 sure that the input data really is a utf8 string.  See
 L<perlunicode> and L<perlunitut>.
+
+I<Unidecode will work disastrously bad on Japanese.> That's because
+Japanese is very very hard.  To extend the Unidecode motto,
+Unidecode is better than nothing, and with Japanese, I<just barely!>
+
+On pure Mandarin, Unidecode will frequently give odd values--
+that's because a single hanzi can have several readings, and Unidecode
+only knows what the Unihan database says is the most common one.
+
 
 =head1 THANKS
 
@@ -723,8 +740,8 @@ implementation.
 
 And thank you to the many people who have encouraged me to plug away
 at this project.  A decade went by before I had any idea that more
-than about four or five people were using or getting any value
-out of Unidecode.  I am told that in reality, that
+than about 4 or 5 people were using or getting any value
+out of Unidecode.  I am told that actually
 my figure was missing some zeroes on the end!
 
 
@@ -766,6 +783,12 @@ An article I wrote for I<The Perl Journal> about
 Unidecode:  L<http://interglacial.com/tpj/22/>
 (B<READ IT!>)
 
+Jukka Korpela's L<http://www.cs.tut.fi/~jkorpela/fui.html8> which is
+brilliantly useful, and its code is brilliant (so, view source!).  I
+was I<kinda> thinking about maybe doing something I<sort of> like that
+for the v2.x versions of Unicode-- but now he's got me convinced that
+I should go right ahead.
+
 Tom Christiansen's
 I<Perl Unicode Cookbook>,
 L<http://www.perl.com/pub/2012/04/perlunicook-standard-preamble.html>
@@ -789,7 +812,7 @@ Books).>  ISBN: 0658009109
 
 =head1 LICENSE
 
-Copyright (c) 2001, 2014, 2015 Sean M. Burke.
+Copyright (c) 2001, 2014, 2015, 2016 Sean M. Burke.
 
 Unidecode is distributed under the Perl Artistic License
 ( L<perlartistic> ), namely:
@@ -811,12 +834,24 @@ people other than myself.
 The views and conclusions contained in my software and documentation
 are my own-- they should not be interpreted as representing official
 policies, either expressed or implied, of The Unicode Consortium; nor
-should they be interepreted as necessarily the views or conclusions of
+should they be interpreted as necessarily the views or conclusions of
 people who have contributed to this project.
+
+Moreover, I discourage you from inferring that choices that I've made
+in Unidecode reflect political or linguistic prejudices on my
+part.  Just because Unidecode doesn't do great on your language,
+or just because it might seem to do better on some another
+language, please don't think I'm out to get you!
 
 =head1 AUTHOR
 
 Your pal, Sean M. Burke C<sburke@cpan.org>
+
+=head1 O HAI!
+
+If you're using Unidecode for anything interesting, be cool and
+email me, I'm always curious what people use this for.  (The
+answers so far have surprised me!)
 
 =cut
 

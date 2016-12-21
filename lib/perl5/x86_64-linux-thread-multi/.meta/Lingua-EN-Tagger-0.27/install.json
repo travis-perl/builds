@@ -1,0 +1,1 @@
+{"pathname":"A/AC/ACOBURN/Lingua-EN-Tagger-0.27.tar.gz","version":"0.27","provides":{"Lingua::EN::Tagger":{"file":"Tagger.pm","version":"0.27"}},"target":"Lingua::EN::Tagger","name":"Lingua::EN::Tagger","dist":"Lingua-EN-Tagger-0.27"}

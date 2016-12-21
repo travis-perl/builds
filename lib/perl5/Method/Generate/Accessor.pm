@@ -251,6 +251,28 @@ sub generate_method {
   \%methods;
 }
 
+sub merge_specs {
+  my ($self, @specs) = @_;
+  my $spec = shift @specs;
+  for my $old_spec (@specs) {
+    foreach my $key (keys %$old_spec) {
+      if ($key eq 'handles') {
+      }
+      elsif ($key eq 'moosify') {
+        $spec->{$key} = [
+          map { ref $_ eq 'ARRAY' ? @$_ : $_ }
+          grep defined,
+          ($old_spec->{$key}, $spec->{$key})
+        ];
+      }
+      elsif (!exists $spec->{$key}) {
+        $spec->{$key} = $old_spec->{$key};
+      }
+    }
+  }
+  $spec;
+}
+
 sub is_simple_attribute {
   my ($self, $name, $spec) = @_;
   # clearer doesn't have to be listed because it doesn't
@@ -612,11 +634,11 @@ sub _generate_getset {
 
 sub _generate_asserter {
   my ($self, $name, $spec) = @_;
-
+  my $name_str = quotify($name);
   "do {\n"
    ."  my \$val = ".$self->_generate_get($name, $spec).";\n"
    ."  ".$self->_generate_simple_has('$_[0]', $name, $spec)."\n"
-   ."    or Carp::croak(\"Attempted to access '${name}' but it is not set\");\n"
+   ."    or Carp::croak(q{Attempted to access '}.${name_str}.q{' but it is not set});\n"
    ."  \$val;\n"
    ."}\n";
 }

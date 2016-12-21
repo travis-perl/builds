@@ -1,1 +1,1 @@
-{"name":"String::CamelCase","provides":{"String::CamelCase":{"file":"lib/String/CamelCase.pm","version":"0.02"}},"target":"String::CamelCase","version":"0.02","dist":"String-CamelCase-0.02","pathname":"H/HI/HIO/String-CamelCase-0.02.tar.gz"}
+{"provides":{"String::CamelCase":{"version":"0.02","file":"lib/String/CamelCase.pm"}},"pathname":"H/HI/HIO/String-CamelCase-0.02.tar.gz","version":"0.02","name":"String::CamelCase","target":"String::CamelCase","dist":"String-CamelCase-0.02"}
