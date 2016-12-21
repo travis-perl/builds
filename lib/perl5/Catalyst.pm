@@ -51,6 +51,7 @@ use Catalyst::Middleware::Stash;
 use Plack::Util;
 use Class::Load 'load_class';
 use Encode 2.21 'decode_utf8', 'encode_utf8';
+use Scalar::Util;
 
 BEGIN { require 5.008003; }
 
@@ -204,7 +205,7 @@ sub composed_stats_class {
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90112';
+our $VERSION = '5.90114';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -2490,6 +2491,8 @@ sub prepare {
     };
 
     $c->log_request;
+    $c->{stash} = $c->stash;
+    Scalar::Util::weaken($c->{stash});
 
     return $c;
 }
