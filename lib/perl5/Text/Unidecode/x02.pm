@@ -1,4 +1,4 @@
-# Time-stamp: "2014-07-09 03:56:04 MDT sburke@cpan.org"
+# Time-stamp: "2016-07-25 06:13:16 MDT"
 $Text::Unidecode::Char[0x02] = [
 'A', 'a', 'A', 'a', 'E', 'e', 'E', 'e', 'I', 'i', 'I', 'i', 'O', 'o', 'O', 'o',
 'R', 'r', 'R', 'r', 'U', 'u', 'U', 'u', 'S', 's', 'T', 't', 'Y', 'y', 'H', 'h',
@@ -50,7 +50,38 @@ $Text::Unidecode::Char[0x02] = [
 'h', 'j', 'r', 'r', 'r', 'r', 'w', 'y', qq{'}, qq{"}, qq{`}, qq{'}, qq{`}, qq{`}, qq{'},
 qq{?}, qq{?}, qq{<}, qq{>}, qq{^}, 'V', qq{^}, 'V', qq{'}, qq{-}, qq{/}, qq{\\}, qq{,}, qq{_}, qq{\\}, qq{/},
 qq{:}, qq{.}, qq{`}, qq{'}, qq{^}, 'V', qq{+}, qq{-}, 'V', qq{.}, qq{\@}, qq{,}, qq{~}, qq{"}, 'R', 'X',
-'G', 'l', 's', 'x', qq{?}, "", "", "", "", "", "", "", 'V', qq{=}, qq{"}, '[?]',
-'[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]', '[?]',
+'G', 'l', 's', 'x', qq{?},
+
+
+# U+2e5 ...
+# ˥   ˦    ˧    ˨     ˩   ˪    ˫
+"5", "4", "3", "2",  "1", "/", "\\",
+
+ 'V', qq{=}, qq{"},
+
+
+'V',  # ˬ  02EF	MODIFIER LETTER LOW DOWN ARROWHEAD
+
+# ...and also 16 UPA modifiers:
+
+# ˰ ˱ ˲ ˳ ˴ ˵ ˶ ˷ ˸ ˹ ˺ ˻ ˼ ˽ ˾ ˿
+
+"^",	# 02F0	MODIFIER LETTER LOW UP ARROWHEAD
+"<",	# 02F1	MODIFIER LETTER LOW LEFT ARROWHEAD
+">",	# 02F2	MODIFIER LETTER LOW RIGHT ARROWHEAD
+"o",	# 02F3	MODIFIER LETTER LOW RING
+"`",	# 02F4	MODIFIER LETTER MIDDLE GRAVE ACCENT
+"``",	# 02F5	MODIFIER LETTER MIDDLE DOUBLE GRAVE ACCENT
+"//",	# 02F6	MODIFIER LETTER MIDDLE DOUBLE ACUTE ACCENT
+"~",	# 02F7	MODIFIER LETTER LOW TILDE
+":",	# 02F8	MODIFIER LETTER RAISED COLON
+"[-",	# 02F9	MODIFIER LETTER BEGIN HIGH TONE
+"-]",	# 02FA	MODIFIER LETTER END HIGH TONE
+"[_",	# 02FB	MODIFIER LETTER BEGIN LOW TONE
+"_]",	# 02FC	MODIFIER LETTER END LOW TONE
+"_",	# 02FD	MODIFIER LETTER SHELF
+"_",	# 02FE	MODIFIER LETTER OPEN SHELF
+"<",	# 02FF	MODIFIER LETTER LOW LEFT ARROW
+
 ];
 1;
