@@ -1,0 +1,4 @@
+/home/travis/.perlbrew/libs/5.25.8@cat/lib/perl5/File/ShareDir.pm
+/home/travis/.perlbrew/libs/5.25.8@cat/lib/perl5/auto/share/dist/File-ShareDir/sample.txt
+/home/travis/.perlbrew/libs/5.25.8@cat/lib/perl5/auto/share/dist/File-ShareDir/subdir/sample.txt
+/home/travis/.perlbrew/libs/5.25.8@cat/lib/perl5/auto/share/module/File-ShareDir/test_file.txt
