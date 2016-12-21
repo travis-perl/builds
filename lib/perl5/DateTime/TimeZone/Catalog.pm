@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.08';
+our $VERSION = '2.09';
 
 our @ALL =
 qw(
@@ -178,6 +178,7 @@ qw(
   Asia/Aqtau
   Asia/Aqtobe
   Asia/Ashgabat
+  Asia/Atyrau
   Asia/Baghdad
   Asia/Baku
   Asia/Bangkok
@@ -305,6 +306,7 @@ qw(
   Europe/Riga
   Europe/Rome
   Europe/Samara
+  Europe/Saratov
   Europe/Simferopol
   Europe/Sofia
   Europe/Stockholm
@@ -556,6 +558,7 @@ our %CATEGORIES =
     Aqtau
     Aqtobe
     Ashgabat
+    Atyrau
     Baghdad
     Baku
     Bangkok
@@ -684,6 +687,7 @@ our %CATEGORIES =
     Riga
     Rome
     Samara
+    Saratov
     Simferopol
     Sofia
     Stockholm
@@ -1214,6 +1218,7 @@ our %ZONES_BY_COUNTRY =
     Asia/Qyzylorda
     Asia/Aqtobe
     Asia/Aqtau
+    Asia/Atyrau
     Asia/Oral
 ) ],
   'la' => [ qw(
@@ -1439,8 +1444,9 @@ our %ZONES_BY_COUNTRY =
     Europe/Volgograd
     Europe/Kirov
     Europe/Astrakhan
-    Europe/Samara
+    Europe/Saratov
     Europe/Ulyanovsk
+    Europe/Samara
     Asia/Yekaterinburg
     Asia/Omsk
     Asia/Novosibirsk
@@ -1888,7 +1894,7 @@ our %LINKS =
 
 ;
 
-sub OlsonVersion { '2016i' }
+sub OlsonVersion { '2016j' }
 
 
 1;
@@ -2083,6 +2089,7 @@ so that applications can easily present a list of timezones.
   Asia/Aqtau
   Asia/Aqtobe
   Asia/Ashgabat
+  Asia/Atyrau
   Asia/Baghdad
   Asia/Baku
   Asia/Bangkok
@@ -2215,6 +2222,7 @@ so that applications can easily present a list of timezones.
   Europe/Riga
   Europe/Rome
   Europe/Samara
+  Europe/Saratov
   Europe/Simferopol
   Europe/Sofia
   Europe/Stockholm
@@ -2822,7 +2830,8 @@ so that applications can easily present a list of timezones.
   Asia/Almaty - Kazakhstan (most areas)
   Asia/Qyzylorda - Qyzylorda/Kyzylorda/Kzyl-Orda
   Asia/Aqtobe - Aqtobe/Aktobe
-  Asia/Aqtau - Atyrau/Atirau/Gur'yev, Mangghystau/Mankistau
+  Asia/Aqtau - Mangghystau/Mankistau
+  Asia/Atyrau - Atyrau/Atirau/Gur'yev
   Asia/Oral - West Kazakhstan
 
 =head3 Kenya (KE)
@@ -3121,14 +3130,15 @@ so that applications can easily present a list of timezones.
   Europe/Kaliningrad - MSK-01 - Kaliningrad
   Europe/Moscow - MSK+00 - Moscow area
   Europe/Simferopol - MSK+00 - Crimea
-  Europe/Volgograd - MSK+00 - Volgograd, Saratov
+  Europe/Volgograd - MSK+00 - Volgograd
   Europe/Kirov - MSK+00 - Kirov
   Europe/Astrakhan - MSK+01 - Astrakhan
-  Europe/Samara - MSK+01 - Samara, Udmurtia
+  Europe/Saratov - MSK+01 - Saratov
   Europe/Ulyanovsk - MSK+01 - Ulyanovsk
+  Europe/Samara - MSK+01 - Samara, Udmurtia
   Asia/Yekaterinburg - MSK+02 - Urals
   Asia/Omsk - MSK+03 - Omsk
-  Asia/Novosibirsk - MSK+03 - Novosibirsk
+  Asia/Novosibirsk - MSK+04 - Novosibirsk
   Asia/Barnaul - MSK+04 - Altai
   Asia/Tomsk - MSK+04 - Tomsk
   Asia/Novokuznetsk - MSK+04 - Kemerovo

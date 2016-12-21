@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.08';
+our $VERSION = '2.09';
 
 use parent 'DateTime::TimeZone';
 
@@ -95,7 +95,7 @@ DateTime::TimeZone::OffsetOnly - A DateTime::TimeZone object that just contains 
 
 =head1 VERSION
 
-version 2.08
+version 2.09
 
 =head1 SYNOPSIS
 
@@ -134,7 +134,7 @@ Both of these methods return the offset in string form.
 
 Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-TimeZone/issues>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 AUTHOR
 

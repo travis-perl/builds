@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.08';
+our $VERSION = '2.09';
 
 use parent 'DateTime::TimeZone::Local';
 
@@ -30,7 +30,7 @@ DateTime::TimeZone::Local::VMS - Determine the local system's time zone on VMS
 
 =head1 VERSION
 
-version 2.08
+version 2.09
 
 =head1 SYNOPSIS
 
@@ -77,7 +77,7 @@ We check the following environment variables:
 
 Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-TimeZone/issues>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 AUTHOR
 

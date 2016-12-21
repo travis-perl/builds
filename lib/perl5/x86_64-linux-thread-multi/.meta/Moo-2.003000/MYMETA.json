@@ -56,6 +56,8 @@
             "Module::Runtime" : "0.014",
             "Role::Tiny" : "2.000004",
             "Scalar::Util" : "0",
+            "Sub::Defer" : "2.003001",
+            "Sub::Quote" : "2.003001",
             "perl" : "5.006"
          }
       },
@@ -86,7 +88,7 @@
       },
       "x_IRC" : "irc://irc.perl.org/#moose"
    },
-   "version" : "2.002005",
+   "version" : "2.003000",
    "x_authority" : "cpan:MSTROUT",
    "x_breaks" : {
       "App::Commando" : "<= 0.012",

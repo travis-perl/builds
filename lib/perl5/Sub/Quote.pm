@@ -2,10 +2,10 @@ package Sub::Quote;
 
 sub _clean_eval { eval $_[0] }
 
-use Moo::_strictures;
+use strict;
+use warnings;
 
 use Sub::Defer qw(defer_sub);
-use Moo::_Utils qw(_install_coderef);
 use Scalar::Util qw(weaken);
 use Exporter qw(import);
 use Carp qw(croak);
@@ -15,7 +15,7 @@ BEGIN {
   *_HAVE_PERLSTRING = defined &B::perlstring ? sub(){1} : sub(){0};
 }
 
-our $VERSION = '2.002005';
+our $VERSION = '2.003001';
 $VERSION = eval $VERSION;
 
 our @EXPORT = qw(quote_sub unquote_sub quoted_from_sub qsub);
@@ -121,7 +121,7 @@ sub quote_sub {
     my $fake = \my $var;
     local $QUOTED{$fake} = $quoted_info;
     my $sub = unquote_sub($fake);
-    _install_coderef($name, $sub) if $name && !$options->{no_install};
+    Sub::Defer::_install_coderef($name, $sub) if $name && !$options->{no_install};
     return $sub;
   }
   else {
@@ -238,6 +238,8 @@ sub CLONE {
 
 1;
 __END__
+
+=encoding utf-8
 
 =head1 NAME
 
@@ -441,14 +443,60 @@ of the code.
 
 =head1 SUPPORT
 
-See L<Moo> for support and contact information.
+Users' IRC: #moose on irc.perl.org
 
-=head1 AUTHORS
+=for :html
+L<(click for instant chatroom login)|http://chat.mibbit.com/#moose@irc.perl.org>
 
-See L<Moo> for authors.
+Development and contribution IRC: #web-simple on irc.perl.org
 
-=head1 COPYRIGHT AND LICENSE
+=for :html
+L<(click for instant chatroom login)|http://chat.mibbit.com/#web-simple@irc.perl.org>
 
-See L<Moo> for the copyright and license.
+Bugtracker: L<https://rt.cpan.org/Public/Dist/Display.html?Name=Sub-Quote>
+
+Git repository: L<git://github.com/moose/Sub-Quote.git>
+
+Git browser: L<https://github.com/moose/Sub-Quote>
+
+=head1 AUTHOR
+
+mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>
+
+=head1 CONTRIBUTORS
+
+frew - Arthur Axel "fREW" Schmidt (cpan:FREW) <frioux@gmail.com>
+
+ribasushi - Peter Rabbitson (cpan:RIBASUSHI) <ribasushi@cpan.org>
+
+Mithaldu - Christian Walde (cpan:MITHALDU) <walde.christian@googlemail.com>
+
+tobyink - Toby Inkster (cpan:TOBYINK) <tobyink@cpan.org>
+
+haarg - Graham Knop (cpan:HAARG) <haarg@cpan.org>
+
+bluefeet - Aran Deltac (cpan:BLUEFEET) <bluefeet@gmail.com>
+
+ether - Karen Etheridge (cpan:ETHER) <ether@cpan.org>
+
+dolmen - Olivier Mengué (cpan:DOLMEN) <dolmen@cpan.org>
+
+alexbio - Alessandro Ghedini (cpan:ALEXBIO) <alexbio@cpan.org>
+
+getty - Torsten Raudssus (cpan:GETTY) <torsten@raudss.us>
+
+arcanez - Justin Hunter (cpan:ARCANEZ) <justin.d.hunter@gmail.com>
+
+kanashiro - Lucas Kanashiro (cpan:KANASHIRO) <kanashiro.duarte@gmail.com>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2010-2016 the Sub::Quote L</AUTHOR> and L</CONTRIBUTORS>
+as listed above.
+
+=head1 LICENSE
+
+This library is free software and may be distributed under the same terms
+as perl itself. See L<http://dev.perl.org/licenses/>.
 
 =cut

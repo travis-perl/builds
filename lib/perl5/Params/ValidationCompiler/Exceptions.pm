@@ -3,7 +3,7 @@ package Params::ValidationCompiler::Exceptions;
 use strict;
 use warnings;
 
-our $VERSION = '0.19';
+our $VERSION = '0.21';
 
 use Exception::Class (
     'Params::ValidationCompiler::Exception::BadArguments',
@@ -41,7 +41,7 @@ Params::ValidationCompiler::Exceptions - Defines exceptions thrown by Params::Va
 
 =head1 VERSION
 
-version 0.19
+version 0.21
 
 =head1 DESCRIPTION
 
@@ -87,8 +87,7 @@ This is the type constraint object that did not accept the value.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Params-ValidationCompiler>
-(or L<bug-params-validationcompiler@rt.cpan.org|mailto:bug-params-validationcompiler@rt.cpan.org>).
+Bugs may be submitted through L<https://github.com/houseabsolute/Params-ValidationCompiler/issues>.
 
 I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 

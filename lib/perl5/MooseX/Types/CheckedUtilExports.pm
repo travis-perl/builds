@@ -1,13 +1,14 @@
 package MooseX::Types::CheckedUtilExports;
 # ABSTRACT: Wrap L<Moose::Util::TypeConstraints> to be safer for L<MooseX::Types>
 
-our $VERSION = '0.46';
+our $VERSION = '0.48';
 
 use strict;
 use warnings;
 use Moose::Util::TypeConstraints ();
 use Moose::Exporter;
-use Carp;
+use Carp 'carp';
+use Sub::Install;
 use namespace::autoclean;
 
 my $StringFoundMsg =
@@ -36,6 +37,8 @@ my @exports = qw/type subtype maybe_type duck_type enum coerce from as/;
 #pod While C<class_type> and C<role_type> will also register the type in the library.
 #pod
 #pod From L<Moose::Util::TypeConstraints>. See that module for syntax.
+#pod
+#pod =for Pod::Coverage class_type role_type
 #pod
 #pod =cut
 
@@ -101,7 +104,7 @@ MooseX::Types::CheckedUtilExports - Wrap L<Moose::Util::TypeConstraints> to be s
 
 =head1 VERSION
 
-version 0.46
+version 0.48
 
 =head1 DESCRIPTION
 
@@ -125,15 +128,28 @@ While C<class_type> and C<role_type> will also register the type in the library.
 
 From L<Moose::Util::TypeConstraints>. See that module for syntax.
 
+=for Pod::Coverage class_type role_type
+
 =head1 SEE ALSO
 
 L<MooseX::Types>
+
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Types>
+(or L<bug-MooseX-Types@rt.cpan.org|mailto:bug-MooseX-Types@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
 
 =head1 AUTHOR
 
 Robert "phaylon" Sedlacek <rs@474.at>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENCE
 
 This software is copyright (c) 2007 by Robert "phaylon" Sedlacek.
 

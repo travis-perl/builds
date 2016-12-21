@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.08';
+our $VERSION = '2.09';
 
 use DateTime::TimeZone::OlsonDB::Rule;
 use DateTime::TimeZone::OlsonDB::Zone;
@@ -300,7 +300,7 @@ DateTime::TimeZone::OlsonDB - An object to represent an Olson time zone database
 
 =head1 VERSION
 
-version 2.08
+version 2.09
 
 =head1 SYNOPSIS
 
@@ -337,7 +337,7 @@ Not yet documented.  This stuff is a mess.
 
 Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-TimeZone/issues>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
 
 =head1 AUTHOR
 
