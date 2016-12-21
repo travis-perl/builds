@@ -60,6 +60,8 @@ you would have to call C<warning_is {warn "foo"} "foo", "Foo succeeded">.
 If you need to test for a warning at an exactly line,
 try something like C<warning_like {warn "foo"} qr/at XYZ.dat line 5/>.
 
+Warn messages with a trailing newline (like C<warn "foo\n">) don't produce the C<at -e line 1> message by Perl. Up to Test::Warn 0.30 such warning weren't supported by C<warning_is {warn "foo\n"} "foo\n">. Starting with version 0.31 they are supported, but also marked as experimental.
+
 warning_is and warning_are are only aliases to the same method.
 So you also could write
 C<warning_is {foo()} [], "no warning"> or something similar.
@@ -250,7 +252,7 @@ use warnings;
 #use Array::Compare;
 use Sub::Uplevel 0.12;
 
-our $VERSION = '0.30';
+our $VERSION = '0.31';
 
 require Exporter;
 
@@ -367,7 +369,12 @@ sub _cmp_got_to_exp_warning {
     my ($got_kind, $got_msg) = %{ shift() };
     my ($exp_kind, $exp_msg) = %{ shift() };
     return 0 if ($got_kind eq 'warn') && ($exp_kind eq 'carped');
-    my $cmp = $got_msg =~ /^\Q$exp_msg\E at .+ line \d+\.?$/;
+    my $cmp;
+    if ($exp_msg =~ /\n$/s) {
+      $cmp = "$got_msg\n" eq $exp_msg;
+    } else {
+      $cmp = $got_msg =~ /^\Q$exp_msg\E at .+ line \d+\.?$/s;
+    }
     return $cmp;
 }
 

@@ -1,36 +1,18 @@
-package Test2::Event::Bail;
+package Test2::Event::TAP::Version;
 use strict;
 use warnings;
 
 our $VERSION = '1.302073';
 
-
 BEGIN { require Test2::Event; our @ISA = qw(Test2::Event) }
-use Test2::Util::HashBase qw{reason};
+use Test2::Util::HashBase qw/version/;
 
-sub callback {
+sub init {
     my $self = shift;
-    my ($hub) = @_;
-
-    $hub->set_bailed_out($self);
+    defined $self->{+VERSION} or $self->trace->throw("'version' is a required attribute");
 }
 
-# Make sure the tests terminate
-sub terminate { 255 };
-
-sub global { 1 };
-
-sub causes_fail { 1 }
-
-sub summary {
-    my $self = shift;
-    return "Bail out!  " . $self->{+REASON}
-        if $self->{+REASON};
-
-    return "Bail out!";
-}
-
-sub diagnostics { 1 }
+sub summary { 'TAP version ' . $_[0]->{+VERSION} }
 
 1;
 
@@ -42,20 +24,19 @@ __END__
 
 =head1 NAME
 
-Test2::Event::Bail - Bailout!
+Test2::Event::TAP::Version - Event for TAP version.
 
 =head1 DESCRIPTION
 
-The bailout event is generated when things go horribly wrong and you need to
-halt all testing in the current file.
+This event is used if a TAP formatter wishes to set a version.
 
 =head1 SYNOPSIS
 
     use Test2::API qw/context/;
-    use Test2::Event::Bail;
+    use Test2::Event::Encoding;
 
     my $ctx = context();
-    my $event = $ctx->bail('Stuff is broken');
+    my $event = $ctx->send_event('TAP::Version', version => 42);
 
 =head1 METHODS
 
@@ -63,9 +44,9 @@ Inherits from L<Test2::Event>. Also defines:
 
 =over 4
 
-=item $reason = $e->reason
+=item $version = $e->version
 
-The reason for the bailout.
+The TAP version being parsed.
 
 =back
 

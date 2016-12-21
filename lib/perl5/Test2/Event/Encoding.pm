@@ -1,36 +1,18 @@
-package Test2::Event::Bail;
+package Test2::Event::Encoding;
 use strict;
 use warnings;
 
 our $VERSION = '1.302073';
 
-
 BEGIN { require Test2::Event; our @ISA = qw(Test2::Event) }
-use Test2::Util::HashBase qw{reason};
+use Test2::Util::HashBase qw/encoding/;
 
-sub callback {
+sub init {
     my $self = shift;
-    my ($hub) = @_;
-
-    $hub->set_bailed_out($self);
+    defined $self->{+ENCODING} or $self->trace->throw("'encoding' is a required attribute");
 }
 
-# Make sure the tests terminate
-sub terminate { 255 };
-
-sub global { 1 };
-
-sub causes_fail { 1 }
-
-sub summary {
-    my $self = shift;
-    return "Bail out!  " . $self->{+REASON}
-        if $self->{+REASON};
-
-    return "Bail out!";
-}
-
-sub diagnostics { 1 }
+sub summary { 'Encoding set to ' . $_[0]->{+ENCODING} }
 
 1;
 
@@ -42,20 +24,22 @@ __END__
 
 =head1 NAME
 
-Test2::Event::Bail - Bailout!
+Test2::Event::Encoding - Set the encoding for the output stream
 
 =head1 DESCRIPTION
 
-The bailout event is generated when things go horribly wrong and you need to
-halt all testing in the current file.
+The encoding event is generated when a test file wants to specify the encoding
+to be used when formatting its output. This event is intended to be produced
+by formatter classes and used for interpreting test names, message contents,
+etc.
 
 =head1 SYNOPSIS
 
     use Test2::API qw/context/;
-    use Test2::Event::Bail;
+    use Test2::Event::Encoding;
 
     my $ctx = context();
-    my $event = $ctx->bail('Stuff is broken');
+    my $event = $ctx->send_event('Encoding', encoding => 'UTF-8');
 
 =head1 METHODS
 
@@ -63,9 +47,9 @@ Inherits from L<Test2::Event>. Also defines:
 
 =over 4
 
-=item $reason = $e->reason
+=item $encoding = $e->encoding
 
-The reason for the bailout.
+The encoding being specified.
 
 =back
 

@@ -4,7 +4,7 @@
       "Alexandr Ciornii <alexchorny@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.78, CPAN::Meta::Converter version 2.131490, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.1, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "keywords" : [
       "testing",
       "warnings"
@@ -26,8 +26,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "File::Spec" : "0",
-            "Test::More" : "0"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "configure" : {
@@ -43,13 +42,22 @@
             "Test::Builder::Tester" : "1.02",
             "perl" : "5.006"
          }
+      },
+      "test" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "Test::More" : "0"
+         }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "https://github.com/chorny/test-warn"
+         "type" : "git",
+         "url" : "git://github.com/chorny/test-warn.git",
+         "web" : "https://github.com/chorny/test-warn"
       }
    },
-   "version" : "0.30"
+   "version" : "0.31",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }

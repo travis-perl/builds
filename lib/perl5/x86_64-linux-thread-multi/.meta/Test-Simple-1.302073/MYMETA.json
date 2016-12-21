@@ -52,7 +52,7 @@
          "url" : "http://github.com/Test-More/test-more/"
       }
    },
-   "version" : "1.302062",
+   "version" : "1.302073",
    "x_breaks" : {
       "Log::Dispatch::Config::TestLog" : "<= 0.02",
       "Net::BitTorrent" : "<= 0.052",
@@ -66,6 +66,7 @@
       "Test::Flatten" : "<= 0.11",
       "Test::Group" : "<= 0.20",
       "Test::Modern" : "<= 0.012",
+      "Test::Moose" : "<= 2.1209",
       "Test::More::Prefix" : "<= 0.005",
       "Test::ParallelSubtest" : "<= 0.05",
       "Test::Pretty" : "<= 0.32",
