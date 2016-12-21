@@ -12,7 +12,7 @@ YAML - YAML Ain't Markup Language™
 
 =head1 VERSION
 
-This document describes L<YAML> version B<1.19>.
+This document describes L<YAML> version B<1.20>.
 
 =head1 NOTE
 
@@ -392,6 +392,13 @@ where your YAML has been.
 LoadCode can also be set to a subroutine reference so that you can write your
 own deserializing routine. YAML.pm passes the serialization (as a string) and
 a format indicator. You pass back the code reference.
+
+=item Preserve
+
+When set to true, this option tells the Loader to load hashes into YAML::Node
+objects. These are tied hashes. This has the effect of remembering the key
+order, thus it will be preserved when the hash is dumped again. See
+L<YAML::Node> for more information.
 
 =item UseBlock
 
