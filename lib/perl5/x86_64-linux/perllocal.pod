@@ -1,4 +1,4 @@
-=head2 Tue Nov 22 00:04:06 2016: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Wed Dec 21 00:03:45 2016: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
