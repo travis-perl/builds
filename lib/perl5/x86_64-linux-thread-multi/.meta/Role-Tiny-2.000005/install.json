@@ -1,1 +1,1 @@
-{"target":"Role::Tiny","provides":{"Role::Tiny::With":{"file":"lib/Role/Tiny/With.pm","version":"2.000005"},"Role::Tiny":{"version":"2.000005","file":"lib/Role/Tiny.pm"}},"name":"Role::Tiny","version":"2.000005","dist":"Role-Tiny-2.000005","pathname":"H/HA/HAARG/Role-Tiny-2.000005.tar.gz"}
+{"pathname":"H/HA/HAARG/Role-Tiny-2.000005.tar.gz","dist":"Role-Tiny-2.000005","name":"Role::Tiny","version":"2.000005","target":"Role::Tiny","provides":{"Role::Tiny":{"version":"2.000005","file":"lib/Role/Tiny.pm"},"Role::Tiny::With":{"version":"2.000005","file":"lib/Role/Tiny/With.pm"}}}

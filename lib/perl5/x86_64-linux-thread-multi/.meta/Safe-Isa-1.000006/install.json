@@ -1,1 +1,1 @@
-{"version":"1.000006","pathname":"H/HA/HAARG/Safe-Isa-1.000006.tar.gz","dist":"Safe-Isa-1.000006","target":"Safe::Isa","provides":{"Safe::Isa":{"file":"lib/Safe/Isa.pm","version":"1.000006"}},"name":"Safe::Isa"}
+{"pathname":"H/HA/HAARG/Safe-Isa-1.000006.tar.gz","version":"1.000006","provides":{"Safe::Isa":{"file":"lib/Safe/Isa.pm","version":"1.000006"}},"dist":"Safe-Isa-1.000006","name":"Safe::Isa","target":"Safe::Isa"}

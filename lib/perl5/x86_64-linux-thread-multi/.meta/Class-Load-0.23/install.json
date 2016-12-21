@@ -1,1 +1,1 @@
-{"pathname":"E/ET/ETHER/Class-Load-0.23.tar.gz","version":"0.23","dist":"Class-Load-0.23","name":"Class::Load","provides":{"Class::Load::PP":{"file":"lib/Class/Load/PP.pm","version":"0.23"},"Class::Load":{"version":"0.23","file":"lib/Class/Load.pm"}},"target":"Class::Load"}
+{"name":"Class::Load","target":"Class::Load","provides":{"Class::Load::PP":{"version":"0.23","file":"lib/Class/Load/PP.pm"},"Class::Load":{"file":"lib/Class/Load.pm","version":"0.23"}},"version":"0.23","dist":"Class-Load-0.23","pathname":"E/ET/ETHER/Class-Load-0.23.tar.gz"}

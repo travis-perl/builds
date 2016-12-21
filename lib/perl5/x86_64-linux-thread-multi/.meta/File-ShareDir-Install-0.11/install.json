@@ -1,1 +1,1 @@
-{"name":"File::ShareDir::Install","target":"File::ShareDir::Install","provides":{"File::ShareDir::Install":{"version":"0.11","file":"lib/File/ShareDir/Install.pm"}},"pathname":"E/ET/ETHER/File-ShareDir-Install-0.11.tar.gz","dist":"File-ShareDir-Install-0.11","version":"0.11"}
+{"pathname":"E/ET/ETHER/File-ShareDir-Install-0.11.tar.gz","dist":"File-ShareDir-Install-0.11","provides":{"File::ShareDir::Install":{"version":"0.11","file":"lib/File/ShareDir/Install.pm"}},"version":"0.11","target":"File::ShareDir::Install","name":"File::ShareDir::Install"}
