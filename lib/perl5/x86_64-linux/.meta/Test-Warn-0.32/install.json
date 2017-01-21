@@ -1,0 +1,1 @@
+{"dist":"Test-Warn-0.32","version":"0.32","name":"Test::Warn","pathname":"B/BI/BIGJ/Test-Warn-0.32.tar.gz","provides":{"Test::Warn::Categorization":{"file":"Warn.pm","version":"0.32"},"Test::Warn":{"version":"0.32","file":"Warn.pm"}},"target":"Test::Warn"}
