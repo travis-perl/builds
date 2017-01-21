@@ -1,5 +1,5 @@
 package Class::MOP::Method::Wrapped;
-our $VERSION = '2.1806';
+our $VERSION = '2.1807';
 
 use strict;
 use warnings;
@@ -217,7 +217,7 @@ Class::MOP::Method::Wrapped - Method Meta Object for methods with before/after/a
 
 =head1 VERSION
 
-version 2.1806
+version 2.1807
 
 =head1 DESCRIPTION
 

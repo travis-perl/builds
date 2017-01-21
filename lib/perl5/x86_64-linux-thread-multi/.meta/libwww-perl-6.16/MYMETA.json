@@ -4,7 +4,7 @@
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.1103, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.1001, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -61,7 +61,6 @@
          },
          "suggests" : {
             "Authen::NTLM" : "1.02",
-            "HTTP::GHTTP" : "0",
             "IO::Socket::INET" : "0",
             "LWP::Protocol::https" : "6.02"
          }
@@ -69,8 +68,9 @@
       "test" : {
          "requires" : {
             "FindBin" : "0",
-            "Test" : "0",
-            "Test::More" : "0"
+            "Test::Fatal" : "0",
+            "Test::More" : "0",
+            "Test::RequiresInternet" : "0"
          }
       }
    },
@@ -88,7 +88,7 @@
       "x_IRC" : "irc://irc.perl.org/#lwp",
       "x_MailingList" : "mailto:libwww@perl.org"
    },
-   "version" : "6.15",
+   "version" : "6.16",
    "x_authority" : "cpan:LWWWP",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }

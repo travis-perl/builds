@@ -1,7 +1,7 @@
 package MooseX::Types::Base;
 # ABSTRACT: Type library base class
 
-our $VERSION = '0.48';
+our $VERSION = '0.49';
 
 use Moose;
 
@@ -43,7 +43,7 @@ sub import {
     delete @ex_spec{ qw(-wrapper -into -full) };
 
     unless ($options) {
-        $options = {foo => 23};
+        $options = {};
         unshift @args, $options;
     }
 
@@ -76,16 +76,19 @@ sub import {
             };
 
         # the check helper
+        my $check_name = "is_${type_short}";
         push @{ $ex_spec{exports} },
-            "is_${type_short}",
+            $check_name,
             sub { $wrapper->check_export_generator($type_short, $type_full, $undef_msg) };
 
         # only export coercion helper if full (for libraries) or coercion is defined
         next TYPE
             unless $options->{ -full }
             or ($type_cons and $type_cons->has_coercion);
+
+        my $coercion_name = "to_${type_short}";
         push @{ $ex_spec{exports} },
-            "to_${type_short}",
+            $coercion_name,
             sub { $wrapper->coercion_export_generator($type_short, $type_full, $undef_msg) };
         $ex_util{ $type_short }{to}++;  # shortcut to remember this exists
     }
@@ -296,7 +299,7 @@ MooseX::Types::Base - Type library base class
 
 =head1 VERSION
 
-version 0.48
+version 0.49
 
 =head1 DESCRIPTION
 

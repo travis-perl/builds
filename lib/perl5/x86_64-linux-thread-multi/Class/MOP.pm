@@ -1,5 +1,5 @@
 package Class::MOP;
-our $VERSION = '2.1806';
+our $VERSION = '2.1807';
 
 use strict;
 use warnings;
@@ -94,7 +94,7 @@ sub is_class_loaded {
 
 sub _definition_context {
     my %context;
-    @context{qw(package file line)} = caller(1);
+    @context{qw(package file line)} = caller(0);
 
     return (
         definition_context => \%context,
@@ -796,7 +796,7 @@ Class::MOP - A Meta Object Protocol for Perl 5
 
 =head1 VERSION
 
-version 2.1806
+version 2.1807
 
 =head1 DESCRIPTION
 

@@ -145,6 +145,7 @@
             "Moose::Meta::TypeConstraint::Union" : "0",
             "Moose::Util::TypeConstraints" : "0",
             "Scalar::Util" : "1.19",
+            "Sub::Defer" : "0",
             "Sub::Exporter" : "0",
             "Sub::Exporter::ForMethods" : "0.100052",
             "Sub::Install" : "0",
@@ -177,39 +178,39 @@
    "provides" : {
       "MooseX::Types" : {
          "file" : "lib/MooseX/Types.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::Base" : {
          "file" : "lib/MooseX/Types/Base.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::CheckedUtilExports" : {
          "file" : "lib/MooseX/Types/CheckedUtilExports.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::Combine" : {
          "file" : "lib/MooseX/Types/Combine.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::Moose" : {
          "file" : "lib/MooseX/Types/Moose.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::TypeDecorator" : {
          "file" : "lib/MooseX/Types/TypeDecorator.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::UndefinedType" : {
          "file" : "lib/MooseX/Types/UndefinedType.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::Util" : {
          "file" : "lib/MooseX/Types/Util.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       },
       "MooseX::Types::Wrapper" : {
          "file" : "lib/MooseX/Types/Wrapper.pm",
-         "version" : "0.48"
+         "version" : "0.49"
       }
    },
    "release_status" : "stable",
@@ -227,7 +228,7 @@
       "x_IRC" : "irc://irc.perl.org/#moose",
       "x_MailingList" : "http://lists.perl.org/list/moose.html"
    },
-   "version" : "0.48",
+   "version" : "0.49",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.025007"
@@ -1080,7 +1081,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "v0.48",
+                  "tag" : "v0.49",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v%t"
                },

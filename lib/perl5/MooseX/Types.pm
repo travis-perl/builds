@@ -1,9 +1,9 @@
-package MooseX::Types; # git description: v0.47-2-gbf38516
+package MooseX::Types; # git description: v0.48-4-gf952a01
 use Moose;
 # ABSTRACT: Organise your Moose types in libraries
 # KEYWORDS: moose types classes objects constraints declare libraries
 
-our $VERSION = '0.48';
+our $VERSION = '0.49';
 
 use Moose::Util::TypeConstraints      qw( find_type_constraint );
 use MooseX::Types::TypeDecorator;
@@ -12,6 +12,7 @@ use MooseX::Types::Util               qw( filter_tags );
 use MooseX::Types::UndefinedType;
 use MooseX::Types::CheckedUtilExports ();
 use Carp::Clan                        qw( ^MooseX::Types );
+use Sub::Defer                        qw( defer_sub );
 use Sub::Name;
 use Scalar::Util                      qw( reftype );
 use Sub::Exporter::ForMethods 0.100052 'method_installer';  # for 'rebless'
@@ -486,17 +487,20 @@ sub create_type_decorator {
 
 sub coercion_export_generator {
     my ($class, $type, $full, $undef_msg) = @_;
-    return sub {
+    return defer_sub undef, sub {
         my ($value) = @_;
 
         # we need a type object
         my $tobj = find_type_constraint($full) or croak $undef_msg;
-        my $return = $tobj->coerce($value);
 
-        # non-successful coercion returns false
-        return unless $tobj->check($return);
+        return sub {
+            my $return = $tobj->coerce($_[0]);
 
-        return $return;
+            # non-successful coercion returns false
+            return unless $tobj->check($return);
+
+            return $return;
+        };
     }
 }
 
@@ -508,13 +512,16 @@ sub coercion_export_generator {
 
 sub check_export_generator {
     my ($class, $type, $full, $undef_msg) = @_;
-    return sub {
+
+    return defer_sub undef, sub {
         my ($value) = @_;
 
         # we need a type object
         my $tobj = find_type_constraint($full) or croak $undef_msg;
 
-        return $tobj->check($value);
+        # This method will actually compile an inlined sub if possible. If
+        # not, it will return something like sub { $tobj->check($_[0]) }
+        return $tobj->_compiled_type_constraint;
     }
 }
 
@@ -530,7 +537,7 @@ MooseX::Types - Organise your Moose types in libraries
 
 =head1 VERSION
 
-version 0.48
+version 0.49
 
 =head1 SYNOPSIS
 

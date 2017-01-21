@@ -1,5 +1,5 @@
 package Moose::Meta::Mixin::AttributeCore;
-our $VERSION = '2.1806';
+our $VERSION = '2.1807';
 
 use strict;
 use warnings;
@@ -117,7 +117,7 @@ Moose::Meta::Mixin::AttributeCore - Core attributes shared by attribute metaclas
 
 =head1 VERSION
 
-version 2.1806
+version 2.1807
 
 =head1 DESCRIPTION
 
