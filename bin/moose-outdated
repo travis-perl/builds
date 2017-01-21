@@ -4,7 +4,7 @@ use strict;
 use warnings;
 # PODNAME: moose-outdated
 
-# this script was generated with Dist::Zilla::Plugin::Conflicts 0.19
+# this script was generated with Dist::Zilla::Plugin::Conflicts 0.18
 
 use Getopt::Long;
 use Moose::Conflicts;

@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.19
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.18
 
 use Dist::CheckConflicts
     -dist      => 'Moose',

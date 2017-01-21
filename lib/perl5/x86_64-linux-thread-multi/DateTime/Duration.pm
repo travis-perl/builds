@@ -4,13 +4,14 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 use Carp ();
 use DateTime;
 use DateTime::Helpers;
 use DateTime::Types;
 use Params::ValidationCompiler qw( validation_for );
+use Scalar::Util qw( blessed );
 
 BEGIN {
     my $has = eval { require Sub::Util; 1 };
@@ -253,16 +254,27 @@ sub add_duration {
 sub add {
     my $self = shift;
 
-    return $self->add_duration( ( ref $self )->new(@_) );
+    return $self->add_duration( $self->_duration_object_from_args(@_) );
 }
-
-sub subtract_duration { return $_[0]->add_duration( $_[1]->inverse ) }
 
 sub subtract {
     my $self = shift;
 
-    return $self->subtract_duration( ( ref $self )->new(@_) );
+    return $self->subtract_duration( $self->_duration_object_from_args(@_) );
 }
+
+# Syntactic sugar for add and subtract: use a duration object if it's
+# supplied, otherwise build a new one from the arguments.
+sub _duration_object_from_args {
+    my $self = shift;
+
+    return $_[0]
+        if @_ == 1 && blessed( $_[0] ) && $_[0]->isa(__PACKAGE__);
+
+    return __PACKAGE__->new(@_);
+}
+
+sub subtract_duration { return $_[0]->add_duration( $_[1]->inverse ) }
 
 sub multiply {
     my $self       = shift;
@@ -308,7 +320,7 @@ sub _subtract_overload {
     ( $d1, $d2 ) = ( $d2, $d1 ) if $rev;
 
     Carp::croak(
-        "Cannot subtract a DateTime object from a DateTime::Duration object")
+        'Cannot subtract a DateTime object from a DateTime::Duration object')
         if DateTime::Helpers::isa( $d2, 'DateTime' );
 
     return $d1->clone->subtract_duration($d2);
@@ -344,7 +356,7 @@ DateTime::Duration - Duration objects for date math
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 
@@ -539,9 +551,8 @@ Adds or subtracts one duration from another.
 
 =head2 $dur->add( ... ), $dur->subtract( ... )
 
-Syntactic sugar for addition and subtraction. The parameters given to
-these methods are used to create a new object, which is then passed to
-C<add_duration()> or C<subtract_duration()>, as appropriate.
+These accept either constructor parameters for a new C<DateTime::Duration>
+object or an already-constructed duration object.
 
 =head2 $dur->multiply( $number )
 

@@ -3,7 +3,7 @@ package Specio::Constraint::Simple;
 use strict;
 use warnings;
 
-our $VERSION = '0.31';
+our $VERSION = '0.32';
 
 use Role::Tiny::With;
 use Specio::OO;
@@ -28,7 +28,7 @@ Specio::Constraint::Simple - Class for simple (non-parameterized or specialized)
 
 =head1 VERSION
 
-version 0.31
+version 0.32
 
 =head1 SYNOPSIS
 
@@ -309,9 +309,13 @@ L<Specio::Role::Inlinable> roles.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/Specio/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/Specio/issues>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Specio can be found at L<https://github.com/houseabsolute/Specio>.
 
 =head1 AUTHOR
 
@@ -319,10 +323,13 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2016 by Dave Rolsky.
+This software is Copyright (c) 2012 - 2017 by Dave Rolsky.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

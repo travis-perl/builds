@@ -1,8 +1,8 @@
 package LWP::Protocol;
 
-require LWP::MemberMixin;
-@ISA = qw(LWP::MemberMixin);
-$VERSION = "6.15";
+use base 'LWP::MemberMixin';
+
+our $VERSION = "6.16";
 
 use strict;
 use Carp ();
@@ -191,6 +191,8 @@ sub collect_once
 
 __END__
 
+=pod
+
 =head1 NAME
 
 LWP::Protocol - Base class for LWP protocols
@@ -203,7 +205,7 @@ LWP::Protocol - Base class for LWP protocols
 
 =head1 DESCRIPTION
 
-This class is used a the base class for all protocol implementations
+This class is used as the base class for all protocol implementations
 supported by the LWP library.
 
 When creating an instance of this class using
@@ -212,7 +214,7 @@ appropriate for that access method. In other words, the
 LWP::Protocol::create() function calls the constructor for one of its
 subclasses.
 
-All derived LWP::Protocol classes need to override the request()
+All derived C<LWP::Protocol> classes need to override the request()
 method which is used to service a request. The overridden method can
 make use of the collect() function to collect together chunks of data
 as it is received.
@@ -289,3 +291,5 @@ Copyright 1995-2001 Gisle Aas.
 
 This library is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
+
+=cut

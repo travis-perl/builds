@@ -3,7 +3,7 @@ package Params::ValidationCompiler;
 use strict;
 use warnings;
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 use Params::ValidationCompiler::Compiler;
 
@@ -40,7 +40,7 @@ Params::ValidationCompiler - Build an optimized subroutine parameter validator o
 
 =head1 VERSION
 
-version 0.21
+version 0.22
 
 =head1 SYNOPSIS
 
@@ -101,8 +101,6 @@ version 0.21
     }
 
 =head1 DESCRIPTION
-
-B<This is still fairly alpha. Things could change. You have been warned.>
 
 This module creates a customized, highly efficient parameter checking
 subroutine. It can handle named or positional parameters, and can return the
@@ -257,11 +255,21 @@ button at L<http://www.urth.org/~autarch/fs-donation.html>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 CONTRIBUTOR
+=head1 CONTRIBUTORS
 
-=for stopwords Gregory Oschwald
+=for stopwords Gregory Oschwald Tomasz Konojacki
+
+=over 4
+
+=item *
 
 Gregory Oschwald <goschwald@maxmind.com>
+
+=item *
+
+Tomasz Konojacki <me@xenu.pl>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

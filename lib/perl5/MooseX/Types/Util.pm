@@ -3,7 +3,7 @@ use strict;
 package MooseX::Types::Util;
 # ABSTRACT: Common utility functions for the distribution
 
-our $VERSION = '0.48';
+our $VERSION = '0.49';
 
 use Scalar::Util 'blessed';
 use base 'Exporter';
@@ -111,7 +111,7 @@ MooseX::Types::Util - Common utility functions for the distribution
 
 =head1 VERSION
 
-version 0.48
+version 0.49
 
 =head1 DESCRIPTION
 

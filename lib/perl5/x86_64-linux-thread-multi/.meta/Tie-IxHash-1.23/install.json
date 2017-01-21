@@ -1,1 +1,1 @@
-{"dist":"Tie-IxHash-1.23","target":"Tie::IxHash","name":"Tie::IxHash","pathname":"C/CH/CHORNY/Tie-IxHash-1.23.tar.gz","version":"1.23","provides":{"Tie::IxHash":{"version":"1.23","file":"lib/Tie/IxHash.pm"}}}
+{"name":"Tie::IxHash","pathname":"C/CH/CHORNY/Tie-IxHash-1.23.tar.gz","dist":"Tie-IxHash-1.23","version":"1.23","provides":{"Tie::IxHash":{"version":"1.23","file":"lib/Tie/IxHash.pm"}},"target":"Tie::IxHash"}

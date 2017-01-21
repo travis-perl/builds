@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.098';
+our $VERSION = '0.100';
 
 # Dependencies
 use Config;
@@ -949,7 +949,7 @@ sub is_dir { -d $_[0]->[PATH] }
 #pod     $fh = path("/tmp/foo.txt")->filehandle({ exclusive => 1  }, $mode, $binmode);
 #pod
 #pod Returns an open file handle.  The C<$mode> argument must be a Perl-style
-#pod read/write mode string ("<" ,">", "<<", etc.).  If a C<$binmode>
+#pod read/write mode string ("<" ,">", ">>", etc.).  If a C<$binmode>
 #pod is given, it is set during the C<open> call.
 #pod
 #pod An optional hash reference may be used to pass options.
@@ -1513,7 +1513,7 @@ sub realpath {
 #pod   consist of updirs (C<"..">) to reach the common prefix, followed by the
 #pod   original path less the common prefix.
 #pod
-#pod Unlike C<File::Spec::rel2abs>, in the last case above, the calculation based
+#pod Unlike C<File::Spec::abs2rel>, in the last case above, the calculation based
 #pod on a common prefix takes into account symlinks that could affect the updir
 #pod process.  Given an original path "/A/B" and a new base "/A/C",
 #pod (where "A", "B" and "C" could each have multiple path components):
@@ -2107,7 +2107,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.098
+version 0.100
 
 =head1 SYNOPSIS
 
@@ -2557,7 +2557,7 @@ Current API available since 0.053.
     $fh = path("/tmp/foo.txt")->filehandle({ exclusive => 1  }, $mode, $binmode);
 
 Returns an open file handle.  The C<$mode> argument must be a Perl-style
-read/write mode string ("<" ,">", "<<", etc.).  If a C<$binmode>
+read/write mode string ("<" ,">", ">>", etc.).  If a C<$binmode>
 is given, it is set during the C<open> call.
 
 An optional hash reference may be used to pass options.
@@ -2803,7 +2803,7 @@ If the new base does not subsume the original, a common prefix path is determine
 
 =back
 
-Unlike C<File::Spec::rel2abs>, in the last case above, the calculation based
+Unlike C<File::Spec::abs2rel>, in the last case above, the calculation based
 on a common prefix takes into account symlinks that could affect the updir
 process.  Given an original path "/A/B" and a new base "/A/C",
 (where "A", "B" and "C" could each have multiple path components):
@@ -3087,7 +3087,7 @@ Exception objects will stringify as the C<msg> field.
 =head2 Subclassing not supported
 
 For speed, this class is implemented as an array based object and uses many
-direction function calls internally.  You must not subclass it and expect
+direct function calls internally.  You must not subclass it and expect
 things to work properly.
 
 =head2 File locking

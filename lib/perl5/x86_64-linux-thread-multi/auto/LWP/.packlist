@@ -11,7 +11,6 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/DebugFile.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/MemberMixin.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/Protocol.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/Protocol/GHTTP.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/Protocol/cpan.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/Protocol/data.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/LWP/Protocol/file.pm

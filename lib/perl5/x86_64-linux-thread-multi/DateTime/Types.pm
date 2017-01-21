@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 use parent 'Specio::Exporter';
 
@@ -170,7 +170,7 @@ DateTime::Types - Types used for parameter checking DateTime
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 DESCRIPTION
 

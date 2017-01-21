@@ -3,10 +3,11 @@ package DateTime::PPExtra;
 use strict;
 use warnings;
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 use DateTime::LeapSecond;
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _normalize_tai_seconds {
     return
         if
@@ -74,6 +75,7 @@ my @subs = qw(
 );
 
 for my $sub (@subs) {
+    ## no critic (TestingAndDebugging::ProhibitNoStrict)
     no strict 'refs';
     *{ 'DateTime::' . $sub } = __PACKAGE__->can($sub);
 }

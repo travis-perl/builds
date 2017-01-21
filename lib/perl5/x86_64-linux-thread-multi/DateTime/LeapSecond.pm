@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 our ( @RD, @LEAP_SECONDS, %RD_LENGTH );
 
@@ -20,10 +20,10 @@ sub _make_utx {
         return $tmp;
     }
     $tmp = "${tab}if (\$val < " . $RD[ $beg + $step ] . ") {\n";
-    $tmp .= _make_utx( $beg,         $beg + $step, $tab . "    ", $op );
+    $tmp .= _make_utx( $beg,         $beg + $step, $tab . q{    }, $op );
     $tmp .= "${tab}}\n";
     $tmp .= "${tab}else {\n";
-    $tmp .= _make_utx( $beg + $step, $end,         $tab . "    ", $op );
+    $tmp .= _make_utx( $beg + $step, $end,         $tab . q{    }, $op );
     $tmp .= "${tab}}\n";
     return $tmp;
 }
@@ -37,6 +37,7 @@ sub _init {
 
         # print "$year,$mon,$mday\n";
 
+        ## no critic (Subroutines::ProtectPrivateSubs)
         my $utc_epoch
             = DateTime->_ymd2rd( $year, ( $mon =~ /Jan/i ? 1 : 7 ), $mday );
 
@@ -57,14 +58,14 @@ sub _init {
 
     $tmp = "sub leap_seconds {\n";
     $tmp .= "    my \$val = shift;\n";
-    $tmp .= _make_utx( -1, 1 + $#RD, "    ", "+" );
-    $tmp .= "}\n";
+    $tmp .= _make_utx( -1, 1 + $#RD, q{    }, '+' );
+    $tmp .= "}; 1\n";
 
     # NOTE: uncomment the line below to see the code:
     #warn $tmp;
 
-    eval $tmp;
-
+    ## no critic (BuiltinFunctions::ProhibitStringyEval)
+    eval $tmp or die $@;
 }
 
 sub extra_seconds {
@@ -108,7 +109,7 @@ sub _initialize {
             1999  Jan. 1  +1
             2006  Jan. 1  +1
             2009  Jan. 1  +1
-            2012  Jun. 1  +1
+            2012  Jul. 1  +1
             2015  Jul. 1  +1
             2017  Jan. 1  +1
             )
@@ -133,7 +134,7 @@ DateTime::LeapSecond - leap seconds table and utilities
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 
@@ -150,7 +151,7 @@ This module is used to calculate leap seconds for a given Rata Die
 day. It is used when DateTime.pm cannot compile the XS version of
 this code.
 
-This library is known to be accurate for dates until December 2009.
+This library is known to be accurate for dates until Jun 2017.
 
 There are no leap seconds before 1972, because that's the year this
 system was implemented.
@@ -159,8 +160,7 @@ system was implemented.
 
 =item * leap_seconds( $rd )
 
-Returns the number of accumulated leap seconds for a given day,
-in the range 0 .. 22.
+Returns the number of accumulated leap seconds for a given day.
 
 =item * extra_seconds( $rd )
 
@@ -176,7 +176,7 @@ in the range 86398 .. 86402.
 
 =head1 SEE ALSO
 
-E<lt>http://hpiers.obspm.fr/eop-pc/earthor/utc/leapsecond.htmlE<gt>
+L<http://hpiers.obspm.fr/eop-pc/earthor/utc/leapsecond.html>
 
 http://datetime.perl.org
 

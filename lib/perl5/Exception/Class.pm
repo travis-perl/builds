@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 use Exception::Class::Base;
 use Scalar::Util qw( blessed reftype );
@@ -188,6 +188,9 @@ EOPERL
     eval $code;
     die $@ if $@;
 
+    ( my $filename = "$subclass.pm" ) =~ s{::}{/}g;
+    $INC{$filename} = __FILE__;
+
     $CLASSES{$subclass} = 1;
 }
 
@@ -218,7 +221,7 @@ Exception::Class - A module that allows you to declare real exception classes in
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 
@@ -529,15 +532,25 @@ button at L<http://www.urth.org/~autarch/fs-donation.html>.
 
 Dave Rolsky <autarch@urth.org>
 
-=head1 CONTRIBUTOR
+=head1 CONTRIBUTORS
 
-=for stopwords Ricardo Signes
+=for stopwords Leon Timmermans Ricardo Signes
+
+=over 4
+
+=item *
+
+Leon Timmermans <fawaka@gmail.com>
+
+=item *
 
 Ricardo Signes <rjbs@cpan.org>
 
+=back
+
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Dave Rolsky.
+This software is copyright (c) 2017 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
