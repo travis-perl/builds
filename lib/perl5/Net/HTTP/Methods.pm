@@ -1,13 +1,8 @@
 package Net::HTTP::Methods;
-
-require 5.005;  # 4-arg substr
-
+$Net::HTTP::Methods::VERSION = '6.12';
 use strict;
-use vars qw($VERSION);
+use warnings;
 use URI;
-
-$VERSION = "6.09";
-$VERSION = eval $VERSION;
 
 my $CRLF = "\015\012";   # "\r\n" is not portable
 
@@ -279,6 +274,8 @@ sub my_readline {
                     if(defined $bytes_read) {
                         $new_bytes += $bytes_read;
                         last if $bytes_read < 1024;
+                        # We got exactly 1024 bytes, so we need to select() to know if there is more data
+                        last unless $self->can_read(0);
                     }
                     elsif($!{EINTR} || $!{EAGAIN} || $!{EWOULDBLOCK}) {
                         redo READ;
@@ -310,6 +307,7 @@ sub can_read {
     my $self = shift;
     return 1 unless defined(fileno($self));
     return 1 if $self->isa('IO::Socket::SSL') && $self->pending;
+    return 1 if $self->isa('Net::SSL') && $self->can('pending') && $self->pending;
 
     # With no timeout, wait forever.  An explicit timeout of 0 can be
     # used to just check if the socket is readable without waiting.
@@ -646,3 +644,30 @@ sub inflate_ok {
 } # BEGIN
 
 1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Net::HTTP::Methods
+
+=head1 VERSION
+
+version 6.12
+
+=head1 AUTHOR
+
+Gisle Aas <gisle@activestate.com>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2001-2017 by Gisle Aas.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

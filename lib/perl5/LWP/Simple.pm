@@ -1,20 +1,20 @@
 package LWP::Simple;
 
 use strict;
-use vars qw($ua %loop_check $FULL_LWP @EXPORT @EXPORT_OK $VERSION);
+use vars qw($ua %loop_check $FULL_LWP @EXPORT @EXPORT_OK);
 
 require Exporter;
 
 @EXPORT = qw(get head getprint getstore mirror);
 @EXPORT_OK = qw($ua);
 
-# I really hate this.  I was a bad idea to do it in the first place.
+# I really hate this.  It was a bad idea to do it in the first place.
 # Wonder how to get rid of it???  (It even makes LWP::Simple 7% slower
 # for trivial tests)
 use HTTP::Status;
 push(@EXPORT, @HTTP::Status::EXPORT);
 
-$VERSION = "6.15";
+our $VERSION = "6.16";
 
 sub import
 {
@@ -97,6 +97,8 @@ sub mirror ($$)
 
 __END__
 
+=pod
+
 =head1 NAME
 
 LWP::Simple - simple procedural interface to LWP
@@ -123,7 +125,7 @@ This module is meant for people who want a simplified view of the
 libwww-perl library.  It should also be suitable for one-liners.  If
 you need more control or access to the header fields in the requests
 sent and responses received, then you should use the full object-oriented
-interface provided by the C<LWP::UserAgent> module.
+interface provided by the L<LWP::UserAgent> module.
 
 The following functions are provided (and exported) by this module:
 
@@ -251,3 +253,5 @@ it as C<LWP::Simple::head($url)>.
 
 L<LWP>, L<lwpcook>, L<LWP::UserAgent>, L<HTTP::Status>, L<lwp-request>,
 L<lwp-mirror>
+
+=cut
