@@ -7,7 +7,7 @@ use Env;
 require Exporter;
 @ISA = qw(Exporter);
 
-our $VERSION = '1.900';
+our $VERSION = '1.901';
 
 %EXPORT_TAGS =
 (
@@ -1831,7 +1831,7 @@ Lingua::EN::Inflect - Convert singular to plural. Select "a" or "an".
 
 =head1 VERSION
 
-This document describes version 1.900 of Lingua::EN::Inflect
+This document describes version 1.901 of Lingua::EN::Inflect
 
 =head1 SYNOPSIS
 

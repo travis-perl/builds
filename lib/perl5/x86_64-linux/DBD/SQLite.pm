@@ -5,7 +5,7 @@ use strict;
 use DBI   1.57 ();
 use DynaLoader ();
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 our @ISA     = 'DynaLoader';
 
 # sqlite_version cache (set in the XS bootstrap)
@@ -2441,13 +2441,13 @@ then query which buildings overlap or are contained within a specified region:
 
   # IDs that are contained within query coordinates
   my $contained_sql = <<"";
-  SELECT id FROM try_rtree
+  SELECT id FROM city_buildings
      WHERE  minLong >= ? AND maxLong <= ?
      AND    minLat  >= ? AND maxLat  <= ?
   
   # ... and those that overlap query coordinates
   my $overlap_sql = <<"";
-  SELECT id FROM try_rtree
+  SELECT id FROM city_buildings
      WHERE    maxLong >= ? AND minLong <= ?
      AND      maxLat  >= ? AND minLat  <= ?
   

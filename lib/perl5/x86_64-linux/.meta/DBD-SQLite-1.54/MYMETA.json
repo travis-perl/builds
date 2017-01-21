@@ -4,7 +4,7 @@
       "Adam Kennedy <adamk@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.143240, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -55,5 +55,5 @@
       },
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbd-sqlite"
    },
-   "version" : "1.52"
+   "version" : "1.54"
 }

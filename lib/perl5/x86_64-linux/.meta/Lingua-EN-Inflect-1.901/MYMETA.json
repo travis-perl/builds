@@ -4,7 +4,7 @@
       "Damian Conway <DCONWAY@CPAN.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4214",
+   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "unknown"
    ],
@@ -20,6 +20,16 @@
       ]
    },
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
       "runtime" : {
          "requires" : {
             "Test::More" : "0"
@@ -27,5 +37,5 @@
       }
    },
    "release_status" : "stable",
-   "version" : "1.900"
+   "version" : "1.901"
 }
