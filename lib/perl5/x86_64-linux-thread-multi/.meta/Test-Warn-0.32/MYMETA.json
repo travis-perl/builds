@@ -54,10 +54,10 @@
    "resources" : {
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/chorny/test-warn.git",
-         "web" : "https://github.com/chorny/test-warn"
+         "url" : "git://github.com/hanfried/test-warn.git",
+         "web" : "https://github.com/hanfried/test-warn"
       }
    },
-   "version" : "0.31",
+   "version" : "0.32",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }

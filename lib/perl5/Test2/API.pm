@@ -7,7 +7,7 @@ BEGIN {
     $ENV{TEST2_ACTIVE} = 1;
 }
 
-our $VERSION = '1.302073';
+our $VERSION = '1.302075';
 
 
 my $INST;
@@ -207,6 +207,7 @@ sub no_context(&;$) {
     return;
 };
 
+my $CID = 1;
 sub context {
     # We need to grab these before anything else to ensure they are not
     # changed.
@@ -286,6 +287,7 @@ sub context {
             frame => [$pkg, $file, $line, $sub],
             pid   => $$,
             tid   => get_tid(),
+            cid   => 'C' . $CID++,
         },
         'Test2::Util::Trace'
     );
@@ -487,6 +489,23 @@ sub run_subtest {
             $finished = 1;
         }
     }
+
+    if ($params->{no_fork}) {
+        if ($$ != $ctx->trace->pid) {
+            warn $ok ? "Forked inside subtest, but subtest never finished!\n" : $err;
+            exit 255;
+        }
+
+        if (get_tid() != $ctx->trace->tid) {
+            warn $ok ? "Started new thread inside subtest, but thread never finished!\n" : $err;
+            exit 255;
+        }
+    }
+    elsif (!$parent->is_local && !$parent->ipc) {
+        warn $ok ? "A new process or thread was started inside subtest, but IPC is not enabled!\n" : $err;
+        exit 255;
+    }
+
     $stack->pop($hub);
 
     my $trace = $ctx->trace;
@@ -957,6 +976,12 @@ created for the hub that shares the same trace as the current context.
 
 Set this to true if your tool is producing subtests without user-specified
 subs.
+
+=item 'no_fork' => $bool
+
+Defaults to off. Normally forking inside a subtest will actually fork the
+subtest, resulting in 2 final subtest events. This parameter will turn off that
+behavior, only the original process/thread will return a final subtest event.
 
 =back
 

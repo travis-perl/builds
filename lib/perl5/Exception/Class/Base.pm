@@ -3,7 +3,7 @@ package Exception::Class::Base;
 use strict;
 use warnings;
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 use Class::Data::Inheritable 0.02;
 use Devel::StackTrace 2.00;
@@ -268,7 +268,7 @@ Exception::Class::Base - A base class for exception objects
 
 =head1 VERSION
 
-version 1.41
+version 1.42
 
 =head1 SYNOPSIS
 
@@ -573,7 +573,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Dave Rolsky.
+This software is copyright (c) 2017 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
