@@ -1,1 +1,1 @@
-{"name":"Class::Method::Modifiers","version":"2.12","pathname":"E/ET/ETHER/Class-Method-Modifiers-2.12.tar.gz","target":"Class::Method::Modifiers","dist":"Class-Method-Modifiers-2.12","provides":{"Class::Method::Modifiers":{"version":"2.12","file":"lib/Class/Method/Modifiers.pm"}}}
+{"name":"Class::Method::Modifiers","provides":{"Class::Method::Modifiers":{"version":"2.12","file":"lib/Class/Method/Modifiers.pm"}},"dist":"Class-Method-Modifiers-2.12","pathname":"E/ET/ETHER/Class-Method-Modifiers-2.12.tar.gz","version":"2.12","target":"Class::Method::Modifiers"}
