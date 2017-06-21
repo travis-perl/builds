@@ -3,7 +3,7 @@ use 5.006;
 use strict;
 # ABSTRACT: apparently run a function in a higher stack frame
 
-our $VERSION = '0.2600';
+our $VERSION = '0.2800';
 
 # Frame check global constant
 our $CHECK_FRAMES;
@@ -349,7 +349,7 @@ Sub::Uplevel - apparently run a function in a higher stack frame
 
 =head1 VERSION
 
-version 0.2600
+version 0.2800
 
 =head1 SYNOPSIS
 
@@ -570,7 +570,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Adam Kennedy Alexandr Ciornii David Golden J. Nick Koston Michael Gray
+=for stopwords Adam Kennedy Alexandr Ciornii David Golden Graham Ollis J. Nick Koston Michael Gray
 
 =over 4
 
@@ -588,6 +588,10 @@ David Golden <xdg@xdg.me>
 
 =item *
 
+Graham Ollis <plicease@cpan.org>
+
+=item *
+
 J. Nick Koston <nick@cpanel.net>
 
 =item *
@@ -598,7 +602,7 @@ Michael Gray <mg13@sanger.ac.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Michael Schwern and David Golden.
+This software is copyright (c) 2017 by Michael Schwern and David Golden.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

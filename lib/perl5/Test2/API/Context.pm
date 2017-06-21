@@ -2,7 +2,7 @@ package Test2::API::Context;
 use strict;
 use warnings;
 
-our $VERSION = '1.302075';
+our $VERSION = '1.302085';
 
 
 use Carp qw/confess croak longmess/;
@@ -19,7 +19,7 @@ my %LOADED = (
         my $file = "Test2/Event/$_.pm";
         require $file unless $INC{$file};
         ( $pkg => $pkg, $_ => $pkg )
-    } qw/Ok Diag Note Info Plan Bail Exception Waiting Skip Subtest/
+    } qw/Ok Diag Note Plan Bail Exception Waiting Skip Subtest/
 );
 
 use Test2::Util::ExternalMeta qw/meta get_meta set_meta delete_meta/;
@@ -250,14 +250,7 @@ sub ok {
     $self->failure_diag($e);
 
     if ($on_fail && @$on_fail) {
-        for my $of (@$on_fail) {
-            if (ref($of) eq 'CODE' || (blessed($of) && $of->can('render'))) {
-                $self->info($of, diagnostics => 1);
-            }
-            else {
-                $self->diag($of);
-            }
-        }
+        $self->diag($_) for @$on_fail;
     }
 
     return $e;
@@ -266,13 +259,6 @@ sub ok {
 sub failure_diag {
     my $self = shift;
     my ($e) = @_;
-
-    # This behavior is inherited from Test::Builder which injected a newline at
-    # the start of the first diagnostics when the harness is active, but not
-    # verbose. This is important to keep the diagnostics from showing up
-    # appended to the existing line, which is hard to read. In a verbose
-    # harness there is no need for this.
-    my $prefix = $ENV{HARNESS_ACTIVE} && !$ENV{HARNESS_IS_VERBOSE} ? "\n" : "";
 
     # Figure out the debug info, this is typically the file name and line
     # number, but can also be a custom message. If no trace object is provided
@@ -284,8 +270,8 @@ sub failure_diag {
     # Create the initial diagnostics. If the test has a name we put the debug
     # info on a second line, this behavior is inherited from Test::Builder.
     my $msg = defined($name)
-        ? qq[${prefix}Failed test '$name'\n$debug.\n]
-        : qq[${prefix}Failed test $debug.\n];
+        ? qq[Failed test '$name'\n$debug.\n]
+        : qq[Failed test $debug.\n];
 
     $self->diag($msg);
 }
@@ -300,12 +286,6 @@ sub skip {
         pass => 1,
         @extra,
     );
-}
-
-sub info {
-    my $self = shift;
-    my ($renderer, %params) = @_;
-    $self->send_event('Info', renderer => $renderer, %params);
 }
 
 sub note {
@@ -565,13 +545,7 @@ failure. If you do not want automatic diagnostics you should use the
 C<send_event()> method directly.
 
 The third argument C<\@on_fail>) is an optional set of diagnostics to be sent in
-the event of a test failure. Plain strings will be sent as
-L<Test2::Event::Diag> events. References will be used to construct
-L<Test2::Event::Info> events with C<< diagnostics => 1 >>.
-
-=item $event = $ctx->info($renderer, diagnostics => $bool, %other_params)
-
-Send an L<Test2::Event::Info>.
+the event of a test failure.
 
 =item $event = $ctx->note($message)
 
@@ -729,7 +703,7 @@ F<http://github.com/Test-More/test-more/>.
 
 =head1 COPYRIGHT
 
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
+Copyright 2017 Chad Granum E<lt>exodist@cpan.orgE<gt>.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

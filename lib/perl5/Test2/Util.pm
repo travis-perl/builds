@@ -2,10 +2,12 @@ package Test2::Util;
 use strict;
 use warnings;
 
-our $VERSION = '1.302075';
+our $VERSION = '1.302085';
 
 
 use Config qw/%Config/;
+use Carp qw/croak/;
+use PerlIO();
 
 our @EXPORT_OK = qw{
     try
@@ -17,9 +19,13 @@ our @EXPORT_OK = qw{
     CAN_REALLY_FORK
     CAN_FORK
 
+    CAN_SIGSYS
+
     IS_WIN32
 
     ipc_separator
+
+    clone_io
 };
 BEGIN { require Exporter; our @ISA = qw(Exporter) }
 
@@ -143,6 +149,42 @@ sub pkg_to_file {
 
 sub ipc_separator() { "~" }
 
+sub _check_for_sig_sys {
+    my $sig_list = shift;
+    return $sig_list =~ m/\bSYS\b/;
+}
+
+BEGIN {
+    if (_check_for_sig_sys($Config{sig_name})) {
+        *CAN_SIGSYS = sub() { 1 };
+    }
+    else {
+        *CAN_SIGSYS = sub() { 0 };
+    }
+}
+
+my %PERLIO_SKIP = (
+    unix => 1,
+    via  => 1,
+);
+
+sub clone_io {
+    my ($fh) = @_;
+    my $fileno = fileno($fh) or croak "Could not get fileno for handle";
+
+    my %seen;
+    open(my $out, '>&', $fileno) or die "Can't dup fileno $fileno: $!";
+    binmode($out, join(":", "", "raw", grep { !$PERLIO_SKIP{$_} and !$seen{$_}++ } PerlIO::get_layers(STDOUT)));
+
+    my $old = select $fh;
+    my $af = $|;
+    select $out;
+    $| = $af;
+    select $old;
+
+    return $out;
+}
+
 1;
 
 __END__
@@ -248,7 +290,7 @@ F<http://github.com/Test-More/test-more/>.
 
 =head1 COPYRIGHT
 
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
+Copyright 2017 Chad Granum E<lt>exodist@cpan.orgE<gt>.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

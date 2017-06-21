@@ -2,7 +2,7 @@ package Test2::Hub;
 use strict;
 use warnings;
 
-our $VERSION = '1.302075';
+our $VERSION = '1.302085';
 
 
 use Carp qw/carp croak confess/;
@@ -55,6 +55,21 @@ sub init {
 }
 
 sub is_subtest { 0 }
+
+sub _tb_reset {
+    my $self = shift;
+
+    # Nothing to do
+    return if $self->{+PID} == $$ && $self->{+TID} == get_tid();
+
+    $self->{+PID} = $$;
+    $self->{+TID} = get_tid();
+    $self->{+HID} = join ipc_separator, $self->{+PID}, $self->{+TID}, $ID_POSTFIX++;
+
+    if (my $ipc = $self->{+IPC}) {
+        $ipc->add_hub($self->{+HID});
+    }
+}
 
 sub reset_state {
     my $self = shift;
@@ -452,7 +467,6 @@ sub DESTROY {
     my $ipc = $self->{+IPC} || return;
     return unless $$ == $self->{+PID};
     return unless get_tid() == $self->{+TID};
-
     $ipc->drop_hub($self->{+HID});
 }
 
@@ -819,7 +833,7 @@ F<http://github.com/Test-More/test-more/>.
 
 =head1 COPYRIGHT
 
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
+Copyright 2017 Chad Granum E<lt>exodist@cpan.orgE<gt>.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

@@ -2,11 +2,11 @@ package Test2::Hub::Subtest;
 use strict;
 use warnings;
 
-our $VERSION = '1.302075';
+our $VERSION = '1.302085';
 
 
 BEGIN { require Test2::Hub; our @ISA = qw(Test2::Hub) }
-use Test2::Util::HashBase qw/nested bailed_out exit_code manual_skip_all id/;
+use Test2::Util::HashBase qw/nested bailed_out exit_code manual_skip_all id buffered/;
 use Test2::Util qw/get_tid/;
 
 my $ID = 1;
@@ -23,7 +23,10 @@ sub process {
     my ($e) = @_;
     $e->set_nested($self->nested);
     $e->set_in_subtest($self->{+ID});
-    $self->set_bailed_out($e) if $e->isa('Test2::Event::Bail');
+    if ($e->isa('Test2::Event::Bail')) {
+        $e->set_buffered(1) if $self->{+BUFFERED};
+        $self->set_bailed_out($e);
+    }
     $self->SUPER::process($e);
 }
 
@@ -115,7 +118,7 @@ F<http://github.com/Test-More/test-more/>.
 
 =head1 COPYRIGHT
 
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
+Copyright 2017 Chad Granum E<lt>exodist@cpan.orgE<gt>.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

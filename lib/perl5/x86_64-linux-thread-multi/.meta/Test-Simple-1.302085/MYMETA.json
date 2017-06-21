@@ -4,7 +4,7 @@
       "Chad Granum <exodist@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 6.008, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 6.009, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -52,7 +52,7 @@
          "url" : "http://github.com/Test-More/test-more/"
       }
    },
-   "version" : "1.302075",
+   "version" : "1.302085",
    "x_breaks" : {
       "Log::Dispatch::Config::TestLog" : "<= 0.02",
       "Net::BitTorrent" : "<= 0.052",
@@ -74,5 +74,5 @@
       "Test::UseAllModules" : ">= 0.12, <= 0.14",
       "Test::Wrapper" : "<= v0.3.0"
    },
-   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0217"
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0231"
 }

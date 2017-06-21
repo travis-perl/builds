@@ -1,12 +1,13 @@
 package Test2::Formatter::TAP;
 use strict;
 use warnings;
-require PerlIO;
 
-our $VERSION = '1.302075';
+our $VERSION = '1.302085';
+
+use Test2::Util qw/clone_io/;
 
 use Test2::Util::HashBase qw{
-    no_numbers handles _encoding
+    no_numbers handles _encoding last_fh
 };
 
 sub OUT_STD() { 0 }
@@ -101,21 +102,25 @@ sub write {
         next unless $msg;
         my $io = $handles->[$hid] or next;
 
+        print $io "\n"
+            if $ENV{HARNESS_ACTIVE}
+            && !$ENV{HARNESS_IS_VERBOSE}
+            && $hid == OUT_ERR
+            && $self->{+LAST_FH} != $io
+            && $msg =~ m/^#\s*Failed test /;
+
         $msg =~ s/^/$indent/mg if $nesting;
         print $io $msg;
+        $self->{+LAST_FH} = $io;
     }
 }
 
 sub _open_handles {
     my $self = shift;
 
-    my %seen;
-    open(my $out, '>&', STDOUT) or die "Can't dup STDOUT:  $!";
-    binmode($out, join(":", "", "raw", grep { $_ ne 'unix' and !$seen{$_}++ } PerlIO::get_layers(STDOUT)));
-
-    %seen = ();
-    open(my $err, '>&', STDERR) or die "Can't dup STDERR:  $!";
-    binmode($err, join(":", "", "raw", grep { $_ ne 'unix' and !$seen{$_}++ } PerlIO::get_layers(STDERR)));
+    require Test2::API;
+    my $out = clone_io(Test2::API::test2_stdout());
+    my $err = clone_io(Test2::API::test2_stderr());
 
     _autoflush($out);
     _autoflush($err);
@@ -234,7 +239,7 @@ sub event_bail {
     my $self = shift;
     my ($e, $num) = @_;
 
-    return if $e->nested;
+    return if $e->nested && !$e->buffered;
 
     return [
         OUT_STD,
@@ -528,7 +533,7 @@ F<http://github.com/Test-More/test-more/>.
 
 =head1 COPYRIGHT
 
-Copyright 2016 Chad Granum E<lt>exodist@cpan.orgE<gt>.
+Copyright 2017 Chad Granum E<lt>exodist@cpan.orgE<gt>.
 
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.

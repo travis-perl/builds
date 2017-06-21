@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '1.302075';
+our $VERSION = '1.302085';
 
 BEGIN {
     if( $] < 5.008 ) {
@@ -143,7 +143,8 @@ sub parent {
     my $chub = $self->{Hub} || $ctx->hub;
     $ctx->release;
 
-    my $parent = $chub->meta(__PACKAGE__, {})->{parent};
+    my $meta = $chub->meta(__PACKAGE__, {});
+    my $parent = $meta->{parent};
 
     return undef unless $parent;
 
@@ -375,11 +376,14 @@ sub reset {    ## no critic (Subroutines::ProhibitBuiltinHomonyms)
     $self->{Original_Pid} = $$;
 
     my $ctx = $self->ctx;
+    my $hub = $ctx->hub;
+    $ctx->release;
     unless ($params{singleton}) {
-        $ctx->hub->reset_state();
-        $ctx->hub->set_pid($$);
-        $ctx->hub->set_tid(get_tid);
+        $hub->reset_state();
+        $hub->_tb_reset();
     }
+
+    $ctx = $self->ctx;
 
     my $meta = $ctx->hub->meta(__PACKAGE__, {});
     %$meta = (
@@ -388,6 +392,7 @@ sub reset {    ## no critic (Subroutines::ProhibitBuiltinHomonyms)
         Done_Testing => undef,
         Skip_All     => 0,
         Test_Results => [],
+        parent       => $meta->{parent},
     );
 
     $self->{Exported_To} = undef;
@@ -666,9 +671,6 @@ sub _ok_debug {
     my $is_todo = defined($self->todo);
 
     my $msg = $is_todo ? "Failed (TODO)" : "Failed";
-
-    my $dfh = $self->_diag_fh;
-    print $dfh "\n" if $ENV{HARNESS_ACTIVE} && $dfh;
 
     my (undef, $file, $line) = $trace->call;
     if (defined $orig_name) {
@@ -2082,7 +2084,7 @@ test failed.
 
 Defaults to 1.
 
-Setting L<$Test::Builder::Level> overrides.  This is typically useful
+Setting C<$Test::Builder::Level> overrides.  This is typically useful
 localized:
 
     sub my_ok {
