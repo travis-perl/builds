@@ -1,4 +1,4 @@
-# Copyright 2002-2016, Paul Johnson (paul@pjcj.net)
+# Copyright 2002-2017, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@ package Devel::Cover::Test;
 use strict;
 use warnings;
 
-our $VERSION = '1.23'; # VERSION
+our $VERSION = '1.25'; # VERSION
 
 use Carp;
 
@@ -197,7 +197,7 @@ sub run_command {
 sub run_test {
     my $self = shift;
 
-    if ($] < 5.008001) {
+    if ($] < 5.010000) {
         plan skip_all => "Perl version $] is not supported";
         return;
     }
@@ -208,7 +208,7 @@ sub run_test {
     }
 
     my $version = int(($] - 5) * 1000 + 0.5);
-    if ($version % 2 && $version < 22) {
+    if ($version % 2 && $version < 24) {
         plan skip_all => "Perl version $] is an obsolete development version";
         return;
     }
@@ -318,8 +318,8 @@ sub create_gold {
     my $self = shift;
 
     # Pod::Coverage not available on all versions, but it must be there on
-    # 5.8.1
-    return if $self->{criteria} =~ /\bpod\b/ && $] != 5.008001;
+    # 5.10.0
+    return if $self->{criteria} =~ /\bpod\b/ && $] != 5.010000;
 
     my ($base, $v) = $self->cover_gold;
     my $gold       = "$base.$v";
@@ -392,7 +392,7 @@ Devel::Cover::Test - Internal module for testing
 
 =head1 VERSION
 
-version 1.23
+version 1.25
 
 =head1 METHODS
 
@@ -491,7 +491,7 @@ Huh?
 
 =head1 LICENCE
 
-Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2017, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

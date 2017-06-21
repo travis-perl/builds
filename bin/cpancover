@@ -1,6 +1,6 @@
 #!/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl
 
-# Copyright 2002-2016, Paul Johnson (paul@pjcj.net)
+# Copyright 2002-2017, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@
 use 5.16.0;
 use warnings;
 
-our $VERSION = '1.23'; # VERSION
+our $VERSION = '1.25'; # VERSION
 
 use Devel::Cover::Collection;
 
@@ -36,7 +36,7 @@ my $Options = {
     output_file     => "index.html",
     report          => "html_basic",
     results_dir     => cwd(),
-    timeout         => 1800,  # half an hour
+    timeout         => 7200,  # two hours
     verbose         => 0,
     workers         => 0,
 };
@@ -70,7 +70,6 @@ sub get_options {
 }
 
 sub newcp {
-    my $self = shift;
     Devel::Cover::Collection->new(
         bin_dir         => $Options->{bin_dir},
         docker          => $Options->{docker},
@@ -146,7 +145,7 @@ cpancover - report coverage statistics on CPAN modules
 
 =head1 VERSION
 
-version 1.23
+version 1.25
 
 =head1 SYNOPSIS
 
@@ -209,7 +208,7 @@ The following exit values are returned:
 
 =head1 LICENCE
 
-Copyright 2002-2016, Paul Johnson (paul@pjcj.net)
+Copyright 2002-2017, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

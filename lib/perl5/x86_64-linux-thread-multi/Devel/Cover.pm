@@ -1,4 +1,4 @@
-# Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
+# Copyright 2001-2017, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@ package Devel::Cover;
 use strict;
 use warnings;
 
-our $VERSION = '1.23'; # VERSION
+our $VERSION = '1.25'; # VERSION
 our $LVERSION;
 BEGIN { $LVERSION = do { no warnings; eval '$VERSION' || "0.001" } }  # for dev
 
@@ -108,7 +108,8 @@ BEGIN {
               ($ENV{PERL5OPT}              || "") =~ /Devel::Cover/;
     *OUT = $ENV{DEVEL_COVER_DEBUG} ? *STDERR : *STDOUT;
 
-    if ($] < 5.008001 && !$ENV{DEVEL_COVER_UNSUPPORTED}) {
+    if ($] < 5.010000 && !$ENV{DEVEL_COVER_UNSUPPORTED}) {
+        my $v = $] < 5.008001 ? "1.22" : "1.23";
         print <<EOM;
 
 ================================================================================
@@ -117,7 +118,7 @@ BEGIN {
                                    ---------
 
 Devel::Cover $LVERSION is not supported on perl $].  The last version of
-Devel::Cover which was supported was version 1.22.  This version may not work.
+Devel::Cover which was supported was version $v.  This version may not work.
 I have not tested it.  If it does work it will not be fully functional.
 
 If you decide to use it anyway, you are on your own.  If it works at all, there
@@ -136,7 +137,7 @@ If you are actually using this version of Devel::Cover with perl $], please let
 me know.  I don't want to know if you are just testing Devel::Cover, only if you
 are seriously using this version to do code coverage analysis of real code.  If
 I get no reports of such usage then I will remove support and delete the
-workarounds for versions of perl below 5.8.1.
+workarounds for versions of perl below 5.10.0.
 
 In order to use this version of Devel::Cover with perl $] you must set the
 environment variable \$DEVEL_COVER_UNSUPPORTED
@@ -1272,7 +1273,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.23
+version 1.25
 
 =head1 SYNOPSIS
 
@@ -1360,10 +1361,10 @@ reported.
 
 =over
 
-=item * Perl 5.8.1 or greater.  Perl 5.8.8 or greater is recommended.
+=item * Perl 5.10.0 or greater.
 
-Perl versions 5.6.1, 5.6.2 and 5.8.0 may work to an extent but are unsupported.
-Perl 5.8.8 or greater is recommended.  Perl 5.8.7 has problems and may crash.
+Perl versions 5.6.1, 5.6.2 and 5.8.x may work to an extent but are unsupported.
+Perl 5.8.7 has problems and may crash.
 
 If you want to use an unsupported version you will need to set the environment
 variable $DEVEL_COVER_UNSUPPORTED.  Unsupported versions are also untested.  I
@@ -1375,7 +1376,7 @@ If you are using an unsupported version, please let me know.  I don't want to
 know if you are just testing Devel::Cover, only if you are seriously using it to
 do code coverage analysis of real code.  If I get no reports of such usage then
 I will remove support and delete the workarounds for versions of perl below
-5.8.1.  I may do that anyway.
+5.10.0.  I may do that anyway.
 
 Different versions of perl may give slightly different results due to changes
 in the op tree.
@@ -1419,9 +1420,10 @@ Needed if the tests fail and you would like nice output telling you why.
 
 Needed if you want to run cpancover.
 
-=item * L<JSON>, L<JSON::PP> or L<JSON::XS>
+=item * L<JSON::MaybeXS>
 
-JSON is used to store the coverage database if it is available.
+JSON is used to store the coverage database if it is available. JSON::MaybeXS
+will select the best JSON backend installed.
 
 =back
 
@@ -1730,7 +1732,7 @@ Modules used by Devel::Cover while gathering coverage:
 
 =item * L<File::Spec>
 
-=item * L<Storable> or L<JSON>
+=item * L<Storable> or L<JSON::MaybeXS> (and its backend) or L<Sereal>
 
 =back
 
@@ -1755,7 +1757,7 @@ Please report new bugs on Github.
 
 =head1 LICENCE
 
-Copyright 2001-2016, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2017, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

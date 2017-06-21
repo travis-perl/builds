@@ -13,7 +13,7 @@
 
 package IO::Socket::SSL;
 
-our $VERSION = '2.043';
+our $VERSION = '2.049';
 
 use IO::Socket;
 use Net::SSLeay 1.46;
@@ -23,10 +23,15 @@ use Errno qw( EWOULDBLOCK EAGAIN ETIMEDOUT EINTR );
 use Carp;
 use strict;
 
+my $use_threads;
 BEGIN {
-    eval { require Scalar::Util; Scalar::Util->import("weaken"); 1 }
-	|| eval { require WeakRef; WeakRef->import("weaken"); 1 }
-	|| die "no support for weaken - please install Scalar::Util";
+    die "no support for weaken - please install Scalar::Util" if ! do {
+	local $SIG{__DIE__};
+	eval { require Scalar::Util; Scalar::Util->import("weaken"); 1 }
+	    || eval { require WeakRef; WeakRef->import("weaken"); 1 }
+    };
+    require Config;
+    $use_threads = $Config::Config{usethreads};
 }
 
 
@@ -220,7 +225,7 @@ DH
 	);
     }
     # Call it once at compile time and try it at INIT.
-    # This should catch all cases of including the module, e.g 'use' (INIT) or
+    # This should catch all cases of including the module, e.g. 'use' (INIT) or
     # 'require' (compile time) and works also with perlcc
     {
 	no warnings;
@@ -240,10 +245,10 @@ my $FILTER_SSL_ARGS = undef;
 
 # non-XS Versions of Scalar::Util will fail
 BEGIN{
-    local $SIG{__DIE__}; local $SIG{__WARN__}; # be silent
-    eval { use Scalar::Util 'dualvar'; dualvar(0,'') };
-    die "You need the XS Version of Scalar::Util for dualvar() support"
-	if $@;
+    die "You need the XS Version of Scalar::Util for dualvar() support" if !do {
+	local $SIG{__DIE__}; local $SIG{__WARN__}; # be silent
+	eval { use Scalar::Util 'dualvar'; dualvar(0,''); 1 };
+    };
 }
 
 # get constants for SSL_OP_NO_* now, instead calling the related functions
@@ -252,6 +257,7 @@ my %SSL_OP_NO;
 for(qw( SSLv2 SSLv3 TLSv1 TLSv1_1 TLSv11:TLSv1_1 TLSv1_2 TLSv12:TLSv1_2 )) {
     my ($k,$op) = m{:} ? split(m{:},$_,2) : ($_,$_);
     my $sub = "Net::SSLeay::OP_NO_$op";
+    local $SIG{__DIE__};
     $SSL_OP_NO{$k} = eval { no strict 'refs'; &$sub } || 0;
 }
 
@@ -267,7 +273,10 @@ if (!defined &Net::SSLeay::CTX_clear_options) {
 
 # Try to work around problems with alternative trust path by default, RT#104759
 my $DEFAULT_X509_STORE_flags = 0;
-eval { $DEFAULT_X509_STORE_flags |= Net::SSLeay::X509_V_FLAG_TRUSTED_FIRST() };
+{
+    local $SIG{__DIE__};
+    eval { $DEFAULT_X509_STORE_flags |= Net::SSLeay::X509_V_FLAG_TRUSTED_FIRST() };
+}
 
 our $DEBUG;
 use vars qw(@ISA $SSL_ERROR @EXPORT);
@@ -481,8 +490,10 @@ my $CHECK_SSL_PATH = sub {
 	    }
 	}
 
-	$default_ca{SSL_ca_file} = Mozilla::CA::SSL_ca_file()
-	    if ! %default_ca && eval { require Mozilla::CA };
+	$default_ca{SSL_ca_file} = Mozilla::CA::SSL_ca_file() if ! %default_ca && do {
+		local $SIG{__DIE__};
+		eval { require Mozilla::CA; 1 };
+	    };
 
 	$ca_detected = 1;
 	return %default_ca;
@@ -531,6 +542,23 @@ my %SSL_OBJECT;
 my %CREATED_IN_THIS_THREAD;
 sub CLONE { %CREATED_IN_THIS_THREAD = (); }
 
+# all keys used internally, these should be cleaned up at end
+my @all_my_keys = qw(
+    _SSL_arguments
+    _SSL_certificate
+    _SSL_ctx
+    _SSL_fileno
+    _SSL_in_DESTROY
+    _SSL_ioclass_downgrade
+    _SSL_ioclass_upgraded
+    _SSL_last_err
+    _SSL_object
+    _SSL_ocsp_verify
+    _SSL_opened
+    _SSL_opening
+    _SSL_servername
+);
+
 
 # we have callbacks associated with contexts, but have no way to access the
 # current SSL object from these callbacks. To work around this
@@ -555,7 +583,7 @@ sub configure {
     # socket and later call connect explicitly
     my $blocking = delete $arg_hash->{Blocking};
 
-    # because Net::HTTPS simple redefines blocking() to {} (e.g
+    # because Net::HTTPS simple redefines blocking() to {} (e.g.
     # return undef) and IO::Socket::INET does not like this we
     # set Blocking only explicitly if it was set
     $arg_hash->{Blocking} = 1 if defined ($blocking);
@@ -589,12 +617,13 @@ sub configure_SSL {
     # add user defined defaults, maybe after filtering
     $FILTER_SSL_ARGS->($is_server,$arg_hash) if $FILTER_SSL_ARGS;
 
+    delete @{*$self}{@all_my_keys};
+    ${*$self}{_SSL_opened} = $is_server;
+    ${*$self}{_SSL_arguments} = $arg_hash;
+
     # this adds defaults to $arg_hash as a side effect!
     ${*$self}{'_SSL_ctx'} = IO::Socket::SSL::SSL_Context->new($arg_hash)
 	or return;
-
-    ${*$self}{'_SSL_arguments'} = $arg_hash;
-    ${*$self}{'_SSL_opened'} = 1 if $is_server;
 
     return $self;
 }
@@ -647,6 +676,7 @@ sub connect {
 sub connect_SSL {
     my $self = shift;
     my $args = @_>1 ? {@_}: $_[0]||{};
+    return $self if ${*$self}{'_SSL_opened'};  # already connected
 
     my ($ssl,$ctx);
     if ( ! ${*$self}{'_SSL_opening'} ) {
@@ -662,7 +692,7 @@ sub connect_SSL {
 	$ctx = ${*$self}{'_SSL_ctx'};  # Reference to real context
 	$ssl = ${*$self}{'_SSL_object'} = Net::SSLeay::new($ctx->{context})
 	    || return $self->error("SSL structure creation failed");
-	$CREATED_IN_THIS_THREAD{$ssl} = 1;
+	$CREATED_IN_THIS_THREAD{$ssl} = 1 if $use_threads;
 	$SSL_OBJECT{$ssl} = [$self,0];
 	weaken($SSL_OBJECT{$ssl}[0]);
 
@@ -851,7 +881,7 @@ sub connect_SSL {
 	$ctx->{session_cache}->add_session(
 	    $arg_hash->{SSL_session_key} || do {
 		my $host = $arg_hash->{PeerAddr} || $arg_hash->{PeerHost}
-		    || self->_update_peer;
+		    || $self->_update_peer;
 		my $port = $arg_hash->{PeerPort} || $arg_hash->{PeerService};
 		$port ? "$host:$port" : $host;
 	    },
@@ -943,7 +973,7 @@ sub accept_SSL {
 	$ssl = ${*$socket}{_SSL_object} =
 	    Net::SSLeay::new(${*$socket}{_SSL_ctx}{context})
 	    || return $socket->error("SSL structure creation failed");
-	$CREATED_IN_THIS_THREAD{$ssl} = 1;
+	$CREATED_IN_THIS_THREAD{$ssl} = 1 if $use_threads;
 	$SSL_OBJECT{$ssl} = [$socket,1];
 	weaken($SSL_OBJECT{$ssl}[0]);
 
@@ -1738,7 +1768,7 @@ if ( defined &Net::SSLeay::get_peer_cert_chain
 	    my $pattern;
 	    ### IMPORTANT!
 	    # We accept only a single wildcard and only for a single part of the FQDN
-	    # e.g *.example.org does match www.example.org but not bla.www.example.org
+	    # e.g. *.example.org does match www.example.org but not bla.www.example.org
 	    # The RFCs are in this regard unspecific but we don't want to have to
 	    # deal with certificates like *.com, *.co.uk or even *
 	    # see also http://nils.toedtmann.net/pub/subjectAltName.txt .
@@ -1884,8 +1914,10 @@ sub fatal_ssl_error {
     $@ = $self->errstr;
     if (defined $error_trap and ref($error_trap) eq 'CODE') {
 	$error_trap->($self, $self->errstr()."\n".$self->get_ssleay_error());
-    } elsif ( ${*$self}{'_SSL_ioclass_upgraded'} ) {
+    } elsif ( ${*$self}{'_SSL_ioclass_upgraded'}
+	|| ${*$self}{_SSL_arguments}{SSL_keepSocketOnError}) {
 	# downgrade only
+	$DEBUG>=3 && DEBUG('downgrading SSL only, not closing socket' );
 	$self->stop_SSL;
     } else {
 	# kill socket
@@ -1901,7 +1933,7 @@ sub get_ssleay_error {
     return Net::SSLeay::print_errs('SSL error: ') || '';
 }
 
-# internal errors, e.g unsupported features, hostname check failed etc
+# internal errors, e.g. unsupported features, hostname check failed etc
 # _SSL_last_err contains severity so that on error chains we can decide if one
 # error should replace the previous one or if this is just a less specific
 # follow-up error, e.g. configuration failed because certificate failed because
@@ -1959,11 +1991,11 @@ sub DESTROY {
     my $self = shift or return;
     my $ssl = ${*$self}{_SSL_object} or return;
     delete $SSL_OBJECT{$ssl};
-    if ($CREATED_IN_THIS_THREAD{$ssl}) {
+    if (!$use_threads or delete $CREATED_IN_THIS_THREAD{$ssl}) {
 	$self->close(_SSL_in_DESTROY => 1, SSL_no_shutdown => 1)
 	    if ${*$self}{'_SSL_opened'};
-	delete(${*$self}{'_SSL_ctx'});
     }
+    delete @{*$self}{@all_my_keys};
 }
 
 
@@ -2324,7 +2356,7 @@ sub new {
 	# replace value in %ctx with real context
 	my $ctx = $ctx_new_sub->() or return
 	    IO::Socket::SSL->error("SSL Context init failed");
-	$CTX_CREATED_IN_THIS_THREAD{$ctx} = 1;
+	$CTX_CREATED_IN_THIS_THREAD{$ctx} = 1 if $use_threads;
 
 	# SSL_OP_CIPHER_SERVER_PREFERENCE
 	$ssl_op |= 0x00400000 if $arg_hash->{SSL_honor_cipher_order};
@@ -2793,8 +2825,7 @@ sub DESTROY {
     my $self = shift;
     if ( my $ctx = $self->{context} ) {
 	$DEBUG>=3 && DEBUG("free ctx $ctx open=".join( " ",keys %CTX_CREATED_IN_THIS_THREAD ));
-	if ( %CTX_CREATED_IN_THIS_THREAD and
-	    delete $CTX_CREATED_IN_THIS_THREAD{$ctx} ) {
+	if (!$use_threads or delete $CTX_CREATED_IN_THIS_THREAD{$ctx} ) {
 	    # remove any verify callback for this context
 	    if ( $self->{verify_mode}) {
 		$DEBUG>=3 && DEBUG("free ctx $ctx callback" );
@@ -3005,7 +3036,7 @@ sub add_response {
 	@soft_error = "http request for OCSP failed; subject: ".
 	    join("; ",@{$todo->{subj}});
 
-    # is it an valid OCSP_RESPONSE
+    # is it a valid OCSP_RESPONSE
     } elsif ( ! eval { $resp = Net::SSLeay::d2i_OCSP_RESPONSE($resp) }) {
 	@soft_error = "invalid response (no OCSP_RESPONSE); subject: ".
 	    join("; ",@{$todo->{subj}});
