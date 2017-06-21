@@ -1,4 +1,4 @@
-=head2 Sat Jan 21 00:10:52 2017: C<Module> L<Sub::Quote|Sub::Quote>
+=head2 Wed Jun 21 00:10:32 2017: C<Module> L<Sub::Quote|Sub::Quote>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.003001>
+C<VERSION: 2.004000>
 
 =item *
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:53 2017: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Wed Jun 21 00:10:35 2017: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:54 2017: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+=head2 Wed Jun 21 00:10:36 2017: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:54 2017: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+=head2 Wed Jun 21 00:10:36 2017: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:55 2017: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Wed Jun 21 00:10:36 2017: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:55 2017: C<Module> L<Moo|Moo>
+=head2 Wed Jun 21 00:10:37 2017: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -122,7 +122,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.003000>
+C<VERSION: 2.003002>
 
 =item *
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:56 2017: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Wed Jun 21 00:10:38 2017: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -144,7 +144,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.042>
+C<VERSION: 1.000000>
 
 =item *
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Jan 21 00:10:57 2017: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Wed Jun 21 00:10:38 2017: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
@@ -166,7 +166,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.000005>
+C<VERSION: 1.002001>
 
 =item *
 
