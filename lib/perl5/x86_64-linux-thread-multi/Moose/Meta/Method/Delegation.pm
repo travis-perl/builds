@@ -1,10 +1,11 @@
 package Moose::Meta::Method::Delegation;
-our $VERSION = '2.1807';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;
 
 use Scalar::Util 'blessed', 'weaken';
+use Try::Tiny;
 
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Generated';
@@ -75,62 +76,114 @@ sub _initialize_body {
     return $self->{body} = $method_to_call
         if ref $method_to_call;
 
-    my $accessor = $self->_get_delegate_accessor;
+    # We don't inline because it's faster, we do it because when the method is
+    # inlined, any errors thrown because of the delegated method have a _much_
+    # nicer stack trace, as the trace doesn't include any Moose internals.
+    $self->{body} = $self->_generate_inline_method;
 
-    my $handle_name = $self->name;
+    return;
+}
 
-    # NOTE: we used to do a goto here, but the goto didn't handle
-    # failure correctly (it just returned nothing), so I took that
-    # out. However, the more I thought about it, the less I liked it
-    # doing the goto, and I preferred the act of delegation being
-    # actually represented in the stack trace.  - SL
-    # not inlining this, since it won't really speed things up at
-    # all... the only thing that would end up different would be
-    # interpolating in $method_to_call, and a bunch of things in the
-    # error handling that mostly never gets called - doy
-    $self->{body} = sub {
-        my $instance = shift;
-        my $proxy    = $instance->$accessor();
+sub _generate_inline_method {
+    my $self = shift;
 
-        if( !defined $proxy ) {
-            throw_exception( AttributeValueIsNotDefined => method     => $self,
-                                                           instance   => $instance,
-                                                           attribute  => $self->associated_attribute,
-                           );
-        }
-        elsif( ref($proxy) && !blessed($proxy) ) {
-            throw_exception( AttributeValueIsNotAnObject => method      => $self,
-                                                            instance    => $instance,
-                                                            attribute   => $self->associated_attribute,
-                                                            given_value => $proxy
-                           );
-        }
+    my $attr = $self->associated_attribute;
+    my $delegate = $self->delegate_to_method;
 
-        unshift @_, @{ $self->curried_arguments };
-        $proxy->$method_to_call(@_);
+    my $method_name = B::perlstring( $self->name );
+    my $attr_name   = B::perlstring( $self->associated_attribute->name );
+
+    my $undefined_attr_throw = $self->_inline_throw_exception(
+        'AttributeValueIsNotDefined',
+        sprintf( <<'EOF', $method_name, $attr_name ) );
+method    => $self->meta->find_method_by_name(%s),
+instance  => $self,
+attribute => $self->meta->find_attribute_by_name(%s),
+EOF
+
+    my $not_an_object_throw = $self->_inline_throw_exception(
+        'AttributeValueIsNotAnObject',
+        sprintf( <<'EOF', $method_name, $attr_name ) );
+method      => $self->meta->find_method_by_name(%s),
+instance    => $self,
+attribute   => $self->meta->find_attribute_by_name(%s),
+given_value => $proxy,
+EOF
+
+    my $get_proxy
+        = $attr->has_read_method ? $attr->get_read_method : '$reader';
+
+    my $args = @{ $self->curried_arguments } ? '@curried, @_' : '@_';
+    my $source = sprintf(
+        <<'EOF', $get_proxy, $undefined_attr_throw, $not_an_object_throw, $delegate, $args );
+sub {
+    my $self = shift;
+
+    my $proxy = $self->%s;
+    if ( !defined $proxy ) {
+        %s;
+    }
+    elsif ( ref $proxy && !Scalar::Util::blessed($proxy) ) {
+        %s;
+    }
+    return $proxy->%s( %s );
+}
+EOF
+
+    my $description
+        = 'inline delegation in '
+        . $self->package_name . ' for '
+        . $attr->name . '->'
+        . $delegate;
+
+    my $definition = $attr->definition_context;
+    # While all attributes created in the usual way (via Moose's has()) will
+    # define this, there's no guarantee that this must be defined. For
+    # example, when Moo inflates a class to Moose it does not define these (as
+    # of Moo 2.003).
+    $description .= " (attribute declared in $definition->{file} at line $definition->{line})"
+        if defined $definition->{file} && defined $definition->{line};
+
+    return try {
+        $self->_compile_code(
+            source      => $source,
+            description => $description,
+        );
+    }
+    catch {
+        $self->_throw_exception(
+            'CouldNotGenerateInlineAttributeMethod',
+            instance => $self,
+            error    => $_,
+            option   => 'handles for ' . $attr->name . '->' . $delegate,
+        );
     };
+}
+
+sub _eval_environment {
+    my $self = shift;
+
+    my %env;
+    if ( @{ $self->curried_arguments } ) {
+        $env{'@curried'} = $self->curried_arguments;
+    }
+
+    unless ( $self->associated_attribute->has_read_method ) {
+        $env{'$reader'} = \( $self->_get_delegate_accessor );
+    }
+
+    return \%env;
 }
 
 sub _get_delegate_accessor {
     my $self = shift;
-    my $attr = $self->associated_attribute;
 
-    # NOTE:
-    # always use a named method when
-    # possible, if you use the method
-    # ref and there are modifiers on
-    # the accessors then it will not
-    # pick up the modifiers too. Only
-    # the named method will assure that
-    # we also have any modifiers run.
-    # - SL
-    my $accessor = $attr->has_read_method
-        ? $attr->get_read_method
-        : $attr->get_read_method_ref;
+    my $accessor = $self->associated_attribute->get_read_method_ref;
 
-    $accessor = $accessor->body if Scalar::Util::blessed $accessor;
-
-    return $accessor;
+    # If it's blessed it's a Moose::Meta::Method
+    return blessed $accessor
+        ? ( $accessor->body )
+        : $accessor;
 }
 
 1;
@@ -149,7 +202,7 @@ Moose::Meta::Method::Delegation - A Moose Method metaclass for delegation method
 
 =head1 VERSION
 
-version 2.1807
+version 2.2005
 
 =head1 DESCRIPTION
 

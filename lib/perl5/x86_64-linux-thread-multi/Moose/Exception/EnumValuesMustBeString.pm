@@ -1,5 +1,5 @@
 package Moose::Exception::EnumValuesMustBeString;
-our $VERSION = '2.1807';
+our $VERSION = '2.2005';
 
 use Moose;
 extends 'Moose::Exception';

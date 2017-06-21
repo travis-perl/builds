@@ -4,7 +4,7 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
-# this module was generated with Dist::Zilla::Plugin::Conflicts 0.18
+# this module was generated with Dist::Zilla::Plugin::Conflicts 0.19
 
 use Dist::CheckConflicts
     -dist      => 'Moose',
@@ -66,6 +66,7 @@ use Dist::CheckConflicts
         'MooseX::Types::Set::Object' => '0.03',
         'MooseX::Types::Signal' => '1.101930',
         'MooseX::UndefTolerant' => '0.11',
+        'Net::Twitter' => '4.01041',
         'PRANG' => '0.14',
         'Pod::Elemental' => '0.093280',
         'Pod::Weaver' => '3.101638',
