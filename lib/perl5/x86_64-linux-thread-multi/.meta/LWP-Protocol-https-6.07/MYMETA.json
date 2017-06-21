@@ -4,7 +4,7 @@
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.56, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -21,9 +21,7 @@
    },
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
+         "requires" : {}
       },
       "configure" : {
          "requires" : {
@@ -38,6 +36,12 @@
             "Net::HTTPS" : "6",
             "perl" : "5.008001"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0",
+            "Test::RequiresInternet" : "0"
+         }
       }
    },
    "release_status" : "stable",
@@ -47,5 +51,6 @@
       },
       "x_MailingList" : "mailto:libwww@perl.org"
    },
-   "version" : "6.06"
+   "version" : "6.07",
+   "x_serialization_backend" : "JSON::PP version 2.27300"
 }
