@@ -78,9 +78,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Sat Jan 21 00:01:33 UTC 2017
+## Configuration time: Wed Jun 21 00:01:24 UTC 2017
 ## Configured by     : travis
-## Target system     : linux testing-gce-15f61bb9-c17b-459e-a338-e34bf926a22c 3.13.0-103-generic #150~precise1-ubuntu smp thu nov 24 11:05:34 utc 2016 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux testing-gce-26083939-cdec-458b-9a32-2806a535011f 3.13.0-115-generic #162~precise1-ubuntu smp fri mar 24 16:47:06 utc 2017 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -202,8 +202,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@testing-gce-15f61bb9-c17b-459e-a338-e34bf926a22c.(none)'
-cf_time='Sat Jan 21 00:01:33 UTC 2017'
+cf_email='travis@testing-gce-26083939-cdec-458b-9a32-2806a535011f.(none)'
+cf_time='Wed Jun 21 00:01:24 UTC 2017'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1046,8 +1046,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.(none)'
-myhostname='testing-gce-15f61bb9-c17b-459e-a338-e34bf926a22c'
-myuname='linux testing-gce-15f61bb9-c17b-459e-a338-e34bf926a22c 3.13.0-103-generic #150~precise1-ubuntu smp thu nov 24 11:05:34 utc 2016 x86_64 x86_64 x86_64 gnulinux '
+myhostname='testing-gce-26083939-cdec-458b-9a32-2806a535011f'
+myuname='linux testing-gce-26083939-cdec-458b-9a32-2806a535011f 3.13.0-115-generic #162~precise1-ubuntu smp fri mar 24 16:47:06 utc 2017 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1075,7 +1075,7 @@ old_pthread_create_joinable=''
 optimize='-O2'
 orderlib='false'
 osname='linux'
-osvers='3.13.0-103-generic'
+osvers='3.13.0-115-generic'
 otherlibdirs=' '
 package='perl5'
 pager='/usr/bin/less -R'
@@ -1086,7 +1086,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@testing-gce-15f61bb9-c17b-459e-a338-e34bf926a22c.(none)'
+perladmin='travis@testing-gce-26083939-cdec-458b-9a32-2806a535011f.(none)'
 perllibs='-lpthread -lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl'
 pg='pg'
