@@ -8,7 +8,7 @@ use DateTime::Locale::Util qw( parse_locale_code );
 use Params::ValidationCompiler 0.13 qw( validation_for );
 use Specio::Declare;
 
-our $VERSION = '1.11';
+our $VERSION = '1.16';
 
 my @FormatLengths;
 
@@ -282,7 +282,7 @@ DateTime::Locale::FromData - Class for locale objects instantiated from pre-defi
 
 =head1 VERSION
 
-version 1.11
+version 1.16
 
 =head1 SYNOPSIS
 
@@ -495,12 +495,16 @@ The CLDR version from which this locale was generated.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-Locale/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/DateTime-Locale/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for DateTime-Locale can be found at L<https://github.com/houseabsolute/DateTime-Locale>.
 
 =head1 AUTHOR
 
@@ -508,9 +512,12 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Dave Rolsky.
+This software is copyright (c) 2003 - 2017 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

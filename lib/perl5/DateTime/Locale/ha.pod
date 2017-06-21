@@ -19,7 +19,7 @@
 
 =head1 NAME
 
-DateTime::Locale::ha - Locale data examples for the ha locale.
+DateTime::Locale::ha - Locale data examples for the Hausa (ha) locale
 
 =head1 DESCRIPTION
 
@@ -447,11 +447,11 @@ Hausa locale.
    1995-12-22T09:05:02 = Jum, Disamba 22
   -0010-09-15T04:44:23 = Asa, Satumba 15
 
-=head3 MMMMW ('week' W 'of' MMM)
+=head3 MMMMW-count-other ('week' W 'of' MMMM)
 
-   2008-02-05T18:30:30 = week 1 of Fab
-   1995-12-22T09:05:02 = week 3 of Dis
-  -0010-09-15T04:44:23 = week 2 of Sat
+   2008-02-05T18:30:30 = week 1 of Faburairu
+   1995-12-22T09:05:02 = week 3 of Disamba
+  -0010-09-15T04:44:23 = week 2 of Satumba
 
 =head3 MMMMd (MMMM d)
 
@@ -573,7 +573,7 @@ Hausa locale.
    1995-12-22T09:05:02 = Kwata na huɗu 1995
   -0010-09-15T04:44:23 = Kwata na uku -10
 
-=head3 yw ('week' w 'of' y)
+=head3 yw-count-other ('week' w 'of' y)
 
    2008-02-05T18:30:30 = week 6 of 2008
    1995-12-22T09:05:02 = week 51 of 1995

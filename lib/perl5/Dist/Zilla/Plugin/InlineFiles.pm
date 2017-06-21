@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::InlineFiles 6.008;
+package Dist::Zilla::Plugin::InlineFiles 6.009;
 # ABSTRACT: files in a data section
 
 use Moose;
@@ -62,7 +62,7 @@ Dist::Zilla::Plugin::InlineFiles - files in a data section
 
 =head1 VERSION
 
-version 6.008
+version 6.009
 
 =head1 DESCRIPTION
 
@@ -83,7 +83,7 @@ Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Ricardo SIGNES.
+This software is copyright (c) 2017 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

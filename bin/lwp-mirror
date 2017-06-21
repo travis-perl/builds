@@ -1,4 +1,4 @@
-#!/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl -w
+#!/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl
 
 # Simple mirror utility using LWP
 
@@ -37,21 +37,20 @@ Gisle Aas <gisle@aas.no>
 
 =cut
 
-
+use strict;
+use warnings;
 use LWP::Simple qw(mirror is_success status_message $ua);
 use Getopt::Std;
 use Encode;
 use Encode::Locale;
 
-$progname = $0;
-$progname =~ s,.*/,,;  # use basename only
-$progname =~ s/\.\w*$//; #strip extension if any
+my $progname = $0;
+$progname =~ s,.*/,,;       # use basename only
+$progname =~ s/\.\w*$//;    #strip extension if any
 
-$VERSION = "6.16";
-
-$opt_h = undef;  # print usage
-$opt_v = undef;  # print version
-$opt_t = undef;  # timeout
+my $opt_h;             # print usage
+my $opt_v;             # print version
+my $opt_t;             # timeout
 
 unless (getopts("hvt:")) {
     usage();
@@ -61,7 +60,7 @@ if ($opt_v) {
     require LWP;
     my $DISTNAME = 'libwww-perl-' . LWP::Version();
     die <<"EOT";
-This is lwp-mirror version $VERSION ($DISTNAME)
+This is lwp-mirror version $LWP::Simple::VERSION ($DISTNAME)
 
 Copyright 1995-1999, Gisle Aas.
 
@@ -70,23 +69,23 @@ modify it under the same terms as Perl itself.
 EOT
 }
 
-$url  = decode(locale => shift) or usage();
-$file = encode(locale_fs => decode(locale => shift)) or usage();
+my $url = decode(locale => shift) or usage();
+my $file = encode(locale_fs => decode(locale => shift)) or usage();
 usage() if $opt_h or @ARGV;
 
 if (defined $opt_t) {
     $opt_t =~ /^(\d+)([smh])?/;
     die "$progname: Illegal timeout value!\n" unless defined $1;
-    $timeout = $1;
+    my $timeout = $1;
     $timeout *= 60   if ($2 eq "m");
     $timeout *= 3600 if ($2 eq "h");
     $ua->timeout($timeout);
 }
 
-$rc = mirror($url, $file);
+my $rc = mirror($url, $file);
 
 if ($rc == 304) {
-    print STDERR "$progname: $file is up to date\n"
+    print STDERR "$progname: $file is up to date\n";
 }
 elsif (!is_success($rc)) {
     print STDERR "$progname: $rc ", status_message($rc), "   ($url)\n";
@@ -95,8 +94,7 @@ elsif (!is_success($rc)) {
 exit;
 
 
-sub usage
-{
+sub usage {
     die <<"EOT";
 Usage: $progname [-options] <url> <file>
     -v           print version number of program

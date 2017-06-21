@@ -19,7 +19,7 @@
 
 =head1 NAME
 
-DateTime::Locale::mer - Locale data examples for the mer locale.
+DateTime::Locale::mer - Locale data examples for the Meru (mer) locale
 
 =head1 DESCRIPTION
 
@@ -447,11 +447,11 @@ Meru locale.
    1995-12-22T09:05:02 = WTN, Dicemba 22
   -0010-09-15T04:44:23 = JUM, Septemba 15
 
-=head3 MMMMW ('week' W 'of' MMM)
+=head3 MMMMW-count-other ('week' W 'of' MMMM)
 
-   2008-02-05T18:30:30 = week 1 of FEB
-   1995-12-22T09:05:02 = week 3 of DEC
-  -0010-09-15T04:44:23 = week 2 of SPT
+   2008-02-05T18:30:30 = week 1 of Feburuarĩ
+   1995-12-22T09:05:02 = week 3 of Dicemba
+  -0010-09-15T04:44:23 = week 2 of Septemba
 
 =head3 MMMMd (MMMM d)
 
@@ -573,7 +573,7 @@ Meru locale.
    1995-12-22T09:05:02 = Inya kĩrĩ inya 1995
   -0010-09-15T04:44:23 = Ithatũ kĩrĩ inya -10
 
-=head3 yw ('week' w 'of' y)
+=head3 yw-count-other ('week' w 'of' y)
 
    2008-02-05T18:30:30 = week 6 of 2008
    1995-12-22T09:05:02 = week 51 of 1995

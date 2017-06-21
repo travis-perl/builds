@@ -15,4 +15,5 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Output.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Screen.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Syslog.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Types.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Log/Dispatch/Vars.pm

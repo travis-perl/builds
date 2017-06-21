@@ -3,18 +3,14 @@ package Log::Dispatch::Null;
 use strict;
 use warnings;
 
-our $VERSION = '2.58';
-
-use Log::Dispatch::Output;
+our $VERSION = '2.65';
 
 use base qw( Log::Dispatch::Output );
 
 sub new {
-    my $proto = shift;
-    my $class = ref $proto || $proto;
+    my $class = shift;
 
     my $self = bless {}, $class;
-
     $self->_basic_init(@_);
 
     return $self;
@@ -38,7 +34,7 @@ Log::Dispatch::Null - Object that accepts messages and does nothing
 
 =head1 VERSION
 
-version 2.58
+version 2.65
 
 =head1 SYNOPSIS
 
@@ -58,9 +54,13 @@ object but it does nothing with them.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/Log-Dispatch/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/Log-Dispatch/issues>.
 
 I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Log-Dispatch can be found at L<https://github.com/houseabsolute/Log-Dispatch>.
 
 =head1 AUTHOR
 
@@ -68,10 +68,13 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2016 by Dave Rolsky.
+This software is Copyright (c) 2017 by Dave Rolsky.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

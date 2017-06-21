@@ -15,6 +15,7 @@ use Dist::CheckConflicts
         Carp
         Dist::CheckConflicts
         Exporter
+        File::ShareDir
         List::Util
         Params::ValidationCompiler
         Specio::Declare

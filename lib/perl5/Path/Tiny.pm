@@ -5,7 +5,7 @@ use warnings;
 package Path::Tiny;
 # ABSTRACT: File path utility
 
-our $VERSION = '0.100';
+our $VERSION = '0.104';
 
 # Dependencies
 use Config;
@@ -356,6 +356,10 @@ sub rootdir { path( File::Spec->rootdir ) }
 #pod
 #pod     my $lost = tempdir()->child("foo"); # tempdir cleaned up right away
 #pod
+#pod B<Note 4>: The cached object may be accessed with the L</cached_temp> method.
+#pod Keeping a reference to, or modifying the cached object may break the
+#pod behavior documented above and is not supported.  Use at your own risk.
+#pod
 #pod Current API available since 0.097.
 #pod
 #pod =cut
@@ -446,9 +450,9 @@ sub _resolve_symlinks {
 #pod     $abs = path("foo/bar")->absolute("/tmp");
 #pod
 #pod Returns a new C<Path::Tiny> object with an absolute path (or itself if already
-#pod absolute).  Unless an argument is given, the current directory is used as the
-#pod absolute base path.  The argument must be absolute or you won't get an absolute
-#pod result.
+#pod absolute).  If no argument is given, the current directory is used as the
+#pod absolute base path.  If an argument is given, it will be converted to an
+#pod absolute path (if it is not already) and used as the absolute base path.
 #pod
 #pod This will not resolve upward directories ("foo/../bar") unless C<canonpath>
 #pod in L<File::Spec> would normally do so on your platform.  If you need them
@@ -457,7 +461,7 @@ sub _resolve_symlinks {
 #pod On Windows, an absolute path without a volume component will have it added
 #pod based on the current drive.
 #pod
-#pod Current API available since 0.001.
+#pod Current API available since 0.101.
 #pod
 #pod =cut
 
@@ -480,9 +484,15 @@ sub absolute {
         return $self if $self->is_absolute;
     }
 
-    # relative path on any OS
+    # no base means use current directory as base
     require Cwd;
-    return path( ( defined($base) ? $base : Cwd::getcwd() ), $_[0]->[PATH] );
+    return path( Cwd::getcwd(), $_[0]->[PATH] ) unless defined $base;
+
+    # relative base should be made absolute; we check is_absolute rather
+    # than unconditionally make base absolute so that "/foo" doesn't become
+    # "C:/foo" on Windows.
+    $base = path($base);
+    return path( ( $base->is_absolute ? $base : $base->absolute ), $_[0]->[PATH] );
 }
 
 #pod =method append, append_raw, append_utf8
@@ -624,6 +634,27 @@ sub basename {
 #pod =cut
 
 sub canonpath { $_[0]->[CANON] }
+
+#pod =method cached_temp
+#pod
+#pod Returns the cached C<File::Temp> or C<File::Temp::Dir> object if the
+#pod C<Path::Tiny> object was created with C</tempfile> or C</tempdir>.
+#pod If there is no such object, this method throws.
+#pod
+#pod B<WARNING>: Keeping a reference to, or modifying the cached object may
+#pod break the behavior documented for temporary files and directories created
+#pod with C<Path::Tiny> and is not supported.  Use at your own risk.
+#pod
+#pod Current API available since 0.101.
+#pod
+#pod =cut
+
+sub cached_temp {
+    my $self = shift;
+    $self->_throw( "cached_temp", $self, "has no cached File::Temp object" )
+      unless defined $self->[TEMP];
+    return $self->[TEMP];
+}
 
 #pod =method child
 #pod
@@ -2107,7 +2138,7 @@ Path::Tiny - File path utility
 
 =head1 VERSION
 
-version 0.100
+version 0.104
 
 =head1 SYNOPSIS
 
@@ -2305,6 +2336,10 @@ of storing it:
 
     my $lost = tempdir()->child("foo"); # tempdir cleaned up right away
 
+B<Note 4>: The cached object may be accessed with the L</cached_temp> method.
+Keeping a reference to, or modifying the cached object may break the
+behavior documented above and is not supported.  Use at your own risk.
+
 Current API available since 0.097.
 
 =head1 METHODS
@@ -2315,9 +2350,9 @@ Current API available since 0.097.
     $abs = path("foo/bar")->absolute("/tmp");
 
 Returns a new C<Path::Tiny> object with an absolute path (or itself if already
-absolute).  Unless an argument is given, the current directory is used as the
-absolute base path.  The argument must be absolute or you won't get an absolute
-result.
+absolute).  If no argument is given, the current directory is used as the
+absolute base path.  If an argument is given, it will be converted to an
+absolute path (if it is not already) and used as the absolute base path.
 
 This will not resolve upward directories ("foo/../bar") unless C<canonpath>
 in L<File::Spec> would normally do so on your platform.  If you need them
@@ -2326,7 +2361,7 @@ resolved, you must call the more expensive C<realpath> method instead.
 On Windows, an absolute path without a volume component will have it added
 based on the current drive.
 
-Current API available since 0.001.
+Current API available since 0.101.
 
 =head2 append, append_raw, append_utf8
 
@@ -2402,6 +2437,18 @@ the platform.  In particular, this means directory separators
 will be C<\> on Windows.
 
 Current API available since 0.001.
+
+=head2 cached_temp
+
+Returns the cached C<File::Temp> or C<File::Temp::Dir> object if the
+C<Path::Tiny> object was created with C</tempfile> or C</tempdir>.
+If there is no such object, this method throws.
+
+B<WARNING>: Keeping a reference to, or modifying the cached object may
+break the behavior documented for temporary files and directories created
+with C<Path::Tiny> and is not supported.  Use at your own risk.
+
+Current API available since 0.101.
 
 =head2 child
 
@@ -3222,7 +3269,7 @@ David Golden <dagolden@cpan.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alex Efros Chris Williams David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop Ollis James Hunt John Karr Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Nigel Gregoire Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
+=for stopwords Alex Efros Chris Williams Dave Rolsky David Steinbrunner Doug Bell Gabor Szabo Gabriel Andrade George Hartzell Geraud Continsouzas Goro Fuji Graham Knop Ollis James Hunt John Karr Karen Etheridge Mark Ellis Martin Kjeldsen Michael G. Schwern Nigel Gregoire Philippe Bruhat (BooK) Regina Verbae Roy Ivy III Shlomi Fish Smylers Tatsuhiko Miyagawa Toby Inkster Yanick Champoux 김도형 - Keedi Kim
 
 =over 4
 
@@ -3233,6 +3280,10 @@ Alex Efros <powerman@powerman.name>
 =item *
 
 Chris Williams <bingos@cpan.org>
+
+=item *
+
+Dave Rolsky <autarch@urth.org>
 
 =item *
 

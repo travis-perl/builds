@@ -3,7 +3,7 @@ package Params::ValidationCompiler::Compiler;
 use strict;
 use warnings;
 
-our $VERSION = '0.22';
+our $VERSION = '0.24';
 
 use Carp qw( croak );
 use Eval::Closure qw( eval_closure );
@@ -178,20 +178,25 @@ sub _any_type_has_coercion {
 sub _types {
     my $self = shift;
 
+    my @types;
     if ( ref $self->params eq 'HASH' ) {
-        return map { $_->{type} || () }
+        @types = map { $_->{type} || () }
             grep { ref $_ } values %{ $self->params };
     }
     elsif ( ref $self->params eq 'ARRAY' ) {
         if ( $self->named_to_list ) {
             my %p = @{ $self->params };
-            return map { $_->{type} || () } grep { ref $_ } values %p;
+            @types = map { $_->{type} || () } grep { ref $_ } values %p;
         }
         else {
-            return
-                map { $_->{type} || () } grep { ref $_ } @{ $self->params };
+            @types
+                = map { $_->{type} || () } grep { ref $_ } @{ $self->params };
         }
     }
+
+    push @types, $self->slurpy if $self->slurpy && ref $self->slurpy;
+
+    return @types;
 }
 
 sub subref {
@@ -479,6 +484,7 @@ sub _compile_positional_args_check {
         $self->_add_check_for_extra_positional_param_types(
             scalar @specs,
             $self->slurpy,
+            $access_var,
         );
     }
 
@@ -495,7 +501,7 @@ sub _munge_and_check_positional_params {
 
     for my $spec ( @{ $self->params } ) {
         $spec = ref $spec ? $spec : { optional => !$spec };
-        if ( $spec->{optional} ) {
+        if ( $spec->{optional} || exists $spec->{default} ) {
             $in_optional = 1;
         }
         elsif ($in_optional) {
@@ -529,14 +535,15 @@ EOF
 }
 
 sub _add_check_for_extra_positional_param_types {
-    my $self = shift;
-    my $max  = shift;
-    my $type = shift;
+    my $self       = shift;
+    my $max        = shift;
+    my $type       = shift;
+    my $access_var = shift;
 
     # We need to set the name argument to something that won't conflict with
     # names someone would actually use for a parameter.
     my $check = join q{}, $self->_type_check(
-        '$_[$i]',
+        sprintf( '%s[$i]', $access_var ),
         '__PCC extra parameters__',
         $type,
     );
@@ -897,15 +904,19 @@ Params::ValidationCompiler::Compiler - Object that implements the check subrouti
 
 =head1 VERSION
 
-version 0.22
+version 0.24
 
 =for Pod::Coverage .*
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/Params-ValidationCompiler/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/Params-ValidationCompiler/issues>.
 
 I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Params-ValidationCompiler can be found at L<https://github.com/houseabsolute/Params-ValidationCompiler>.
 
 =head1 AUTHOR
 
@@ -913,10 +924,13 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2016 by Dave Rolsky.
+This software is Copyright (c) 2016 - 2017 by Dave Rolsky.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

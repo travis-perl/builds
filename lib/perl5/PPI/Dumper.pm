@@ -37,7 +37,7 @@ use Params::Util qw{_INSTANCE};
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '1.220';
+	$VERSION = '1.228';
 }
 
 
@@ -123,7 +123,8 @@ sub new {
 		}, $class;
 
 	# Handle the options
-	my %options = map { lc $_ } @_;
+	my @options = map { lc $_ } @_; # strict hashpairs # https://github.com/adamkennedy/PPI/issues/201
+	my %options = @options;
 	foreach ( keys %{$self->{display}} ) {
 		if ( exists $options{$_} ) {
 			if ( $_ eq 'indent' ) {
@@ -183,7 +184,7 @@ sub string {
 The C<list> method generates the dump and provides it as a raw
 list, without trailing newlines.
 
-Returns a list or the null list if there is an error while generation
+Returns a list or the null list if there is an error while generating
 the dump.
 
 =cut

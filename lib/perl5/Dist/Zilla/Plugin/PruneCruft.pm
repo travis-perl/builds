@@ -1,4 +1,4 @@
-package Dist::Zilla::Plugin::PruneCruft 6.008;
+package Dist::Zilla::Plugin::PruneCruft 6.009;
 # ABSTRACT: prune stuff that you probably don't mean to include
 
 use Moose;
@@ -74,6 +74,7 @@ sub exclude_file {
   # Avoid bundling fatlib/ dir created by App::FatPacker
   # https://github.com/andk/pause/pull/65
   return 1 if substr($file->name, 0, 7) eq 'fatlib/';
+  return 1 if substr($file->name, 0, 4) eq 'tmp/';
 
   if (my $file = $file->name =~ s/\.c$//r) {
     for my $other (@{ $self->zilla->files }) {
@@ -114,7 +115,7 @@ Dist::Zilla::Plugin::PruneCruft - prune stuff that you probably don't mean to in
 
 =head1 VERSION
 
-version 6.008
+version 6.009
 
 =head1 SYNOPSIS
 
@@ -149,7 +150,7 @@ Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Ricardo SIGNES.
+This software is copyright (c) 2017 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

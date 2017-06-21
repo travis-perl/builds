@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Exporter';
 
-our $VERSION = '0.32';
+our $VERSION = '0.37';
 
 use Carp qw( croak );
 use Specio::Coercion;
@@ -141,8 +141,8 @@ sub object_does_type {
     # force the user to use t() for all calls but the first, making their code
     # pointlessly more complicated.
     unless ( keys %p ) {
-        if ( my $tc = internal_types_for_package($caller)->{$name} ) {
-            return $tc;
+        if ( my $exists = internal_types_for_package($caller)->{$name} ) {
+            return $exists;
         }
     }
 
@@ -165,8 +165,8 @@ sub object_isa_type {
 
     my $caller = scalar caller();
     unless ( keys %p ) {
-        if ( my $tc = internal_types_for_package($caller)->{$name} ) {
-            return $tc;
+        if ( my $exists = internal_types_for_package($caller)->{$name} ) {
+            return $exists;
         }
     }
 
@@ -210,8 +210,8 @@ sub any_does_type {
 
     my $caller = scalar caller();
     unless ( keys %p ) {
-        if ( my $tc = internal_types_for_package($caller)->{$name} ) {
-            return $tc;
+        if ( my $exists = internal_types_for_package($caller)->{$name} ) {
+            return $exists;
         }
     }
 
@@ -234,8 +234,8 @@ sub any_isa_type {
 
     my $caller = scalar caller();
     unless ( keys %p ) {
-        if ( my $tc = internal_types_for_package($caller)->{$name} ) {
-            return $tc;
+        if ( my $exists = internal_types_for_package($caller)->{$name} ) {
+            return $exists;
         }
     }
 
@@ -337,7 +337,7 @@ Specio::Declare - Specio declaration subroutines
 
 =head1 VERSION
 
-version 0.32
+version 0.37
 
 =head1 SYNOPSIS
 
@@ -385,7 +385,7 @@ version 0.32
     any_isa_type('DateTime');
 
     # Specio name is DateTimeObject
-    object_isa_type( 'DateTimeObject', 'DateTime' );
+    object_isa_type( 'DateTimeObject', class => 'DateTime' );
 
     any_can_type(
         'Duck',
@@ -527,7 +527,7 @@ named or anonymous type.
 =item * using => sub { ... }
 
 This is a subroutine which defines the type coercion. It will be passed a
-single argument, the value coerce. It should return a new value of the type
+single argument, the value to coerce. It should return a new value of the type
 this coercion is to.
 
 This parameter is mutually exclusive with the C<inline> parameter.

@@ -23,7 +23,7 @@ use Specio::TypeChecks qw(
 );
 use Storable qw( dclone );
 
-our $VERSION = '0.32';
+our $VERSION = '0.37';
 
 use Exporter qw( import );
 
@@ -57,10 +57,28 @@ sub _inline_reader {
 
     my $reader;
     if ( $attr->{lazy} && ( my $builder = $attr->{builder} ) ) {
-        $reader = "sub { \$_[0]->{$name} ||= \$_[0]->$builder; }";
+        my $source = <<'EOF';
+sub {
+     unless ( exists $_[0]->{%s} ) {
+         $_[0]->{%s} = $_[0]->%s;
+         Scalar::Util::weaken( $_[0]->{%s} ) if %s && ref $_[0]->{%s};
+     }
+     $_[0]->{%s};
+}
+EOF
+        $reader = sprintf(
+            $source,
+            $name,
+            $name,
+            $builder,
+            $name,
+            ( $attr->{weak_ref} ? 1 : 0 ),
+            $name,
+            $name,
+        );
     }
     else {
-        $reader = "sub { \$_[0]->{$name} }";
+        $reader = sprintf( 'sub { $_[0]->{%s} }', $name );
     }
 
     {
@@ -98,12 +116,12 @@ sub _inline_constructor {
     my $class = shift;
 
     my @build_subs;
-    for my $class ( @{ mro::get_linear_isa($class) } ) {
+    for my $parent ( @{ mro::get_linear_isa($class) } ) {
         {
             ## no critic (TestingAndDebugging::ProhibitNoStrict)
             no strict 'refs';
-            push @build_subs, $class . '::BUILD'
-                if defined &{ $class . '::BUILD' };
+            push @build_subs, $parent . '::BUILD'
+                if defined &{ $parent . '::BUILD' };
         }
     }
 
@@ -319,7 +337,7 @@ Specio::OO - A painfully poor reimplementation of Moo(se)
 
 =head1 VERSION
 
-version 0.32
+version 0.37
 
 =head1 DESCRIPTION
 

@@ -19,7 +19,7 @@
 
 =head1 NAME
 
-DateTime::Locale::luo_KE - Locale data examples for the luo-KE locale.
+DateTime::Locale::luo_KE - Locale data examples for the Luo Kenya (luo-KE) locale
 
 =head1 DESCRIPTION
 
@@ -447,11 +447,11 @@ Luo Kenya locale.
    1995-12-22T09:05:02 = TAB, Dwe mar Apar gi ariyo 22
   -0010-09-15T04:44:23 = NGS, Dwe mar Ochiko 15
 
-=head3 MMMMW ('week' W 'of' MMM)
+=head3 MMMMW-count-other ('week' W 'of' MMMM)
 
-   2008-02-05T18:30:30 = week 1 of DAR
-   1995-12-22T09:05:02 = week 3 of DAG
-  -0010-09-15T04:44:23 = week 2 of DOC
+   2008-02-05T18:30:30 = week 1 of Dwe mar Ariyo
+   1995-12-22T09:05:02 = week 3 of Dwe mar Apar gi ariyo
+  -0010-09-15T04:44:23 = week 2 of Dwe mar Ochiko
 
 =head3 MMMMd (MMMM d)
 
@@ -573,7 +573,7 @@ Luo Kenya locale.
    1995-12-22T09:05:02 = nus mar nus 4 1995
   -0010-09-15T04:44:23 = nus mar nus 3 -10
 
-=head3 yw ('week' w 'of' y)
+=head3 yw-count-other ('week' w 'of' y)
 
    2008-02-05T18:30:30 = week 6 of 2008
    1995-12-22T09:05:02 = week 51 of 1995

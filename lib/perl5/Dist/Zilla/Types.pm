@@ -1,4 +1,4 @@
-package Dist::Zilla::Types 6.008;
+package Dist::Zilla::Types 6.009;
 # ABSTRACT: dzil-specific type library
 
 use namespace::autoclean;
@@ -15,10 +15,11 @@ use namespace::autoclean;
 
 use MooseX::Types -declare => [qw(
   License OneZero YesNoStr ReleaseStatus 
-  Path
+  Path ArrayRefOfPaths
   _Filename
 )];
-use MooseX::Types::Moose qw(Str Int Defined);
+use MooseX::Types::Moose qw(Str Int Defined ArrayRef);
+use Path::Tiny;
 
 subtype License, as class_type('Software::License');
 
@@ -26,6 +27,12 @@ subtype Path, as class_type('Path::Tiny');
 coerce Path, from Defined, via {
   require Dist::Zilla::Path;
   Dist::Zilla::Path::path($_);
+};
+
+subtype ArrayRefOfPaths, as ArrayRef[Path];
+coerce ArrayRefOfPaths, from ArrayRef[Defined], via {
+  require Dist::Zilla::Path;
+  [ map { Dist::Zilla::Path::path($_) } @$_ ];
 };
 
 subtype OneZero, as Str, where { $_ eq '0' or $_ eq '1' };
@@ -38,7 +45,7 @@ coerce OneZero, from YesNoStr, via { /\Ay/i ? 1 : 0 };
 
 subtype _Filename, as Str,
   where   { $_ !~ qr/(?:\x{0a}|\x{0b}|\x{0c}|\x{0d}|\x{85}|\x{2028}|\x{2029})/ },
-  message { "Filename contains a newline or other vertical whitespace" };
+  message { "Filename not a Str, or contains a newline or other vertical whitespace" };
 
 1;
 
@@ -54,7 +61,7 @@ Dist::Zilla::Types - dzil-specific type library
 
 =head1 VERSION
 
-version 6.008
+version 6.009
 
 =head1 OVERVIEW
 
@@ -70,7 +77,7 @@ Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Ricardo SIGNES.
+This software is copyright (c) 2017 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

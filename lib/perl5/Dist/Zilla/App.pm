@@ -1,12 +1,14 @@
 use strict;
 use warnings;
-package Dist::Zilla::App 6.008;
+package Dist::Zilla::App 6.009;
 # ABSTRACT: Dist::Zilla's App::Cmd
 
 use App::Cmd::Setup 0.330 -app; # better compilation error detection
 
 use Carp ();
 use Try::Tiny;
+
+$Carp::Internal{'Module::Runtime'} = 1;
 
 sub global_opt_spec {
   my ($self) = @_;
@@ -173,7 +175,7 @@ Dist::Zilla::App - Dist::Zilla's App::Cmd
 
 =head1 VERSION
 
-version 6.008
+version 6.009
 
 =head1 METHODS
 
@@ -188,7 +190,7 @@ Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Ricardo SIGNES.
+This software is copyright (c) 2017 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

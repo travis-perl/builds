@@ -19,7 +19,7 @@
 
 =head1 NAME
 
-DateTime::Locale::dyo_SN - Locale data examples for the dyo-SN locale.
+DateTime::Locale::dyo_SN - Locale data examples for the Jola-Fonyi Senegal (dyo-SN) locale
 
 =head1 DESCRIPTION
 
@@ -441,11 +441,11 @@ Jola-Fonyi Senegal locale.
    1995-12-22T09:05:02 = Arj 22 De
   -0010-09-15T04:44:23 = Sib 15 Se
 
-=head3 MMMMW ('week' W 'of' MMM)
+=head3 MMMMW-count-other ('week' W 'of' MMMM)
 
-   2008-02-05T18:30:30 = week 1 of Fe
-   1995-12-22T09:05:02 = week 3 of De
-  -0010-09-15T04:44:23 = week 2 of Se
+   2008-02-05T18:30:30 = week 1 of Fébirie
+   1995-12-22T09:05:02 = week 3 of Disambar
+  -0010-09-15T04:44:23 = week 2 of Settembar
 
 =head3 MMMMd (MMMM d)
 
@@ -567,7 +567,7 @@ Jola-Fonyi Senegal locale.
    1995-12-22T09:05:02 = Q4 1995
   -0010-09-15T04:44:23 = Q3 -10
 
-=head3 yw ('week' w 'of' y)
+=head3 yw-count-other ('week' w 'of' y)
 
    2008-02-05T18:30:30 = week 6 of 2008
    1995-12-22T09:05:02 = week 51 of 1995

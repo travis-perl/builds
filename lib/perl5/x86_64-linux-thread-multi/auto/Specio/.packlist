@@ -15,6 +15,8 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Constraint/Role/Interface.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Constraint/Role/IsaType.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Constraint/Simple.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Constraint/Structurable.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Constraint/Structured.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Constraint/Union.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Declare.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/DeclaredAt.pm
@@ -25,9 +27,14 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/Numeric.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/Perl.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/String.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/Structured.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/Structured/Dict.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/Structured/Map.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Library/Structured/Tuple.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/OO.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/PartialDump.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Registry.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Role/Inlinable.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/Subs.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Specio/TypeChecks.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Test/Specio.pm

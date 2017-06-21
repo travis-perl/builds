@@ -3,7 +3,7 @@ package Params::ValidationCompiler;
 use strict;
 use warnings;
 
-our $VERSION = '0.22';
+our $VERSION = '0.24';
 
 use Params::ValidationCompiler::Compiler;
 
@@ -21,7 +21,7 @@ no warnings 'once';
 ## use critic
 
 sub source_for {
-    return Params::ValidationCompiler::Compiler->new(@_)->source_for;
+    return Params::ValidationCompiler::Compiler->new(@_)->source;
 }
 
 1;
@@ -40,7 +40,7 @@ Params::ValidationCompiler - Build an optimized subroutine parameter validator o
 
 =head1 VERSION
 
-version 0.22
+version 0.24
 
 =head1 SYNOPSIS
 
@@ -130,7 +130,7 @@ If you pass an arrayref and C<named_to_list> is false, the validator will
 expect positional params. Each element of the C<params> arrayref should be a
 parameter spec.
 
-If you pass an arrayref and C<named_to_list> is false, the validator will
+If you pass an arrayref and C<named_to_list> is true, the validator will
 expect named params, but will return a list of values. In this case the
 arrayref should contain a I<list> of key/value pairs, where parameter names
 are the keys and the specs are the values.
@@ -230,9 +230,13 @@ passed to L<Eval::Closure>.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/Params-ValidationCompiler/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/Params-ValidationCompiler/issues>.
 
 I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Params-ValidationCompiler can be found at L<https://github.com/houseabsolute/Params-ValidationCompiler>.
 
 =head1 DONATIONS
 
@@ -267,16 +271,23 @@ Gregory Oschwald <goschwald@maxmind.com>
 
 =item *
 
+Gregory Oschwald <oschwald@gmail.com>
+
+=item *
+
 Tomasz Konojacki <me@xenu.pl>
 
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2016 by Dave Rolsky.
+This software is Copyright (c) 2016 - 2017 by Dave Rolsky.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

@@ -3,7 +3,7 @@ package Specio::Constraint::Simple;
 use strict;
 use warnings;
 
-our $VERSION = '0.32';
+our $VERSION = '0.37';
 
 use Role::Tiny::With;
 use Specio::OO;
@@ -28,7 +28,7 @@ Specio::Constraint::Simple - Class for simple (non-parameterized or specialized)
 
 =head1 VERSION
 
-version 0.32
+version 0.37
 
 =head1 SYNOPSIS
 
@@ -281,6 +281,22 @@ C<eval_closure> subroutine.
 
 Given a variable name, this returns a string of code that implements the
 constraint. If the type is not inlinable, this method throws an error.
+
+=head2 $type->inline_coercion($var)
+
+Given a variable name, this returns a string of code and an environment hash
+that implements all of the type's coercions. I<It does not check that the
+resulting value is valid.>
+
+This will throw an exception unless all of the type's coercions are inlinable.
+
+The return value is a two-element list. The first element is the code. The
+second is a hash reference containing variables which need to be in scope for
+the code to work. This is intended to be passed to L<Eval::Closure>'s
+C<eval_closure> subroutine.
+
+The returned code is a single C<do { }> block without a terminating
+semicolon.
 
 =head2 $type->inline_environment()
 

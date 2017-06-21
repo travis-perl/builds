@@ -3,7 +3,7 @@ package Test::Specio;
 use strict;
 use warnings;
 
-our $VERSION = '0.32';
+our $VERSION = '0.37';
 
 use B ();
 use IO::File;
@@ -103,8 +103,8 @@ our $STR_OVERLOAD_CLASS_NAME = _T::StrOverload->new('_T::StrOverload');
     package _T::NumOverload;
 
     use overload
-        q{0+} => sub { ${ $_[0] } },
-        '+'   => sub { ${ $_[0] } + $_[1] },
+        '0+' => sub { ${ $_[0] } },
+        '+'  => sub { ${ $_[0] } + $_[1] },
         fallback => 0;
 
     sub new {
@@ -123,7 +123,7 @@ our $NUM_OVERLOAD_NEG_DECIMAL = _T::NumOverload->new(42.42);
     package _T::CodeOverload;
 
     use overload
-        q{&{}} => sub { ${ $_[0] } },
+        '&{}' => sub { ${ $_[0] } },
         fallback => 0;
 
     sub new {
@@ -138,7 +138,7 @@ our $CODE_OVERLOAD = _T::CodeOverload->new( sub { } );
     package _T::RegexOverload;
 
     use overload
-        q{qr} => sub { ${ $_[0] } },
+        'qr' => sub { ${ $_[0] } },
         fallback => 0;
 
     sub new {
@@ -153,7 +153,7 @@ our $REGEX_OVERLOAD = _T::RegexOverload->new(qr/foo/);
     package _T::GlobOverload;
 
     use overload
-        q[*{}] => sub { ${ $_[0] } },
+        '*{}' => sub { ${ $_[0] } },
         fallback => 0;
 
     sub new {
@@ -166,12 +166,12 @@ our $REGEX_OVERLOAD = _T::RegexOverload->new(qr/foo/);
     package _T::ScalarOverload;
 
     use overload
-        q[${}] => sub { ${ $_[0] } },
+        '${}' => sub { $_[0][0] },
         fallback => 0;
 
     sub new {
         my $scalar = $_[1];
-        bless \$scalar, __PACKAGE__;
+        bless [$scalar], __PACKAGE__;
     }
 }
 
@@ -181,12 +181,12 @@ our $SCALAR_OVERLOAD = _T::ScalarOverload->new('x');
     package _T::ArrayOverload;
 
     use overload
-        q[@{}] => sub { $_[0] },
+        '@{}' => sub { $_[0]{array} },
         fallback => 0;
 
     sub new {
         my $array = $_[1];
-        bless $array, __PACKAGE__;
+        bless { array => $array }, __PACKAGE__;
     }
 }
 
@@ -196,12 +196,15 @@ our $ARRAY_OVERLOAD = _T::ArrayOverload->new( [ 1, 2, 3 ] );
     package _T::HashOverload;
 
     use overload
-        q[%{}] => sub { $_[0] },
+        '%{}' => sub { $_[0][0] },
         fallback => 0;
 
     sub new {
         my $hash = $_[1];
-        bless $hash, __PACKAGE__;
+
+        # We use an array-based object so we make sure we test hash
+        # overloading as opposed to just treating the object as a hash.
+        bless [$hash], __PACKAGE__;
     }
 }
 
@@ -216,8 +219,944 @@ BEGIN {
     }
 }
 
-our @EXPORT_OK = ( @vars, qw( describe test_constraint ) );
+our @EXPORT_OK = ( @vars, qw( builtins_tests describe test_constraint ) );
 our %EXPORT_TAGS = ( vars => \@vars );
+
+sub builtins_tests {
+    my $GLOB             = shift;
+    my $GLOB_OVERLOAD    = shift;
+    my $GLOB_OVERLOAD_FH = shift;
+
+    return {
+        Item => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        Defined => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+            ],
+            reject => [
+                $UNDEF,
+            ],
+        },
+        Undef => {
+            accept => [
+                $UNDEF,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+            ],
+        },
+        Bool => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $EMPTY_STRING,
+                $UNDEF,
+            ],
+            reject => [
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+            ],
+        },
+        Maybe => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        Value => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $GLOB,
+            ],
+            reject => [
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        Ref => {
+            accept => [
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $GLOB,
+                $UNDEF,
+            ],
+        },
+        Num => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                qw(
+                    1e10
+                    1e-10
+                    1.23456e10
+                    1.23456e-10
+                    1e10
+                    1e-10
+                    1.23456e10
+                    1.23456e-10
+                    -1e10
+                    -1e-10
+                    -1.23456e10
+                    -1.23456e-10
+                    -1e10
+                    -1e-10
+                    -1.23456e10
+                    -1.23456e-10
+                    -1e+10
+                    1E10
+                    ),
+            ],
+            reject => [
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        Int => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                qw(
+                    1e20
+                    1e100
+                    -1e10
+                    -1e+10
+                    1E20
+                    ),
+            ],
+            reject => [
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+                qw(
+                    1e-10
+                    -1e-10
+                    1.23456e10
+                    1.23456e-10
+                    -1.23456e10
+                    -1.23456e-10
+                    -1.23456e+10
+                    ),
+            ],
+        },
+        Str => {
+            accept => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+            ],
+            reject => [
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        ScalarRef => {
+            accept => [
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        ArrayRef => {
+            accept => [
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        HashRef => {
+            accept => [
+                $HASH_REF,
+                $HASH_OVERLOAD,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        CodeRef => {
+            accept => [
+                $CODE_REF,
+                $CODE_OVERLOAD,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+        RegexpRef => {
+            accept => [
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $OBJECT,
+                $UNDEF,
+                $FAKE_REGEX,
+            ],
+        },
+        GlobRef => {
+            accept => [
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $FH_OBJECT,
+                $OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $UNDEF,
+            ],
+        },
+        FileHandle => {
+            accept => [
+                $FH,
+                $FH_OBJECT,
+                $GLOB_OVERLOAD_FH,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $UNDEF,
+            ],
+        },
+        Object => {
+            accept => [
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $CODE_OVERLOAD,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $SCALAR_OVERLOAD,
+                $ARRAY_OVERLOAD,
+                $HASH_OVERLOAD,
+                $OBJECT,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $ARRAY_REF,
+                $HASH_REF,
+                $CODE_REF,
+                $GLOB,
+                $GLOB_REF,
+                $FH,
+                $UNDEF,
+            ],
+        },
+        ClassName => {
+            accept => [
+                $CLASS_NAME,
+                $STR_OVERLOAD_CLASS_NAME,
+            ],
+            reject => [
+                $ZERO,
+                $ONE,
+                $BOOL_OVERLOAD_TRUE,
+                $BOOL_OVERLOAD_FALSE,
+                $INT,
+                $NEG_INT,
+                $NUM,
+                $NEG_NUM,
+                $NUM_OVERLOAD_ZERO,
+                $NUM_OVERLOAD_ONE,
+                $NUM_OVERLOAD_NEG,
+                $NUM_OVERLOAD_NEG_DECIMAL,
+                $NUM_OVERLOAD_DECIMAL,
+                $EMPTY_STRING,
+                $STRING,
+                $NUM_IN_STRING,
+                $STR_OVERLOAD_EMPTY,
+                $STR_OVERLOAD_FULL,
+                $INT_WITH_NL1,
+                $INT_WITH_NL2,
+                $SCALAR_REF,
+                $SCALAR_REF_REF,
+                $SCALAR_OVERLOAD,
+                $ARRAY_REF,
+                $ARRAY_OVERLOAD,
+                $HASH_REF,
+                $HASH_OVERLOAD,
+                $CODE_REF,
+                $CODE_OVERLOAD,
+                $GLOB,
+                $GLOB_REF,
+                $GLOB_OVERLOAD,
+                $GLOB_OVERLOAD_FH,
+                $FH,
+                $FH_OBJECT,
+                $REGEX,
+                $REGEX_OBJ,
+                $REGEX_OVERLOAD,
+                $FAKE_REGEX,
+                $OBJECT,
+                $UNDEF,
+            ],
+        },
+    };
+}
 
 sub test_constraint {
     my $type      = shift;
@@ -329,7 +1268,7 @@ Test::Specio - Test helpers for Specio
 
 =head1 VERSION
 
-version 0.32
+version 0.37
 
 =head1 SYNOPSIS
 
@@ -368,6 +1307,36 @@ Given a value, this subroutine returns a string describing that value in a
 useful way for test output. It know about the various classes used for the
 variables exported by this package and will do something intelligent when such
 a variable.
+
+=head2 builtins_tests( $GLOB, $GLOB_OVERLOAD, $GLOB_OVERLOAD_FH )
+
+This subroutine returns a hashref containing test variables for all builtin
+types. The hashref has a form like this:
+
+  {
+      Bool => {
+          accept => [
+              $ZERO,
+              $ONE,
+              $BOOL_OVERLOAD_TRUE,
+              $BOOL_OVERLOAD_FALSE,
+              ...,
+          ],
+          reject => [
+              $INT,
+              $NEG_INT,
+              $NUM,
+              $NEG_NUM,
+              ...,
+              $OBJECT,
+          ],
+      },
+      Maybe => {...},
+  }
+
+You need to pass in a glob, an object which overloads globification, and an
+object which overloads globification to return an open filehandle. See below
+for more details on how to create these things.
 
 =head2 Variables
 
@@ -507,18 +1476,26 @@ An object which overloads hash dereferencing to return a non-empty hash.
 
 =back
 
-=head2 _T::GlobOverload package
+=head2 Globs and the _T::GlobOverload package
 
-This package is defined when you load C<Test::Specio> so you can create your
-own glob overloading objects. Such objects cannot be exported because the glob
-they return does not transfer across packages properly.
+To create a glob you can pass around for tests, use this code:
+
+  my $GLOB = do {
+      no warnings 'once';
+      *SOME_GLOB;
+  };
+
+The C<_T::GlobOverload> package is defined when you load C<Test::Specio> so
+you can create your own glob overloading objects. Such objects cannot be
+exported because the glob they return does not transfer across packages
+properly.
 
 You can create such a variable like this:
 
   local *FOO;
   my $GLOB_OVERLOAD = _T::GlobOverload->new( \*FOO );
 
-If you want to create a glob overloading object that returns filehandle, do
+If you want to create a glob overloading object that returns a filehandle, do
 this:
 
   local *BAR;

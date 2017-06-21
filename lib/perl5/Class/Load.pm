@@ -1,10 +1,10 @@
 use strict;
 use warnings;
-package Class::Load; # git description: v0.22-9-g29ebb54
+package Class::Load; # git description: v0.23-8-ge399b9c
 # ABSTRACT: A working (require "Class::Name") and more
 # KEYWORDS: class module load require use runtime
 
-our $VERSION = '0.23';
+our $VERSION = '0.24';
 
 use base 'Exporter';
 use Data::OptList ();
@@ -211,7 +211,7 @@ Class::Load - A working (require "Class::Name") and more
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 SYNOPSIS
 
@@ -355,13 +355,24 @@ A leaner approach to loading modules
 
 =back
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Class-Load>
+(or L<bug-Class-Load@rt.cpan.org|mailto:bug-Class-Load@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
+
 =head1 AUTHOR
 
 Shawn M Moore <sartak at bestpractical.com>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Dave Rolsky Shawn Moore Karen Etheridge M Jesse Luehrs Kent Fredric Caleb Cushing
+=for stopwords Dave Rolsky Karen Etheridge Shawn Moore Jesse Luehrs Kent Fredric Paul Howarth Olivier Mengué Caleb Cushing
 
 =over 4
 
@@ -371,15 +382,11 @@ Dave Rolsky <autarch@urth.org>
 
 =item *
 
-Shawn Moore <sartak@bestpractical.com>
-
-=item *
-
 Karen Etheridge <ether@cpan.org>
 
 =item *
 
-Shawn M Moore <sartak@bestpractical.com>
+Shawn Moore <sartak@bestpractical.com>
 
 =item *
 
@@ -388,6 +395,14 @@ Jesse Luehrs <doy@tozt.net>
 =item *
 
 Kent Fredric <kentfredric@gmail.com>
+
+=item *
+
+Paul Howarth <paul@city-fan.org>
+
+=item *
+
+Olivier Mengué <dolmen@cpan.org>
 
 =item *
 

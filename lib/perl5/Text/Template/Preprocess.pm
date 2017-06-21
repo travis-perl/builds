@@ -1,8 +1,10 @@
 
 package Text::Template::Preprocess;
+$Text::Template::Preprocess::VERSION = '1.47';
+# ABSTRACT: Expand template text with embedded Perl
+
 use Text::Template;
 @ISA = qw(Text::Template);
-$Text::Template::Preprocess::VERSION = 1.46;
 
 sub fill_in {
   my $self = shift;
@@ -27,14 +29,17 @@ sub preprocessor {
 
 1;
 
+__END__
 
-=head1 NAME 
+=pod
+
+=head1 NAME
 
 Text::Template::Preprocess - Expand template text with embedded Perl
 
 =head1 VERSION
 
-This file documents C<Text::Template::Preprocess> version B<1.46>
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -78,7 +83,6 @@ C<Text::Template>.
 One possible purpose:  If your files contain a lot of JavaScript, like
 this:
 
-
         Plain text here...
         { perl code }
         <script language=JavaScript>
@@ -98,14 +102,21 @@ JavaScript program with executable Perl code.  One strategy:
 
 Then use C<PREPROCESSOR =E<gt> \&quote_scripts>.  This will transform 
 
-
-
 =head1 SEE ALSO
 
 L<Text::Template>
 
-=head1 AUTHOR
+=head1 SOURCE
 
+The development version is on github at L<http://github.com/mschout/perl-text-template>
+and may be cloned from L<git://github.com/mschout/perl-text-template.git>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to bug-text-template@rt.cpan.org or through the web interface at:
+ http://rt.cpan.org/Public/Dist/Display.html?Name=Text-Template
+
+=head1 AUTHOR
 
 Mark Jason Dominus, Plover Systems
 
@@ -118,27 +129,11 @@ C<mjd-perl-template-request@plover.com> to join.
 
 For updates, visit C<http://www.plover.com/~mjd/perl/Template/>.
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
-    Text::Template::Preprocess version 1.46
-    Copyright 2013 Mark Jason Dominus
+This software is copyright (c) 2013 by Mark Jason Dominus <mjd@cpan.org>.
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation; either version 2 of the
-    License, or (at your option) any later version.  You may also can
-    redistribute it and/or modify it under the terms of the Perl
-    Artistic License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received copies of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
-

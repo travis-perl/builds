@@ -3,17 +3,17 @@ package Log::Dispatch::File::Locked;
 use strict;
 use warnings;
 
-use base qw( Log::Dispatch::File );
-
-our $VERSION = '2.58';
+our $VERSION = '2.65';
 
 use Fcntl qw(:DEFAULT :flock);
+
+use base qw( Log::Dispatch::File );
 
 sub log_message {
     my $self = shift;
     my %p    = @_;
 
-    if ( $self->{close} ) {
+    if ( $self->{close_after_write} ) {
         $self->_open_file;
     }
 
@@ -36,7 +36,7 @@ sub log_message {
     }
 
     flock( $fh, LOCK_UN ) or die "Cannot unlock '$self->{filename}'";
-    if ( $self->{close} ) {
+    if ( $self->{close_after_write} ) {
         close $fh
             or die "Cannot close '$self->{filename}': $!";
         delete $self->{fh};
@@ -59,7 +59,7 @@ Log::Dispatch::File::Locked - Subclass of Log::Dispatch::File to facilitate lock
 
 =head1 VERSION
 
-version 2.58
+version 2.65
 
 =head1 SYNOPSIS
 
@@ -95,9 +95,13 @@ L<perlfunc/flock>
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/Log-Dispatch/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/Log-Dispatch/issues>.
 
 I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Log-Dispatch can be found at L<https://github.com/houseabsolute/Log-Dispatch>.
 
 =head1 AUTHOR
 
@@ -105,10 +109,13 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2016 by Dave Rolsky.
+This software is Copyright (c) 2017 by Dave Rolsky.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

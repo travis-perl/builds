@@ -1,5 +1,5 @@
 package Net::HTTP::Methods;
-$Net::HTTP::Methods::VERSION = '6.12';
+$Net::HTTP::Methods::VERSION = '6.16';
 use strict;
 use warnings;
 use URI;
@@ -269,23 +269,17 @@ sub my_readline {
                      or die "read timeout";
 
                 # consume all incoming bytes
-                while(1) {
-                    my $bytes_read = $self->sysread($_, 1024, length);
-                    if(defined $bytes_read) {
-                        $new_bytes += $bytes_read;
-                        last if $bytes_read < 1024;
-                        # We got exactly 1024 bytes, so we need to select() to know if there is more data
-                        last unless $self->can_read(0);
-                    }
-                    elsif($!{EINTR} || $!{EAGAIN} || $!{EWOULDBLOCK}) {
-                        redo READ;
-                    }
-                    else {
-                        # if we have already accumulated some data let's at
-                        # least return that as a line
-                        length or die "$what read failed: $!";
-                        last;
-                    }
+                my $bytes_read = $self->sysread($_, 1024, length);
+                if(defined $bytes_read) {
+                    $new_bytes += $bytes_read;
+                }
+                elsif($!{EINTR} || $!{EAGAIN} || $!{EWOULDBLOCK}) {
+                    redo READ;
+                }
+                else {
+                    # if we have already accumulated some data let's at
+                    # least return that as a line
+                    length or die "$what read failed: $!";
                 }
 
                 # no line-ending, no new bytes
@@ -321,8 +315,8 @@ sub can_read {
         $before = time if $timeout;
         my $nfound = select($fbits, undef, undef, $timeout);
         if ($nfound < 0) {
-            if ($!{EINTR} || $!{EAGAIN}) {
-                # don't really think EAGAIN can happen here
+            if ($!{EINTR} || $!{EAGAIN} || $!{EWOULDBLOCK}) {
+                # don't really think EAGAIN/EWOULDBLOCK can happen here
                 if ($timeout) {
                     $timeout -= time - $before;
                     $timeout = 0 if $timeout < 0;
@@ -645,19 +639,17 @@ sub inflate_ok {
 
 1;
 
-__END__
-
 =pod
 
 =encoding UTF-8
 
 =head1 NAME
 
-Net::HTTP::Methods
+Net::HTTP::Methods - Methods shared by Net::HTTP and Net::HTTPS
 
 =head1 VERSION
 
-version 6.12
+version 6.16
 
 =head1 AUTHOR
 
@@ -671,3 +663,7 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+__END__
+
+# ABSTRACT: Methods shared by Net::HTTP and Net::HTTPS

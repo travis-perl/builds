@@ -9,7 +9,7 @@ use warnings;
 use Dist::CheckConflicts
     -dist      => 'Log::Dispatch',
     -conflicts => {
-        'Log::Dispatch::File::Stamped' => '0.10',
+        'Log::Dispatch::File::Stamped' => '0.17',
     },
     -also => [ qw(
         Carp
@@ -20,10 +20,19 @@ use Dist::CheckConflicts
         Fcntl
         IO::Handle
         Module::Runtime
-        Params::Validate
+        Params::ValidationCompiler
         Scalar::Util
+        Specio
+        Specio::Declare
+        Specio::Exporter
+        Specio::Library::Builtins
+        Specio::Library::Numeric
+        Specio::Library::String
         Sys::Syslog
+        Try::Tiny
         base
+        namespace::autoclean
+        parent
         strict
         warnings
     ) ],

@@ -8,7 +8,6 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Element.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Exception.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Exception/ParserRejection.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Exception/ParserTimeout.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Find.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Lexer.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Node.pm

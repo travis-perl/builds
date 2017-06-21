@@ -3,7 +3,7 @@ package Specio::Constraint::Role::Interface;
 use strict;
 use warnings;
 
-our $VERSION = '0.32';
+our $VERSION = '0.37';
 
 use Carp qw( confess );
 use Eval::Closure qw( eval_closure );
@@ -19,7 +19,7 @@ with 'Specio::Role::Inlinable';
 
 use overload(
     q{""}  => sub { $_[0] },
-    '&{}'  => '_subify',
+    '&{}'  => '_subification',
     'bool' => sub {1},
 );
 
@@ -62,6 +62,11 @@ use overload(
         _coercions => {
             builder => '_build_coercions',
             clone   => '_clone_coercions',
+        },
+        _subification => {
+            init_arg => undef,
+            lazy     => 1,
+            builder  => '_build_subification',
         },
 
         # Because types are cloned on import, we can't directly compare type
@@ -304,42 +309,79 @@ sub coerce_value {
     return $value;
 }
 
+sub can_inline_coercion {
+    my $self = shift;
+
+    return all { $_->can_be_inlined } $self->coercions;
+}
+
 sub can_inline_coercion_and_check {
     my $self = shift;
 
     return all { $_->can_be_inlined } $self, $self->coercions;
 }
 
+sub inline_coercion {
+    my $self     = shift;
+    my $arg_name = shift;
+
+    die 'Cannot inline coercion'
+        unless $self->can_inline_coercion;
+
+    my $source = 'do { my $value = ' . $arg_name . ';';
+
+    my ( $coerce, $env );
+    ( $coerce, $arg_name, $env ) = $self->_inline_coercion($arg_name);
+    $source .= $coerce . $arg_name . '};';
+
+    return ( $source, $env );
+}
+
 sub inline_coercion_and_check {
-    my $self = shift;
+    my $self     = shift;
+    my $arg_name = shift;
 
     die 'Cannot inline coercion and check'
         unless $self->can_inline_coercion_and_check;
 
-    my %env;
+    my $source = 'do { my $value = ' . $arg_name . ';';
 
-    my $arg_name = $_[0];
-    my $source   = 'do {';
-    if ( $self->has_coercions ) {
-        $source .= 'my $value = ' . $arg_name . ';';
-        $arg_name = '$value';
-        for my $coercion ( $self->coercions ) {
-            $source
-                .= '$value = '
-                . $coercion->inline_coercion($arg_name) . ' if '
-                . $coercion->from->inline_check($arg_name) . ';';
-
-            %env = ( %env, %{ $coercion->inline_environment } );
-        }
-    }
-
+    my ( $coerce, $env );
+    ( $coerce, $arg_name, $env ) = $self->_inline_coercion($arg_name);
     my ( $assert, $assert_env ) = $self->inline_assert($arg_name);
-    $source .= $assert;
-    %env = ( %env, %{$assert_env} );
 
+    $source .= $coerce;
+    $source .= $assert;
     $source .= $arg_name . '};';
 
-    return ( $source, \%env );
+    return ( $source, { %{$env}, %{$assert_env} } );
+}
+
+sub _inline_coercion {
+    my $self     = shift;
+    my $arg_name = shift;
+
+    return ( q{}, $arg_name, {} ) unless $self->has_coercions;
+
+    my %env;
+
+    $arg_name = '$value';
+    my $source = $arg_name . ' = ';
+    for my $coercion ( $self->coercions ) {
+        $source
+            .= '('
+            . $coercion->from->inline_check($arg_name) . ') ? ('
+            . $coercion->inline_coercion($arg_name) . ') : ';
+
+        %env = (
+            %env,
+            %{ $coercion->inline_environment },
+            %{ $coercion->from->inline_environment },
+        );
+    }
+    $source .= $arg_name . ';';
+
+    return ( $source, $arg_name, \%env );
 }
 
 {
@@ -381,7 +423,14 @@ sub inline_check {
     return $type->_inline_generator->( $type, @_ );
 }
 
-sub _subify {
+# For some idiotic reason I called $type->_subify directly in Code::TidyAll so
+# I'll leave this in here for now.
+
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
+sub _subify { $_[0]->_subification }
+## use critic
+
+sub _build_subification {
     my $self = shift;
 
     if ( defined &Sub::Quote::quote_sub && $self->can_be_inlined ) {
@@ -437,7 +486,11 @@ sub coercion_sub {
                 $coercion->from->inline_check('$_[0]')
             );
 
-            %env = ( %env, %{ $coercion->inline_environment } );
+            %env = (
+                %env,
+                %{ $coercion->inline_environment },
+                %{ $coercion->from->inline_environment },
+            );
         }
 
         $inline .= sprintf( "%s;\n", '$_[0]' );
@@ -579,7 +632,7 @@ Specio::Constraint::Role::Interface - The interface all type constraints should 
 
 =head1 VERSION
 
-version 0.32
+version 0.37
 
 =head1 DESCRIPTION
 

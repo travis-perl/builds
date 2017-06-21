@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package Dist::Zilla::Util::AuthorDeps 6.008;
+package Dist::Zilla::Util::AuthorDeps 6.009;
 # ABSTRACT: Utils for listing your distribution's author dependencies
 
 use Dist::Zilla::Util;
@@ -42,7 +42,12 @@ sub extract_author_deps {
   }
 
   for my $section ( sort keys %$config ) {
-    next if q[_] eq $section;
+    if (q[_] eq $section) {
+      my $version = $config->{_}{':version'};
+      $reqs->add_minimum('Dist::Zilla' => $version) if $version;
+      next;
+    }
+
     my $pack = $section;
     $pack =~ s{\s*/.*$}{}; # trim optional space and slash-delimited suffix
 
@@ -139,7 +144,7 @@ Dist::Zilla::Util::AuthorDeps - Utils for listing your distribution's author dep
 
 =head1 VERSION
 
-version 6.008
+version 6.009
 
 =head1 AUTHOR
 
@@ -147,7 +152,7 @@ Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Ricardo SIGNES.
+This software is copyright (c) 2017 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

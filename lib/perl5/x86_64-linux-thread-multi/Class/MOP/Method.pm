@@ -1,5 +1,5 @@
 package Class::MOP::Method;
-our $VERSION = '2.1807';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;
@@ -143,6 +143,15 @@ sub clone {
     return $clone;
 }
 
+sub _inline_throw_exception {
+    my ( $self, $exception_type, $throw_args ) = @_;
+    return
+          'die Module::Runtime::use_module("Moose::Exception::'
+        . $exception_type
+        . '")->new('
+        . ( $throw_args || '' ) . ')';
+}
+
 1;
 
 # ABSTRACT: Method Meta Object
@@ -159,7 +168,7 @@ Class::MOP::Method - Method Meta Object
 
 =head1 VERSION
 
-version 2.1807
+version 2.2005
 
 =head1 DESCRIPTION
 

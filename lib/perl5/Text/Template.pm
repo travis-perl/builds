@@ -5,12 +5,14 @@
 #
 # Copyright 2013 M. J. Dominus.
 # You may copy and distribute this program under the
-# same terms as Perl iteself.  
+# same terms as Perl itself.  
 # If in doubt, write to mjd-perl-template+@plover.com for a license.
 #
-# Version 1.46
 
 package Text::Template;
+$Text::Template::VERSION = '1.47';
+# ABSTRACT: Expand template text with embedded Perl
+
 require 5.004;
 use Exporter;
 @ISA = qw(Exporter);
@@ -18,7 +20,6 @@ use Exporter;
 use vars '$ERROR';
 use strict;
 
-$Text::Template::VERSION = '1.46';
 my %GLOBAL_PREPEND = ('Text::Template' => '');
 
 sub Version {
@@ -443,6 +444,8 @@ sub _unconditionally_untaint {
     foreach my $key (keys %$hash) {
       undef $hash->{$key};
     }
+    %$hash = ();
+    delete $Text::Template::{$s."::"};
   }
 }
   
@@ -477,14 +480,17 @@ sub TTerror { $ERROR }
 
 1;
 
+__END__
 
-=head1 NAME 
+=pod
+
+=head1 NAME
 
 Text::Template - Expand template text with embedded Perl
 
 =head1 VERSION
 
-This file documents C<Text::Template> version B<1.46>
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -579,7 +585,6 @@ file C<formletter.tmpl>:
 
 			Mark "Vizopteryx" Dominus
 
-
 The result of filling in this template is a string, which might look
 something like this:
 
@@ -617,7 +622,6 @@ template into the example result, and prints it out:
 
 	if (defined $result) { print $result }
 	else { die "Couldn't fill in template: $Text::Template::ERROR" }
-
 
 =head2 Philosophy
 
@@ -675,7 +679,7 @@ C<DELIMITERS> option.  (See L<"Alternative Delimiters">, below.)
 
 Each program fragment should be a sequence of Perl statements, which
 are evaluated the usual way.  The result of the last statement
-executed will be evaluted in scalar context; the result of this
+executed will be evaluated in scalar context; the result of this
 statement is a string, which is interpolated into the template in
 place of the program fragment itself.
 
@@ -802,7 +806,6 @@ end-of-file, and that text is the template:
 	# Read template source code from STDIN:
 	new Text::Template ( TYPE => 'FILEHANDLE', 
                              SOURCE => \*STDIN  );
-
 
 If you omit the C<TYPE> attribute, it's taken to be C<FILE>.
 C<SOURCE> is required.  If you omit it, the program will abort.
@@ -943,7 +946,6 @@ Here's an example of using C<PACKAGE>:
 
 We want to pass in an array which will be assigned to the array
 C<@items>.  Here's how to do that:
-
 
 	@items = ('ivory', 'apes', 'peacocks', );
 	$template->fill_in();
@@ -1380,7 +1382,6 @@ package, and use the C<PACKAGE> option to C<fill_in>:
 
 	$Q::recipient = $recipient;
 	my $text = fill_in_file('formletter.tmpl', PACKAGE => 'Q');
-	
 
 or pass the names and values in a hash with the C<HASH> option:
 
@@ -1491,7 +1492,7 @@ each and every code fragment:
 
 Because we didn't put C<use strict> at the top of the second fragment,
 it was only active in the first fragment, and we didn't get any
-C<strict> checking in the second fragment.  Then we mispelled C<$foo>
+C<strict> checking in the second fragment.  Then we misspelled C<$foo>
 and the error wasn't caught.  
 
 C<Text::Template> version 1.22 and higher has a new feature to make
@@ -1646,7 +1647,6 @@ and it'll come out as
 
 which is what you want.
 
-
 =head2 Shut Up!
 
 People sometimes try to put an initialization section at the top of
@@ -1734,7 +1734,6 @@ they should be taken literally.  The result in the output looks like this:
 
 	{ foo }
 
-
 This is a syntax error:
 
 	{ "foo}" }
@@ -1819,47 +1818,11 @@ method.  It is passed a list of pairs with these entries:
   text   - the text that will be appended
   type   - where the text came from: TEXT for literal text, PROG for code
 
-=head2 Author
+=head1 SUPPORT
 
-Mark Jason Dominus, Plover Systems
-
-Please send questions and other remarks about this software to
-C<mjd-perl-template+@plover.com>
-
-You can join a very low-volume (E<lt>10 messages per year) mailing
-list for announcements about this package.  Send an empty note to
-C<mjd-perl-template-request@plover.com> to join.
-
-For updates, visit C<http://www.plover.com/~mjd/perl/Template/>.
-
-=head2 Support?
-
-This software is version 1.46.  It may have bugs.  Suggestions and bug
-reports are always welcome.  Send them to
-C<mjd-perl-template+@plover.com>.  (That is my address, not the address
-of the mailing list.  The mailing list address is a secret.)
-
-=head1 LICENSE
-
-    Text::Template version 1.46
-    Copyright 2013 Mark Jason Dominus
-
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation; either version 2 of the
-    License, or (at your option) any later version.  You may also can
-    redistribute it and/or modify it under the terms of the Perl
-    Artistic License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received copies of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+This software may have bugs.  Suggestions and bug reports are always welcome.
+Send them to C<mjd-perl-template+@plover.com>.  (That is my address, not the
+address of the mailing list.  The mailing list address is a secret.)
 
 =head1 THANKS
 
@@ -1969,5 +1932,35 @@ The C<$OUT> variable has a special meaning in templates, so you cannot
 use it as if it were a regular variable.
 
 There are not quite enough tests in the test suite.
+
+=head1 SOURCE
+
+The development version is on github at L<http://github.com/mschout/perl-text-template>
+and may be cloned from L<git://github.com/mschout/perl-text-template.git>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to bug-text-template@rt.cpan.org or through the web interface at:
+ http://rt.cpan.org/Public/Dist/Display.html?Name=Text-Template
+
+=head1 AUTHOR
+
+Mark Jason Dominus, Plover Systems
+
+Please send questions and other remarks about this software to
+C<mjd-perl-template+@plover.com>
+
+You can join a very low-volume (E<lt>10 messages per year) mailing
+list for announcements about this package.  Send an empty note to
+C<mjd-perl-template-request@plover.com> to join.
+
+For updates, visit C<http://www.plover.com/~mjd/perl/Template/>.
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Mark Jason Dominus <mjd@cpan.org>.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut

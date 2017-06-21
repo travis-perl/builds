@@ -3,7 +3,7 @@ package Specio::Constraint::Parameterizable;
 use strict;
 use warnings;
 
-our $VERSION = '0.32';
+our $VERSION = '0.37';
 
 use Carp qw( confess );
 use Role::Tiny::With;
@@ -62,7 +62,7 @@ sub parameterize {
     my $self = shift;
     my %args = @_;
 
-    my ( $parameter, $declared_at ) = @args{qw( of declared_at)};
+    my ( $parameter, $declared_at ) = @args{qw( of declared_at )};
     does_role( $parameter, 'Specio::Constraint::Role::Interface' )
         or confess
         'The "of" parameter passed to ->parameterize must be an object which does the Specio::Constraint::Role::Interface role';
@@ -116,7 +116,7 @@ Specio::Constraint::Parameterizable - A class which represents parameterizable c
 
 =head1 VERSION
 
-version 0.32
+version 0.37
 
 =head1 SYNOPSIS
 
@@ -158,16 +158,16 @@ C<parameterized_inline_generator> parameter.
 This is a subroutine that generates a new inline generator subroutine when the
 type is parameterized.
 
-It will be called as a method on the L<Specio::Constraint::Parameterized> object
-when that object needs to generate inline constraint. It will receive the type
-parameter as the first argument and the variable name as a string as the
-second.
+It will be called as a method on the L<Specio::Constraint::Parameterized>
+object when that object needs to generate an inline constraint. It will
+receive the type parameter as the first argument and the variable name as a
+string as the second.
 
 This probably seems fairly confusing, so looking at the examples in the
 L<Specio::Library::Builtins> code may be helpful.
 
 This parameter is mutually exclusive with the
-C<parameterized_inline_generator> parameter.
+C<parameterized_constraint_generator> parameter.
 
 =back
 

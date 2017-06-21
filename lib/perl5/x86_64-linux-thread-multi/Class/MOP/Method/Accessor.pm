@@ -1,5 +1,5 @@
 package Class::MOP::Method::Accessor;
-our $VERSION = '2.1807';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;
@@ -169,11 +169,6 @@ sub _generate_reader_method_inline {
     };
 }
 
-sub _inline_throw_exception {
-    my ( $self, $exception_type, $throw_args ) = @_;
-    return 'die Module::Runtime::use_module("Moose::Exception::' . $exception_type . '")->new(' . ($throw_args || '') . ')';
-}
-
 sub _generate_writer_method {
     my $self = shift;
     my $attr = $self->associated_attribute;
@@ -274,7 +269,7 @@ Class::MOP::Method::Accessor - Method Meta Object for accessors
 
 =head1 VERSION
 
-version 2.1807
+version 2.2005
 
 =head1 SYNOPSIS
 

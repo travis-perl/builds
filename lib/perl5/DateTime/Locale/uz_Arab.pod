@@ -19,12 +19,12 @@
 
 =head1 NAME
 
-DateTime::Locale::uz_Arab - Locale data examples for the uz-Arab locale.
+DateTime::Locale::uz_Arab - Locale data examples for the Uzbek Arabic (uz-Arab) locale
 
 =head1 DESCRIPTION
 
 This pod file contains examples of the locale data available for the
-Uzbek locale.
+Uzbek Arabic locale.
 
 =head2 Days
 
@@ -441,11 +441,11 @@ Uzbek locale.
    1995-12-22T09:05:02 = دسم 22, ج.
   -0010-09-15T04:44:23 = سپت 15, ش.
 
-=head3 MMMMW ('week' W 'of' MMM)
+=head3 MMMMW-count-other ('week' W 'of' MMMM)
 
-   2008-02-05T18:30:30 = week 1 of فبر
-   1995-12-22T09:05:02 = week 3 of دسم
-  -0010-09-15T04:44:23 = week 2 of سپت
+   2008-02-05T18:30:30 = week 1 of فبروری
+   1995-12-22T09:05:02 = week 3 of دسمبر
+  -0010-09-15T04:44:23 = week 2 of سپتمبر
 
 =head3 MMMMd (MMMM d)
 
@@ -567,7 +567,7 @@ Uzbek locale.
    1995-12-22T09:05:02 = 1995 Q4
   -0010-09-15T04:44:23 = -10 Q3
 
-=head3 yw ('week' w 'of' y)
+=head3 yw-count-other ('week' w 'of' y)
 
    2008-02-05T18:30:30 = week 6 of 2008
    1995-12-22T09:05:02 = week 51 of 1995

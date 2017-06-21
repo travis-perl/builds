@@ -1,4 +1,4 @@
-package Dist::Zilla::MVP::Reader::Perl 6.008;
+package Dist::Zilla::MVP::Reader::Perl 6.009;
 # ABSTRACT: the reader for dist.pl files
 
 use Moose;
@@ -18,7 +18,7 @@ sub default_extension { 'pl' }
 sub read_into_assembler {
   my ($self, $location, $asm) = @_;
 
-  my @input = do $location;
+  my @input = do File::Spec->rel2abs($location);
   while (@input and ! ref $input[0]) {
     my ($key, $value) = (shift(@input), shift(@input));
     $asm->add_value($key => $value);
@@ -63,7 +63,7 @@ Dist::Zilla::MVP::Reader::Perl - the reader for dist.pl files
 
 =head1 VERSION
 
-version 6.008
+version 6.009
 
 =head1 DESCRIPTION
 
@@ -75,7 +75,7 @@ Ricardo SIGNES 😏 <rjbs@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Ricardo SIGNES.
+This software is copyright (c) 2017 by Ricardo SIGNES.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

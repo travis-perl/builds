@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '1.11';
+our $VERSION = '1.16';
 
 use DateTime::Locale::Data;
 use DateTime::Locale::FromData;
@@ -362,7 +362,7 @@ DateTime::Locale - Localization support for DateTime.pm
 
 =head1 VERSION
 
-version 1.11
+version 1.16
 
 =head1 SYNOPSIS
 
@@ -370,7 +370,7 @@ version 1.11
 
   my $loc = DateTime::Locale->load('en-GB');
 
-  print $loc->native_locale_name, "\n", $loc->datetime_format_long, "\n";
+  print $loc->native_name, "\n", $loc->datetime_format_long, "\n";
 
   # but mostly just things like ...
 
@@ -452,7 +452,14 @@ reference if called in a scalar context.
 
 Returns an unsorted list of the available locale names in their native
 language, or an array reference if called in a scalar context. All native
-names in UTF-8 characters as appropriate.
+names use UTF-8 as appropriate.
+
+=head1 LOADING LOCALES IN A PRE-FORKING SYSTEM
+
+If you are running an application that does pre-forking (for example with
+Starman), then you should try to load all the locales that you'll need in the
+parent process. Locales are loaded on-demand, so loading them once in each
+child will waste memory that could otherwise be shared.
 
 =head1 CLDR DATA BUGS
 
@@ -483,12 +490,16 @@ http://datetime.perl.org/
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-Locale/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/DateTime-Locale/issues>.
 
 There is a mailing list available for users of this distribution,
 L<mailto:datetime@perl.org>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for DateTime-Locale can be found at L<https://github.com/houseabsolute/DateTime-Locale>.
 
 =head1 DONATIONS
 
@@ -513,7 +524,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Mohammad S Anwar
+=for stopwords Karen Etheridge Mohammad S Anwar Sergey Leschenko yasu47b
 
 =over 4
 
@@ -525,13 +536,24 @@ Karen Etheridge <ether@cpan.org>
 
 Mohammad S Anwar <mohammad.anwar@yahoo.com>
 
+=item *
+
+Sergey Leschenko <Sergey.Leschenko@portaone.com>
+
+=item *
+
+yasu47b <nakayamayasuhiro1986@gmail.com>
+
 =back
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Dave Rolsky.
+This software is copyright (c) 2003 - 2017 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

@@ -47,6 +47,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/FinderCode.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/GatherDir.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/GatherDir/Template.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/GatherFile.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/GenerateFile.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/InlineFiles.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Dist/Zilla/Plugin/License.pm

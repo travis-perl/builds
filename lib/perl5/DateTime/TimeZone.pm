@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-our $VERSION = '2.09';
+our $VERSION = '2.13';
 
 use DateTime::TimeZone::Catalog;
 use DateTime::TimeZone::Floating;
@@ -602,7 +602,7 @@ DateTime::TimeZone - Time zone object base class and factory
 
 =head1 VERSION
 
-version 2.09
+version 2.13
 
 =head1 SYNOPSIS
 
@@ -836,6 +836,13 @@ If you subclass C<DateTime::TimeZone>, you will inherit its hooks,
 which may not work for your module, so please test the interaction of
 your module with Storable.
 
+=head1 LOADING TIME ZONES IN A PRE-FORKING SYSTEM
+
+If you are running an application that does pre-forking (for example with
+Starman), then you should try to load all the time zones that you'll need in
+the parent process. Time zones are loaded on-demand, so loading them once in
+each child will waste memory that could otherwise be shared.
+
 =head1 DONATIONS
 
 If you'd like to thank me for the work I've done on this module,
@@ -883,9 +890,13 @@ Please submit bugs to the CPAN RT system at
 http://rt.cpan.org/NoAuth/ReportBug.html?Queue=datetime%3A%3Atimezone
 or via email at bug-datetime-timezone@rt.cpan.org.
 
-Bugs may be submitted through L<https://github.com/houseabsolute/DateTime-TimeZone/issues>.
+Bugs may be submitted at L<https://github.com/houseabsolute/DateTime-TimeZone/issues>.
 
 I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for DateTime-TimeZone can be found at L<https://github.com/houseabsolute/DateTime-TimeZone>.
 
 =head1 DONATIONS
 
@@ -910,7 +921,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Alexey Molchanov Alfie John Bron Gondwana Daisuke Maki David Pinkowitz Iain Truskett Joshua Hoblitt Karen Etheridge karupanerura Olaf Alders Peter Rabbitson
+=for stopwords Alexey Molchanov Alfie John Bron Gondwana Daisuke Maki David Pinkowitz Iain Truskett Jakub Wilk Joshua Hoblitt Karen Etheridge karupanerura Olaf Alders Peter Rabbitson
 
 =over 4
 
@@ -940,6 +951,10 @@ Iain Truskett <deceased>
 
 =item *
 
+Jakub Wilk <jwilk@jwilk.net>
+
+=item *
+
 Joshua Hoblitt <jhoblitt@cpan.org>
 
 =item *
@@ -962,9 +977,12 @@ Peter Rabbitson <ribasushi@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by Dave Rolsky.
+This software is copyright (c) 2017 by Dave Rolsky.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut
