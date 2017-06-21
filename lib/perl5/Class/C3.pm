@@ -1,10 +1,9 @@
-
 package Class::C3;
 
 use strict;
 use warnings;
 
-our $VERSION = '0.32';
+our $VERSION = '0.33';
 
 our $C3_IN_CORE;
 our $C3_XS;
@@ -403,23 +402,23 @@ method along the C3 linearization. This is best shown with an example.
   #   \   /
   #    <D>
 
-  package A;
-  use c3;
-  sub foo { 'A::foo' }
+  package ClassA;
+  use Class::C3;
+  sub foo { 'ClassA::foo' }
 
-  package B;
-  use base 'A';
-  use c3;
-  sub foo { 'B::foo => ' . (shift)->next::method() }
+  package ClassB;
+  use base 'ClassA';
+  use Class::C3;
+  sub foo { 'ClassB::foo => ' . (shift)->next::method() }
 
-  package C;
-  use base 'A';
-  use c3;
-  sub foo { 'C::foo => ' . (shift)->next::method() }
+  package ClassC;
+  use base 'ClassA';
+  use Class::C3;
+  sub foo { 'ClassC::foo => ' . (shift)->next::method() }
 
-  package D;
-  use base ('B', 'C');
-  use c3;
+  package ClassD;
+  use base ('ClassB', 'ClassC');
+  use Class::C3;
   sub foo { 'D::foo => ' . (shift)->next::method() }
 
   print D->foo; # prints out "D::foo => B::foo => C::foo => A::foo"
@@ -576,9 +575,9 @@ C<maybe::next::method>.
 
 =head1 AUTHOR
 
-Stevan Little, E<lt>stevan@iinteractive.comE<gt>
+Stevan Little, <stevan@iinteractive.com>
 
-Brandon L. Black, E<lt>blblack@gmail.comE<gt>
+Brandon L. Black, <blblack@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -64,15 +64,15 @@ Specifies that this module requires L<Config::General> in order to work.
 
 =cut
 
-sub requires_all_of { [ 'Config::General' ] }
+sub requires_all_of { [ 'Config::General' => '2.47' ] }
 
 =head1 AUTHOR
 
-Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+Brian Cassidy <bricas@cpan.org>
 
 =head1 CONTRIBUTORS
 
-Joel Bernstein E<lt>rataxis@cpan.orgE<gt>
+Joel Bernstein <rataxis@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -81,11 +81,11 @@ Copyright 2006-2016 by Brian Cassidy
 Portions Copyright 2006 Portugal Telecom
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-=over 4 
+=over 4
 
 =item * L<Catalyst>
 

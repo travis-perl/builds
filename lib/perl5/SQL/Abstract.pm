@@ -27,7 +27,7 @@ BEGIN {
 # GLOBALS
 #======================================================================
 
-our $VERSION  = '1.81';
+our $VERSION  = '1.84';
 
 # This would confuse some packagers
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
@@ -227,7 +227,11 @@ sub insert {
   return wantarray ? ($sql, @bind) : $sql;
 }
 
-sub _insert_returning {
+# So that subclasses can override INSERT ... RETURNING separately from
+# UPDATE and DELETE (e.g. DBIx::Class::SQLMaker::Oracle does this)
+sub _insert_returning { shift->_returning(@_) }
+
+sub _returning {
   my ($self, $options) = @_;
 
   my $f = $options->{returning};
@@ -261,13 +265,14 @@ sub _insert_ARRAYREF { # just generate values(?,?) part (no list of fields)
   $self->{bindtype} ne 'columns'
     or belch "can't do 'columns' bindtype when called with arrayref";
 
-  # fold the list of values into a hash of column name - value pairs
-  # (where the column names are artificially generated, and their
-  # lexicographical ordering keep the ordering of the original list)
-  my $i = "a";  # incremented values will be in lexicographical order
-  my $data_in_hash = { map { ($i++ => $_) } @$data };
-
-  return $self->_insert_values($data_in_hash);
+  my (@values, @all_bind);
+  foreach my $value (@$data) {
+    my ($values, @bind) = $self->_insert_value(undef, $value);
+    push @values, $values;
+    push @all_bind, @bind;
+  }
+  my $sql = $self->_sqlcase('values')." ( ".join(", ", @values)." )";
+  return ($sql, @all_bind);
 }
 
 sub _insert_ARRAYREFREF { # literal SQL with bind
@@ -291,52 +296,60 @@ sub _insert_values {
 
   my (@values, @all_bind);
   foreach my $column (sort keys %$data) {
-    my $v = $data->{$column};
+    my ($values, @bind) = $self->_insert_value($column, $data->{$column});
+    push @values, $values;
+    push @all_bind, @bind;
+  }
+  my $sql = $self->_sqlcase('values')." ( ".join(", ", @values)." )";
+  return ($sql, @all_bind);
+}
 
-    $self->_SWITCH_refkind($v, {
+sub _insert_value {
+  my ($self, $column, $v) = @_;
 
-      ARRAYREF => sub {
-        if ($self->{array_datatypes}) { # if array datatype are activated
-          push @values, '?';
-          push @all_bind, $self->_bindtype($column, $v);
-        }
-        else {                          # else literal SQL with bind
-          my ($sql, @bind) = @$v;
-          $self->_assert_bindval_matches_bindtype(@bind);
-          push @values, $sql;
-          push @all_bind, @bind;
-        }
-      },
+  my (@values, @all_bind);
+  $self->_SWITCH_refkind($v, {
 
-      ARRAYREFREF => sub { # literal SQL with bind
-        my ($sql, @bind) = @${$v};
+    ARRAYREF => sub {
+      if ($self->{array_datatypes}) { # if array datatype are activated
+        push @values, '?';
+        push @all_bind, $self->_bindtype($column, $v);
+      }
+      else {                  # else literal SQL with bind
+        my ($sql, @bind) = @$v;
         $self->_assert_bindval_matches_bindtype(@bind);
         push @values, $sql;
         push @all_bind, @bind;
-      },
+      }
+    },
 
-      # THINK : anything useful to do with a HASHREF ?
-      HASHREF => sub {  # (nothing, but old SQLA passed it through)
-        #TODO in SQLA >= 2.0 it will die instead
-        belch "HASH ref as bind value in insert is not supported";
-        push @values, '?';
-        push @all_bind, $self->_bindtype($column, $v);
-      },
+    ARRAYREFREF => sub {        # literal SQL with bind
+      my ($sql, @bind) = @${$v};
+      $self->_assert_bindval_matches_bindtype(@bind);
+      push @values, $sql;
+      push @all_bind, @bind;
+    },
 
-      SCALARREF => sub {  # literal SQL without bind
-        push @values, $$v;
-      },
+    # THINK : anything useful to do with a HASHREF ?
+    HASHREF => sub {       # (nothing, but old SQLA passed it through)
+      #TODO in SQLA >= 2.0 it will die instead
+      belch "HASH ref as bind value in insert is not supported";
+      push @values, '?';
+      push @all_bind, $self->_bindtype($column, $v);
+    },
 
-      SCALAR_or_UNDEF => sub {
-        push @values, '?';
-        push @all_bind, $self->_bindtype($column, $v);
-      },
+    SCALARREF => sub {          # literal SQL without bind
+      push @values, $$v;
+    },
 
-     });
+    SCALAR_or_UNDEF => sub {
+      push @values, '?';
+      push @all_bind, $self->_bindtype($column, $v);
+    },
 
-  }
+  });
 
-  my $sql = $self->_sqlcase('values')." ( ".join(", ", @values)." )";
+  my $sql = join(", ", @values);
   return ($sql, @all_bind);
 }
 
@@ -348,10 +361,11 @@ sub _insert_values {
 
 
 sub update {
-  my $self  = shift;
-  my $table = $self->_table(shift);
-  my $data  = shift || return;
-  my $where = shift;
+  my $self    = shift;
+  my $table   = $self->_table(shift);
+  my $data    = shift || return;
+  my $where   = shift;
+  my $options = shift;
 
   # first build the 'SET' part of the sql statement
   my (@set, @all_bind);
@@ -414,9 +428,18 @@ sub update {
     push @all_bind, @where_bind;
   }
 
+  if ($options->{returning}) {
+    my ($returning_sql, @returning_bind) = $self->_update_returning ($options);
+    $sql .= $returning_sql;
+    push @all_bind, @returning_bind;
+  }
+
   return wantarray ? ($sql, @all_bind) : $sql;
 }
 
+# So that subclasses can override UPDATE ... RETURNING separately from
+# INSERT and DELETE
+sub _update_returning { shift->_returning(@_) }
 
 
 
@@ -449,16 +472,27 @@ sub select {
 
 
 sub delete {
-  my $self  = shift;
-  my $table = $self->_table(shift);
-  my $where = shift;
-
+  my $self    = shift;
+  my $table   = $self->_table(shift);
+  my $where   = shift;
+  my $options = shift;
 
   my($where_sql, @bind) = $self->where($where);
   my $sql = $self->_sqlcase('delete from') . " $table" . $where_sql;
 
+  if ($options->{returning}) {
+    my ($returning_sql, @returning_bind) = $self->_delete_returning ($options);
+    $sql .= $returning_sql;
+    push @bind, @returning_bind;
+  }
+
   return wantarray ? ($sql, @bind) : $sql;
 }
+
+# So that subclasses can override DELETE ... RETURNING separately from
+# INSERT and UPDATE
+sub _delete_returning { shift->_returning(@_) }
+
 
 
 #======================================================================
@@ -477,7 +511,9 @@ sub where {
 
   # order by?
   if ($order) {
-    $sql .= $self->_order_by($order);
+    my ($order_sql, @order_bind) = $self->_order_by($order);
+    $sql .= $order_sql;
+    push @bind, @order_bind;
   }
 
   return wantarray ? ($sql, @bind) : $sql;
@@ -1377,34 +1413,27 @@ sub _quote {
   return '' unless defined $_[1];
   return ${$_[1]} if ref($_[1]) eq 'SCALAR';
 
-  unless ($_[0]->{quote_char}) {
-    $_[0]->_assert_pass_injection_guard($_[1]);
-    return $_[1];
-  }
+  $_[0]->{quote_char} or
+    ($_[0]->_assert_pass_injection_guard($_[1]), return $_[1]);
 
   my $qref = ref $_[0]->{quote_char};
-  my ($l, $r);
-  if (!$qref) {
-    ($l, $r) = ( $_[0]->{quote_char}, $_[0]->{quote_char} );
-  }
-  elsif ($qref eq 'ARRAY') {
-    ($l, $r) = @{$_[0]->{quote_char}};
-  }
-  else {
-    puke "Unsupported quote_char format: $_[0]->{quote_char}";
-  }
+  my ($l, $r) =
+      !$qref             ? ($_[0]->{quote_char}, $_[0]->{quote_char})
+    : ($qref eq 'ARRAY') ? @{$_[0]->{quote_char}}
+    : puke "Unsupported quote_char format: $_[0]->{quote_char}";
+
   my $esc = $_[0]->{escape_char} || $r;
 
   # parts containing * are naturally unquoted
   return join( $_[0]->{name_sep}||'', map
-    { $_ eq '*' ? $_ : do { (my $n = $_) =~ s/(\Q$esc\E|\Q$r\E)/$esc$1/g; $l . $n . $r } }
+    +( $_ eq '*' ? $_ : do { (my $n = $_) =~ s/(\Q$esc\E|\Q$r\E)/$esc$1/g; $l . $n . $r } ),
     ( $_[0]->{name_sep} ? split (/\Q$_[0]->{name_sep}\E/, $_[1] ) : $_[1] )
   );
 }
 
 
 # Conversion, if applicable
-sub _convert ($) {
+sub _convert {
   #my ($self, $arg) = @_;
   if ($_[0]->{convert}) {
     return $_[0]->_sqlcase($_[0]->{convert}) .'(' . $_[1] . ')';
@@ -1413,7 +1442,7 @@ sub _convert ($) {
 }
 
 # And bindtype
-sub _bindtype (@) {
+sub _bindtype {
   #my ($self, $col, @vals) = @_;
   # called often - tighten code
   return $_[0]->{bindtype} eq 'columns'
@@ -1662,7 +1691,7 @@ SQL::Abstract - Generate SQL from Perl data structures
 
     my $sql = SQL::Abstract->new;
 
-    my($stmt, @bind) = $sql->select($source, \@fields, \%where, \@order);
+    my($stmt, @bind) = $sql->select($source, \@fields, \%where, $order);
 
     my($stmt, @bind) = $sql->insert($table, \%fieldvals || \@values);
 
@@ -1675,7 +1704,7 @@ SQL::Abstract - Generate SQL from Perl data structures
     $sth->execute(@bind);
 
     # Just generate the WHERE clause
-    my($stmt, @bind) = $sql->where(\%where, \@order);
+    my($stmt, @bind) = $sql->where(\%where, $order);
 
     # Return values in the same order, for hashed queries
     # See PERFORMANCE section for more details
@@ -2070,7 +2099,7 @@ be supported by all database engines.
 
 =back
 
-=head2 update($table, \%fieldvals, \%where)
+=head2 update($table, \%fieldvals, \%where, \%options)
 
 This takes a table, hashref of field/value pairs, and an optional
 hashref L<WHERE clause|/WHERE CLAUSES>. It returns an SQL UPDATE function and a list
@@ -2078,6 +2107,19 @@ of bind values.
 See the sections on L</"Inserting and Updating Arrays"> and
 L</"Inserting and Updating SQL"> for information on how to insert
 with those data types.
+
+The optional C<\%options> hash reference may contain additional
+options to generate the update SQL. Currently supported options
+are:
+
+=over 4
+
+=item returning
+
+See the C<returning> option to
+L<insert|/insert($table, \@values || \%fieldvals, \%options)>.
+
+=back
 
 =head2 select($source, $fields, $where, $order)
 
@@ -2122,12 +2164,25 @@ for details.
 =back
 
 
-=head2 delete($table, \%where)
+=head2 delete($table, \%where, \%options)
 
 This takes a table name and optional hashref L<WHERE clause|/WHERE CLAUSES>.
 It returns an SQL DELETE statement and list of bind values.
 
-=head2 where(\%where, \@order)
+The optional C<\%options> hash reference may contain additional
+options to generate the delete SQL. Currently supported options
+are:
+
+=over 4
+
+=item returning
+
+See the C<returning> option to
+L<insert|/insert($table, \@values || \%fieldvals, \%options)>.
+
+=back
+
+=head2 where(\%where, $order)
 
 This is used to generate just the WHERE clause. For example,
 if you have an arbitrary data structure and know what the
@@ -2623,10 +2678,16 @@ This difference in syntax is unfortunate but must be preserved for
 historical reasons. So be careful : the two examples below would
 seem algebraically equivalent, but they are not
 
-  {col => [-and => {-like => 'foo%'}, {-like => '%bar'}]}
+  { col => [ -and =>
+    { -like => 'foo%' },
+    { -like => '%bar' },
+  ] }
   # yields : WHERE ( ( col LIKE ? AND col LIKE ? ) )
 
-  [-and => {col => {-like => 'foo%'}, {col => {-like => '%bar'}}]]
+  [ -and =>
+    { col => { -like => 'foo%' } },
+    { col => { -like => '%bar' } },
+  ]
   # yields : WHERE ( ( col LIKE ? OR col LIKE ? ) )
 
 
@@ -2728,7 +2789,7 @@ This would create:
     @bind = ('10');
 
 Note that you must pass the bind values in the same format as they are returned
-by L<where|/where(\%where, \@order)>. This means that if you set L</bindtype>
+by L<where|/where(\%where, $order)>. This means that if you set L</bindtype>
 to C<columns>, you must provide the bind values in the
 C<< [ column_meta => value ] >> format, where C<column_meta> is an opaque
 scalar value; most commonly the column name, but you can use any scalar value
@@ -2870,32 +2931,38 @@ script.
 =head1 ORDER BY CLAUSES
 
 Some functions take an order by clause. This can either be a scalar (just a
-column name,) a hash of C<< { -desc => 'col' } >> or C<< { -asc => 'col' } >>,
-or an array of either of the two previous forms. Examples:
+column name), a hashref of C<< { -desc => 'col' } >> or C<< { -asc => 'col' }
+>>, a scalarref, an arrayref-ref, or an arrayref of any of the previous
+forms. Examples:
 
-               Given            |         Will Generate
-    ----------------------------------------------------------
-                                |
-    \'colA DESC'                | ORDER BY colA DESC
-                                |
-    'colA'                      | ORDER BY colA
-                                |
-    [qw/colA colB/]             | ORDER BY colA, colB
-                                |
-    {-asc  => 'colA'}           | ORDER BY colA ASC
-                                |
-    {-desc => 'colB'}           | ORDER BY colB DESC
-                                |
-    ['colA', {-asc => 'colB'}]  | ORDER BY colA, colB ASC
-                                |
-    { -asc => [qw/colA colB/] } | ORDER BY colA ASC, colB ASC
-                                |
-    [                           |
-      { -asc => 'colA' },       | ORDER BY colA ASC, colB DESC,
-      { -desc => [qw/colB/],    |          colC ASC, colD ASC
-      { -asc => [qw/colC colD/],|
-    ]                           |
-    ===========================================================
+               Given              |         Will Generate
+    ---------------------------------------------------------------
+                                  |
+    'colA'                        | ORDER BY colA
+                                  |
+    [qw/colA colB/]               | ORDER BY colA, colB
+                                  |
+    {-asc  => 'colA'}             | ORDER BY colA ASC
+                                  |
+    {-desc => 'colB'}             | ORDER BY colB DESC
+                                  |
+    ['colA', {-asc => 'colB'}]    | ORDER BY colA, colB ASC
+                                  |
+    { -asc => [qw/colA colB/] }   | ORDER BY colA ASC, colB ASC
+                                  |
+    \'colA DESC'                  | ORDER BY colA DESC
+                                  |
+    \[ 'FUNC(colA, ?)', $x ]      | ORDER BY FUNC(colA, ?)
+                                  |   /* ...with $x bound to ? */
+                                  |
+    [                             | ORDER BY
+      { -asc => 'colA' },         |     colA ASC,
+      { -desc => [qw/colB/] },    |     colB DESC,
+      { -asc => [qw/colC colD/] },|     colC ASC, colD ASC,
+      \'colE DESC',               |     colE DESC,
+      \[ 'FUNC(colF, ?)', $x ],   |     FUNC(colF, ?)
+    ]                             |   /* ...with $x bound to ? */
+    ===============================================================
 
 
 
@@ -3229,4 +3296,3 @@ terms as perl itself (either the GNU General Public License or
 the Artistic License)
 
 =cut
-
