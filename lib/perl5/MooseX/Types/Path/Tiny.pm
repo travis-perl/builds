@@ -1,10 +1,11 @@
 use strict;
 use warnings;
-package MooseX::Types::Path::Tiny;
-# git description: v0.010-16-gf86e422
-$MooseX::Types::Path::Tiny::VERSION = '0.011';
+package MooseX::Types::Path::Tiny; # git description: v0.011-21-g8796f45
 # ABSTRACT: Path::Tiny types and coercions for Moose
 # KEYWORDS: moose type constraint path filename directory
+# vim: set ts=8 sts=4 sw=4 tw=115 et :
+
+our $VERSION = '0.012';
 
 use Moose 2;
 use MooseX::Types::Stringlike qw/Stringable/;
@@ -67,14 +68,27 @@ coerce(
     from ArrayRef()   => via { [ map { Path::Tiny::path($_)->absolute } @$_ ] },
 );
 
-### optionally add Getopt option type (adapted from MooseX::Types:Path::Class
-##eval { require MooseX::Getopt; };
-##if ( !$@ ) {
-##    MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $_, '=s', )
-##      for ( 'Path::Tiny', Path );
-##}
+
+# optionally add Getopt option type (adapted from MooseX::Types:Path::Class)
+if (eval { require MooseX::Getopt; 1 }) {
+    for my $type (
+        'Path::Tiny',
+        Path ,
+        AbsPath,
+        File ,
+        AbsFile,
+        Dir ,
+        AbsDir,
+        Paths ,
+        AbsPaths,
+    ) {
+        MooseX::Getopt::OptionTypeMap->add_option_type_to_map( $type, '=s', );
+    }
+}
 
 1;
+
+__END__
 
 =pod
 
@@ -86,7 +100,7 @@ MooseX::Types::Path::Tiny - Path::Tiny types and coercions for Moose
 
 =head1 VERSION
 
-version 0.011
+version 0.012
 
 =head1 SYNOPSIS
 
@@ -214,21 +228,26 @@ L<Types::Path::Tiny>
 
 =back
 
+=head1 SUPPORT
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=MooseX-Types-Path-Tiny>
+(or L<bug-MooseX-Types-Path-Tiny@rt.cpan.org|mailto:bug-MooseX-Types-Path-Tiny@rt.cpan.org>).
+
+There is also a mailing list available for users of this distribution, at
+L<http://lists.perl.org/list/moose.html>.
+
+There is also an irc channel available for users of this distribution, at
+L<C<#moose> on C<irc.perl.org>|irc://irc.perl.org/#moose>.
+
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
 =head1 AUTHOR
 
 David Golden <dagolden@cpan.org>
 
-=head1 COPYRIGHT AND LICENSE
-
-This software is Copyright (c) 2013 by David Golden.
-
-This is free software, licensed under:
-
-  The Apache License, Version 2.0, January 2004
-
 =head1 CONTRIBUTORS
 
-=for stopwords Karen Etheridge Toby Inkster Demian Riccardi
+=for stopwords Karen Etheridge Toby Inkster Demian Riccardi Gregory Oschwald
 
 =over 4
 
@@ -244,11 +263,18 @@ Toby Inkster <mail@tobyinkster.co.uk>
 
 Demian Riccardi <dde@ornl.gov>
 
+=item *
+
+Gregory Oschwald <goschwald@maxmind.com>
+
 =back
 
+=head1 COPYRIGHT AND LICENCE
+
+This software is Copyright (c) 2013 by David Golden.
+
+This is free software, licensed under:
+
+  The Apache License, Version 2.0, January 2004
+
 =cut
-
-__END__
-
-
-# vim: ts=4 sts=4 sw=4 et:
