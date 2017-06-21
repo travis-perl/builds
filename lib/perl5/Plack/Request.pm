@@ -2,7 +2,7 @@ package Plack::Request;
 use strict;
 use warnings;
 use 5.008_001;
-our $VERSION = '1.0042';
+our $VERSION = '1.0044';
 
 use HTTP::Headers::Fast;
 use Carp ();
@@ -93,7 +93,7 @@ sub headers {
         $self->{headers} = HTTP::Headers::Fast->new(
             map {
                 (my $field = $_) =~ s/^HTTPS?_//;
-                ( $field => $env->{$_} );
+                ( lc($field) => $env->{$_} );
             }
                 grep { /^(?:HTTP|CONTENT)/i } keys %$env
             );

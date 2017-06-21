@@ -3,7 +3,7 @@ package Tree::Simple;
 use strict;
 use warnings;
 
-our $VERSION = '1.29';
+our $VERSION = '1.31';
 
 use Scalar::Util qw(blessed);
 
@@ -134,6 +134,11 @@ sub addChild {
 sub addChildren {
     splice @_, 1, 0, $_[0]->getChildCount;
     goto &insertChildren;
+}
+
+sub generateChild
+{
+	return $_[0]->addChild($_[0]->new($_[1]) );
 }
 
 sub _insertChildAt {
@@ -346,6 +351,14 @@ sub getAllSiblings {
     $self->getParent()->getAllChildren();
 }
 
+sub getSiblingCount
+{
+	my($self) = @_;
+
+	return $self->isRoot ? 0 : $#{$self->getAllSiblings};
+
+} # End of getSiblingCount.
+
 ## -----------------------------------------------
 ## informational
 
@@ -364,6 +377,22 @@ sub size {
     }
     return $size;
 }
+
+sub isFirstChild
+{
+	my($self) = @_;
+
+	return $self->isRoot ? 0 : $_[0]->getIndex == 0;
+
+} # End of isFirstChild.
+
+sub isLastChild
+{
+	my($self) = @_;
+
+	return $self->isRoot ? 0 : $self->getIndex == ($self->getParent->getChildCount - 1);
+
+} # End of isLastChild.
 
 ## -----------------------------------------------
 ## misc
@@ -627,6 +656,23 @@ Tree::Simple - A simple tree object
   # clean up circular references
   $tree->DESTROY();
 
+Alternately, to avoid calling Tree::Simple->new(...) just to add a node:
+
+	use Tree::Simple;
+	use Data::TreeDumper; # Provides DumpTree().
+
+	# ---------------
+
+	my($root) = Tree::Simple->new('Root', Tree::Simple->ROOT);
+
+	$root->generateChild('Child 1.0');
+	$root->generateChild('Child 2.0');
+	$root->getChild(0)->generateChild('Grandchild 1.1');
+
+	print DumpTree($root);
+
+	$root->DESTROY;
+
 =head1 DESCRIPTION
 
 This module in an fully object-oriented implementation of a simple n-ary
@@ -727,6 +773,11 @@ Or the more complex:
                                      )
                          );
 
+=item B<generateChild ($scalar)>
+
+This method accepts a scalar and calls addChild(Tree::Simple->new($scalar) ) purely to
+save you the effort of needing to use C<< Tree::Simple->new(...) >> as the parameter.
+
 =item B<addChildren (@trees)>
 
 This method accepts an array of B<Tree::Simple> objects, and adds them to
@@ -826,6 +877,21 @@ It will return an array reference in scalar context.
 Much like C<addSibling> and C<addSiblings>, these two methods simply call
 C<getChild> and C<getAllChildren> on the parent of the invocant.
 
+See also </getSiblingCount>.
+
+Warning: This method includes the invocant, so it is not really all siblings but rather all
+children of the parent!
+
+=item B<getSiblingCount>
+
+Returns 0 if the invocant is the root node. Otherwise returns the count of siblings, which excludes
+the invocant.
+
+See also </getAllSiblings>.
+
+Warning: This differs from scalar(parent->getAllSiblings() ) just above, which for some reason
+includes the invocant. I cannot change getAllSiblings() now for a module first released in 2004.
+
 =item B<getDepth>
 
 Returns a number representing the depth of the invocant within the hierarchy of
@@ -874,6 +940,18 @@ Returns true (1) if the invocant does not have any children, false (0) otherwise
 
 Returns true (1) if the invocant has a "parent" of B<ROOT>, returns false
 (0) otherwise.
+
+=item B<isFistChild>
+
+Returns 0 if the invocant is the root node.
+
+Returns 1 if the invocant is the first child in the parental list of children. Otherwise returns 0.
+
+=item B<isLastChild>
+
+Returns 0 if the invocant is the root node.
+
+Returns 1 if the invocant is the last child in the parental list of children. Otherwise returns 0.
 
 =back
 

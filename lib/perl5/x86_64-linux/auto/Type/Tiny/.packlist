@@ -37,6 +37,7 @@
 /home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Common/String.pm
 /home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Standard.pm
 /home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Standard/ArrayRef.pm
+/home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Standard/CycleTuple.pm
 /home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Standard/Dict.pm
 /home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Standard/HashRef.pm
 /home/travis/.perlbrew/libs/5.22.0@cat/lib/perl5/Types/Standard/Map.pm

@@ -2,7 +2,7 @@ package Test::TCP;
 use strict;
 use warnings;
 use 5.00800;
-our $VERSION = '2.17';
+our $VERSION = '2.19';
 use base qw/Exporter/;
 use Test::SharedFork 0.12;
 use Test::More ();
@@ -20,7 +20,7 @@ my $TERMSIG = $^O eq 'MSWin32' ? 'KILL' : 'TERM';
 sub test_tcp {
     my %args = @_;
     for my $k (qw/client server/) {
-        die "missing madatory parameter $k" unless exists $args{$k};
+        die "missing mandatory parameter $k" unless exists $args{$k};
     }
     my $server_code = delete $args{server};
     my $client_code = delete $args{client};
