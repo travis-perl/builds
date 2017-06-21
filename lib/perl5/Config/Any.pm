@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use Module::Pluggable::Object ();
 
-our $VERSION = '0.27';
+our $VERSION = '0.32';
 
 =head1 NAME
 
@@ -33,16 +33,14 @@ to load configuration data from multiple different file formats. It supports XML
 JSON, Apache-style configuration, Windows INI files, and even Perl code.
 
 The rationale for this module is as follows: Perl programs are deployed on many different
-platforms and integrated with many different systems. Systems administrators and end 
+platforms and integrated with many different systems. Systems administrators and end
 users may prefer different configuration formats than the developers. The flexibility
-inherent in a multiple format configuration loader allows different users to make 
+inherent in a multiple format configuration loader allows different users to make
 different choices, without generating extra work for the developers. As a developer
 you only need to learn a single interface to be able to use the power of different
 configuration formats.
 
-=head1 INTERFACE 
-
-=cut
+=head1 INTERFACE
 
 =head2 load_files( \%args )
 
@@ -54,15 +52,15 @@ configuration formats.
 C<load_files()> attempts to load configuration from the list of files passed in
 the C<files> parameter, if the file exists.
 
-If the C<filter> parameter is set, it is used as a callback to modify the configuration 
-data before it is returned. It will be passed a single hash-reference parameter which 
+If the C<filter> parameter is set, it is used as a callback to modify the configuration
+data before it is returned. It will be passed a single hash-reference parameter which
 it should modify in-place.
 
 If the C<use_ext> parameter is defined, the loader will attempt to parse the file
 extension from each filename and will skip the file unless it matches a standard
 extension for the loading plugins. Only plugins whose standard extensions match the
 file extension will be used. For efficiency reasons, its use is encouraged, but
-be aware that you will lose flexibility -- for example, a file called C<myapp.cfg> 
+be aware that you will lose flexibility -- for example, a file called C<myapp.cfg>
 containing YAML data will not be offered to the YAML plugin, whereas C<myapp.yml>
 or C<myapp.yaml> would be.
 
@@ -70,9 +68,9 @@ When the C<flatten_to_hash> parameter is defined, the loader will return a hash
 keyed on the file names, as opposed to the usual list of single-key hashes.
 
 C<load_files()> also supports a 'force_plugins' parameter, whose value should be an
-arrayref of plugin names like C<Config::Any::INI>. Its intended use is to allow the use 
+arrayref of plugin names like C<Config::Any::INI>. Its intended use is to allow the use
 of a non-standard file extension while forcing it to be offered to a particular parser.
-It is not compatible with 'use_ext'. 
+It is not compatible with 'use_ext'.
 
 You can supply a C<driver_args> hashref to pass special options to a particular
 parser object. Example:
@@ -102,7 +100,7 @@ sub load_files {
     Config::Any->load_stems( { stems => \@stems, flatten_to_hash => 1 } );
 
 C<load_stems()> attempts to load configuration from a list of files which it generates
-by combining the filename stems list passed in the C<stems> parameter with the 
+by combining the filename stems list passed in the C<stems> parameter with the
 potential filename extensions from each loader, which you can check with the
 C<extensions()> classmethod described below. Once this list of possible filenames is
 built it is treated exactly as in C<load_files()> above, as which it takes the same
@@ -245,7 +243,7 @@ sub _support_error {
 
 =head2 finder( )
 
-The C<finder()> classmethod returns the 
+The C<finder()> classmethod returns the
 L<Module::Pluggable::Object|Module::Pluggable::Object>
 object which is used to load the plugins. See the documentation for that module for
 more information.
@@ -264,7 +262,7 @@ sub finder {
 
 =head2 plugins( )
 
-The C<plugins()> classmethod returns the names of configuration loading plugins as 
+The C<plugins()> classmethod returns the names of configuration loading plugins as
 found by L<Module::Pluggable::Object|Module::Pluggable::Object>.
 
 =cut
@@ -335,15 +333,15 @@ No bugs have been reported.
 
 Please report any bugs or feature requests to
 C<bug-config-any@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=Config-Any>.
 
 =head1 AUTHOR
 
-Joel Bernstein E<lt>rataxis@cpan.orgE<gt>
+Joel Bernstein <rataxis@cpan.org>
 
 =head1 CONTRIBUTORS
 
-This module was based on the original 
+This module was based on the original
 L<Catalyst::Plugin::ConfigLoader|Catalyst::Plugin::ConfigLoader>
 module by Brian Cassidy C<< <bricas@cpan.org> >>.
 
@@ -384,7 +382,7 @@ SUCH DAMAGES.
 
 =head1 SEE ALSO
 
-L<Catalyst::Plugin::ConfigLoader|Catalyst::Plugin::ConfigLoader> 
+L<Catalyst::Plugin::ConfigLoader|Catalyst::Plugin::ConfigLoader>
 -- now a wrapper around this module.
 
 =cut

@@ -21,7 +21,6 @@ Loads YAML files. Example:
         foo: bar
     Model::Baz:
         qux: xyzzy
-    
 
 =head1 METHODS
 
@@ -45,13 +44,10 @@ sub load {
     my $class = shift;
     my $file  = shift;
 
-    eval { require YAML::XS };
-    unless ( $@ ) {
+    if (eval { require YAML::XS; 1 }) {
         return YAML::XS::LoadFile( $file );
     }
-
-    eval { require YAML::Syck; YAML::Syck->VERSION( '0.70' ) };
-    unless ( $@ ) {
+    elsif ($] > 5.008008 && eval { require YAML::Syck; YAML::Syck->VERSION(0.70) } ) {
         open( my $fh, $file ) or die $!;
         my $content = do { local $/; <$fh> };
         close $fh;
@@ -69,22 +65,24 @@ L<YAML> in order to work.
 
 =cut
 
-sub requires_any_of { 'YAML::XS', [ 'YAML::Syck', '0.70' ], 'YAML' }
+sub requires_any_of {
+    'YAML::XS', ( $] > 5.008008 ? [ 'YAML::Syck', '0.70' ] : ()), 'YAML';
+}
 
 =head1 AUTHOR
 
-Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+Brian Cassidy <bricas@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2006-2016 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-=over 4 
+=over 4
 
 =item * L<Catalyst>
 

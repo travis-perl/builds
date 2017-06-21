@@ -38,15 +38,16 @@ Lack of specifying these subs will assume you require no extra modules to functi
 
 sub is_supported {
     my ( $class ) = shift;
+    local $@;
     if ( $class->can( 'requires_all_of' ) ) {
-        eval join( '', map { _require_line( $_ ) } $class->requires_all_of );
-        return $@ ? 0 : 1;
+        return eval {
+            _require($_) for $class->requires_all_of;
+            1;
+        } || 0;
     }
     if ( $class->can( 'requires_any_of' ) ) {
-        for ( $class->requires_any_of ) {
-            eval _require_line( $_ );
-            return 1 unless $@;
-        }
+        eval { _require( $_ ); 1 } and return 1
+            for $class->requires_any_of;
         return 0;
     }
 
@@ -54,27 +55,28 @@ sub is_supported {
     return 1;
 }
 
-sub _require_line {
+sub _require {
     my ( $input ) = shift;
     my ( $module, $version ) = ( ref $input ? @$input : $input );
-    return "require $module;"
-        . ( $version ? "${module}->VERSION('${version}');" : '' );
+    (my $file = "$module.pm") =~ s{::}{/}g;
+    require $file;
+    $module->VERSION if $version;
 }
 
 =head1 AUTHOR
 
-Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+Brian Cassidy <bricas@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2008-2009 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-=over 4 
+=over 4
 
 =item * L<Config::Any>
 

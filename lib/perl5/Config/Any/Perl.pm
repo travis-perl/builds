@@ -4,6 +4,8 @@ use strict;
 use warnings;
 
 use base 'Config::Any::Base';
+use File::Spec;
+use Cwd ();
 
 =head1 NAME
 
@@ -48,8 +50,13 @@ sub load {
     my( $exception, $content );
     {
         local $@;
-        $content = do $file;
-        $exception = $@;
+        # previously this would load based on . being in @INC, and wouldn't
+        # trigger taint errors even if '.' probably should have been considered
+        # tainted.  untaint for backwards compatibility.
+        my ($cwd) = Cwd::cwd() =~ /\A(.*)\z/s;
+        $content = do File::Spec->rel2abs($file, $cwd);
+        $exception = $@ || $!
+            if !defined $content;
     }
     die $exception if $exception;
 
@@ -58,18 +65,18 @@ sub load {
 
 =head1 AUTHOR
 
-Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+Brian Cassidy <bricas@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2006-2016 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-=over 4 
+=over 4
 
 =item * L<Catalyst>
 
