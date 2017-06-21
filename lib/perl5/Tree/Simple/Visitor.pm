@@ -3,7 +3,7 @@ package Tree::Simple::Visitor;
 use strict;
 use warnings;
 
-our $VERSION = '1.29';
+our $VERSION = '1.31';
 
 use Scalar::Util qw(blessed);
 

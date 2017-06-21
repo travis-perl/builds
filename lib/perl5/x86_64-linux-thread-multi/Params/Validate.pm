@@ -5,7 +5,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = '1.26';
+our $VERSION = '1.29';
 
 use Exporter;
 use Module::Implementation;
@@ -77,7 +77,7 @@ Params::Validate - Validate method/function parameters
 
 =head1 VERSION
 
-version 1.26
+version 1.29
 
 =head1 SYNOPSIS
 
@@ -124,10 +124,12 @@ version 1.26
         validate(
             @_,
             {
-                foo => callbacks => {
-                    'is an integer' => sub {
-                        return 1 if $_[0] =~ /^-?[1-9][0-9]*$/;
-                        die "$_[0] is not a valid integer value";
+                foo => {
+                    callbacks => {
+                        'is an integer' => sub {
+                            return 1 if $_[0] =~ /^-?[1-9][0-9]*$/;
+                            die "$_[0] is not a valid integer value";
+                        },
                     },
                 }
             }
@@ -160,10 +162,15 @@ version 1.26
 
 =head1 DESCRIPTION
 
-The Params::Validate module allows you to validate method or function
-call parameters to an arbitrary level of specificity. At the simplest
-level, it is capable of validating the required parameters were given
-and that no unspecified additional parameters were passed in.
+B<< I would recommend you consider using L<Params::ValidationCompiler>
+instead. That module, despite being pure Perl, is I<significantly> faster than
+this one, at the cost of having to adopt a type system such as L<Specio>,
+L<Type::Tiny>, or the one shipped with L<Moose> >>.
+
+This module allows you to validate method or function call parameters to an
+arbitrary level of specificity. At the simplest level, it is capable of
+validating the required parameters were given and that no unspecified
+additional parameters were passed in.
 
 It is also capable of determining that a parameter is of a specific
 type, that it is an object of a certain class hierarchy, that it
@@ -829,10 +836,13 @@ figures out how to do this, please let me know.
 
 =head1 SUPPORT
 
-Bugs may be submitted through L<the RT bug tracker|http://rt.cpan.org/Public/Dist/Display.html?Name=Params-Validate>
-(or L<bug-params-validate@rt.cpan.org|mailto:bug-params-validate@rt.cpan.org>).
+Bugs may be submitted at L<http://rt.cpan.org/Public/Dist/Display.html?Name=Params-Validate> or via email to L<bug-params-validate@rt.cpan.org|mailto:bug-params-validate@rt.cpan.org>.
 
-I am also usually active on IRC as 'drolsky' on C<irc://irc.perl.org>.
+I am also usually active on IRC as 'autarch' on C<irc://irc.perl.org>.
+
+=head1 SOURCE
+
+The source code repository for Params-Validate can be found at L<https://github.com/houseabsolute/Params-Validate>.
 
 =head1 DONATIONS
 
@@ -867,9 +877,17 @@ Ilya Martynov <ilya@martynov.org>
 
 =head1 CONTRIBUTORS
 
-=for stopwords Ivan Bessarabov J.R. Mash Karen Etheridge Noel Maddy Olivier Mengué Tony Cook Vincent Pit
+=for stopwords Andy Grundman E. Choroba Ivan Bessarabov J.R. Mash Karen Etheridge Noel Maddy Olivier Mengué Tony Cook Vincent Pit
 
 =over 4
+
+=item *
+
+Andy Grundman <andyg@activestate.com>
+
+=item *
+
+E. Choroba <choroba@matfyz.cz>
 
 =item *
 
@@ -903,10 +921,13 @@ Vincent Pit <perl@profvince.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2001 - 2016 by Dave Rolsky and Ilya Martynov.
+This software is Copyright (c) 2001 - 2017 by Dave Rolsky and Ilya Martynov.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
+
+The full text of the license can be found in the
+F<LICENSE> file included with this distribution.
 
 =cut

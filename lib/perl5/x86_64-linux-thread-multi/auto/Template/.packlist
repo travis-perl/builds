@@ -56,7 +56,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Stash/Context.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Stash/XS.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Test.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Toolkit.pod
+/home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Toolkit.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Tools.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Tools/tpage.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/x86_64-linux-thread-multi/Template/Tools/ttree.pod

@@ -16,10 +16,10 @@ Config::Any::INI - Load INI config files
 Loads INI files. Example:
 
     name=TestApp
-    
+
     [Controller::Foo]
     foo=bar
-    
+
     [Model::Baz]
     qux=xyzzy
 
@@ -85,7 +85,7 @@ sub requires_all_of { 'Config::Tiny' }
 This variable controls whether spaces in INI section headings will be expanded into nested hash keys.
 e.g. it controls whether [Full Power] maps to $config->{'Full Power'} or $config->{'Full'}->{'Power'}
 
-By default it is set to 1 (i.e. true). 
+By default it is set to 1 (i.e. true).
 
 Set it to 0 to preserve literal spaces in section headings:
 
@@ -97,20 +97,20 @@ Set it to 0 to preserve literal spaces in section headings:
 
 =head1 AUTHORS
 
-Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+Brian Cassidy <bricas@cpan.org>
 
-Joel Bernstein E<lt>rataxis@cpan.orgE<gt>
+Joel Bernstein <rataxis@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2006-2016 by Brian Cassidy, portions copyright 2006, 2007 by Joel Bernstein
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 
-=over 4 
+=over 4
 
 =item * L<Catalyst>
 

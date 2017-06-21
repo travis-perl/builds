@@ -205,7 +205,7 @@ sub composed_stats_class {
 __PACKAGE__->_encode_check(Encode::FB_CROAK | Encode::LEAVE_SRC);
 
 # Remember to update this in Catalyst::Runtime as well!
-our $VERSION = '5.90114';
+our $VERSION = '5.90115';
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
 
 sub import {
@@ -246,11 +246,6 @@ sub _application { $_[0] }
 =head1 NAME
 
 Catalyst - The Elegant MVC Web Application Framework
-
-=for html
-<a href="https://badge.fury.io/pl/Catalyst-Runtime"><img src="https://badge.fury.io/pl/Catalyst-Runtime.svg" alt="CPAN version" height="18"></a>
-<a href="https://travis-ci.org/perl-catalyst/catalyst-runtime/"><img src="https://api.travis-ci.org/perl-catalyst/catalyst-runtime.png" alt="Catalyst></a>
-<a href="http://cpants.cpanauthors.org/dist/Catalyst-Runtime"><img src="http://cpants.cpanauthors.org/dist/Catalyst-Runtime.png" alt='Kwalitee Score' /></a>
 
 =head1 SYNOPSIS
 
@@ -475,7 +470,7 @@ or stash it like so:
 
 and access it from the stash.
 
-Keep in mind that the C<end> method used is that of the caller action. So a C<$c-E<gt>detach> inside a forwarded action would run the C<end> method from the original action requested.
+Keep in mind that the C<end> method used is that of the caller action. So a C<< $c->detach >> inside a forwarded action would run the C<end> method from the original action requested.
 
 =cut
 
@@ -2322,6 +2317,10 @@ sub finalize_encoding {
       (defined($res->body)) and
       (ref(\$res->body) eq 'SCALAR')
     ) {
+        # if you are finding yourself here and your body is already encoded correctly
+        # and you want to turn this off, use $c->clear_encoding to prevent encoding
+        # at this step, or set encoding to undef in the config to do so for the whole
+        # application.  See the ENCODING documentaiton for better notes.
         $c->res->body( $c->encoding->encode( $c->res->body, $c->_encode_check ) );
 
         # Set the charset if necessary.  This might be a bit bonkers since encodable response
@@ -2741,9 +2740,16 @@ sub log_request_parameters {
         next if ! keys %$params;
         my $t = Text::SimpleTable->new( [ 35, 'Parameter' ], [ $column_width, 'Value' ] );
         for my $key ( sort keys %$params ) {
-            my $param = $params->{$key};
-            my $value = defined($param) ? $param : '';
-            $t->row( $key, ref $value eq 'ARRAY' ? ( join ', ', @$value ) : $value );
+            my @values = ();
+            if(ref $params eq 'Hash::MultiValue') {
+                @values = $params->get_all($key);
+            } else {
+                my $param = $params->{$key};
+                if( defined($param) ) {
+                    @values = ref $param eq 'ARRAY' ? @$param : $param;
+                }
+            }
+            $t->row( $key.( scalar @values > 1 ? ' [multiple]' : ''), join(', ', @values) );
         }
         $c->log->debug( ucfirst($type) . " Parameters are:\n" . $t->draw );
     }
@@ -4300,18 +4306,20 @@ value to undef.
 
 C<abort_chain_on_error_fix>
 
-When there is an error in an action chain, the default behavior is to continue
-processing the remaining actions and then catch the error upon chain end.  This
-can lead to running actions when the application is in an unexpected state.  If
-you have this issue, setting this config value to true will promptly exit a
-chain when there is an error raised in any action (thus terminating the chain
-early.)
+Defaults to true.
 
-use like:
+When there is an error in an action chain, the default behavior is to
+abort the processing of the remaining actions to avoid running them
+when the application is in an unexpected state.
 
-    __PACKAGE__->config(abort_chain_on_error_fix => 1);
+Before version 5.90070, the default used to be false. To keep the old
+behaviour, you can explicitely set the value to false. E.g.
 
-In the future this might become the default behavior.
+    __PACKAGE__->config(abort_chain_on_error_fix => 0);
+
+If this setting is set to false, then the remaining actions are
+performed and the error is caught at the end of the chain.
+
 
 =item *
 
@@ -4765,6 +4773,11 @@ the encoding configuration to undef.
 
 This is recommended for temporary backwards compatibility only.
 
+To turn it off for a single request use the L<clear_encoding>
+method to turn off encoding for this request.  This can be useful
+when you are setting the body to be an arbitrary block of bytes,
+especially if that block happens to be a block of UTF8 text.
+
 Encoding is automatically applied when the content-type is set to
 a type that can be encoded.  Currently we encode when the content type
 matches the following regular expression:
@@ -4887,7 +4900,7 @@ andrewalker: André Walker <andre@cpan.org>
 
 Andrew Bramble
 
-Andrew Ford E<lt>A.Ford@ford-mason.co.ukE<gt>
+Andrew Ford <A.Ford@ford-mason.co.uk>
 
 Andrew Ruthven
 
@@ -4911,7 +4924,7 @@ Danijel Milicevic C<me@danijel.de>
 
 davewood: David Schmidt <davewood@cpan.org>
 
-David Kamholz E<lt>dkamholz@cpan.orgE<gt>
+David Kamholz <dkamholz@cpan.org>
 
 David Naughton, C<naughton@umn.edu>
 

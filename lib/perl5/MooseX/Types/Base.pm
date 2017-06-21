@@ -1,7 +1,7 @@
 package MooseX::Types::Base;
 # ABSTRACT: Type library base class
 
-our $VERSION = '0.49';
+our $VERSION = '0.50';
 
 use Moose;
 
@@ -299,7 +299,7 @@ MooseX::Types::Base - Type library base class
 
 =head1 VERSION
 
-version 0.49
+version 0.50
 
 =head1 DESCRIPTION
 

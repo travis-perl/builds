@@ -1,5 +1,5 @@
 package Moose::Meta::Mixin::AttributeCore;
-our $VERSION = '2.1807';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;
@@ -36,7 +36,8 @@ __PACKAGE__->meta->add_attribute(
 
 __PACKAGE__->meta->add_attribute(
     'lazy' => (
-        reader => 'is_lazy', Class::MOP::_definition_context(),
+        reader => 'is_lazy',
+        Class::MOP::_definition_context(),
     )
 );
 
@@ -117,7 +118,7 @@ Moose::Meta::Mixin::AttributeCore - Core attributes shared by attribute metaclas
 
 =head1 VERSION
 
-version 2.1807
+version 2.2005
 
 =head1 DESCRIPTION
 

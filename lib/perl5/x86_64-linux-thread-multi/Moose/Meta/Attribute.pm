@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute;
-our $VERSION = '2.1807';
+our $VERSION = '2.2005';
 
 use B ();
 use Scalar::Util 'blessed';
@@ -291,11 +291,13 @@ sub _process_is_option {
         $options->{reader} ||= $name;
     }
     elsif ( $options->{is} eq 'rw' ) {
-        if ( $options->{writer} ) {
-            $options->{reader} ||= $name;
-        }
-        else {
-            $options->{accessor} ||= $name;
+        if ( ! $options->{accessor} ) {
+            if ( $options->{writer}) {
+                $options->{reader} ||= $name;
+            }
+            else {
+                $options->{accessor} = $name;
+            }
         }
     }
     elsif ( $options->{is} eq 'bare' ) {
@@ -1040,15 +1042,59 @@ sub _process_accessors {
     my $method = $self->associated_class->get_method($accessor);
 
     if (   $method
-        && $method->isa('Class::MOP::Method::Accessor')
-        && $method->associated_attribute->name ne $self->name ) {
+        && $method->isa('Class::MOP::Method::Accessor') ) {
 
-        my $other_attr_name = $method->associated_attribute->name;
-        my $name            = $self->name;
+        # This is a special case that is very unlikely to occur outside of the
+        # Moose bootstrapping process. We do not want to warn if the method
+        # we're about to replace is for this same attribute, _and_ we're
+        # replacing a non-inline method with an inlined version.
+        #
+        # This would never occur in normal user code because Moose inlines all
+        # accessors. However, Moose metaclasses are instances of
+        # Class::MOP::Class, which _does not_ inline accessors by
+        # default. However, in Class::MOP & Moose.pm, we iterate over all of
+        # our internal metaclasses and make them immutable after they're fully
+        # defined. This ends up replacing the attribute accessors.
+        unless ( $method->associated_attribute->name eq $self->name
+            && ( $generate_as_inline_methods && !$method->is_inline ) ) {
 
-        Carp::cluck(
-            "You are overwriting an accessor ($accessor) for the $other_attr_name attribute"
-                . " with a new accessor method for the $name attribute" );
+            my $other_attr = $method->associated_attribute;
+
+            my $msg = sprintf(
+                'You are overwriting a %s (%s) for the %s attribute',
+                $method->accessor_type,
+                $accessor,
+                $other_attr->name,
+            );
+
+            if ( my $method_context = $method->definition_context ) {
+                $msg .= sprintf(
+                    ' (defined at %s line %s)',
+                    $method_context->{file},
+                    $method_context->{line},
+                    )
+                    if defined $method_context->{file}
+                    && $method_context->{line};
+            }
+
+            $msg .= sprintf(
+                ' with a new %s method for the %s attribute',
+                $type,
+                $self->name,
+            );
+
+            if ( my $self_context = $self->definition_context ) {
+                $msg .= sprintf(
+                    ' (defined at %s line %s)',
+                    $self_context->{file},
+                    $self_context->{line},
+                    )
+                    if defined $self_context->{file}
+                    && $self_context->{line};
+            }
+
+            Carp::cluck($msg);
+        }
     }
 
     if (
@@ -1311,7 +1357,7 @@ Moose::Meta::Attribute - The Moose attribute metaclass
 
 =head1 VERSION
 
-version 2.1807
+version 2.2005
 
 =head1 DESCRIPTION
 
