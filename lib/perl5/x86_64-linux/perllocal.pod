@@ -1,4 +1,26 @@
-=head2 Sat Jan 21 00:02:22 2017: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Wed Jun 21 00:02:11 2017: C<Module> L<Devel::Cover|Devel::Cover>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.25>
+
+=item *
+
+C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
+
+=back
+
+=head2 Wed Jun 21 00:02:13 2017: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -13,28 +35,6 @@ C<LINKTYPE: dynamic>
 =item *
 
 C<VERSION: 1.23>
-
-=item *
-
-C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
-
-=back
-
-=head2 Sat Jan 21 00:02:23 2017: C<Module> L<YAML|YAML>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.21>
 
 =item *
 

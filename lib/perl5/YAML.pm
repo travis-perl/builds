@@ -1,5 +1,5 @@
 package YAML;
-our $VERSION = '1.21';
+our $VERSION = '1.23';
 
 use YAML::Mo;
 
@@ -12,7 +12,8 @@ our (
     $SpecVersion,
     $UseHeader, $UseVersion, $UseBlock, $UseFold, $UseAliases,
     $Indent, $SortKeys, $Preserve,
-    $AnchorPrefix, $CompressSeries, $InlineSeries, $Purity, $Stringify,
+    $AnchorPrefix, $CompressSeries, $InlineSeries, $Purity,
+    $Stringify, $Numify
 );
 
 
