@@ -1,0 +1,44 @@
+{
+   "abstract" : "Rudimentary profiling for Template Toolkit",
+   "author" : [
+      "Andy Lester <andy@petdance.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "ExtUtils::MakeMaker version 6.44, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "Template-Timer",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Template" : "0",
+            "Test::More" : "0",
+            "Time::HiRes" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "x_Repository" : "http://github.com/petdance/template-timer/"
+   },
+   "version" : "1.00",
+   "x_serialization_backend" : "JSON::PP version 2.94"
+}
