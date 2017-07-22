@@ -4,7 +4,7 @@
       "Andy Armstrong <andy@hexten.net>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.4224",
+   "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.142060, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -20,6 +20,16 @@
       ]
    },
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
       "runtime" : {
          "requires" : {
             "IO::Scalar" : "0",
