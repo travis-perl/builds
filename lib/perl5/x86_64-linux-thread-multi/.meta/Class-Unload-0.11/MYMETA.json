@@ -4,7 +4,7 @@
       "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>;"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.037, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 6.009, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -26,6 +26,7 @@
       },
       "develop" : {
          "requires" : {
+            "Moose" : "0",
             "Pod::Coverage::TrustPod" : "0",
             "Test::EOL" : "0",
             "Test::More" : "0.88",
@@ -43,7 +44,8 @@
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0",
+            "Test::More" : "0.88",
+            "Test::Requires" : "0",
             "base" : "0",
             "lib" : "0"
          }
@@ -62,5 +64,6 @@
          "web" : "https://github.com/ilmari/Class-Unload"
       }
    },
-   "version" : "0.09"
+   "version" : "0.11",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0233"
 }
