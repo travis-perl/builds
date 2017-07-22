@@ -89,7 +89,7 @@ use PPI::Exception::ParserRejection ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '1.228';
+	$VERSION = '1.236';
 }
 
 # The x operator cannot follow most Perl operators, implying that
@@ -833,8 +833,7 @@ sub __current_token_is_forced_word {
 		# We also have to make sure that the sub/package/etc doing the forcing
 		# is not a method call.
 		if( $USUALLY_FORCES{$content}) {
-			return 1 if not defined $word; # TODO this is a quick fix to unblock Perl::Critic users, needs to be verified
-			return if $word =~ /^v[0-9]+$/ and ( $content eq "use" or $content eq "no" );
+			return if defined $word and $word =~ /^v[0-9]+$/ and ( $content eq "use" or $content eq "no" );
 			return 1 if not $prevprev;
 			return 1 if not $USUALLY_FORCES{$prevprev->content} and $prevprev->content ne '->';
 			return;

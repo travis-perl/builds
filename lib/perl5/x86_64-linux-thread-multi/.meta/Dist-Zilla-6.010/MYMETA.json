@@ -145,7 +145,6 @@
             "Test::Fatal" : "0",
             "Test::File::ShareDir" : "0",
             "Test::More" : "0.96",
-            "if" : "0",
             "lib" : "0"
          }
       }
@@ -164,7 +163,7 @@
       "x_IRC" : "irc://irc.perl.org/#distzilla",
       "x_MailingList" : "http://dzil.org/#mailing-list"
    },
-   "version" : "6.009",
+   "version" : "6.010",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.024000"
@@ -187,7 +186,7 @@
                }
             },
             "name" : "@RJBS/Git::GatherDir",
-            "version" : "2.041"
+            "version" : "2.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::CheckPrereqsIndexed",
@@ -214,7 +213,7 @@
                }
             },
             "name" : "@RJBS/RJBS-Outdated",
-            "version" : "0.052"
+            "version" : "0.053"
          },
          {
             "class" : "Dist::Zilla::Plugin::PromptIfStale",
@@ -229,7 +228,7 @@
                }
             },
             "name" : "@RJBS/CPAN-Outdated",
-            "version" : "0.052"
+            "version" : "0.053"
          },
          {
             "class" : "Dist::Zilla::Plugin::PruneCruft",
@@ -310,12 +309,12 @@
                   "version_regexp" : "(?^:^([0-9]+\\.[0-9]+)$)"
                },
                "Dist::Zilla::Role::Git::Repo" : {
-                  "git --version" : "2.11.1",
+                  "git_version" : "2.13.0",
                   "repo_root" : "."
                }
             },
             "name" : "@RJBS/Git::NextVersion",
-            "version" : "2.041"
+            "version" : "2.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::PkgVersion",
@@ -350,7 +349,7 @@
          {
             "class" : "Dist::Zilla::Plugin::Test::ReportPrereqs",
             "name" : "@RJBS/Test::ReportPrereqs",
-            "version" : "0.025"
+            "version" : "0.027"
          },
          {
             "class" : "Dist::Zilla::Plugin::Prereqs",
@@ -496,12 +495,12 @@
                   "changelog" : "Changes"
                },
                "Dist::Zilla::Role::Git::Repo" : {
-                  "git --version" : "2.11.1",
+                  "git_version" : "2.13.0",
                   "repo_root" : "."
                }
             },
             "name" : "@RJBS/@Git/Check",
-            "version" : "2.041"
+            "version" : "2.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Commit",
@@ -519,7 +518,7 @@
                   "changelog" : "Changes"
                },
                "Dist::Zilla::Role::Git::Repo" : {
-                  "git --version" : "2.11.1",
+                  "git_version" : "2.13.0",
                   "repo_root" : "."
                },
                "Dist::Zilla::Role::Git::StringFormatter" : {
@@ -527,7 +526,7 @@
                }
             },
             "name" : "@RJBS/@Git/Commit",
-            "version" : "2.041"
+            "version" : "2.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Tag",
@@ -536,12 +535,12 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "6.009",
+                  "tag" : "6.010",
                   "tag_format" : "%v",
                   "tag_message" : "v%v"
                },
                "Dist::Zilla::Role::Git::Repo" : {
-                  "git --version" : "2.11.1",
+                  "git_version" : "2.13.0",
                   "repo_root" : "."
                },
                "Dist::Zilla::Role::Git::StringFormatter" : {
@@ -549,7 +548,7 @@
                }
             },
             "name" : "@RJBS/@Git/Tag",
-            "version" : "2.041"
+            "version" : "2.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Push",
@@ -562,18 +561,18 @@
                   "remotes_must_exist" : 0
                },
                "Dist::Zilla::Role::Git::Repo" : {
-                  "git --version" : "2.11.1",
+                  "git_version" : "2.13.0",
                   "repo_root" : "."
                }
             },
             "name" : "@RJBS/@Git/Push",
-            "version" : "2.041"
+            "version" : "2.042"
          },
          {
             "class" : "Dist::Zilla::Plugin::Git::Contributors",
             "config" : {
                "Dist::Zilla::Plugin::Git::Contributors" : {
-                  "git --version" : "2.11.1",
+                  "git_version" : "2.13.0",
                   "include_authors" : 0,
                   "include_releaser" : 1,
                   "order_by" : "name",
@@ -581,7 +580,7 @@
                }
             },
             "name" : "@RJBS/Git::Contributors",
-            "version" : "0.029"
+            "version" : "0.030"
          },
          {
             "class" : "Dist::Zilla::Plugin::ModuleShareDirs",
@@ -693,7 +692,7 @@
                }
             },
             "name" : "Test::CheckBreaks",
-            "version" : "0.017"
+            "version" : "0.018"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
@@ -764,6 +763,7 @@
       "Dist::Zilla::Plugin::Git" : "<= 2.036",
       "Dist::Zilla::Plugin::Keywords" : "<= 0.006",
       "Dist::Zilla::Plugin::MakeMaker::Awesome" : "< 0.22",
+      "Dist::Zilla::Plugin::NameFromDirectory" : "<= 0.03",
       "Dist::Zilla::Plugin::PodWeaver" : "<= 4.006",
       "Dist::Zilla::Plugin::Prereqs::AuthorDeps" : "<= 0.005",
       "Dist::Zilla::Plugin::ReadmeAnyFromPod" : "< 0.161170",
@@ -786,6 +786,7 @@
       "Bernardo Rechea <brbpub@gmail.com>",
       "Brian Fraser <fraserbn@gmail.com>",
       "Caleb Cushing <xenoterracide@gmail.com>",
+      "Chase Whitener <cwhitener@gmail.com>",
       "Chisel <chisel@chizography.net>",
       "Christian Walde <walde.christian@googlemail.com>",
       "Christopher J. Madsen <cjm@cjmweb.net>",
@@ -827,6 +828,7 @@
       "Jesse Luehrs <doy@tozt.net>",
       "Jesse Vincent <jesse@bestpractical.com>",
       "John Napiorkowski <jjnapiork@cpan.org>",
+      "jonasbn <jonasbn@gmail.com>",
       "Jonathan C. Otsuka <djgoku@gmail.com>",
       "Jonathan Rockway <jrockway@cpan.org>",
       "Jonathan Scott Duff <duff@pobox.com>",
@@ -838,6 +840,7 @@
       "Luc St-Louis <lucs@pobox.com>",
       "Marcel Gruenauer <hanekomu@gmail.com>",
       "Martin McGrath <mcgrath.martin@gmail.com>",
+      "Mary Ehlers <regina.verb.ae@gmail.com>",
       "Mateu X Hunter <hunter@missoula.org>",
       "mauke <l.mai@web.de>",
       "Michael G. Schwern <schwern@pobox.com>",
@@ -869,5 +872,5 @@
       "Yanick Champoux <yanick@babyl.dyndns.org>",
       "Yuval Kogman <nothingmuch@woobling.org>"
    ],
-   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0227"
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0231"
 }

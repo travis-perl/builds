@@ -27,7 +27,7 @@ use PPI::Exception ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.228';
+	$VERSION = '1.236';
 	@ISA     = 'PPI::Element';
 }
 
