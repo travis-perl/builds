@@ -17,7 +17,7 @@
       "build" : {
          "requires" : {
             "Module::Build" : "0",
-            "Test::More" : "0",
+            "Test::More" : "0.41",
             "perl" : "5.006",
             "strict" : "0",
             "warnings" : "0"
@@ -40,7 +40,7 @@
    "provides" : {
       "Module::Runtime" : {
          "file" : "lib/Module/Runtime.pm",
-         "version" : "0.014"
+         "version" : "0.015"
       }
    },
    "release_status" : "stable",
@@ -53,5 +53,6 @@
          "url" : "git://git.fysh.org/zefram/Module-Runtime.git"
       }
    },
-   "version" : "0.014"
+   "version" : "0.015",
+   "x_serialization_backend" : "JSON::PP version 2.93"
 }
