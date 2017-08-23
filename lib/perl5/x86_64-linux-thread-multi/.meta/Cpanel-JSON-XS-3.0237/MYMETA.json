@@ -1,10 +1,10 @@
 {
-   "abstract" : "Nearly transparent SSL encapsulation for IO::Socket::INET.",
+   "abstract" : "cPanel fork of JSON::XS, fast and correct serializing",
    "author" : [
-      "Steffen Ullrich <sullr@cpan.org>, Peter Behroozi, Marko Asplund"
+      "Reini Urban <rurban@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.0401, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 8.0404, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "IO-Socket-SSL",
+   "name" : "Cpanel-JSON-XS",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,24 +32,22 @@
       },
       "runtime" : {
          "requires" : {
-            "Mozilla::CA" : "0",
-            "Net::SSLeay" : "1.46",
-            "Scalar::Util" : "0"
+            "Pod::Text" : "2.08"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://rt.cpan.org/Dist/Display.html?Queue=IO-Socket-SSL"
+         "web" : "https://github.com/rurban/Cpanel-JSON-XS/issues"
       },
-      "homepage" : "https://github.com/noxxi/p5-io-socket-ssl",
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
-         "url" : "https://github.com/noxxi/p5-io-socket-ssl"
+         "url" : "https://github.com/rurban/Cpanel-JSON-XS"
       }
    },
-   "version" : "2.049"
+   "version" : "3.0237",
+   "x_serialization_backend" : "JSON::PP version 2.93"
 }
