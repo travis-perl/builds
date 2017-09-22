@@ -18,6 +18,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/Digests.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/File.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/IO.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/IO/Base.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/IO/JSON.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/IO/Sereal.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5/x86_64-linux-thread-multi/Devel/Cover/DB/IO/Storable.pm
