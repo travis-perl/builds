@@ -15,6 +15,6 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 
 ------------------------------------------------------------------------------
 DISTRIB_ID=Ubuntu
-DISTRIB_RELEASE=12.04
-DISTRIB_CODENAME=precise
-DISTRIB_DESCRIPTION="Ubuntu 12.04.5 LTS"
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.5 LTS"
