@@ -4,9 +4,9 @@
       "YAMASHINA Hio <hio@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MY_Metafile version 0.09, EUMM-6.17., CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.0401, CPAN::Meta::Converter version 2.150001",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -15,8 +15,8 @@
    "name" : "String-CamelCase",
    "no_index" : {
       "directory" : [
-         "inc",
-         "t"
+         "t",
+         "inc"
       ]
    },
    "prereqs" : {
@@ -37,7 +37,5 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.02",
-   "x_installdirs" : "site",
-   "x_version_from" : "lib/String/CamelCase.pm"
+   "version" : "0.03"
 }
