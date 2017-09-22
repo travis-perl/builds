@@ -1,1 +1,1 @@
-{"dist":"Class-C3-0.33","target":"Class::C3","pathname":"H/HA/HAARG/Class-C3-0.33.tar.gz","provides":{"Class::C3":{"file":"lib/Class/C3.pm","version":"0.33"}},"version":"0.33","name":"Class::C3"}
+{"version":"0.33","dist":"Class-C3-0.33","target":"Class::C3","pathname":"H/HA/HAARG/Class-C3-0.33.tar.gz","provides":{"Class::C3":{"file":"lib/Class/C3.pm","version":"0.33"}},"name":"Class::C3"}
