@@ -1,5 +1,5 @@
 {
-   "abstract" : "Provide the stuff missing in List::Util",
+   "abstract" : "Provide the stuff missing in List::Util in XS",
    "author" : [
       "Tassilo von Parseval <tassilo.von.parseval@rwth-aachen.de>",
       "Adam Kennedy <adamk@cpan.org>",
@@ -14,7 +14,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "List-MoreUtils",
+   "name" : "List-MoreUtils-XS",
    "no_index" : {
       "directory" : [
          "t",
@@ -23,17 +23,27 @@
    },
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
+         "requires" : {}
       },
       "configure" : {
+         "recommends" : {
+            "Config::AutoConf" : "0.315",
+            "inc::latest" : "0.500"
+         },
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Carp" : "0",
+            "ExtUtils::MakeMaker" : "0",
+            "File::Basename" : "0",
+            "File::Copy" : "0",
+            "File::Path" : "0",
+            "File::Spec" : "0",
+            "IPC::Cmd" : "0",
+            "base" : "0"
          }
       },
       "develop" : {
          "requires" : {
+            "Config::AutoConf" : "0.315",
             "Module::CPANTS::Analyse" : "0.96",
             "Test::CPAN::Changes" : "0",
             "Test::CheckManifest" : "0",
@@ -42,15 +52,13 @@
             "Test::Pod::Coverage" : "0",
             "Test::Pod::Spelling::CommonMistakes" : "0",
             "Test::Spelling" : "0",
-            "Test::WriteVariants" : "0.014"
+            "Test::WriteVariants" : "0.013",
+            "inc::latest" : "0.500"
          }
       },
       "runtime" : {
-         "recommends" : {
-            "List::MoreUtils::XS" : "0.423"
-         },
          "requires" : {
-            "Exporter::Tiny" : "0.038"
+            "XSLoader" : "0.22"
          }
       },
       "test" : {
@@ -66,14 +74,14 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "bug-List-MoreUtils@rt.cpan.org",
-         "web" : "https://rt.cpan.org/Dist/Display.html?Name=List-MoreUtils"
+         "mailto" : "bug-List-MoreUtils-XS@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Dist/Display.html?Name=List-MoreUtils-XS"
       },
-      "homepage" : "https://metacpan.org/release/List-MoreUtils",
+      "homepage" : "https://metacpan.org/release/List-MoreUtils-XS",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/perl5-utils/List-MoreUtils.git",
-         "web" : "https://github.com/perl5-utils/List-MoreUtils"
+         "url" : "https://github.com/perl5-utils/List-MoreUtils-XS.git",
+         "web" : "https://github.com/perl5-utils/List-MoreUtils-XS"
       }
    },
    "version" : "0.423",
