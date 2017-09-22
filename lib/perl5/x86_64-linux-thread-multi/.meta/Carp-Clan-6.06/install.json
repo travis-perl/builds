@@ -1,1 +1,1 @@
-{"dist":"Carp-Clan-6.06","pathname":"K/KE/KENTNL/Carp-Clan-6.06.tar.gz","provides":{"Carp::Clan":{"version":"6.06","file":"lib/Carp/Clan.pm"}},"target":"Carp::Clan","name":"Carp::Clan","version":"6.06"}
+{"version":"6.06","provides":{"Carp::Clan":{"file":"lib/Carp/Clan.pm","version":"6.06"}},"dist":"Carp-Clan-6.06","name":"Carp::Clan","pathname":"K/KE/KENTNL/Carp-Clan-6.06.tar.gz","target":"Carp::Clan"}
