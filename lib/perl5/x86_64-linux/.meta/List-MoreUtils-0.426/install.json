@@ -1,0 +1,1 @@
+{"name":"List::MoreUtils","pathname":"R/RE/REHSACK/List-MoreUtils-0.426.tar.gz","version":"0.426","target":"List::MoreUtils","dist":"List-MoreUtils-0.426","provides":{"List::MoreUtils":{"file":"lib/List/MoreUtils.pm","version":"0.426"},"List::MoreUtils::PP":{"file":"lib/List/MoreUtils/PP.pm","version":"0.426"}}}
