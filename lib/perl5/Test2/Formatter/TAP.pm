@@ -2,7 +2,7 @@ package Test2::Formatter::TAP;
 use strict;
 use warnings;
 
-our $VERSION = '1.302096';
+our $VERSION = '1.302106';
 
 use Test2::Util qw/clone_io/;
 
@@ -53,7 +53,7 @@ sub _open_handles {
 sub encoding {
     my $self = shift;
 
-    if (@_) {
+    if ($] ge "5.007003" and @_) {
         my ($enc) = @_;
         my $handles = $self->{+HANDLES};
 
@@ -187,6 +187,8 @@ sub error_tap {
     my $self = shift;
     my ($f) = @_;
 
+    my $IO = ($f->{amnesty} && @{$f->{amnesty}}) ? OUT_STD : OUT_ERR;
+
     return map {
         my $details = $_->{details};
 
@@ -202,7 +204,7 @@ sub error_tap {
             $msg =~ s/\n/\n# /g;
         }
 
-        [OUT_ERR, "$msg\n"];
+        [$IO, "$msg\n"];
     } @{$f->{errors}};
 }
 
@@ -362,7 +364,7 @@ sub info_tap {
     return map {
         my $details = $_->{details};
 
-        my $IO = $_->{debug} ? OUT_ERR : OUT_STD;
+        my $IO = $_->{debug} && !($f->{amnesty} && @{$f->{amnesty}}) ? OUT_ERR : OUT_STD;
 
         my $msg;
         if (ref($details)) {

@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '1.302096';
+our $VERSION = '1.302106';
 
 BEGIN {
     if( $] < 5.008 ) {
@@ -69,9 +69,16 @@ sub _add_ts_hooks {
         # Turn a diag into a todo diag
         return Test::Builder::TodoDiag->new(%$e) if ref($e) eq 'Test2::Event::Diag';
 
+        if ($active_hub == $hub) {
+            $e->set_todo($todo) if $e->can('set_todo');
+            $e->add_amnesty({tag => 'TODO', details => $todo});
+        }
+        else {
+            $e->add_amnesty({tag => 'TODO', details => $todo, inherited => 1});
+        }
+
         # Set todo on ok's
         if ($e->isa('Test2::Event::Ok')) {
-            $e->set_todo($todo);
             $e->set_effective_pass(1);
 
             if (my $result = $e->get_meta(__PACKAGE__)) {
@@ -336,7 +343,7 @@ sub subtest {
         }
     }
 
-    if ($start_pid != $$ && !$INC{'Test/Sync/IPC.pm'}) {
+    if ($start_pid != $$ && !$INC{'Test2/IPC.pm'}) {
         warn $ok ? "Forked inside subtest, but subtest never finished!\n" : $err;
         exit 255;
     }
@@ -693,8 +700,7 @@ sub _ok_debug {
 
     my (undef, $file, $line) = $trace->call;
     if (defined $orig_name) {
-        $self->diag(qq[  $msg test '$orig_name'\n]);
-        $self->diag(qq[  at $file line $line.\n]);
+        $self->diag(qq[  $msg test '$orig_name'\n  at $file line $line.\n]);
     }
     else {
         $self->diag(qq[  $msg test at $file line $line.\n]);
@@ -1439,7 +1445,7 @@ sub summary {
     my $ctx = $self->ctx;
     my $data = $ctx->hub->meta(__PACKAGE__, {})->{Test_Results};
     $ctx->release;
-    return map { $_->{'ok'} } @$data;
+    return map { $_ ? $_->{'ok'} : () } @$data;
 }
 
 
