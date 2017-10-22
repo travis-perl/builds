@@ -12,7 +12,7 @@ package Devel::Cover::Inc;
 use strict;
 use warnings;
 
-our $VERSION      = "1.27";
+our $VERSION      = "1.29";
 our $Perl_version = '5.022000';
 our @Inc          = qw( . /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5 /home/travis/perl5/perlbrew/perls/5.22.0-thr/lib/5.22.0 /home/travis/perl5/perlbrew/perls/5.22.0-thr/lib/5.22.0/x86_64-linux-thread-multi /home/travis/perl5/perlbrew/perls/5.22.0-thr/lib/site_perl/5.22.0 /home/travis/perl5/perlbrew/perls/5.22.0-thr/lib/site_perl/5.22.0/x86_64-linux-thread-multi );
 chomp (our $Perl  = <<'EOV');  # Careful with \\ in the path
