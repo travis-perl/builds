@@ -1,12 +1,12 @@
 {
-   "abstract" : "Provide the stuff missing in List::Util in XS",
+   "abstract" : "Provide the stuff missing in List::Util",
    "author" : [
       "Tassilo von Parseval <tassilo.von.parseval@rwth-aachen.de>",
       "Adam Kennedy <adamk@cpan.org>",
       "Jens Rehsack <rehsack@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.3, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "apache_2_0"
    ],
@@ -14,7 +14,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "List-MoreUtils-XS",
+   "name" : "List-MoreUtils",
    "no_index" : {
       "directory" : [
          "t",
@@ -23,22 +23,16 @@
    },
    "prereqs" : {
       "build" : {
-         "requires" : {}
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
       },
       "configure" : {
          "recommends" : {
-            "Config::AutoConf" : "0.315",
-            "inc::latest" : "0.500"
+            "Config::AutoConf" : "0.315"
          },
          "requires" : {
-            "Carp" : "0",
-            "ExtUtils::MakeMaker" : "0",
-            "File::Basename" : "0",
-            "File::Copy" : "0",
-            "File::Path" : "0",
-            "File::Spec" : "0",
-            "IPC::Cmd" : "0",
-            "base" : "0"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "develop" : {
@@ -52,21 +46,20 @@
             "Test::Pod::Coverage" : "0",
             "Test::Pod::Spelling::CommonMistakes" : "0",
             "Test::Spelling" : "0",
-            "Test::WriteVariants" : "0.013",
+            "Test::WriteVariants" : "0.014",
             "inc::latest" : "0.500"
          }
       },
       "runtime" : {
          "requires" : {
-            "XSLoader" : "0.22"
+            "Exporter::Tiny" : "0.038",
+            "List::MoreUtils::XS" : "0.426"
          }
       },
       "test" : {
-         "recommends" : {
-            "Test::LeakTrace" : "0"
-         },
          "requires" : {
             "Storable" : "0",
+            "Test::LeakTrace" : "0",
             "Test::More" : "0.96"
          }
       }
@@ -74,16 +67,16 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "bug-List-MoreUtils-XS@rt.cpan.org",
-         "web" : "https://rt.cpan.org/Dist/Display.html?Name=List-MoreUtils-XS"
+         "mailto" : "bug-List-MoreUtils@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Dist/Display.html?Name=List-MoreUtils"
       },
-      "homepage" : "https://metacpan.org/release/List-MoreUtils-XS",
+      "homepage" : "https://metacpan.org/release/List-MoreUtils",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/perl5-utils/List-MoreUtils-XS.git",
-         "web" : "https://github.com/perl5-utils/List-MoreUtils-XS"
+         "url" : "https://github.com/perl5-utils/List-MoreUtils.git",
+         "web" : "https://github.com/perl5-utils/List-MoreUtils"
       }
    },
-   "version" : "0.423",
+   "version" : "0.426",
    "x_serialization_backend" : "JSON::PP version 2.94"
 }
