@@ -1,0 +1,1 @@
+{"name":"Catalyst::Plugin::ConfigLoader","pathname":"B/BO/BOBTFISH/Catalyst-Plugin-ConfigLoader-0.34.tar.gz","version":"0.34","dist":"Catalyst-Plugin-ConfigLoader-0.34","provides":{"Catalyst::Plugin::ConfigLoader":{"version":"0.34","file":"lib/Catalyst/Plugin/ConfigLoader.pm"}},"target":"Catalyst::Plugin::ConfigLoader"}
