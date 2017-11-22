@@ -1,1 +1,1 @@
-{"version":"1.000008","provides":{"Safe::Isa":{"file":"lib/Safe/Isa.pm","version":"1.000008"}},"name":"Safe::Isa","dist":"Safe-Isa-1.000008","pathname":"E/ET/ETHER/Safe-Isa-1.000008.tar.gz","target":"Safe::Isa"}
+{"version":"1.000008","target":"Safe::Isa","provides":{"Safe::Isa":{"version":"1.000008","file":"lib/Safe/Isa.pm"}},"name":"Safe::Isa","dist":"Safe-Isa-1.000008","pathname":"E/ET/ETHER/Safe-Isa-1.000008.tar.gz"}

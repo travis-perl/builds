@@ -1,10 +1,10 @@
 {
    "abstract" : "unknown",
    "author" : [
-      "Marty Pauley <marty+perl@kasei.com>"
+      "Marty Pauley <marty+perl@martian.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.42, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.1002, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -13,6 +13,12 @@
       "version" : "2"
    },
    "name" : "Class-Accessor",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -31,5 +37,6 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.34"
+   "version" : "0.51",
+   "x_serialization_backend" : "JSON::PP version 2.27300_01"
 }
