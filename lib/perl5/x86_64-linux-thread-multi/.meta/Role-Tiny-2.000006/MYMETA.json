@@ -64,6 +64,6 @@
       },
       "x_IRC" : "irc://irc.perl.org/#moose"
    },
-   "version" : "2.000005",
-   "x_serialization_backend" : "JSON::PP version 2.27300"
+   "version" : "2.000006",
+   "x_serialization_backend" : "JSON::PP version 2.94"
 }
