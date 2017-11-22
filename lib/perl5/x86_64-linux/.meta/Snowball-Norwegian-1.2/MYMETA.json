@@ -1,0 +1,37 @@
+{
+   "abstract" : "Porters stemming algorithm for norwegian.",
+   "author" : [
+      "Ask Solem <ASKSH@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4224",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "Snowball-Norwegian",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : 0.42
+         }
+      }
+   },
+   "provides" : {
+      "Lingua::Stem::Snowball::No" : {
+         "file" : "lib/Lingua/Stem/Snowball/No.pm",
+         "version" : "1.2"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "1.2",
+   "x_serialization_backend" : "JSON::PP version 2.94"
+}
