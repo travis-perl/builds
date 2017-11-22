@@ -1,0 +1,1 @@
+{"provides":{"Tree::Simple":{"version":"1.31","file":"lib/Tree/Simple.pm"},"Tree::Simple::Visitor":{"file":"lib/Tree/Simple/Visitor.pm","version":"1.31"}},"target":"Tree::Simple::Visitor","pathname":"R/RS/RSAVAGE/Tree-Simple-1.31.tgz","name":"Tree::Simple","dist":"Tree-Simple-1.31","version":"1.31"}
