@@ -7,6 +7,8 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/BSD.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/CC0_1_0.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/Custom.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/EUPL_1_1.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/EUPL_1_2.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/FreeBSD.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/GFDL_1_2.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Software/License/GFDL_1_3.pm

@@ -1,1 +1,1 @@
-{"provides":{"File::ShareDir":{"version":"1.104","file":"lib/File/ShareDir.pm"}},"target":"File::ShareDir","pathname":"R/RE/REHSACK/File-ShareDir-1.104.tar.gz","version":"1.104","dist":"File-ShareDir-1.104","name":"File::ShareDir"}
+{"version":"1.104","name":"File::ShareDir","target":"File::ShareDir","provides":{"File::ShareDir":{"version":"1.104","file":"lib/File/ShareDir.pm"}},"pathname":"R/RE/REHSACK/File-ShareDir-1.104.tar.gz","dist":"File-ShareDir-1.104"}
