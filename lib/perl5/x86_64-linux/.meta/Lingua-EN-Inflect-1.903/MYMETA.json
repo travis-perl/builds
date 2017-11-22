@@ -1,18 +1,24 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "Convert singular to plural. Select \"a\" or \"an\".",
    "author" : [
-      "Marty Pauley <marty+perl@kasei.com>"
+      "Damian Conway <DCONWAY@CPAN.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.42, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.142690, CPAN::Meta::Converter version 2.150001",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Class-Accessor",
+   "name" : "Lingua-EN-Inflect",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -26,10 +32,10 @@
       },
       "runtime" : {
          "requires" : {
-            "base" : "1.01"
+            "Test::More" : "0"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.34"
+   "version" : "1.903"
 }
