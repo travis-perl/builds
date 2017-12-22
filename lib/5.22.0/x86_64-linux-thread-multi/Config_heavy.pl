@@ -78,9 +78,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Wed Nov 22 00:01:33 UTC 2017
+## Configuration time: Fri Dec 22 00:01:20 UTC 2017
 ## Configured by     : travis
-## Target system     : linux travis-job-cb8f93b3-f007-4f34-b7c3-f054e8e5e170 4.4.0-93-generic #116~14.04.1-ubuntu smp mon aug 14 16:07:05 utc 2017 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux travis-job-87ac82fa-166c-4bd6-8898-c37bd0fbc805 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -142,6 +142,7 @@ sub myconfig {
 local *_ = \my $a;
 $_ = <<'!END!';
 Author=''
+BuiltWithPatchPerl='1.48'
 CONFIG='true'
 Date=''
 Header=''
@@ -202,8 +203,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@travis-job-cb8f93b3-f007-4f34-b7c3-f054e8e5e170.(none)'
-cf_time='Wed Nov 22 00:01:33 UTC 2017'
+cf_email='travis@travis-job-87ac82fa-166c-4bd6-8898-c37bd0fbc805.(none)'
+cf_time='Fri Dec 22 00:01:20 UTC 2017'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1046,8 +1047,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.(none)'
-myhostname='travis-job-cb8f93b3-f007-4f34-b7c3-f054e8e5e170'
-myuname='linux travis-job-cb8f93b3-f007-4f34-b7c3-f054e8e5e170 4.4.0-93-generic #116~14.04.1-ubuntu smp mon aug 14 16:07:05 utc 2017 x86_64 x86_64 x86_64 gnulinux '
+myhostname='travis-job-87ac82fa-166c-4bd6-8898-c37bd0fbc805'
+myuname='linux travis-job-87ac82fa-166c-4bd6-8898-c37bd0fbc805 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1075,7 +1076,7 @@ old_pthread_create_joinable=''
 optimize='-O2'
 orderlib='false'
 osname='linux'
-osvers='4.4.0-93-generic'
+osvers='4.4.0-101-generic'
 otherlibdirs=' '
 package='perl5'
 pager='/usr/bin/less -R'
@@ -1086,7 +1087,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@travis-job-cb8f93b3-f007-4f34-b7c3-f054e8e5e170.(none)'
+perladmin='travis@travis-job-87ac82fa-166c-4bd6-8898-c37bd0fbc805.(none)'
 perllibs='-lpthread -lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl'
 pg='pg'

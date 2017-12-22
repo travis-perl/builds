@@ -137,7 +137,7 @@ static const char * const local_patches[] = {
 	,"uncommitted-changes"
 #endif
 	PERL_GIT_UNPUSHED_COMMITS    	/* do not remove this line */
-	,"Devel::PatchPerl 1.38"
+	,"Devel::PatchPerl 1.48"
 	,NULL
 };
 
