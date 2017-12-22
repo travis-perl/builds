@@ -1,0 +1,176 @@
+=head2 Fri Dec 22 00:06:30 2017: C<Module> L<B::Debug|B::Debug>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.26>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 22 00:06:31 2017: C<Module> L<HTML::Tagset|HTML::Tagset>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.20>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 22 00:06:32 2017: C<Module> L<HTML::Parser|HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.72>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 22 00:06:34 2017: C<Module> L<Devel::Cover|Devel::Cover>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.29>
+
+=item *
+
+C<EXE_FILES: bin/cover bin/cpancover bin/gcov2perl>
+
+=back
+
+=head2 Fri Dec 22 00:06:36 2017: C<Module> L<YAML|YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.24>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 22 00:06:47 2017: C<Module> L<Net::SSLeay|Net::SSLeay>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.82>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 22 00:06:48 2017: C<Module> L<Mozilla::CA|Mozilla::CA>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 20160104>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Dec 22 00:06:49 2017: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.27.7-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.052>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
