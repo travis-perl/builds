@@ -26,6 +26,7 @@
       },
       "develop" : {
          "requires" : {
+            "IPC::Open3" : "0",
             "Test::Pod" : "1.41",
             "Test::Spelling" : "0.12"
          }
@@ -51,7 +52,7 @@
          "url" : "http://github.com/Test-More/test-more/"
       }
    },
-   "version" : "1.302113",
+   "version" : "1.302120",
    "x_breaks" : {
       "Log::Dispatch::Config::TestLog" : "<= 0.02",
       "Net::BitTorrent" : "<= 0.052",
