@@ -1,0 +1,1 @@
+{"version":"0.30","name":"Data::Visitor","provides":{"Data::Visitor::Callback":{"version":"0.30","file":"lib/Data/Visitor/Callback.pm"},"Data::Visitor":{"file":"lib/Data/Visitor.pm","version":"0.30"}},"pathname":"D/DO/DOY/Data-Visitor-0.30.tar.gz","dist":"Data-Visitor-0.30","target":"Data::Visitor"}
