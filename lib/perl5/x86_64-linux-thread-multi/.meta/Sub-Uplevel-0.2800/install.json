@@ -1,1 +1,1 @@
-{"dist":"Sub-Uplevel-0.2800","pathname":"D/DA/DAGOLDEN/Sub-Uplevel-0.2800.tar.gz","provides":{"Sub::Uplevel":{"version":"0.2800","file":"lib/Sub/Uplevel.pm"}},"target":"Sub::Uplevel","name":"Sub::Uplevel","version":"0.2800"}
+{"pathname":"D/DA/DAGOLDEN/Sub-Uplevel-0.2800.tar.gz","provides":{"Sub::Uplevel":{"file":"lib/Sub/Uplevel.pm","version":"0.2800"}},"name":"Sub::Uplevel","target":"Sub::Uplevel","version":"0.2800","dist":"Sub-Uplevel-0.2800"}
