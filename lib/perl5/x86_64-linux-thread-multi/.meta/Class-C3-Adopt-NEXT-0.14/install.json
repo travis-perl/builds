@@ -1,1 +1,1 @@
-{"target":"Class::C3::Adopt::NEXT","pathname":"E/ET/ETHER/Class-C3-Adopt-NEXT-0.14.tar.gz","name":"Class::C3::Adopt::NEXT","version":"0.14","provides":{"Class::C3::Adopt::NEXT":{"file":"lib/Class/C3/Adopt/NEXT.pm","version":"0.14"}},"dist":"Class-C3-Adopt-NEXT-0.14"}
+{"version":"0.14","dist":"Class-C3-Adopt-NEXT-0.14","provides":{"Class::C3::Adopt::NEXT":{"file":"lib/Class/C3/Adopt/NEXT.pm","version":"0.14"}},"name":"Class::C3::Adopt::NEXT","target":"Class::C3::Adopt::NEXT","pathname":"E/ET/ETHER/Class-C3-Adopt-NEXT-0.14.tar.gz"}
