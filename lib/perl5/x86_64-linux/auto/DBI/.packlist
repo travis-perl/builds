@@ -18,6 +18,7 @@
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/Gofer/Transport/null.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/Gofer/Transport/pipeone.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/Gofer/Transport/stream.pm
+/home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/Mem.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/NullP.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/Proxy.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/Sponge.pm
