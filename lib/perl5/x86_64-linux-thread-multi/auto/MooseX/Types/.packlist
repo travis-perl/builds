@@ -1,0 +1,9 @@
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/Base.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/CheckedUtilExports.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/Combine.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/Moose.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/TypeDecorator.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/UndefinedType.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/Util.pm
+/home/travis/.perlbrew/libs/5.27.8-thr@dzil/lib/perl5/MooseX/Types/Wrapper.pm
