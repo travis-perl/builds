@@ -1,10 +1,10 @@
 {
-   "abstract" : "The Catalyst Framework Runtime",
+   "abstract" : "unknown",
    "author" : [
-      "Sebastian Riedel <sri@cpan.org>"
+      "unknown"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.3, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -15,22 +15,13 @@
    "name" : "Catalyst-Runtime",
    "no_index" : {
       "directory" : [
-         "inc",
-         "t"
+         "t",
+         "inc"
       ]
    },
    "prereqs" : {
       "build" : {
-         "requires" : {
-            "Data::Dump" : "0",
-            "ExtUtils::MakeMaker" : "6.59",
-            "HTTP::Request::Common" : "0",
-            "HTTP::Status" : "0",
-            "IO::Scalar" : "0",
-            "JSON::MaybeXS" : "0",
-            "Test::Fatal" : "0",
-            "Test::More" : "0.88"
-         }
+         "requires" : {}
       },
       "configure" : {
          "requires" : {
@@ -55,20 +46,18 @@
             "HTTP::Headers" : "1.64",
             "HTTP::Request" : "5.814",
             "HTTP::Request::AsCGI" : "1.0",
-            "HTTP::Request::Common" : "0",
             "HTTP::Response" : "5.813",
-            "HTTP::Status" : "0",
             "Hash::MultiValue" : "0",
-            "IO::Scalar" : "0",
             "JSON::MaybeXS" : "1.000000",
             "LWP" : "5.837",
-            "List::MoreUtils" : "0",
+            "List::Util" : "1.45",
             "MRO::Compat" : "0",
             "Module::Pluggable" : "4.7",
             "Moose" : "1.03",
             "MooseX::Emulate::Class::Accessor::Fast" : "0.00903",
             "MooseX::Getopt" : "0.48",
             "MooseX::MethodAttributes::Role::AttrContainer::Inheritable" : "0.24",
+            "MooseX::Role::WithOverloading" : "0.09",
             "Path::Class" : "0.09",
             "Plack" : "0.9991",
             "Plack::Middleware::Conditional" : "0",
@@ -90,8 +79,6 @@
             "String::RewritePrefix" : "0.004",
             "Sub::Exporter" : "0",
             "Task::Weaken" : "0",
-            "Test::Fatal" : "0",
-            "Test::More" : "0.88",
             "Text::Balanced" : "0",
             "Text::SimpleTable" : "0.03",
             "Time::HiRes" : "0",
@@ -104,21 +91,18 @@
             "namespace::clean" : "0.23",
             "perl" : "5.008003"
          }
+      },
+      "test" : {
+         "requires" : {
+            "HTTP::Request::Common" : "0",
+            "HTTP::Status" : "0",
+            "IO::Scalar" : "0",
+            "Test::Fatal" : "0",
+            "Test::More" : "0.88"
+         }
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "homepage" : "http://dev.catalyst.perl.org/",
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ],
-      "repository" : {
-         "type" : "git",
-         "url" : "git://git.shadowcat.co.uk/catagits/Catalyst-Runtime.git"
-      },
-      "x_IRC" : "irc://irc.perl.org/#catalyst",
-      "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/catalyst"
-   },
-   "version" : "5.90115",
-   "x_authority" : "cpan:MSTROUT"
+   "version" : "5.90116",
+   "x_serialization_backend" : "JSON::PP version 2.94"
 }
