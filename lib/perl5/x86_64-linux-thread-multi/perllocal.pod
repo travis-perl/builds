@@ -1,4 +1,4 @@
-=head2 Fri Dec 22 00:10:39 2017: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Sun Jan 21 00:11:16 2018: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -20,51 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 22 00:10:41 2017: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.001013>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Dec 22 00:10:41 2017: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.14>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Fri Dec 22 00:10:42 2017: C<Module> L<Sub::Quote|Sub::Quote>
+=head2 Sun Jan 21 00:11:18 2018: C<Module> L<Sub::Quote|Sub::Quote>
 
 =over 4
 
@@ -86,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 22 00:10:43 2017: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Sun Jan 21 00:11:19 2018: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -108,7 +64,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 22 00:10:43 2017: C<Module> L<Moo|Moo>
+=head2 Sun Jan 21 00:11:20 2018: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.001013>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sun Jan 21 00:11:20 2018: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sun Jan 21 00:11:20 2018: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 22 00:10:44 2017: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Sun Jan 21 00:11:22 2018: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -152,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Fri Dec 22 00:10:45 2017: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Sun Jan 21 00:11:22 2018: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
