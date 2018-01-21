@@ -4,7 +4,7 @@
       "Caelum: Rafael Kitover <rkitover@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.17, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.18, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -71,6 +71,7 @@
             "Test::More" : "0.94",
             "Test::Warn" : "0.21",
             "Try::Tiny" : "0",
+            "curry" : "1.000000",
             "namespace::clean" : "0.23",
             "perl" : "5.008001"
          }
@@ -87,5 +88,5 @@
       "x_IRC" : "irc://irc.perl.org/#dbix-class",
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbix-class"
    },
-   "version" : "0.07047"
+   "version" : "0.07048"
 }
