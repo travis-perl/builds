@@ -4,7 +4,7 @@
       "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.039, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Dist::Zilla version 6.009, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -47,7 +47,6 @@
          "requires" : {
             "Test::Fatal" : "0",
             "Test::More" : "0.88",
-            "base" : "0",
             "parent" : "0"
          }
       }
@@ -64,5 +63,6 @@
          "web" : "https://github.com/ilmari/Devel-OverloadInfo"
       }
    },
-   "version" : "0.004"
+   "version" : "0.005",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0233"
 }
