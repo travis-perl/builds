@@ -1,1 +1,1 @@
-{"pathname":"D/DA/DAGOLDEN/Path-Tiny-0.104.tar.gz","version":"0.104","name":"Path::Tiny","dist":"Path-Tiny-0.104","provides":{"Path::Tiny":{"file":"lib/Path/Tiny.pm","version":"0.104"},"Path::Tiny::Error":{"version":"0.104","file":"lib/Path/Tiny.pm"}},"target":"Path::Tiny"}
+{"provides":{"Path::Tiny::Error":{"file":"lib/Path/Tiny.pm","version":"0.104"},"Path::Tiny":{"file":"lib/Path/Tiny.pm","version":"0.104"}},"version":"0.104","dist":"Path-Tiny-0.104","name":"Path::Tiny","target":"Path::Tiny","pathname":"D/DA/DAGOLDEN/Path-Tiny-0.104.tar.gz"}
