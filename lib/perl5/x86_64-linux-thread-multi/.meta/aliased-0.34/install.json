@@ -1,1 +1,1 @@
-{"pathname":"E/ET/ETHER/aliased-0.34.tar.gz","provides":{"aliased":{"file":"lib/aliased.pm","version":"0.34"}},"dist":"aliased-0.34","name":"aliased","target":"aliased","version":"0.34"}
+{"dist":"aliased-0.34","pathname":"E/ET/ETHER/aliased-0.34.tar.gz","version":"0.34","name":"aliased","target":"aliased","provides":{"aliased":{"version":"0.34","file":"lib/aliased.pm"}}}
