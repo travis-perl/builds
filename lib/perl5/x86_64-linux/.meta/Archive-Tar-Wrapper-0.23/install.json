@@ -1,0 +1,1 @@
+{"version":"0.23","pathname":"M/MS/MSCHILLI/Archive-Tar-Wrapper-0.23.tar.gz","target":"Archive::Tar::Wrapper","dist":"Archive-Tar-Wrapper-0.23","provides":{"Archive::Tar::Wrapper":{"version":"0.23","file":"lib/Archive/Tar/Wrapper.pm"}},"name":"Archive::Tar::Wrapper"}
