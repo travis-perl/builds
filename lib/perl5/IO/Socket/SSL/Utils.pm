@@ -284,7 +284,6 @@ sub CERT_create {
     my @ext = (
 	&Net::SSLeay::NID_subject_key_identifier => 'hash',
 	&Net::SSLeay::NID_authority_key_identifier => 'keyid',
-	&Net::SSLeay::NID_authority_key_identifier => 'issuer',
     );
     if ( my $altsubj = delete $args{subjectAltNames} ) {
 	push @ext,
@@ -315,20 +314,14 @@ sub CERT_create {
 	    }
 	}
     }
-    if (defined( my $ca = delete $args{CA})) {
-	# add defaults
-	if ($ca) {
-	    %purpose = (
-		ca => 1, sslca => 1, emailca => 1, objca => 1,
-		%purpose
-	    );
-	} else {
-	    %purpose = (
-		server => 1, client => 1,
-		%purpose
-	    );
-	}
-    } elsif (!%purpose) {
+    if (delete $args{CA}) {
+	# add defaults for CA
+	%purpose = (
+	    ca => 1, sslca => 1, emailca => 1, objca => 1,
+	    %purpose
+	);
+    }
+    if (!%purpose) {
 	%purpose = (server => 1, client => 1);
     }
 
@@ -337,6 +330,7 @@ sub CERT_create {
     my %dS = ( digitalSignature => \%key_usage );
     my %kE = ( keyEncipherment => \%key_usage );
     my %CA = ( 'CA:TRUE' => \%basic_constraints, %dS, keyCertSign => \%key_usage );
+    my @disable;
     for(
 	[ client  => { %dS, %kE, clientAuth => \%ext_key_usage, client  => \%cert_type } ],
 	[ server  => { %dS, %kE, serverAuth => \%ext_key_usage, server  => \%cert_type } ],
@@ -361,19 +355,30 @@ sub CERT_create {
 	[ cRLSign          => { cRLSign => \%key_usage } ],
 	[ encipherOnly     => { encipherOnly => \%key_usage } ],
 	[ decipherOnly     => { decipherOnly => \%key_usage } ],
+	[ clientAuth       => { clientAuth   => \%ext_key_usage } ],
+	[ serverAuth       => { serverAuth   => \%ext_key_usage } ],
     ) {
-	delete $purpose{lc($_->[0])} or next;
-	while (my($k,$h) = each %{$_->[1]}) {
-	    $h->{$k} = 1;
+	exists $purpose{lc($_->[0])} or next;
+	if (delete $purpose{lc($_->[0])}) {
+	    while (my($k,$h) = each %{$_->[1]}) {
+		$h->{$k} = 1;
+	    }
+	} else {
+	    push @disable, $_->[1];
 	}
     }
     die "unknown purpose ".join(",",keys %purpose) if %purpose;
+    for(@disable) {
+	while (my($k,$h) = each %$_) {
+	    delete $h->{$k};
+	}
+    }
 
     if (%basic_constraints) {
 	push @ext,&Net::SSLeay::NID_basic_constraints,
 	    => join(",",'critical', sort keys %basic_constraints);
     } else {
-	push @ext, &Net::SSLeay::NID_basic_constraints => 'CA:FALSE';
+	push @ext, &Net::SSLeay::NID_basic_constraints => 'critical,CA:FALSE';
     }
     push @ext,&Net::SSLeay::NID_key_usage
 	=> join(",",'critical', sort keys %key_usage) if %key_usage;
