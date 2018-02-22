@@ -1,0 +1,1 @@
+{"provides":{"Plack::Middleware::RemoveRedundantBody":{"version":"0.06","file":"lib/Plack/Middleware/RemoveRedundantBody.pm"}},"version":"0.06","pathname":"S/SW/SWEETKID/Plack-Middleware-RemoveRedundantBody-0.06.tar.gz","name":"Plack::Middleware::RemoveRedundantBody","dist":"Plack-Middleware-RemoveRedundantBody-0.06","target":"Plack::Middleware::RemoveRedundantBody"}
