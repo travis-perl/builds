@@ -3,10 +3,10 @@
    "author" : [
       "mst: Matt S Trout <mst@shadowcat.co.uk> (project founder - original idea, architecture and implementation)",
       "castaway: Jess Robinson <castaway@desert-island.me.uk> (lions share of the reference documentation and manuals)",
-      "ribasushi: Peter Rabbitson <ribasushi@cpan.org> (present day maintenance and controlled evolution)"
+      "ribasushi: Peter Rabbitson <ribasushi@leporine.io> (present day maintenance and controlled evolution)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.16, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "Module::Install version 1.19, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -91,17 +91,16 @@
       "bugtracker" : {
          "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=DBIx-Class"
       },
-      "homepage" : "http://www.dbix-class.org/",
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
-         "url" : "https://github.com/dbsrgits/DBIx-Class"
+         "url" : "https://github.com/Perl5/DBIx-Class"
       },
       "x_IRC" : "irc://irc.perl.org/#dbix-class",
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbix-class"
    },
-   "version" : "0.082840",
+   "version" : "0.082841",
    "x_authority" : "cpan:RIBASUSHI",
    "x_contributors" : [
       "abraxxa: Alexander Hartmaier <abraxxa@cpan.org>",
@@ -261,7 +260,7 @@
       "rdj: Ryan D Johnson <ryan@innerfence.com>",
       "Relequestual: Ben Hutton <relequestual@gmail.com>",
       "renormalist: Steffen Schwigon <schwigon@cpan.org>",
-      "ribasushi: Peter Rabbitson <ribasushi@cpan.org>",
+      "ribasushi: Peter Rabbitson <ribasushi@leporine.io>",
       "rjbs: Ricardo Signes <rjbs@cpan.org>",
       "Robert Krimen <rkrimen@cpan.org>",
       "Robert Olson <bob@rdolson.org>",
