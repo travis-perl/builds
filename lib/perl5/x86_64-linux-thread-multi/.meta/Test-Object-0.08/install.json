@@ -1,0 +1,1 @@
+{"name":"Test::Object","target":"Test::Object","version":"0.08","provides":{"Test::Object::Test":{"file":"lib/Test/Object/Test.pm","version":"0.08"},"Test::Object":{"version":"0.08","file":"lib/Test/Object.pm"}},"dist":"Test-Object-0.08","pathname":"E/ET/ETHER/Test-Object-0.08.tar.gz"}
