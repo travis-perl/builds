@@ -1,7 +1,0 @@
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run/Debug.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run/IO.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run/Timer.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run/Win32Helper.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run/Win32IO.pm
-/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/IPC/Run/Win32Pump.pm

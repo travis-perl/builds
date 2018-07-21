@@ -132,10 +132,10 @@
   ],
   first_day_of_week => 6,
   glibc_date_1_format => "%a %b %e %H:%M:%S %Z %Y",
-  glibc_date_format => "%m/%d/%y",
-  glibc_datetime_format => "%a %b %e %H:%M:%S %Y",
+  glibc_date_format => "%d/%m/%Y",
+  glibc_datetime_format => "%a %d %b %Y %T %Z",
   glibc_time_12_format => "%I:%M:%S %p",
-  glibc_time_format => "%H:%M:%S",
+  glibc_time_format => "%T",
   language => "Kabyle",
   month_format_abbreviated => [
     "Yen",
@@ -270,5 +270,5 @@
   time_format_medium => "h:mm:ss a",
   time_format_short => "h:mm a",
   variant => undef,
-  version => 32,
+  version => 33,
 }

@@ -1,7 +1,7 @@
 {
   am_pm_abbreviated => [
     "\N{U+13cc}\N{U+13be}\N{U+13b4}",
-    "\N{U+13d2}\N{U+13af}\N{U+13f1}\N{U+13a2}\N{U+13d7}\N{U+13e2}",
+    "\N{U+13d2}\N{U+13af}\N{U+13f1}\N{U+13a2}",
   ],
   available_formats => {
     Bh => "h B",
@@ -130,10 +130,10 @@
   ],
   first_day_of_week => 7,
   glibc_date_1_format => "%a %b %e %H:%M:%S %Z %Y",
-  glibc_date_format => "%m/%d/%y",
-  glibc_datetime_format => "%a %b %e %H:%M:%S %Y",
+  glibc_date_format => "%m/%d/%Y",
+  glibc_datetime_format => "%a %d %b %Y %r %Z",
   glibc_time_12_format => "%I:%M:%S %p",
-  glibc_time_format => "%H:%M:%S",
+  glibc_time_format => "%r",
   language => "Cherokee",
   month_format_abbreviated => [
     "\N{U+13a4}\N{U+13c3}",
@@ -268,5 +268,5 @@
   time_format_medium => "h:mm:ss a",
   time_format_short => "h:mm a",
   variant => undef,
-  version => 32,
+  version => 33,
 }
