@@ -33,6 +33,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/Event/Skip.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/Event/Subtest.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/Event/TAP/Version.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/Event/V2.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/Event/Waiting.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/About.pm
@@ -40,6 +41,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Assert.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Control.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Error.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Hub.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Info.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Meta.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Parent.pm

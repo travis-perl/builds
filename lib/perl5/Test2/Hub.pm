@@ -2,11 +2,11 @@ package Test2::Hub;
 use strict;
 use warnings;
 
-our $VERSION = '1.302122';
+our $VERSION = '1.302140';
 
 
 use Carp qw/carp croak confess/;
-use Test2::Util qw/get_tid ipc_separator/;
+use Test2::Util qw/get_tid gen_uid/;
 
 use Scalar::Util qw/weaken/;
 use List::Util qw/first/;
@@ -25,6 +25,7 @@ use Test2::Util::HashBase qw{
     _context_init
     _context_release
 
+    uuid
     active
     count
     failed
@@ -35,13 +36,17 @@ use Test2::Util::HashBase qw{
     skip_reason
 };
 
-my $ID_POSTFIX = 1;
+my $UUID_VIA;
+
 sub init {
     my $self = shift;
 
     $self->{+PID} = $$;
     $self->{+TID} = get_tid();
-    $self->{+HID} = join ipc_separator, $self->{+PID}, $self->{+TID}, $ID_POSTFIX++;
+    $self->{+HID} = gen_uid();
+
+    $UUID_VIA ||= Test2::API::_add_uuid_via_ref();
+    $self->{+UUID} = ${$UUID_VIA}->('hub') if $$UUID_VIA;
 
     $self->{+NESTED}   = 0 unless defined $self->{+NESTED};
     $self->{+BUFFERED} = 0 unless defined $self->{+BUFFERED};
@@ -69,7 +74,7 @@ sub _tb_reset {
 
     $self->{+PID} = $$;
     $self->{+TID} = get_tid();
-    $self->{+HID} = join ipc_separator, $self->{+PID}, $self->{+TID}, $ID_POSTFIX++;
+    $self->{+HID} = gen_uid();
 
     if (my $ipc = $self->{+IPC}) {
         $ipc->add_hub($self->{+HID});
@@ -271,6 +276,25 @@ sub remove_context_release {
 sub send {
     my $self = shift;
     my ($e) = @_;
+
+    $e->eid;
+
+    $e->add_hub(
+        {
+            details => ref($self),
+
+            buffered => $self->{+BUFFERED},
+            hid      => $self->{+HID},
+            nested   => $self->{+NESTED},
+            pid      => $self->{+PID},
+            tid      => $self->{+TID},
+            uuid     => $self->{+UUID},
+
+            ipc => $self->{+IPC} ? 1 : 0,
+        }
+    );
+
+    $e->set_uuid(${$UUID_VIA}->('event')) if $$UUID_VIA;
 
     if ($self->{+_PRE_FILTERS}) {
         for (@{$self->{+_PRE_FILTERS}}) {
@@ -774,6 +798,10 @@ Get the thread id under which the hub was created.
 =item $hud = $hub->hid()
 
 Get the identifier string of the hub.
+
+=item $uuid = $hub->uuid()
+
+If UUID tagging is enabled (see L<Test2::API>) then the hub will have a UUID.
 
 =item $ipc = $hub->ipc()
 
