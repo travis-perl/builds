@@ -7,6 +7,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Eval/TypeTiny.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Reply/Plugin/TypeTiny.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Test/TypeTiny.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Type/CONTRIBUTING.pod
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Type/Coercion.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Type/Coercion/FromMoose.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Type/Coercion/Union.pm
@@ -42,5 +43,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/Standard/HashRef.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/Standard/Map.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/Standard/ScalarRef.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/Standard/StrMatch.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/Standard/Tied.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/Standard/Tuple.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@cat/lib/perl5/Types/TypeTiny.pm
