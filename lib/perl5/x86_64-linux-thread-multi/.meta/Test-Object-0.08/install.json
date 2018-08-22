@@ -1,1 +1,1 @@
-{"pathname":"E/ET/ETHER/Test-Object-0.08.tar.gz","version":"0.08","provides":{"Test::Object":{"file":"lib/Test/Object.pm","version":"0.08"},"Test::Object::Test":{"file":"lib/Test/Object/Test.pm","version":"0.08"}},"dist":"Test-Object-0.08","name":"Test::Object","target":"Test::Object"}
+{"version":"0.08","name":"Test::Object","dist":"Test-Object-0.08","target":"Test::Object","pathname":"E/ET/ETHER/Test-Object-0.08.tar.gz","provides":{"Test::Object":{"version":"0.08","file":"lib/Test/Object.pm"},"Test::Object::Test":{"file":"lib/Test/Object/Test.pm","version":"0.08"}}}
