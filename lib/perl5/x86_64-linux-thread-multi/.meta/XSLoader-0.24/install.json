@@ -1,1 +1,1 @@
-{"target":"XSLoader","dist":"XSLoader-0.24","pathname":"S/SA/SAPER/XSLoader-0.24.tar.gz","version":"0.24","name":"XSLoader","provides":{"XSLoader":{"file":"XSLoader_pm.PL","version":"0.24"}}}
+{"pathname":"S/SA/SAPER/XSLoader-0.24.tar.gz","name":"XSLoader","target":"XSLoader","dist":"XSLoader-0.24","provides":{"XSLoader":{"version":"0.24","file":"XSLoader_pm.PL"}},"version":"0.24"}
