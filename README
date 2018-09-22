@@ -1,0 +1,20 @@
+local::lib test for Perl 5.29.3 built by Travis Helpers: heads/master-0-gcde9ab6
+------------------------------------------------------------------------------
+
+This is perl 5, version 29, subversion 3 (v5.29.3) built for x86_64-linux
+(with 1 registered patch, see perl -V for more detail)
+
+Copyright 1987-2018, Larry Wall
+
+Perl may be copied only under the terms of either the Artistic License or the
+GNU General Public License, which may be found in the Perl 5 source kit.
+
+Complete documentation for Perl, including FAQ lists, should be found on
+this system using "man perl" or "perldoc perl".  If you have access to the
+Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+
+------------------------------------------------------------------------------
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=14.04
+DISTRIB_CODENAME=trusty
+DISTRIB_DESCRIPTION="Ubuntu 14.04.5 LTS"
