@@ -26,11 +26,6 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "ExtUtils::CBuilder" : "0"
-         }
-      },
       "configure" : {
          "requires" : {
             "Module::Build" : "0.4005"
@@ -44,7 +39,7 @@
       },
       "test" : {
          "requires" : {
-            "JSON" : "2",
+            "JSON::PP" : "2",
             "Test::More" : "0.98"
          }
       }
@@ -52,7 +47,7 @@
    "provides" : {
       "WWW::Form::UrlEncoded" : {
          "file" : "lib/WWW/Form/UrlEncoded.pm",
-         "version" : "0.24"
+         "version" : "0.25"
       },
       "WWW::Form::UrlEncoded::PP" : {
          "file" : "lib/WWW/Form/UrlEncoded/PP.pm"
@@ -70,6 +65,10 @@
          "web" : "https://github.com/kazeburo/WWW-Form-UrlEncoded"
       }
    },
-   "version" : "0.24",
-   "x_serialization_backend" : "JSON::PP version 2.27400"
+   "version" : "0.25",
+   "x_contributors" : [
+      "Graham Knop <haarg@haarg.org>"
+   ],
+   "x_serialization_backend" : "JSON::PP version 2.27300_01",
+   "x_static_install" : 0
 }
