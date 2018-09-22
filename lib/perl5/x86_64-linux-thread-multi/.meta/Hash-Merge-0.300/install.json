@@ -1,1 +1,1 @@
-{"dist":"Hash-Merge-0.300","pathname":"R/RE/REHSACK/Hash-Merge-0.300.tar.gz","version":"0.300","target":"Hash::Merge","name":"Hash::Merge","provides":{"Hash::Merge":{"version":"0.300","file":"lib/Hash/Merge.pm"}}}
+{"provides":{"Hash::Merge":{"file":"lib/Hash/Merge.pm","version":"0.300"}},"target":"Hash::Merge","version":"0.300","pathname":"R/RE/REHSACK/Hash-Merge-0.300.tar.gz","dist":"Hash-Merge-0.300","name":"Hash::Merge"}
