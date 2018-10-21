@@ -1,0 +1,11 @@
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite.pm
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite/Constants.pm
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite/Cookbook.pod
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite/Fulltext_search.pod
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite/VirtualTable.pm
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite/VirtualTable/FileContent.pm
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/DBD/SQLite/VirtualTable/PerlData.pm
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/auto/DBD/SQLite/SQLite.so
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/auto/share/dist/DBD-SQLite/sqlite3.c
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/auto/share/dist/DBD-SQLite/sqlite3.h
+/home/travis/.perlbrew/libs/5.29.4@dbic/lib/perl5/x86_64-linux/auto/share/dist/DBD-SQLite/sqlite3ext.h

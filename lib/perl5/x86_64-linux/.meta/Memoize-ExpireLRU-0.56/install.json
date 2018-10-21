@@ -1,0 +1,1 @@
+{"version":"0.56","target":"Memoize::ExpireLRU","name":"Memoize::ExpireLRU","pathname":"N/NE/NEILB/Memoize-ExpireLRU-0.56.tar.gz","provides":{"Memoize::ExpireLRU":{"version":"0.56","file":"lib/Memoize/ExpireLRU.pm"}},"dist":"Memoize-ExpireLRU-0.56"}
