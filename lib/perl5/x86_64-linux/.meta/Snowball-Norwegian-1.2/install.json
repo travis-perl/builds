@@ -1,1 +1,1 @@
-{"name":"Lingua::Stem::Snowball::No","dist":"Snowball-Norwegian-1.2","provides":{"Lingua::Stem::Snowball::No":{"version":"1.2","file":"lib/Lingua/Stem/Snowball/No.pm"}},"version":"1.2","pathname":"A/AS/ASKSH/Snowball-Norwegian-1.2.tar.gz","target":"Lingua::Stem::Snowball::No"}
+{"name":"Lingua::Stem::Snowball::No","dist":"Snowball-Norwegian-1.2","pathname":"A/AS/ASKSH/Snowball-Norwegian-1.2.tar.gz","provides":{"Lingua::Stem::Snowball::No":{"version":"1.2","file":"lib/Lingua/Stem/Snowball/No.pm"}},"version":"1.2","target":"Lingua::Stem::Snowball::No"}
