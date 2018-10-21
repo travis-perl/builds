@@ -1,1 +1,1 @@
-{"dist":"Cpanel-JSON-XS-4.06","target":"Cpanel::JSON::XS","version":"4.06","name":"Cpanel::JSON::XS","provides":{"Cpanel::JSON::XS":{"file":"XS.pm","version":"4.06"},"Cpanel::JSON::XS::Type":{"file":"XS/Type.pm"}},"pathname":"R/RU/RURBAN/Cpanel-JSON-XS-4.06.tar.gz"}
+{"pathname":"R/RU/RURBAN/Cpanel-JSON-XS-4.06.tar.gz","provides":{"Cpanel::JSON::XS":{"version":"4.06","file":"XS.pm"},"Cpanel::JSON::XS::Type":{"file":"XS/Type.pm"}},"dist":"Cpanel-JSON-XS-4.06","name":"Cpanel::JSON::XS","version":"4.06","target":"Cpanel::JSON::XS"}

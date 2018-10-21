@@ -1,1 +1,1 @@
-{"dist":"Task-Weaken-1.06","target":"Task::Weaken","version":"1.06","name":"Task::Weaken","pathname":"E/ET/ETHER/Task-Weaken-1.06.tar.gz","provides":{"Task::Weaken":{"version":"1.06","file":"lib/Task/Weaken.pm"}}}
+{"dist":"Task-Weaken-1.06","version":"1.06","name":"Task::Weaken","target":"Task::Weaken","provides":{"Task::Weaken":{"version":"1.06","file":"lib/Task/Weaken.pm"}},"pathname":"E/ET/ETHER/Task-Weaken-1.06.tar.gz"}
