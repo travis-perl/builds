@@ -1,0 +1,1 @@
+{"target":"Log::Message::Simple","pathname":"B/BI/BINGOS/Log-Message-Simple-0.10.tar.gz","name":"Log::Message::Simple","provides":{"Log::Message::Handlers":{"file":"lib/Log/Message/Simple.pm","version":"0.10"},"Log::Message::Simple":{"version":"0.10","file":"lib/Log/Message/Simple.pm"}},"dist":"Log-Message-Simple-0.10","version":"0.10"}
