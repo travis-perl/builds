@@ -1,4 +1,4 @@
-=head2 Sat Sep 22 00:06:09 2018: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Sun Oct 21 00:06:33 2018: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Sep 22 00:06:10 2018: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Sun Oct 21 00:06:35 2018: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Sep 22 00:06:11 2018: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Sun Oct 21 00:06:36 2018: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Sat Sep 22 00:06:23 2018: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Sun Oct 21 00:06:48 2018: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -86,29 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Sep 22 00:06:24 2018: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.060>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sat Sep 22 00:06:24 2018: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Sun Oct 21 00:06:49 2018: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -130,7 +108,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Sep 22 00:06:25 2018: C<Module> L<YAML|YAML>
+=head2 Sun Oct 21 00:06:49 2018: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.060>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sun Oct 21 00:06:50 2018: C<Module> L<YAML|YAML>
 
 =over 4
 
