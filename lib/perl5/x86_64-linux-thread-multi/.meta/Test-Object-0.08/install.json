@@ -1,1 +1,1 @@
-{"provides":{"Test::Object::Test":{"file":"lib/Test/Object/Test.pm","version":"0.08"},"Test::Object":{"file":"lib/Test/Object.pm","version":"0.08"}},"dist":"Test-Object-0.08","target":"Test::Object","pathname":"E/ET/ETHER/Test-Object-0.08.tar.gz","name":"Test::Object","version":"0.08"}
+{"provides":{"Test::Object":{"file":"lib/Test/Object.pm","version":"0.08"},"Test::Object::Test":{"file":"lib/Test/Object/Test.pm","version":"0.08"}},"dist":"Test-Object-0.08","target":"Test::Object","version":"0.08","name":"Test::Object","pathname":"E/ET/ETHER/Test-Object-0.08.tar.gz"}

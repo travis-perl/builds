@@ -1,1 +1,1 @@
-{"version":"0.39","provides":{"Clone":{"version":"0.39","file":"Clone.pm"}},"dist":"Clone-0.39","target":"Clone","pathname":"G/GA/GARU/Clone-0.39.tar.gz","name":"Clone"}
+{"name":"Clone","pathname":"G/GA/GARU/Clone-0.39.tar.gz","provides":{"Clone":{"version":"0.39","file":"Clone.pm"}},"dist":"Clone-0.39","target":"Clone","version":"0.39"}
