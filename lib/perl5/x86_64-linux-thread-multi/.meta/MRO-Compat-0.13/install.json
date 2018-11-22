@@ -1,1 +1,1 @@
-{"pathname":"H/HA/HAARG/MRO-Compat-0.13.tar.gz","version":"0.13","target":"MRO::Compat","name":"MRO::Compat","dist":"MRO-Compat-0.13","provides":{"MRO::Compat":{"version":"0.13","file":"lib/MRO/Compat.pm"}}}
+{"name":"MRO::Compat","pathname":"H/HA/HAARG/MRO-Compat-0.13.tar.gz","provides":{"MRO::Compat":{"version":"0.13","file":"lib/MRO/Compat.pm"}},"dist":"MRO-Compat-0.13","target":"MRO::Compat","version":"0.13"}
