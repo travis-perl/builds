@@ -1,1 +1,1 @@
-{"name":"Devel::OverloadInfo","pathname":"I/IL/ILMARI/Devel-OverloadInfo-0.005.tar.gz","dist":"Devel-OverloadInfo-0.005","provides":{"Devel::OverloadInfo":{"file":"lib/Devel/OverloadInfo.pm","version":"0.005"}},"version":"0.005","target":"Devel::OverloadInfo"}
+{"version":"0.005","provides":{"Devel::OverloadInfo":{"file":"lib/Devel/OverloadInfo.pm","version":"0.005"}},"pathname":"I/IL/ILMARI/Devel-OverloadInfo-0.005.tar.gz","dist":"Devel-OverloadInfo-0.005","name":"Devel::OverloadInfo","target":"Devel::OverloadInfo"}

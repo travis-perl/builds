@@ -1,1 +1,1 @@
-{"provides":{"Test::SubCalls":{"version":"1.10","file":"lib/Test/SubCalls.pm"}},"dist":"Test-SubCalls-1.10","pathname":"E/ET/ETHER/Test-SubCalls-1.10.tar.gz","name":"Test::SubCalls","target":"Test::SubCalls","version":"1.10"}
+{"target":"Test::SubCalls","name":"Test::SubCalls","dist":"Test-SubCalls-1.10","pathname":"E/ET/ETHER/Test-SubCalls-1.10.tar.gz","version":"1.10","provides":{"Test::SubCalls":{"file":"lib/Test/SubCalls.pm","version":"1.10"}}}
