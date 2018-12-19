@@ -9,9 +9,9 @@
 
 /* Package name      : perl5
  * Source directory  : .
- * Configuration time: Thu Nov 22 00:01:29 UTC 2018
+ * Configuration time: Wed Dec 19 00:01:37 UTC 2018
  * Configured by     : travis
- * Target system     : linux travis-job-e4611c84-e7a3-4f76-a3fc-6ddcc499c122 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux travis-job-d959af3f-3c44-4bdb-85a7-7c0803d75bc4 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
