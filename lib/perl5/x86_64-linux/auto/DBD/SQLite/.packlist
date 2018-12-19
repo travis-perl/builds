@@ -2,6 +2,7 @@
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/Constants.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/Cookbook.pod
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/Fulltext_search.pod
+/home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/GetInfo.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/VirtualTable.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/VirtualTable/FileContent.pm
 /home/travis/.perlbrew/libs/5.22.0@dbic/lib/perl5/x86_64-linux/DBD/SQLite/VirtualTable/PerlData.pm
