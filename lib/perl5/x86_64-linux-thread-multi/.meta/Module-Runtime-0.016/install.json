@@ -1,1 +1,1 @@
-{"provides":{"Module::Runtime":{"version":"0.016","file":"lib/Module/Runtime.pm"}},"target":"Module::Runtime","name":"Module::Runtime","pathname":"Z/ZE/ZEFRAM/Module-Runtime-0.016.tar.gz","version":"0.016","dist":"Module-Runtime-0.016"}
+{"name":"Module::Runtime","version":"0.016","dist":"Module-Runtime-0.016","target":"Module::Runtime","provides":{"Module::Runtime":{"version":"0.016","file":"lib/Module/Runtime.pm"}},"pathname":"Z/ZE/ZEFRAM/Module-Runtime-0.016.tar.gz"}
