@@ -1,1 +1,1 @@
-{"name":"Lingua::Stem::Fr","pathname":"S/SD/SDP/Lingua-Stem-Fr-0.02.tar.gz","version":"0.02","target":"Lingua::Stem::Fr","dist":"Lingua-Stem-Fr-0.02","provides":{"Lingua::Stem::Fr":{"version":"0.02","file":"lib/Lingua/Stem/Fr.pm"}}}
+{"dist":"Lingua-Stem-Fr-0.02","pathname":"S/SD/SDP/Lingua-Stem-Fr-0.02.tar.gz","target":"Lingua::Stem::Fr","provides":{"Lingua::Stem::Fr":{"file":"lib/Lingua/Stem/Fr.pm","version":"0.02"}},"name":"Lingua::Stem::Fr","version":"0.02"}
