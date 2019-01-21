@@ -43,6 +43,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Error.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Hub.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Info.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Info/Table.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Meta.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Parent.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5/Test2/EventFacet/Plan.pm
