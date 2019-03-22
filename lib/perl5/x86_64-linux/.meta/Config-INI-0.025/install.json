@@ -1,0 +1,1 @@
+{"target":"Config::INI::Reader","provides":{"Config::INI::Reader":{"file":"lib/Config/INI/Reader.pm","version":"0.025"},"Config::INI":{"file":"lib/Config/INI.pm","version":"0.025"},"Config::INI::Writer":{"file":"lib/Config/INI/Writer.pm","version":"0.025"}},"pathname":"R/RJ/RJBS/Config-INI-0.025.tar.gz","dist":"Config-INI-0.025","name":"Config::INI","version":"0.025"}
