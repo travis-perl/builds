@@ -1,0 +1,6 @@
+/home/travis/.perlbrew/libs/5.29.9-thr@dzil/lib/perl5/Git/Wrapper.pm
+/home/travis/.perlbrew/libs/5.29.9-thr@dzil/lib/perl5/Git/Wrapper/Exception.pm
+/home/travis/.perlbrew/libs/5.29.9-thr@dzil/lib/perl5/Git/Wrapper/File/RawModification.pm
+/home/travis/.perlbrew/libs/5.29.9-thr@dzil/lib/perl5/Git/Wrapper/Log.pm
+/home/travis/.perlbrew/libs/5.29.9-thr@dzil/lib/perl5/Git/Wrapper/Status.pm
+/home/travis/.perlbrew/libs/5.29.9-thr@dzil/lib/perl5/Git/Wrapper/Statuses.pm
