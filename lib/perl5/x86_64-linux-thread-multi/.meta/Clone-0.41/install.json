@@ -1,1 +1,1 @@
-{"pathname":"G/GA/GARU/Clone-0.41.tar.gz","name":"Clone","target":"Clone","version":"0.41","provides":{"Clone":{"version":"0.41","file":"Clone.pm"}},"dist":"Clone-0.41"}
+{"provides":{"Clone":{"version":"0.41","file":"Clone.pm"}},"dist":"Clone-0.41","name":"Clone","target":"Clone","pathname":"G/GA/GARU/Clone-0.41.tar.gz","version":"0.41"}

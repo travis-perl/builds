@@ -66,7 +66,7 @@ Document-specific.
 use strict;
 use Carp                          ();
 use List::Util 1.33               ();
-use Params::Util                  qw{_SCALAR0 _ARRAY0 _INSTANCE};
+use Params::Util 1.00             qw{_SCALAR0 _ARRAY0 _INSTANCE};
 use Digest::MD5                   ();
 use PPI::Util                     ();
 use PPI                           ();
@@ -75,12 +75,9 @@ use PPI::Node                     ();
 use overload 'bool' => \&PPI::Util::TRUE;
 use overload '""'   => 'content';
 
-use vars qw{$VERSION @ISA $errstr};
-BEGIN {
-	$VERSION = '1.236';
-	@ISA     = 'PPI::Node';
-	$errstr  = '';
-}
+our $VERSION = '1.269'; # VERSION
+
+our ( $errstr, @ISA ) = ( "", "PPI::Node" );
 
 use PPI::Document::Fragment ();
 
@@ -170,6 +167,9 @@ sub new {
 			Carp::croak("API CHANGE: Source code should only be passed to PPI::Document->new as a SCALAR reference");
 		}
 
+		# Save the filename
+		$attr{filename} ||= $source;
+
 		# When loading from a filename, use the caching layer if it exists.
 		if ( $CACHE ) {
 			my $file_contents = PPI::Util::_slurp( $source );
@@ -228,6 +228,7 @@ sub load {
 sub _setattr {
 	my ($class, $document, %attr) = @_;
 	$document->{readonly} = !! $attr{readonly};
+	$document->{filename} = $attr{filename};
 	return $document;
 }
 
@@ -290,6 +291,19 @@ sub get_cache {
 
 #####################################################################
 # PPI::Document Instance Methods
+
+=pod
+
+=head2 filename
+
+The C<filename> accessor returns the name of the file in which the document
+is stored.
+
+=cut
+
+sub filename {
+	$_[0]->{filename};
+}
 
 =pod
 
@@ -546,7 +560,7 @@ sub index_locations {
 	my @tokens = $self->tokens;
 
 	# Whenever we hit a heredoc we will need to increment by
-	# the number of lines in it's content section when we
+	# the number of lines in its content section when we
 	# encounter the next token with a newline in it.
 	my $heredoc = 0;
 

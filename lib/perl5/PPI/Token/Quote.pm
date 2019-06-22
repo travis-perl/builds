@@ -18,7 +18,8 @@ The C<PPI::Token::Quote> class is never instantiated, and simply
 provides a common abstract base class for the four quote classes.
 In PPI, a "quote" is limited to only the quote-like things that
 themselves directly represent a string. (although this includes
-double quotes with interpolated elements inside them).
+double quotes with interpolated elements inside them, note that
+L<String::InterpolatedVariables> allows to extract them).
 
 The subclasses of C<PPI::Token::Quote> are:
 
@@ -48,11 +49,9 @@ honor of its own token class (L<PPI::Token::HereDoc>).
 use strict;
 use PPI::Token ();
 
-use vars qw{$VERSION @ISA};
-BEGIN {
-	$VERSION = '1.236';
-	@ISA     = 'PPI::Token';
-}
+our $VERSION = '1.269'; # VERSION
+
+our @ISA = "PPI::Token";
 
 
 

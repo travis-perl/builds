@@ -13,6 +13,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Node.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Normal.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Normal/Standard.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Singletons.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Statement.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Statement/Break.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/PPI/Statement/Compound.pm
