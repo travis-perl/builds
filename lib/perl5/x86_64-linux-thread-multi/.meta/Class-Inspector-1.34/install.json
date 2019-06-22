@@ -1,0 +1,1 @@
+{"target":"Class::Inspector","name":"Class::Inspector","pathname":"P/PL/PLICEASE/Class-Inspector-1.34.tar.gz","dist":"Class-Inspector-1.34","provides":{"Class::Inspector":{"file":"lib/Class/Inspector.pm","version":"1.34"},"Class::Inspector::Functions":{"file":"lib/Class/Inspector/Functions.pm","version":"1.34"}},"version":"1.34"}
