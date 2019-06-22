@@ -1,4 +1,4 @@
-# Copyright 2001-2018, Paul Johnson (paul@pjcj.net)
+# Copyright 2001-2019, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -12,9 +12,16 @@ package Devel::Cover::Inc;
 use strict;
 use warnings;
 
-our $VERSION      = "1.31";
+our $VERSION      = "1.33";
 our $Perl_version = '5.022000';
-our @Inc          = qw( . /home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5 /home/travis/perl5/perlbrew/perls/5.22.0/lib/5.22.0 /home/travis/perl5/perlbrew/perls/5.22.0/lib/5.22.0/x86_64-linux /home/travis/perl5/perlbrew/perls/5.22.0/lib/site_perl/5.22.0 /home/travis/perl5/perlbrew/perls/5.22.0/lib/site_perl/5.22.0/x86_64-linux );
+our @Inc          = @{ [
+  '.',
+  '/home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5',
+  '/home/travis/perl5/perlbrew/perls/5.22.0/lib/5.22.0',
+  '/home/travis/perl5/perlbrew/perls/5.22.0/lib/5.22.0/x86_64-linux',
+  '/home/travis/perl5/perlbrew/perls/5.22.0/lib/site_perl/5.22.0',
+  '/home/travis/perl5/perlbrew/perls/5.22.0/lib/site_perl/5.22.0/x86_64-linux'
+] };
 chomp (our $Perl  = <<'EOV');  # Careful with \\ in the path
 /home/travis/perl5/perlbrew/perls/5.22.0/bin/perl
 EOV
