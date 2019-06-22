@@ -1,4 +1,4 @@
-# Copyright 2001-2018, Paul Johnson (paul@pjcj.net)
+# Copyright 2001-2019, Paul Johnson (paul@pjcj.net)
 
 # This software is free.  It is licensed under the same terms as Perl itself.
 
@@ -12,7 +12,7 @@ use warnings;
 
 our $VERSION;
 BEGIN {
-our $VERSION = '1.31'; # VERSION
+our $VERSION = '1.33'; # VERSION
 }
 
 use DynaLoader ();
@@ -24,7 +24,7 @@ use Devel::Cover::Inc;
 
 BEGIN { $VERSION //= $Devel::Cover::Inc::VERSION }
 
-use B qw( class ppname main_cv main_start main_root walksymtable OPf_KIDS );
+use B qw( ppname main_cv main_start main_root walksymtable OPf_KIDS );
 use B::Debug;
 use B::Deparse;
 
@@ -777,18 +777,18 @@ sub _report {
 
     unless ($Subs_only) {
         get_cover(main_cv, main_root);
-        get_cover($_)
-            for B::begin_av()->isa("B::AV") ? B::begin_av()->ARRAY : ();
+        get_cover_progress("BEGIN block",
+            B::begin_av()->isa("B::AV") ? B::begin_av()->ARRAY : ());
         if (exists &B::check_av) {
-            get_cover($_)
-                for B::check_av()->isa("B::AV") ? B::check_av()->ARRAY : ();
+            get_cover_progress("CHECK block",
+                B::check_av()->isa("B::AV") ? B::check_av()->ARRAY : ());
         }
         # get_ends includes INIT blocks
-        get_cover($_)
-            for get_ends()->isa("B::AV") ? get_ends()->ARRAY : ();
+        get_cover_progress("END/INIT block",
+            get_ends()->isa("B::AV") ? get_ends()->ARRAY : ());
     }
     # print STDERR "--- @Cvs\n";
-    get_cover($_) for @Cvs;
+    get_cover_progress("CV", @Cvs);
 
     my %files;
     $files{$_}++ for keys %{$Run{count}}, keys %{$Run{vec}};
@@ -1010,7 +1010,7 @@ sub deparse {
     my $deparse;
 
     if ($Collect) {
-        my $class = class($op);
+        my $class = B::class($op);
         my $null  = $class eq "NULL";
 
         my $name = $op->can("name") ? $op->name : "Unknown";
@@ -1078,7 +1078,7 @@ sub deparse {
             } else {
                 { local $Collect; $cond = $self->deparse($cond, 1) }
                 add_branch_cover($op, "if", "if ($cond) { }", $File, $Line);
-                while (class($false) ne "NULL" && is_ifelse_cont($false)) {
+                while (B::class($false) ne "NULL" && is_ifelse_cont($false)) {
                     my $newop   = $false->first;
                     my $newcond = $newop->first;
                     my $newtrue = $newcond->sibling;
@@ -1276,6 +1276,34 @@ sub get_cover {
     $de
 }
 
+sub _report_progress {
+    my ($msg, $code, @items) = @_;
+    if ($Silent) {
+        $code->($_) for @items;
+        return;
+    }
+    my $tot = @items || 1;
+    my $prog = sub {
+        my ($n) = @_;
+        print OUT "\r" . __PACKAGE__ . ": " . int(100 * $n / $tot) . "% ";
+    };
+    my ($old_pipe, $n, $start) = ($|, 0, time);
+    $|++;
+    print OUT __PACKAGE__, ": $msg\n";
+    for (@items) {
+        $prog->($n++);
+        $code->($_);
+    }
+    $prog->($n || 1);
+    print OUT "- " . (time - $start) . "s taken\n";
+    $| = $old_pipe;
+}
+
+sub get_cover_progress {
+    my ($type, @cvs) = @_;
+    _report_progress("getting $type coverage", sub { get_cover($_) }, @cvs);
+}
+
 "
 We have normality, I repeat we have normality.
 Anything you still can’t cope with is therefore your own problem.
@@ -1289,7 +1317,7 @@ Devel::Cover - Code coverage metrics for Perl
 
 =head1 VERSION
 
-version 1.31
+version 1.33
 
 =head1 SYNOPSIS
 
@@ -1469,7 +1497,7 @@ In this example, Devel::Cover will be operating in silent mode.
                        "/Devel/Cover\b")
  +ignore RE          - Append to regular expressions of files to ignore
  -inc path           - Set prefixes of files to include (default @INC)
- +inc path           - Append to prefixes of files regular expressionsto include
+ +inc path           - Append to prefixes of files to include
  -loose_perms val    - Use loose permissions on all files and directories in
                        the coverage db so that code changing EUID can still
                        write coverage information (default off)
@@ -1608,14 +1636,14 @@ If there is an elsif in the branch then it can be addressed as the second
 branch on the line by using the "count" attribute.  Further elsifs are the
 third and fourth "count" value, and so on:
 
-# uncoverable branch false count:2
-if ($thing == 1) {
-    handle_thing_being_one();
-} elsif ($thing == 2) {
-    handle_thing_being_tow();
-} else {
-    die "thing can only be one or two, not $thing"; # uncoverable statement
-}
+    # uncoverable branch false count:2
+    if ($thing == 1) {
+        handle_thing_being_one();
+    } elsif ($thing == 2) {
+        handle_thing_being_tow();
+    } else {
+        die "thing can only be one or two, not $thing"; # uncoverable statement
+    }
 
 =head3 Conditions
 
@@ -1808,7 +1836,7 @@ Please report new bugs on Github.
 
 =head1 LICENCE
 
-Copyright 2001-2018, Paul Johnson (paul@pjcj.net)
+Copyright 2001-2019, Paul Johnson (paul@pjcj.net)
 
 This software is free.  It is licensed under the same terms as Perl itself.
 

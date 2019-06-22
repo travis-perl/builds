@@ -1,1 +1,1 @@
-{"provides":{"Mozilla::CA":{"version":"20180117","file":"lib/Mozilla/CA.pm"}},"version":"20180117","name":"Mozilla::CA","target":"Mozilla::CA","pathname":"A/AB/ABH/Mozilla-CA-20180117.tar.gz","dist":"Mozilla-CA-20180117"}
+{"version":"20180117","name":"Mozilla::CA","dist":"Mozilla-CA-20180117","pathname":"A/AB/ABH/Mozilla-CA-20180117.tar.gz","provides":{"Mozilla::CA":{"version":"20180117","file":"lib/Mozilla/CA.pm"}},"target":"Mozilla::CA"}
