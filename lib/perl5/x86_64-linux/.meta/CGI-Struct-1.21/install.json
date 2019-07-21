@@ -1,1 +1,1 @@
-{"dist":"CGI-Struct-1.21","provides":{"CGI::Struct":{"file":"lib/CGI/Struct.pm","version":"1.21"}},"name":"CGI::Struct","target":"CGI::Struct","pathname":"F/FU/FULLERMD/CGI-Struct-1.21.tar.gz","version":"1.21"}
+{"pathname":"F/FU/FULLERMD/CGI-Struct-1.21.tar.gz","version":"1.21","dist":"CGI-Struct-1.21","name":"CGI::Struct","target":"CGI::Struct","provides":{"CGI::Struct":{"file":"lib/CGI/Struct.pm","version":"1.21"}}}
