@@ -1,1 +1,1 @@
-{"target":"String::RewritePrefix","version":"0.007","dist":"String-RewritePrefix-0.007","pathname":"R/RJ/RJBS/String-RewritePrefix-0.007.tar.gz","name":"String::RewritePrefix","provides":{"String::RewritePrefix":{"version":"0.007","file":"lib/String/RewritePrefix.pm"}}}
+{"version":"0.007","name":"String::RewritePrefix","provides":{"String::RewritePrefix":{"file":"lib/String/RewritePrefix.pm","version":"0.007"}},"dist":"String-RewritePrefix-0.007","pathname":"R/RJ/RJBS/String-RewritePrefix-0.007.tar.gz","target":"String::RewritePrefix"}
