@@ -78,9 +78,9 @@ sub header_files {
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Sat Jun 22 00:01:13 UTC 2019
+## Configuration time: Sun Jul 21 00:01:19 UTC 2019
 ## Configured by     : travis
-## Target system     : linux travis-job-0ae1560d-ef2d-45aa-9389-98e6c6ffd8a5 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux travis-job-e44791b4-e4b3-45ae-b9aa-896d2a6bb478 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -203,8 +203,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@travis-job-0ae1560d-ef2d-45aa-9389-98e6c6ffd8a5.(none)'
-cf_time='Sat Jun 22 00:01:13 UTC 2019'
+cf_email='travis@travis-job-e44791b4-e4b3-45ae-b9aa-896d2a6bb478.(none)'
+cf_time='Sun Jul 21 00:01:19 UTC 2019'
 charbits='8'
 charsize='1'
 chgrp=''
@@ -1047,8 +1047,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.(none)'
-myhostname='travis-job-0ae1560d-ef2d-45aa-9389-98e6c6ffd8a5'
-myuname='linux travis-job-0ae1560d-ef2d-45aa-9389-98e6c6ffd8a5 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux '
+myhostname='travis-job-e44791b4-e4b3-45ae-b9aa-896d2a6bb478'
+myuname='linux travis-job-e44791b4-e4b3-45ae-b9aa-896d2a6bb478 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -1087,7 +1087,7 @@ perl5='/usr/bin/perl'
 perl='perl'
 perl_patchlevel=''
 perl_static_inline='static __inline__'
-perladmin='travis@travis-job-0ae1560d-ef2d-45aa-9389-98e6c6ffd8a5.(none)'
+perladmin='travis@travis-job-e44791b4-e4b3-45ae-b9aa-896d2a6bb478.(none)'
 perllibs='-lpthread -lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.22.0-thr/bin/perl'
 pg='pg'
