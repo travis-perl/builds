@@ -1,0 +1,1 @@
+{"dist":"Text-Template-1.56","version":"1.56","pathname":"M/MS/MSCHOUT/Text-Template-1.56.tar.gz","provides":{"Text::Template::Preprocess":{"file":"lib/Text/Template/Preprocess.pm","version":"1.56"},"Text::Template":{"version":"1.56","file":"lib/Text/Template.pm"}},"name":"Text::Template","target":"Text::Template"}
