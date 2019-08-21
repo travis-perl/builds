@@ -6,7 +6,7 @@ sub _getstash { \%{"$_[0]::"} }
 use strict;
 use warnings;
 
-our $VERSION = '2.000006';
+our $VERSION = '2.000008';
 $VERSION =~ tr/_//d;
 
 our %INFO;
@@ -483,7 +483,7 @@ __END__
 
 =head1 NAME
 
-Role::Tiny - Roles. Like a nouvelle cuisine portion size slice of Moose.
+Role::Tiny - Roles: a nouvelle cuisine portion size slice of Moose
 
 =head1 SYNOPSIS
 
