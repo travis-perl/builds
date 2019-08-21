@@ -1,7 +1,4 @@
 #!/home/travis/perl5/perlbrew/perls/5.22.0/bin/perl 
-
-eval 'exec /home/travis/perl5/perlbrew/perls/5.22.0/bin/perl  -S $0 ${1+"$@"}'
-    if 0; # not running under some shell
 # $Id: stemmer.pl,v 1.1 2007/05/07 11:35:25 ask Exp $
 # $Source: /opt/CVS/NoSnowball/examples/stemmer.pl,v $
 # $Author: ask $

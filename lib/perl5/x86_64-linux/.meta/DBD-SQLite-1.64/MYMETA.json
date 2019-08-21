@@ -35,8 +35,7 @@
          "requires" : {
             "DBI" : "1.57",
             "File::Spec" : "0.82",
-            "Test::Builder" : "0.86",
-            "Test::More" : "0.47",
+            "Test::More" : "0.88",
             "Tie::Hash" : "0",
             "perl" : "5.006"
          }
@@ -55,6 +54,6 @@
       },
       "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbd-sqlite"
    },
-   "version" : "1.62",
-   "x_serialization_backend" : "JSON::PP version 2.94"
+   "version" : "1.64",
+   "x_serialization_backend" : "JSON::PP version 4.00"
 }
