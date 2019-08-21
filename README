@@ -1,4 +1,4 @@
-Perl 5.22.0 built by Travis Helpers: heads/master-0-gc522d3f
+Perl 5.22.0 built by Travis Helpers: heads/master-0-g080ddfa
 ------------------------------------------------------------------------------
 
 This is perl 5, version 22, subversion 0 (v5.22.0) built for x86_64-linux
@@ -15,6 +15,6 @@ Internet, point your browser at http://www.perl.org/, the Perl Home Page.
 
 ------------------------------------------------------------------------------
 DISTRIB_ID=Ubuntu
-DISTRIB_RELEASE=12.04
-DISTRIB_CODENAME=precise
-DISTRIB_DESCRIPTION="Ubuntu 12.04 LTS"
+DISTRIB_RELEASE=16.04
+DISTRIB_CODENAME=xenial
+DISTRIB_DESCRIPTION="Ubuntu 16.04.6 LTS"
