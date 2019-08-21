@@ -9,9 +9,9 @@
 
 /* Package name      : perl5
  * Source directory  : .
- * Configuration time: Sun Jul 21 00:01:19 UTC 2019
+ * Configuration time: Wed Aug 21 00:01:09 UTC 2019
  * Configured by     : travis
- * Target system     : linux travis-job-e44791b4-e4b3-45ae-b9aa-896d2a6bb478 4.4.0-101-generic #124~14.04.1-ubuntu smp fri nov 10 19:05:36 utc 2017 x86_64 x86_64 x86_64 gnulinux 
+ * Target system     : linux travis-job-7070fb3c-1415-41d5-873d-cd465b6a4bff 4.15.0-1028-gcp #29~16.04.1-ubuntu smp tue feb 12 16:31:10 utc 2019 x86_64 x86_64 x86_64 gnulinux 
  */
 
 #ifndef _config_h_
@@ -883,7 +883,7 @@
  *	feature tests from Configure are generally more reliable.
  */
 #define OSNAME "linux"		/**/
-#define OSVERS "4.4.0-101-generic"		/**/
+#define OSVERS "4.15.0-1028-gcp"		/**/
 
 /* MULTIARCH:
  *	This symbol, if defined, signifies that the build
@@ -2488,13 +2488,13 @@
  *	This symbol is defined if using the FILE_ptr macro as an lvalue
  *	to increase the pointer by n leaves File_cnt(fp) unchanged.
  */
-#define USE_STDIO_PTR 	/**/
+/*#define USE_STDIO_PTR 	/ **/
 #ifdef USE_STDIO_PTR
 #define FILE_ptr(fp)	((fp)->_IO_read_ptr)
-#define STDIO_PTR_LVALUE 		/**/
+/*#define STDIO_PTR_LVALUE 		/ **/
 #define FILE_cnt(fp)	((fp)->_IO_read_end - (fp)->_IO_read_ptr)
 /*#define STDIO_CNT_LVALUE 		/ **/
-#define STDIO_PTR_LVAL_SETS_CNT	/**/
+/*#define STDIO_PTR_LVAL_SETS_CNT	/ **/
 /*#define STDIO_PTR_LVAL_NOCHANGE_CNT	/ **/
 #endif
 
@@ -2518,7 +2518,7 @@
  *	structure pointed to its argument. This macro will always be defined
  *	if USE_STDIO_BASE is defined.
  */
-#define USE_STDIO_BASE 	/**/
+/*#define USE_STDIO_BASE 	/ **/
 #ifdef USE_STDIO_BASE
 #define FILE_base(fp)	((fp)->_IO_read_base)
 #define FILE_bufsiz(fp)	((fp)->_IO_read_end - (fp)->_IO_read_base)
@@ -3540,7 +3540,7 @@
  *	This symbol, if defined, indicates that the "fast stdio"
  *	is available to manipulate the stdio buffers directly.
  */
-#define HAS_FAST_STDIO		/**/
+/*#define HAS_FAST_STDIO		/ **/
 
 /* HAS_FCHDIR:
  *	This symbol, if defined, indicates that the fchdir routine is
