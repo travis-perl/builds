@@ -1,1 +1,1 @@
-{"dist":"Term-Encoding-0.03","provides":{"Term::Encoding":{"version":"0.03","file":"lib/Term/Encoding.pm"}},"pathname":"M/MI/MIYAGAWA/Term-Encoding-0.03.tar.gz","name":"Term::Encoding","version":"0.03","target":"Term::Encoding"}
+{"version":"0.03","target":"Term::Encoding","pathname":"M/MI/MIYAGAWA/Term-Encoding-0.03.tar.gz","provides":{"Term::Encoding":{"version":"0.03","file":"lib/Term/Encoding.pm"}},"name":"Term::Encoding","dist":"Term-Encoding-0.03"}
