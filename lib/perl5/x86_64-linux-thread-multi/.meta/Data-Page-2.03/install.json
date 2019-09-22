@@ -1,1 +1,1 @@
-{"name":"Data::Page","version":"2.03","provides":{"Data::Page":{"file":"lib/Data/Page.pm","version":"2.03"}},"pathname":"E/ET/ETHER/Data-Page-2.03.tar.gz","dist":"Data-Page-2.03","target":"Data::Page"}
+{"dist":"Data-Page-2.03","name":"Data::Page","version":"2.03","pathname":"E/ET/ETHER/Data-Page-2.03.tar.gz","target":"Data::Page","provides":{"Data::Page":{"file":"lib/Data/Page.pm","version":"2.03"}}}
