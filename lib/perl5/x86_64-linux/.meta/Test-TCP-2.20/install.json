@@ -1,0 +1,1 @@
+{"name":"Test::TCP","provides":{"Net::EmptyPort":{"file":"lib/Net/EmptyPort.pm"},"Test::TCP":{"file":"lib/Test/TCP.pm","version":"2.20"},"Test::TCP::CheckPort":{"file":"lib/Test/TCP/CheckPort.pm"}},"version":"2.20","pathname":"M/MI/MIYAGAWA/Test-TCP-2.20.tar.gz","dist":"Test-TCP-2.20","target":"Test::TCP"}
