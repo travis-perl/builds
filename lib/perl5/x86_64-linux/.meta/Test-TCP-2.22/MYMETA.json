@@ -70,7 +70,7 @@
       },
       "Test::TCP" : {
          "file" : "lib/Test/TCP.pm",
-         "version" : "2.20"
+         "version" : "2.22"
       },
       "Test::TCP::CheckPort" : {
          "file" : "lib/Test/TCP/CheckPort.pm"
@@ -88,7 +88,7 @@
          "web" : "https://github.com/tokuhirom/Test-TCP"
       }
    },
-   "version" : "2.20",
+   "version" : "2.22",
    "x_contributors" : [
       "Alex Vandiver <alex@chmrr.net>",
       "Andrii Melnykov <andy.melnikov@gmail.com>",
@@ -104,12 +104,14 @@
       "Kenichi Ishigaki <ishigaki@cpan.org>",
       "Kent Fredric <kentnl@gentoo.org>",
       "Masahiro Nagano <kazeburo@gmail.com>",
+      "Mohammad S Anwar <mohammad.anwar@yahoo.com>",
       "Neil Bowers <neil@bowers.com>",
       "Pavel Shaydo <zwon@cpan.org>",
       "Pete Houston <githubdevteam@openstrike.co.uk>",
       "Petr Písař <ppisar@redhat.com>",
       "Syohei YOSHIDA <syohex@gmail.com>",
       "Tatsuhiko Miyagawa <miyagawa@gmail.com>",
+      "Tatsuhiko Miyagawa <tmiyagawa@fastly.com>",
       "Thomas Klausner <domm@plix.at>",
       "Yasuhiro Matsumoto <mattn.jp@gmail.com>",
       "gfx <gfuji@cpan.org>",
