@@ -1,0 +1,4 @@
+/home/travis/.perlbrew/libs/5.31.5-thr@cat/bin/findrule
+/home/travis/.perlbrew/libs/5.31.5-thr@cat/lib/perl5/File/Find/Rule.pm
+/home/travis/.perlbrew/libs/5.31.5-thr@cat/lib/perl5/File/Find/Rule/Extending.pod
+/home/travis/.perlbrew/libs/5.31.5-thr@cat/lib/perl5/File/Find/Rule/Procedural.pod
