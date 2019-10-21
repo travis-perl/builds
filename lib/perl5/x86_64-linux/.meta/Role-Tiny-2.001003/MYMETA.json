@@ -1,10 +1,10 @@
 {
-   "abstract" : "Efficient generation of subroutines via string eval",
+   "abstract" : "Roles: a nouvelle cuisine portion size slice of Moose",
    "author" : [
       "mst - Matt S. Trout (cpan:MSTROUT) <mst@shadowcat.co.uk>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 7.38, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Sub-Quote",
+   "name" : "Role-Tiny",
    "no_index" : {
       "directory" : [
          "t",
@@ -24,46 +24,46 @@
          "requires" : {}
       },
       "configure" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "0"
-         }
+         "requires" : {}
       },
       "develop" : {
-         "requires" : {}
+         "recommends" : {
+            "Class::Method::Modifiers" : "1.05",
+            "Moo" : "0",
+            "namespace::autoclean" : "0"
+         }
       },
       "runtime" : {
          "recommends" : {
-            "Sub::Name" : "0.08"
+            "Class::Method::Modifiers" : "1.05"
          },
          "requires" : {
-            "Scalar::Util" : "0",
+            "Exporter" : "5.57",
             "perl" : "5.006"
          }
       },
       "test" : {
          "requires" : {
-            "Test::Fatal" : "0.003",
-            "Test::More" : "0.94"
+            "Test::More" : "0.88"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "mailto" : "bug-Sub-Quote@rt.cpan.org",
-         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Sub-Quote"
+         "mailto" : "bug-Role-Tiny@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Role-Tiny"
       },
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/moose/Sub-Quote.git",
-         "web" : "https://github.com/moose/Sub-Quote"
+         "url" : "git://github.com/moose/Role-Tiny.git",
+         "web" : "https://github.com/moose/Role-Tiny"
       },
       "x_IRC" : "irc://irc.perl.org/#moose"
    },
-   "version" : "2.006003",
-   "x_authority" : "cpan:MSTROUT",
-   "x_serialization_backend" : "JSON::PP version 4.02"
+   "version" : "2.001003",
+   "x_serialization_backend" : "JSON::PP version 4.04"
 }

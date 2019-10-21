@@ -1,12 +1,8 @@
 package Role::Tiny;
-
-sub _getglob { \*{$_[0]} }
-sub _getstash { \%{"$_[0]::"} }
-
 use strict;
 use warnings;
 
-our $VERSION = '2.000008';
+our $VERSION = '2.001003';
 $VERSION =~ tr/_//d;
 
 our %INFO;
@@ -23,7 +19,11 @@ BEGIN {
     = "$]" < 5.011 && !("$]" >= 5.009004 && "$]" < 5.010001)
       ? sub(){1} : sub(){0};
   *_MRO_MODULE = "$]" < 5.010 ? sub(){"MRO/Compat.pm"} : sub(){"mro.pm"};
+  *_CONSTANTS_DEFLATE = "$]" >= 5.012 && "$]" < 5.020 ? sub(){1} : sub(){0};
 }
+
+sub _getglob { no strict 'refs'; \*{$_[0]} }
+sub _getstash { no strict 'refs'; \%{"$_[0]::"} }
 
 sub croak {
   require Carp;
@@ -54,22 +54,47 @@ sub _load_module {
   return 1;
 }
 
+sub _all_subs {
+  my ($me, $package) = @_;
+  my $stash = _getstash($package);
+  return {
+    map {;
+      no strict 'refs';
+      # this is an ugly hack to populate the scalar slot of any globs, to
+      # prevent perl from converting constants back into scalar refs in the
+      # stash when they are used (perl 5.12 - 5.18). scalar slots on their own
+      # aren't detectable through pure perl, so this seems like an acceptable
+      # compromise.
+      ${"${package}::${_}"} = ${"${package}::${_}"}
+        if _CONSTANTS_DEFLATE;
+      $_ => \&{"${package}::${_}"}
+    }
+    grep exists &{"${package}::${_}"},
+    grep !/::\z/,
+    keys %$stash
+  };
+}
+
 sub import {
   my $target = caller;
   my $me = shift;
   strict->import;
   warnings->import;
-  $me->_install_subs($target);
-  return if $me->is_role($target); # already exported into this package
+  $me->_install_subs($target, @_);
+  $me->make_role($target);
+  return;
+}
+
+sub make_role {
+  my ($me, $target) = @_;
+
+  return if $me->is_role($target);
   $INFO{$target}{is_role} = 1;
-  # get symbol table reference
-  my $stash = _getstash($target);
-  # grab all *non-constant* (stash slot is not a scalarref) subs present
-  # in the symbol table and store their refaddrs (no need to forcibly
-  # inflate constant subs into real subs) with a map to the coderefs in
-  # case of copying or re-use
-  my @not_methods = map +(ref $_ eq 'CODE' ? $_ : ref $_ ? () : *$_{CODE}||()), values %$stash;
-  @{$INFO{$target}{not_methods}={}}{@not_methods} = @not_methods;
+
+  my $non_methods = $me->_all_subs($target);
+  delete @{$non_methods}{grep /\A\(/, keys %$non_methods};
+  $INFO{$target}{non_methods} = $non_methods;
+
   # a role does itself
   $APPLIED_TO{$target} = { $target => undef };
   foreach my $hook (@ON_ROLE_CREATE) {
@@ -80,21 +105,31 @@ sub import {
 sub _install_subs {
   my ($me, $target) = @_;
   return if $me->is_role($target);
-  # install before/after/around subs
-  foreach my $type (qw(before after around)) {
-    *{_getglob "${target}::${type}"} = sub {
-      push @{$INFO{$target}{modifiers}||=[]}, [ $type => @_ ];
+  my %install = $me->_gen_subs($target);
+  *{_getglob("${target}::${_}")} = $install{$_}
+    for sort keys %install;
+  return;
+}
+
+sub _gen_subs {
+  my ($me, $target) = @_;
+  (
+    (map {;
+      my $type = $_;
+      $type => sub {
+        push @{$INFO{$target}{modifiers}||=[]}, [ $type => @_ ];
+        return;
+      };
+    } qw(before after around)),
+    requires => sub {
+      push @{$INFO{$target}{requires}||=[]}, @_;
       return;
-    };
-  }
-  *{_getglob "${target}::requires"} = sub {
-    push @{$INFO{$target}{requires}||=[]}, @_;
-    return;
-  };
-  *{_getglob "${target}::with"} = sub {
-    $me->apply_roles_to_package($target, @_);
-    return;
-  };
+    },
+    with => sub {
+      $me->apply_roles_to_package($target, @_);
+      return;
+    },
+  );
 }
 
 sub role_application_steps {
@@ -342,49 +377,75 @@ sub _check_requires {
   }
 }
 
+sub _non_methods {
+  my ($me, $role) = @_;
+  my $info = $INFO{$role} or return {};
+
+  my %non_methods = %{ $info->{non_methods} || {} };
+
+  # this is only for backwards compatibility with older Moo, which
+  # reimplements method tracking rather than calling our method
+  my %not_methods = reverse %{ $info->{not_methods} || {} };
+  return \%non_methods unless keys %not_methods;
+
+  my $subs = $me->_all_subs($role);
+  for my $sub (grep !/\A\(/, keys %$subs) {
+    my $code = $subs->{$sub};
+    if (exists $not_methods{$code}) {
+      $non_methods{$sub} = $code;
+    }
+  }
+
+  return \%non_methods;
+}
+
 sub _concrete_methods_of {
   my ($me, $role) = @_;
   my $info = $INFO{$role};
-  # grab role symbol table
-  my $stash = _getstash($role);
-  # reverse so our keys become the values (captured coderefs) in case
-  # they got copied or re-used since
-  my $not_methods = { reverse %{$info->{not_methods}||{}} };
-  $info->{methods} ||= +{
-    # grab all code entries that aren't in the not_methods list
-    map {;
-      no strict 'refs';
-      my $code = exists &{"${role}::$_"} ? \&{"${role}::$_"} : undef;
-      ( ! $code or exists $not_methods->{$code} ) ? () : ($_ => $code)
-    } grep +(!ref($stash->{$_}) || ref($stash->{$_}) eq 'CODE'), keys %$stash
-  };
+
+  return $info->{methods}
+    if $info && $info->{methods};
+
+  my $non_methods = $me->_non_methods($role);
+
+  my $subs = $me->_all_subs($role);
+  for my $sub (keys %$subs) {
+    if ( exists $non_methods->{$sub} && $non_methods->{$sub} == $subs->{$sub} ) {
+      delete $subs->{$sub};
+    }
+  }
+
+  if ($info) {
+    $info->{methods} = $subs;
+  }
+  return $subs;
 }
 
 sub methods_provided_by {
   my ($me, $role) = @_;
   croak "${role} is not a Role::Tiny" unless $me->is_role($role);
-  (keys %{$me->_concrete_methods_of($role)}, @{$INFO{$role}->{requires}||[]});
+  sort (keys %{$me->_concrete_methods_of($role)}, @{$INFO{$role}->{requires}||[]});
 }
 
 sub _install_methods {
   my ($me, $to, $role) = @_;
 
-  my $info = $INFO{$role};
-
   my $methods = $me->_concrete_methods_of($role);
 
-  # grab target symbol table
-  my $stash = _getstash($to);
+  my %existing_methods;
+  for my $package ($to, grep $_ ne $role, keys %{$APPLIED_TO{$to}}) {
+    @existing_methods{keys %{ $me->_concrete_methods_of($package) }} = ();;
+  }
 
-  # determine already extant methods of target
-  my %has_methods;
-  @has_methods{grep
-    +(ref($stash->{$_}) || *{$stash->{$_}}{CODE}),
-    keys %$stash
-  } = ();
+  # _concrete_methods_of caches its result on roles.  that cache needs to be
+  # invalidated after applying roles
+  delete $INFO{$to}{methods} if $INFO{$to};
 
-  foreach my $i (grep !exists $has_methods{$_}, keys %$methods) {
-    no warnings 'once';
+
+  foreach my $i (keys %$methods) {
+    next
+      if exists $existing_methods{$i};
+
     my $glob = _getglob "${to}::${i}";
     *$glob = $methods->{$i};
 
@@ -395,7 +456,7 @@ sub _install_methods {
         && ((defined &overload::nil && $methods->{$i} == \&overload::nil)
             || (defined &overload::_nil && $methods->{$i} == \&overload::_nil));
 
-    my $overload = ${ *{_getglob "${role}::${i}"}{SCALAR} };
+    my $overload = ${ _getglob "${role}::${i}" };
     next
       unless defined $overload;
 
@@ -473,7 +534,7 @@ sub does_role {
 
 sub is_role {
   my ($me, $role) = @_;
-  return !!($INFO{$role} && ($INFO{$role}{is_role} || $INFO{$role}{not_methods}));
+  return !!($INFO{$role} && ($INFO{$role}{is_role} || $INFO{$role}{not_methods} || $INFO{$role}{non_methods}));
 }
 
 1;
@@ -637,6 +698,12 @@ for your class. However, if C<any> class in your class' inheritance
 hierarchy provides C<DOES>, then Role::Tiny will not override it.
 
 =head1 METHODS
+
+=head2 make_role
+
+ Role::Tiny->make_role('Some::Role');
+
+Makes a package into a role, but does not export any subs into it.
 
 =head2 apply_roles_to_package
 
