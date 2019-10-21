@@ -1,1 +1,0 @@
-{"version":"2.006003","pathname":"H/HA/HAARG/Sub-Quote-2.006003.tar.gz","name":"Sub::Quote","target":"Sub::Defer","provides":{"Sub::Defer":{"version":"2.006003","file":"lib/Sub/Defer.pm"},"Sub::Quote":{"file":"lib/Sub/Quote.pm","version":"2.006003"}},"dist":"Sub-Quote-2.006003"}
