@@ -1,1 +1,1 @@
-{"dist":"File-Which-1.23","name":"File::Which","pathname":"P/PL/PLICEASE/File-Which-1.23.tar.gz","target":"File::Which","version":"1.23","provides":{"File::Which":{"version":"1.23","file":"lib/File/Which.pm"}}}
+{"dist":"File-Which-1.23","version":"1.23","pathname":"P/PL/PLICEASE/File-Which-1.23.tar.gz","target":"File::Which","provides":{"File::Which":{"file":"lib/File/Which.pm","version":"1.23"}},"name":"File::Which"}
