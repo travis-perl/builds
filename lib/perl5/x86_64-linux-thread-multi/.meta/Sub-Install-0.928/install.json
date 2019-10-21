@@ -1,1 +1,1 @@
-{"target":"Sub::Install","version":"0.928","name":"Sub::Install","dist":"Sub-Install-0.928","pathname":"R/RJ/RJBS/Sub-Install-0.928.tar.gz","provides":{"Sub::Install":{"version":"0.928","file":"lib/Sub/Install.pm"}}}
+{"name":"Sub::Install","provides":{"Sub::Install":{"file":"lib/Sub/Install.pm","version":"0.928"}},"pathname":"R/RJ/RJBS/Sub-Install-0.928.tar.gz","target":"Sub::Install","version":"0.928","dist":"Sub-Install-0.928"}
