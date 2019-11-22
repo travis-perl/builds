@@ -1,0 +1,506 @@
+=head2 Fri Nov 22 00:10:50 2019: C<Module> L<URI|URI>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.76>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:50 2019: C<Module> L<WWW::RobotRules|WWW::RobotRules>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.02>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:51 2019: C<Module> L<Try::Tiny|Try::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:52 2019: C<Module> L<HTML::Tagset|HTML::Tagset>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.20>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:53 2019: C<Module> L<HTML::Parser|HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.72>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:55 2019: C<Module> L<Date::Parse|Date::Parse>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:55 2019: C<Module> L<HTTP::Date|HTTP::Date>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.05>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:56 2019: C<Module> L<Encode::Locale|Encode::Locale>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.05>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:56 2019: C<Module> L<IO::HTML|IO::HTML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.001>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:57 2019: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:57 2019: C<Module> L<HTTP::Message|HTTP::Message>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.18>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:58 2019: C<Module> L<HTTP::Negotiate|HTTP::Negotiate>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.01>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:59 2019: C<Module> L<Net::HTTP|Net::HTTP>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.19>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:59 2019: C<Module> L<HTTP::Cookies|HTTP::Cookies>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.07>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:00 2019: C<Module> L<File::Listing|File::Listing>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:01 2019: C<Module> L<ExtUtils::Config|ExtUtils::Config>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.008>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:02 2019: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.026>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:02 2019: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.012>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:04 2019: C<Module> L<libwww::perl|libwww::perl>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.42>
+
+=item *
+
+C<EXE_FILES: bin/lwp-download bin/lwp-dump bin/lwp-mirror bin/lwp-request>
+
+=back
+
+=head2 Fri Nov 22 00:11:13 2019: C<Module> L<Net::SSLeay|Net::SSLeay>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.88>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:13 2019: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.066>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:14 2019: C<Module> L<Mozilla::CA|Mozilla::CA>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 20180117>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:11:14 2019: C<Module> L<LWP::Protocol::https|LWP::Protocol::https>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.6@lwp/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.07>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
