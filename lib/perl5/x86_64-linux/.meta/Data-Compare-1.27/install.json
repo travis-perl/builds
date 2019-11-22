@@ -1,0 +1,1 @@
+{"target":"Data::Compare","version":"1.27","provides":{"Data::Compare":{"version":"1.27","file":"lib/Data/Compare.pm"},"Data::Compare::Plugins::Scalar::Properties":{"file":"lib/Data/Compare/Plugins/Scalar/Properties.pm","version":"1.25"}},"name":"Data::Compare","dist":"Data-Compare-1.27","pathname":"D/DC/DCANTRELL/Data-Compare-1.27.tar.gz"}
