@@ -15,7 +15,7 @@ use LWP::Protocol ();
 use Scalar::Util qw(blessed);
 use Try::Tiny qw(try catch);
 
-our $VERSION = '6.39';
+our $VERSION = '6.42';
 
 sub new
 {
@@ -489,6 +489,21 @@ sub head {
     return $self->request( HTTP::Request::Common::HEAD( @parameters ), @suff );
 }
 
+sub patch {
+    require HTTP::Request::Common;
+    my($self, @parameters) = @_;
+    my @suff = $self->_process_colonic_headers(\@parameters, (ref($parameters[1]) ? 2 : 1));
+
+    # this work-around is in place as HTTP::Request::Common
+    # did not implement a patch convenience method until
+    # version 6.12. Once we can bump the prereq to at least
+    # that version, we can use ::PATCH instead of this hack
+    my $req = HTTP::Request::Common::PUT(@parameters);
+    $req->method('PATCH');
+
+    $self->_maybe_copy_default_content_type($req, @parameters);
+    return $self->request($req, @suff);
+}
 
 sub put {
     require HTTP::Request::Common;
@@ -966,6 +981,8 @@ sub mirror
 {
     my($self, $url, $file) = @_;
 
+    die "Local file name is missing" unless defined $file && length $file;
+
     my $request = HTTP::Request->new('GET', $url);
 
     # If the file exists, add a cache-related header
@@ -979,10 +996,10 @@ sub mirror
 
     my $response = $self->request($request, $tmpfile);
     if ( $response->header('X-Died') ) {
-	die $response->header('X-Died');
+        die $response->header('X-Died');
     }
 
-    # Only fetching a fresh copy of the would be considered success.
+    # Only fetching a fresh copy of the file would be considered success.
     # If the file was not modified, "304" would returned, which
     # is considered by HTTP::Status to be a "redirect", /not/ "success"
     if ( $response->is_success ) {
@@ -1017,7 +1034,7 @@ sub mirror
     }
     # The local copy is fresh enough, so just delete the temp file
     else {
-	unlink($tmpfile);
+        unlink($tmpfile);
     }
     return $response;
 }
@@ -1247,7 +1264,7 @@ is passed in with a true value, then proxy settings are read from environment
 variables (see L<LWP::UserAgent/env_proxy>). If C<env_proxy> isn't provided, the
 C<PERL_LWP_ENV_PROXY> environment variable controls if
 L<LWP::UserAgent/env_proxy> is called during initialization.  If the
-C<keep_alive> option is passed in, then a C<LWP::ConnCache> is set up (see
+C<keep_alive> option value is defined and non-zero, then an C<LWP::ConnCache> is set up (see
 L<LWP::UserAgent/conn_cache>).  The C<keep_alive> value is passed on as the
 C<total_capacity> for the connection cache.
 
@@ -1732,7 +1749,7 @@ the given processing phase.
 
     $ua->remove_handler( undef, %matchspec );
     $ua->remove_handler( $phase, %matchspec );
-    $ua->remove_handlers(); # REMOVE ALL HANDLERS IN ALL PHASES
+    $ua->remove_handler(); # REMOVE ALL HANDLERS IN ALL PHASES
 
 Remove handlers that match the given C<%matchspec>.  If C<$phase> is not
 provided, remove handlers from all phases.
@@ -1796,9 +1813,9 @@ Fields names that start with ":" are special.  These will not
 initialize headers of the request but will determine how the response
 content is treated.  The following special field names are recognized:
 
-    :content_file   => $filename
-    :content_cb     => \&callback
-    :read_size_hint => $bytes
+    ':content_file'   => $filename
+    ':content_cb'     => \&callback
+    ':read_size_hint' => $bytes
 
 If a $filename is provided with the C<:content_file> option, then the
 response content will be saved here instead of in the response
@@ -1871,6 +1888,33 @@ will be downloaded again.  The modification time of the file will be
 forced to match that of the server.
 
 The return value is an L<HTTP::Response> object.
+
+=head2 patch
+    # Any version of HTTP::Message works with this form:
+    my $res = $ua->patch( $url, $field_name => $value, Content => $content );
+
+    # Using hash or array references requires HTTP::Message >= 6.12
+    use HTTP::Request 6.12;
+    my $res = $ua->patch( $url, \%form );
+    my $res = $ua->patch( $url, \@form );
+    my $res = $ua->patch( $url, \%form, $field_name => $value, ... );
+    my $res = $ua->patch( $url, $field_name => $value, Content => \%form );
+    my $res = $ua->patch( $url, $field_name => $value, Content => \@form );
+
+This method will dispatch a C<PATCH> request on the given URL, with
+C<%form> or C<@form> providing the key/value pairs for the fill-in form
+content. Additional headers and content options are the same as for
+the L<LWP::UserAgent/get> method.
+
+CAVEAT:
+
+This method can only accept content that is in key-value pairs when using
+L<HTTP::Request::Common> prior to version C<6.12>. Any use of hash or array
+references will result in an error prior to version C<6.12>.
+
+This method will use the C<PATCH> function from L<HTTP::Request::Common>
+to build the request.  See L<HTTP::Request::Common> for a details on
+how to pass form content and other advanced features.
 
 =head2 post
 
