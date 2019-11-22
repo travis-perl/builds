@@ -1,10 +1,10 @@
 {
-   "abstract" : "date conversion routines",
+   "abstract" : "unknown",
    "author" : [
-      "Gisle Aas <gisle@activestate.com>"
+      "Graham Barr <gbarr@pobox.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.57_05, CPAN::Meta::Converter version 2.150001",
+   "generated_by" : "ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921, CPAN::Meta::Converter version 2.150001",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "HTTP-Date",
+   "name" : "TimeDate",
    "no_index" : {
       "directory" : [
          "t",
@@ -31,21 +31,14 @@
          }
       },
       "runtime" : {
-         "recommends" : {
-            "Time::Zone" : "0"
-         },
-         "requires" : {
-            "Time::Local" : "0",
-            "perl" : "5.006002"
-         }
+         "requires" : {}
       }
    },
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "http://github.com/gisle/http-date"
-      },
-      "x_MailingList" : "mailto:libwww@perl.org"
+         "url" : "http://github.com/gbarr/perl-TimeDate"
+      }
    },
-   "version" : "6.02"
+   "version" : "2.30"
 }
