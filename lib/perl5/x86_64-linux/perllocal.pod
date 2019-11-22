@@ -1,48 +1,4 @@
-=head2 Mon Oct 21 00:10:35 2019: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.001013>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Oct 21 00:10:36 2019: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.14>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Oct 21 00:10:36 2019: C<Module> L<Sub::Quote|Sub::Quote>
+=head2 Fri Nov 22 00:10:32 2019: C<Module> L<Sub::Quote|Sub::Quote>
 
 =over 4
 
@@ -64,29 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Oct 21 00:10:37 2019: C<Module> L<Role::Tiny|Role::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.001003>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Oct 21 00:10:39 2019: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Fri Nov 22 00:10:32 2019: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -108,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Oct 21 00:10:39 2019: C<Module> L<Moo|Moo>
+=head2 Fri Nov 22 00:10:34 2019: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -122,7 +56,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.003004>
+C<VERSION: 2.001004>
 
 =item *
 
@@ -130,7 +64,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Oct 21 00:10:41 2019: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Fri Nov 22 00:10:35 2019: C<Module> L<Moo|Moo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.003006>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Nov 22 00:10:36 2019: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -152,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Oct 21 00:10:41 2019: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Fri Nov 22 00:10:36 2019: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
@@ -166,7 +122,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.004004>
+C<VERSION: 1.006000>
 
 =item *
 
