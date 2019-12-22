@@ -1,5 +1,15 @@
 package IO::ScalarArray;
 
+use strict;
+use Carp;
+use IO::Handle;
+
+# The package version, both in 1.23 style *and* usable by MakeMaker:
+our $VERSION = "2.112";
+
+# Inheritance:
+our @ISA = qw(IO::Handle);
+require IO::WrapTie and push @ISA, 'IO::WrapTie::Slave' if ($] >= 5.004);
 
 =head1 NAME
 
@@ -15,27 +25,27 @@ Perform I/O on strings, using the basic OO interface...
 
     ### Open a handle on an array, and append to it:
     $AH = new IO::ScalarArray \@data;
-    $AH->print("Hello");       
-    $AH->print(", world!\nBye now!\n");  
+    $AH->print("Hello");
+    $AH->print(", world!\nBye now!\n");
     print "The array is now: ", @data, "\n";
 
     ### Open a handle on an array, read it line-by-line, then close it:
     $AH = new IO::ScalarArray \@data;
-    while (defined($_ = $AH->getline)) { 
+    while (defined($_ = $AH->getline)) {
 	print "Got line: $_";
     }
     $AH->close;
 
     ### Open a handle on an array, and slurp in all the lines:
     $AH = new IO::ScalarArray \@data;
-    print "All lines:\n", $AH->getlines; 
+    print "All lines:\n", $AH->getlines;
 
     ### Get the current position (either of two ways):
-    $pos = $AH->getpos;         
-    $offset = $AH->tell;  
+    $pos = $AH->getpos;
+    $offset = $AH->tell;
 
     ### Set the current position (either of two ways):
-    $AH->setpos($pos);        
+    $AH->setpos($pos);
     $AH->seek($offset, 0);
 
     ### Open an anonymous temporary array:
@@ -44,16 +54,16 @@ Perform I/O on strings, using the basic OO interface...
     print "I printed: ", @{$AH->aref}, "\n";      ### get at value
 
 
-Don't like OO for your I/O?  No problem.  
-Thanks to the magic of an invisible tie(), the following now 
+Don't like OO for your I/O?  No problem.
+Thanks to the magic of an invisible tie(), the following now
 works out of the box, just as it does with IO::Handle:
-    
+
     use IO::ScalarArray;
     @data = ("My mes", "sage:\n");
 
     ### Open a handle on an array, and append to it:
     $AH = new IO::ScalarArray \@data;
-    print $AH "Hello";    
+    print $AH "Hello";
     print $AH ", world!\nBye now!\n";
     print "The array is now: ", @data, "\n";
 
@@ -86,16 +96,16 @@ though this is I<unnecessary and deprecated>:
     use IO::ScalarArray;
 
     ### Writing to a scalar...
-    my @a; 
+    my @a;
     tie *OUT, 'IO::ScalarArray', \@a;
     print OUT "line 1\nline 2\n", "line 3\n";
     print "Array is now: ", @a, "\n"
 
-    ### Reading and writing an anonymous scalar... 
+    ### Reading and writing an anonymous scalar...
     tie *OUT, 'IO::ScalarArray';
     print OUT "line 1\nline 2\n", "line 3\n";
     tied(OUT)->seek(0,0);
-    while (<OUT>) { 
+    while (<OUT>) {
         print "Got line: ", $_;
     }
 
@@ -106,15 +116,15 @@ though this is I<unnecessary and deprecated>:
 This class is part of the IO::Stringy distribution;
 see L<IO::Stringy> for change log and general information.
 
-The IO::ScalarArray class implements objects which behave just like 
-IO::Handle (or FileHandle) objects, except that you may use them 
+The IO::ScalarArray class implements objects which behave just like
+IO::Handle (or FileHandle) objects, except that you may use them
 to write to (or read from) arrays of scalars.  Logically, an
 array of scalars defines an in-core "file" whose contents are
-the concatenation of the scalars in the array.  The handles created by 
+the concatenation of the scalars in the array.  The handles created by
 this class are automatically tiehandle'd (though please see L<"WARNINGS">
 for information relevant to your Perl version).
 
-For writing large amounts of data with individual print() statements, 
+For writing large amounts of data with individual print() statements,
 this class is likely to be more efficient than IO::Scalar.
 
 Basically, this:
@@ -133,8 +143,8 @@ Or this:
 
 Causes @a to be set to the following array of 3 strings:
 
-    ( "Hel" , 
-      "lo, " , 
+    ( "Hel" ,
+      "lo, " ,
       "world!\n" )
 
 See L<IO::Scalar> and compare with this class.
@@ -142,24 +152,7 @@ See L<IO::Scalar> and compare with this class.
 
 =head1 PUBLIC INTERFACE
 
-=cut
-
-use Carp;
-use strict;
-use vars qw($VERSION @ISA);
-use IO::Handle;
-
-# The package version, both in 1.23 style *and* usable by MakeMaker:
-$VERSION = "2.111";
-
-# Inheritance:
-@ISA = qw(IO::Handle);
-require IO::WrapTie and push @ISA, 'IO::WrapTie::Slave' if ($] >= 5.004);
-
-
-#==============================
-
-=head2 Construction 
+=head2 Construction
 
 =over 4
 
@@ -170,7 +163,7 @@ require IO::WrapTie and push @ISA, 'IO::WrapTie::Slave' if ($] >= 5.004);
 =item new [ARGS...]
 
 I<Class method.>
-Return a new, unattached array handle.  
+Return a new, unattached array handle.
 If any arguments are given, they're sent to open().
 
 =cut
@@ -183,7 +176,7 @@ sub new {
     $self->open(@_);  ### open on anonymous by default
     $self;
 }
-sub DESTROY { 
+sub DESTROY {
     shift->close;
 }
 
@@ -259,14 +252,14 @@ sub close {
 
 #------------------------------
 
-=item flush 
+=item flush
 
 I<Instance method.>
 No-op, provided for OO compatibility.
 
 =cut
 
-sub flush { "0 but true" } 
+sub flush { "0 but true" }
 
 #------------------------------
 
@@ -314,7 +307,7 @@ sub getline {
     ### We do the fast thing (no regexps) if using the
     ### classic input record separator.
 
-    ### Case 1: $/ is undef: slurp all...    
+    ### Case 1: $/ is undef: slurp all...
     if    (!defined($/)) {
 
         return undef if ($self->eof);
@@ -323,17 +316,17 @@ sub getline {
 	my $ar = *$self->{AR};
 	my @slurp = (
 		     substr($ar->[*$self->{Str}], *$self->{Pos}),
-		     @$ar[(1 + *$self->{Str}) .. $#$ar ] 
+		     @$ar[(1 + *$self->{Str}) .. $#$ar ]
 		     );
-	     	
+
 	### Seek to end:
 	$self->_setpos_to_eof;
 	return join('', @slurp);
     }
 
-    ### Case 2: $/ is "\n": 
-    elsif ($/ eq "\012") {    
-	
+    ### Case 2: $/ is "\n":
+    elsif ($/ eq "\012") {
+
 	### Until we hit EOF (or exited because of a found line):
 	until ($self->eof) {
 	    ### If at end of current string, go fwd to next one (won't be EOF):
@@ -342,7 +335,7 @@ sub getline {
 	    ### Get ref to current string in array, and set internal pos mark:
 	    $str = \(*$self->{AR}[*$self->{Str}]); ### get current string
 	    pos($$str) = *$self->{Pos};            ### start matching from here
-	
+
 	    ### Get from here to either \n or end of string, and add to line:
 	    $$str =~ m/\G(.*?)((\n)|\Z)/g;         ### match to 1st \n or EOS
 	    $line .= $1.$2;                        ### add it
@@ -359,7 +352,7 @@ sub getline {
 
     ### Case 4: $/ is either "" (paragraphs) or something weird...
     ###         Bail for now.
-    else {                
+    else {
         croak '$/ as given is currently unsupported';
     }
 }
@@ -387,7 +380,7 @@ sub getlines {
 =item print ARGS...
 
 I<Instance method.>
-Print ARGS to the underlying array.  
+Print ARGS to the underlying array.
 
 Currently, this always causes a "seek to the end of the array"
 and generates a new array entry.  This may change in the future.
@@ -424,7 +417,7 @@ sub read {
 
     ### Stop when we have zero bytes to go, or when we hit EOF:
     my @got;
-    until (!$n or $self->eof) {       
+    until (!$n or $self->eof) {
         ### If at end of current string, go forward to next one (won't be EOF):
         if ($self->_eos) {
             ++*$self->{Str};
@@ -435,7 +428,7 @@ sub read {
         $justread = substr(*$self->{AR}[*$self->{Str}], *$self->{Pos}, $n);
         $len = length($justread);
         push @got, $justread;
-        $n            -= $len; 
+        $n            -= $len;
         *$self->{Pos} += $len;
     }
     $_[1] .= join('', @got);
@@ -479,14 +472,14 @@ sub write {
 
 #------------------------------
 
-=item autoflush 
+=item autoflush
 
 I<Instance method.>
 No-op, provided for OO compatibility.
 
 =cut
 
-sub autoflush {} 
+sub autoflush {}
 
 #------------------------------
 
@@ -497,7 +490,7 @@ No-op, provided for OO compatibility.
 
 =cut
 
-sub binmode {} 
+sub binmode {}
 
 #------------------------------
 
@@ -511,7 +504,7 @@ sub clearerr { 1 }
 
 #------------------------------
 
-=item eof 
+=item eof
 
 I<Instance method.>  Are we at end of file?
 
@@ -524,7 +517,7 @@ sub eof {
     return 0 if (*{$_[0]}->{Str} < $#{*{$_[0]}->{AR}});  ### before EOA
     return 1 if (*{$_[0]}->{Str} > $#{*{$_[0]}->{AR}});  ### after EOA
     ###                                                  ### at EOA, past EOS:
-    ((*{$_[0]}->{Str} == $#{*{$_[0]}->{AR}}) && ($_[0]->_eos)); 
+    ((*{$_[0]}->{Str} == $#{*{$_[0]}->{AR}}) && ($_[0]->_eos));
 }
 
 #------------------------------
@@ -548,7 +541,7 @@ Only a WHENCE of 0 (SEEK_SET) is supported.
 =cut
 
 sub seek {
-    my ($self, $pos, $whence) = @_; 
+    my ($self, $pos, $whence) = @_;
 
     ### Seek:
     if    ($whence == 0) { $self->_seek_set($pos); }
@@ -566,12 +559,12 @@ sub seek {
 # Seek to $pos relative to start:
 #
 sub _seek_set {
-    my ($self, $pos) = @_; 
+    my ($self, $pos) = @_;
 
     ### Advance through array until done:
     my $istr = 0;
     while (($pos >= 0) && ($istr < scalar(@{*$self->{AR}}))) {
-	if (length(*$self->{AR}[$istr]) > $pos) {   ### it's in this string! 
+	if (length(*$self->{AR}[$istr]) > $pos) {   ### it's in this string!
 	    return $self->setpos([$istr, $pos]);
 	}
 	else {                                      ### it's in next string
@@ -590,7 +583,7 @@ sub _seek_set {
 # Seek to $pos relative to current position.
 #
 sub _seek_cur {
-    my ($self, $pos) = @_; 
+    my ($self, $pos) = @_;
     $self->_seek_set($self->tell + $pos);
 }
 
@@ -603,7 +596,7 @@ sub _seek_cur {
 # We actually seek relative to beginning, which is simple.
 #
 sub _seek_end {
-    my ($self, $pos) = @_; 
+    my ($self, $pos) = @_;
     $self->_seek_set($self->_tell_eof + $pos);
 }
 
@@ -654,7 +647,7 @@ Don't expect this to be a number.
 
 =cut
 
-sub setpos { 
+sub setpos {
     my ($self, $pos) = @_;
     (ref($pos) eq 'ARRAY') or
 	die "setpos: only use a value returned by getpos!\n";
@@ -709,7 +702,7 @@ sub aref {
 
 ### Conventional tiehandle interface:
 sub TIEHANDLE { (defined($_[1]) && UNIVERSAL::isa($_[1],"IO::ScalarArray"))
-		    ? $_[1] 
+		    ? $_[1]
 		    : shift->new(@_) }
 sub GETC      { shift->getc(@_) }
 sub PRINT     { shift->print(@_) }
@@ -746,7 +739,7 @@ __END__
 Perl's TIEHANDLE spec was incomplete prior to 5.005_57;
 it was missing support for C<seek()>, C<tell()>, and C<eof()>.
 Attempting to use these functions with an IO::ScalarArray will not work
-prior to 5.005_57. IO::ScalarArray will not have the relevant methods 
+prior to 5.005_57. IO::ScalarArray will not have the relevant methods
 invoked; and even worse, this kind of bug can lie dormant for a while.
 If you turn warnings on (via C<$^W> or C<perl -w>),
 and you see something like this...
@@ -779,7 +772,7 @@ Eryq (F<eryq@zeegee.com>).
 President, ZeeGee Software Inc (F<http://www.zeegee.com>).
 
 
-=head2 Other contributors 
+=head2 Other contributors
 
 Thanks to the following individuals for their invaluable contributions
 (if I've forgotten or misspelled your name, please email me!):
@@ -791,7 +784,7 @@ I<Brandon Browning,>
 for suggesting C<opened()>.
 
 I<Eric L. Brine,>
-for his offset-using read() and write() implementations. 
+for his offset-using read() and write() implementations.
 
 I<Doug Wilson,>
 for the IO::Handle inheritance and automatic tie-ing.
@@ -800,4 +793,3 @@ for the IO::Handle inheritance and automatic tie-ing.
 
 #------------------------------
 1;
-

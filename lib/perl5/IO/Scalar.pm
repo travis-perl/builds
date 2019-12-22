@@ -1,5 +1,26 @@
 package IO::Scalar;
 
+use strict;
+
+use Carp;
+use IO::Handle;
+
+### Stringification, courtesy of B. K. Oxley (binkley):  :-)
+use overload '""'   => sub { ${*{$_[0]}->{SR}} };
+use overload 'bool' => sub { 1 };      ### have to do this, so object is true!
+
+### The package version, both in 1.23 style *and* usable by MakeMaker:
+our $VERSION = "2.112";
+
+### Inheritance:
+our @ISA = qw(IO::Handle);
+
+### This stuff should be got rid of ASAP.
+require IO::WrapTie and push @ISA, 'IO::WrapTie::Slave' if ($] >= 5.004);
+
+#==============================
+
+
 
 =head1 NAME
 
@@ -143,30 +164,6 @@ Causes $s to be set to:
 
 
 =head1 PUBLIC INTERFACE
-
-=cut
-
-use Carp;
-use strict;
-use vars qw($VERSION @ISA);
-use IO::Handle;
-
-use 5.005;
-
-### Stringification, courtesy of B. K. Oxley (binkley):  :-)
-use overload '""'   => sub { ${*{$_[0]}->{SR}} };
-use overload 'bool' => sub { 1 };      ### have to do this, so object is true!
-
-### The package version, both in 1.23 style *and* usable by MakeMaker:
-$VERSION = "2.111";
-
-### Inheritance:
-@ISA = qw(IO::Handle);
-
-### This stuff should be got rid of ASAP.
-require IO::WrapTie and push @ISA, 'IO::WrapTie::Slave' if ($] >= 5.004);
-
-#==============================
 
 =head2 Construction
 
@@ -787,4 +784,3 @@ their IO::Handle counterparts, so we have comparable
 functionality to IO::String.
 
 =cut
-
