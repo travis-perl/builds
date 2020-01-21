@@ -1,1 +1,1 @@
-{"provides":{"Sub::Defer":{"version":"2.006006","file":"lib/Sub/Defer.pm"},"Sub::Quote":{"version":"2.006006","file":"lib/Sub/Quote.pm"}},"target":"Sub::Defer","dist":"Sub-Quote-2.006006","version":"2.006006","pathname":"H/HA/HAARG/Sub-Quote-2.006006.tar.gz","name":"Sub::Quote"}
+{"version":"2.006006","provides":{"Sub::Defer":{"file":"lib/Sub/Defer.pm","version":"2.006006"},"Sub::Quote":{"version":"2.006006","file":"lib/Sub/Quote.pm"}},"pathname":"H/HA/HAARG/Sub-Quote-2.006006.tar.gz","name":"Sub::Quote","target":"Sub::Quote","dist":"Sub-Quote-2.006006"}

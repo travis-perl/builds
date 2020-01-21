@@ -6,7 +6,7 @@
 #   Andy Wardley  <abw@wardley.org>
 #
 # COPYRIGHT
-#   Copyright (C) 1996-2014 Andy Wardley.  All Rights Reserved.
+#   Copyright (C) 1996-2020 Andy Wardley.  All Rights Reserved.
 #
 #   This module is free software; you can redistribute it and/or
 #   modify it under the same terms as Perl itself.
@@ -141,7 +141,7 @@ Output:
 The C<PRE_CHOMP> and C<POST_CHOMP> options can help to clean up some of this
 extraneous whitespace.  Both are disabled by default.
 
-    my $template = Template-E<gt>new({
+    my $template = Template->new({
         PRE_CHOMP  => 1,
         POST_CHOMP => 1,
     });
@@ -1149,7 +1149,7 @@ example 2 (text string):
 
 example 3 (file handle):
 
-    open (TOUT, "> $file") || die "$file: $!\n";
+    open (TOUT, ">", $file) || die "$file: $!\n";
     my $template = Template->new({
         OUTPUT => \*TOUT,
     });

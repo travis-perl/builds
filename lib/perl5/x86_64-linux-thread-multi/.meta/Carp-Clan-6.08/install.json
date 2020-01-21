@@ -1,1 +1,1 @@
-{"target":"Carp::Clan","pathname":"E/ET/ETHER/Carp-Clan-6.08.tar.gz","provides":{"Carp::Clan":{"version":"6.08","file":"lib/Carp/Clan.pm"}},"name":"Carp::Clan","dist":"Carp-Clan-6.08","version":"6.08"}
+{"version":"6.08","name":"Carp::Clan","dist":"Carp-Clan-6.08","provides":{"Carp::Clan":{"version":"6.08","file":"lib/Carp/Clan.pm"}},"target":"Carp::Clan","pathname":"E/ET/ETHER/Carp-Clan-6.08.tar.gz"}
