@@ -1,4 +1,4 @@
-=head2 Sun Dec 22 00:09:04 2019: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Tue Jan 21 00:09:25 2020: C<Module> L<Sub::Uplevel|Sub::Uplevel>
 
 =over 4
 
@@ -20,51 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:04 2019: C<Module> L<Test::Warn|Test::Warn>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.36>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Dec 22 00:09:05 2019: C<Module> L<Test::Deep|Test::Deep>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.128>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Dec 22 00:09:05 2019: C<Module> L<Test::Exception|Test::Exception>
+=head2 Tue Jan 21 00:09:25 2020: C<Module> L<Test::Exception|Test::Exception>
 
 =over 4
 
@@ -86,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:06 2019: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Tue Jan 21 00:09:25 2020: C<Module> L<Test::Warn|Test::Warn>
 
 =over 4
 
@@ -100,7 +56,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.04>
+C<VERSION: 0.36>
 
 =item *
 
@@ -108,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:07 2019: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+=head2 Tue Jan 21 00:09:26 2020: C<Module> L<Test::Simple|Test::Simple>
 
 =over 4
 
@@ -122,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.08>
+C<VERSION: 1.302171>
 
 =item *
 
@@ -130,29 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:07 2019: C<Module> L<Exception::Class|Exception::Class>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.44>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Dec 22 00:09:08 2019: C<Module> L<Capture::Tiny|Capture::Tiny>
+=head2 Tue Jan 21 00:09:27 2020: C<Module> L<Capture::Tiny|Capture::Tiny>
 
 =over 4
 
@@ -174,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:08 2019: C<Module> L<Algorithm::Diff|Algorithm::Diff>
+=head2 Tue Jan 21 00:09:28 2020: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -196,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:09 2019: C<Module> L<Text::Diff|Text::Diff>
+=head2 Tue Jan 21 00:09:28 2020: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -218,7 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:09 2019: C<Module> L<Test::Differences|Test::Differences>
+=head2 Tue Jan 21 00:09:28 2020: C<Module> L<Test::Differences|Test::Differences>
 
 =over 4
 
@@ -240,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:09 2019: C<Module> L<Test::Simple|Test::Simple>
+=head2 Tue Jan 21 00:09:29 2020: C<Module> L<Devel::StackTrace|Devel::StackTrace>
 
 =over 4
 
@@ -254,7 +188,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.302170>
+C<VERSION: 2.04>
 
 =item *
 
@@ -262,7 +196,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Dec 22 00:09:10 2019: C<Module> L<Test::Most|Test::Most>
+=head2 Tue Jan 21 00:09:30 2020: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.08>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jan 21 00:09:30 2020: C<Module> L<Exception::Class|Exception::Class>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.44>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jan 21 00:09:31 2020: C<Module> L<Test::Deep|Test::Deep>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.128>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jan 21 00:09:31 2020: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
