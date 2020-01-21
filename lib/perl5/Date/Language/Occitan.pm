@@ -1,17 +1,17 @@
 ##
-## French tables, contributed by Emmanuel Bataille (bem@residents.frmug.org)
+## Occitan tables, contributed by Quentn PAGÈS
 ##
 
-package Date::Language::French;
+package Date::Language::Occitan;
 
 use Date::Language ();
 use vars qw(@ISA @DoW @DoWs @MoY @MoYs @AMPM @Dsuf %MoY %DoW $VERSION);
 @ISA = qw(Date::Language);
 $VERSION = "1.04";
 
-@DoW = qw(dimanche lundi mardi mercredi jeudi vendredi samedi);
-@MoY = qw(janvier f�vrier mars avril mai juin 
-          juillet ao�t septembre octobre novembre d�cembre);
+@DoW = qw(dimenge diluns dimars dimècres dijòus divendres dissabte);
+@MoY = qw(genièr febrièr mars abrial mai junh 
+          julhet agost octòbre novembre decembre);
 @DoWs = map { substr($_,0,3) } @DoW;
 @MoYs = map { substr($_,0,3) } @MoY;
 $MoYs[6] = 'jul';
@@ -32,6 +32,5 @@ sub format_b { $MoYs[$_[0]->[4]] }
 sub format_B { $MoY[$_[0]->[4]] }
 sub format_h { $MoYs[$_[0]->[4]] }
 sub format_p { $_[0]->[2] >= 12 ?  $AMPM[1] : $AMPM[0] }
-sub format_o { $_[0]->[3] }
 
 1;
