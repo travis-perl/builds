@@ -11,7 +11,7 @@ BEGIN {
 
 BEGIN {
 	$Type::Tiny::AUTHORITY   = 'cpan:TOBYINK';
-	$Type::Tiny::VERSION     = '1.008000';
+	$Type::Tiny::VERSION     = '1.008003';
 	$Type::Tiny::XS_VERSION  = '0.016';
 }
 
@@ -146,27 +146,58 @@ __PACKAGE__->_install_overloads(
 	q(~~)    => sub { $_[0]->check($_[1]) },
 ) if Type::Tiny::SUPPORT_SMARTMATCH;
 
+# Would be easy to just return sub { $self->assert_return(@_) }
+# but try to build a more efficient coderef whenever possible.
+#
 sub _overload_coderef
 {
 	my $self = shift;
-	$self->message unless exists $self->{message};
 	
-#	if ($self->has_parent && $self->_is_null_constraint)
-#	{
-#		$self->{_overload_coderef} ||= $self->parent->_overload_coderef;
-#	}
-#	els
-	if (!exists($self->{message}) && exists(&Sub::Quote::quote_sub) && $self->can_be_inlined)
-	{
-		$self->{_overload_coderef} = Sub::Quote::quote_sub($self->inline_assert('$_[0]'))
-			if !$self->{_overload_coderef} || !$self->{_sub_quoted}++;
-	}
-	else
-	{
-		Scalar::Util::weaken(my $weak = $self);
-		$self->{_overload_coderef} ||= sub { $weak->assert_return(@_) };
-	}
+	# Bypass generating a coderef if we've already got the best possible one.
+	#
+	return $self->{_overload_coderef} if $self->{_overload_coderef_no_rebuild};
 	
+	# Subclasses of Type::Tiny might override assert_return to do some kind
+	# of interesting thing. In that case, we can't rely on it having identical
+	# behaviour to Type::Tiny::inline_assert.
+	#
+	$self->{_overrides_assert_return} = ($self->can('assert_return') != \&assert_return)
+		unless exists $self->{_overrides_assert_return};
+	
+	if ($self->{_overrides_assert_return}) {
+		$self->{_overload_coderef} ||= do {
+			Scalar::Util::weaken(my $weak = $self);
+			sub { $weak->assert_return(@_) };
+		};
+		++ $self->{_overload_coderef_no_rebuild};
+	}
+	elsif (exists(&Sub::Quote::quote_sub)) {
+		# Use `=` instead of `||=` because we want to overwrite non-Sub::Quote
+		# coderef if possible.
+		$self->{_overload_coderef} = $self->can_be_inlined
+			? Sub::Quote::quote_sub(
+				$self->inline_assert('$_[0]'),
+			)
+			: Sub::Quote::quote_sub(
+				$self->inline_assert('$_[0]', '$type'),
+				{ '$type' => \$self },
+			);
+		++ $self->{_overload_coderef_no_rebuild};
+	}
+	else {
+		require Eval::TypeTiny;
+		$self->{_overload_coderef} ||= $self->can_be_inlined
+			? Eval::TypeTiny::eval_closure(
+				source      => sprintf('sub { %s }', $self->inline_assert('$_[0]', undef, no_wrapper => 1)),
+				description => sprintf("compiled assertion 'assert_%s'", $self),
+			)
+			: Eval::TypeTiny::eval_closure(
+				source      => sprintf('sub { %s }', $self->inline_assert('$_[0]', '$type', no_wrapper => 1)),
+				description => sprintf("compiled assertion 'assert_%s'", $self),
+				environment => { '$type' => \$self },
+			);
+	}
+		
 	$self->{_overload_coderef};
 }
 
@@ -180,24 +211,6 @@ sub new
 	my $class  = shift;
 	my %params = (@_==1) ? %{$_[0]} : @_;
 	
-	if (exists $params{constraint}
-	and not ref $params{constraint}
-	and not exists $params{constraint_generator}
-	and not exists $params{inline_generator})
-	{
-		require Eval::TypeTiny;
-		my $code = $params{constraint};
-		$params{constraint} = Eval::TypeTiny::eval_closure(
-			source      => sprintf('sub ($) { %s }', $code),
-			description => "anonymous check",
-		);
-		$params{inlined} ||= sub {
-			my ($type) = @_;
-			my $inlined = $_ eq '$_' ? "do { $code }" : "do { local \$_ = $_; $code }";
-			$type->has_parent ? (undef, $inlined) : $inlined;
-		};
-	}
-	
 	if (exists $params{parent}) {
 		$params{parent} = ref($params{parent}) =~ /^Type::Tiny\b/
 			? $params{parent}
@@ -209,6 +222,23 @@ sub new
 		if ($params{parent}->deprecated and not exists $params{deprecated}) {
 			$params{deprecated} = 1;
 		}
+	}
+	
+	if (exists $params{constraint}
+	and defined $params{constraint}
+	and not ref $params{constraint})
+	{
+		require Eval::TypeTiny;
+		my $code = $params{constraint};
+		$params{constraint} = Eval::TypeTiny::eval_closure(
+			source      => sprintf('sub ($) { %s }', $code),
+			description => "anonymous check",
+		);
+		$params{inlined} ||= sub {
+			my ($type) = @_;
+			my $inlined = $_ eq '$_' ? "do { $code }" : "do { local \$_ = $_; $code }";
+			$type->has_parent ? (undef, $inlined) : $inlined;
+		} if (!exists $params{parent} or $params{parent}->can_be_inlined);
 	}
 	
 	# canonicalize to a boolean
@@ -825,7 +855,7 @@ sub inline_assert
 {
 	require B;
 	my $self = shift;
-	my ($varname, $typevarname, @extras) = @_;
+	my ($varname, $typevarname, %extras) = @_;
 	
 	my $inline_check;
 	if ($self->can_be_inlined) {
@@ -838,15 +868,16 @@ sub inline_assert
 		_croak 'Cannot inline type constraint check for "%s"', $self;
 	}
 	
+	my $do_wrapper = !delete $extras{no_wrapper};
+	
 	my $inline_throw;
 	if ($typevarname) {
-		require B;
 		$inline_throw = sprintf(
 			'Type::Tiny::_failed_check(%s, %s, %s, %s)',
 			$typevarname,
 			B::perlstring("$self"),
 			$varname,
-			join(',', map B::perlstring($_), @extras),
+			join(',', map +(B::perlstring($_) => B::perlstring($extras{$_})), sort keys %extras),
 		);
 	}
 	else {
@@ -855,11 +886,13 @@ sub inline_assert
 			$self->{uniq},
 			B::perlstring("$self"),
 			$varname,
-			join(',', map B::perlstring($_), @extras),
+			join(',', map +(B::perlstring($_) => B::perlstring($extras{$_})), sort keys %extras),
 		);
 	}
 	
-	qq[do { no warnings "void"; $inline_check or $inline_throw };]
+	$do_wrapper
+		? qq[do { no warnings "void"; $inline_check or $inline_throw; $varname };]
+		: qq[     no warnings "void"; $inline_check or $inline_throw; $varname   ]
 }
 
 sub _failed_check {
@@ -913,10 +946,10 @@ sub is_parameterized
 	my %seen;
 	sub ____make_key {
 		join ',', map {
-			Types::TypeTiny::TypeTiny->check($_) ? sprintf('$Type::Tiny::ALL_TYPES{%d}', $_->{uniq}) :
-			ref() eq 'ARRAY'                     ? do { $seen{$_}++ ? '____CANNOT_KEY____' : sprintf('[%s]', ____make_key(@$_)) } :
-			ref() eq 'HASH'                      ? do { $seen{$_}++ ? '____CANNOT_KEY____' : sprintf('{%s}', ____make_key(%$_)) } :
-			ref() eq 'SCALAR' || ref() eq 'REF'  ? do { $seen{$_}++ ? '____CANNOT_KEY____' : sprintf('do { my $x = %s; \\$x }', ____make_key($$_)) } :
+			Types::TypeTiny::TypeTiny->check($_) ? sprintf('$Type::Tiny::ALL_TYPES{%d}', defined($_->{uniq}) ? $_->{uniq} : '____CANNOT_KEY____') :
+			ref() eq 'ARRAY'                     ? do { $seen{$_}++ ? '____CANNOT_KEY____' : sprintf('[%s]',   ____make_key(@$_)) } :
+			ref() eq 'HASH'                      ? do { $seen{$_}++ ? '____CANNOT_KEY____' : sprintf('{%s}',   ____make_key(%$_)) } :
+			ref() eq 'SCALAR' || ref() eq 'REF'  ? do { $seen{$_}++ ? '____CANNOT_KEY____' : sprintf('\\(%s)', ____make_key($$_)) } :
 			!defined()                           ? 'undef' :
 			!ref()                               ? do { require B; B::perlstring($_) } :
 			'____CANNOT_KEY____';
@@ -2197,7 +2230,7 @@ Thanks to Matt S Trout for advice on L<Moo> integration.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2013-2014, 2017-2019 by Toby Inkster.
+This software is copyright (c) 2013-2014, 2017-2020 by Toby Inkster.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

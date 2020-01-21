@@ -20,6 +20,7 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Icelandic.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Italian.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Norwegian.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Occitan.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Oromo.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Romanian.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Russian.pm
@@ -35,3 +36,4 @@
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Language/Turkish.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Date/Parse.pm
 /home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/Time/Zone.pm
+/home/travis/.perlbrew/libs/5.22.0-thr@dzil/lib/perl5/TimeDate.pm
