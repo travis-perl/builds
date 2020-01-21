@@ -1,1 +1,1 @@
-{"name":"Lingua::Stem::Snowball::Se","provides":{"Lingua::Stem::Snowball::Se":{"version":"1.2","file":"lib/Lingua/Stem/Snowball/Se.pm"}},"dist":"Snowball-Swedish-1.2","target":"Lingua::Stem::Snowball::Se","pathname":"A/AS/ASKSH/Snowball-Swedish-1.2.tar.gz","version":"1.2"}
+{"dist":"Snowball-Swedish-1.2","pathname":"A/AS/ASKSH/Snowball-Swedish-1.2.tar.gz","name":"Lingua::Stem::Snowball::Se","version":"1.2","target":"Lingua::Stem::Snowball::Se","provides":{"Lingua::Stem::Snowball::Se":{"file":"lib/Lingua/Stem/Snowball/Se.pm","version":"1.2"}}}

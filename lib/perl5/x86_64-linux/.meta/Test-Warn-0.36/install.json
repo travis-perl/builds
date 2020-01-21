@@ -1,1 +1,1 @@
-{"version":"0.36","name":"Test::Warn","provides":{"Test::Warn":{"file":"Warn.pm","version":"0.36"}},"target":"Test::Warn","pathname":"B/BI/BIGJ/Test-Warn-0.36.tar.gz","dist":"Test-Warn-0.36"}
+{"name":"Test::Warn","dist":"Test-Warn-0.36","pathname":"B/BI/BIGJ/Test-Warn-0.36.tar.gz","version":"0.36","target":"Test::Warn","provides":{"Test::Warn":{"file":"Warn.pm","version":"0.36"}}}
