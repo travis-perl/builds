@@ -1,1 +1,1 @@
-{"name":"Time::Local","dist":"Time-Local-1.28","target":"Time::Local","provides":{"Time::Local":{"file":"lib/Time/Local.pm","version":"1.28"}},"pathname":"D/DR/DROLSKY/Time-Local-1.28.tar.gz","version":"1.28"}
+{"version":"1.28","provides":{"Time::Local":{"file":"lib/Time/Local.pm","version":"1.28"}},"dist":"Time-Local-1.28","name":"Time::Local","target":"Time::Local","pathname":"D/DR/DROLSKY/Time-Local-1.28.tar.gz"}
