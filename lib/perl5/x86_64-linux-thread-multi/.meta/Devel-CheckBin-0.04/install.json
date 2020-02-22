@@ -1,1 +1,1 @@
-{"pathname":"T/TO/TOKUHIROM/Devel-CheckBin-0.04.tar.gz","dist":"Devel-CheckBin-0.04","provides":{"Devel::CheckBin":{"version":"0.04","file":"lib/Devel/CheckBin.pm"}},"version":"0.04","name":"Devel::CheckBin","target":"Devel::CheckBin"}
+{"dist":"Devel-CheckBin-0.04","version":"0.04","pathname":"T/TO/TOKUHIROM/Devel-CheckBin-0.04.tar.gz","name":"Devel::CheckBin","provides":{"Devel::CheckBin":{"file":"lib/Devel/CheckBin.pm","version":"0.04"}},"target":"Devel::CheckBin"}
