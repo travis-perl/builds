@@ -1,0 +1,6 @@
+/home/travis/.perlbrew/libs/5.31.9-thr@cat/lib/perl5/File/ChangeNotify.pm
+/home/travis/.perlbrew/libs/5.31.9-thr@cat/lib/perl5/File/ChangeNotify/Event.pm
+/home/travis/.perlbrew/libs/5.31.9-thr@cat/lib/perl5/File/ChangeNotify/Watcher.pm
+/home/travis/.perlbrew/libs/5.31.9-thr@cat/lib/perl5/File/ChangeNotify/Watcher/Default.pm
+/home/travis/.perlbrew/libs/5.31.9-thr@cat/lib/perl5/File/ChangeNotify/Watcher/Inotify.pm
+/home/travis/.perlbrew/libs/5.31.9-thr@cat/lib/perl5/File/ChangeNotify/Watcher/KQueue.pm
