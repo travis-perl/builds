@@ -1,1 +1,1 @@
-{"pathname":"H/HA/HAARG/Devel-GlobalDestruction-0.14.tar.gz","name":"Devel::GlobalDestruction","version":"0.14","target":"Devel::GlobalDestruction","dist":"Devel-GlobalDestruction-0.14","provides":{"Devel::GlobalDestruction":{"version":"0.14","file":"lib/Devel/GlobalDestruction.pm"}}}
+{"provides":{"Devel::GlobalDestruction":{"file":"lib/Devel/GlobalDestruction.pm","version":"0.14"}},"pathname":"H/HA/HAARG/Devel-GlobalDestruction-0.14.tar.gz","name":"Devel::GlobalDestruction","dist":"Devel-GlobalDestruction-0.14","target":"Devel::GlobalDestruction","version":"0.14"}
