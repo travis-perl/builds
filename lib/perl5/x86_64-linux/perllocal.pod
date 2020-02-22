@@ -1,4 +1,4 @@
-=head2 Tue Jan 21 00:04:39 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Sat Feb 22 00:05:05 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jan 21 00:04:40 2020: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Sat Feb 22 00:05:06 2020: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jan 21 00:04:41 2020: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Sat Feb 22 00:05:07 2020: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Tue Jan 21 00:04:43 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Sat Feb 22 00:05:08 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
 
 =over 4
 
@@ -78,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 20180117>
+C<VERSION: 0.008>
 
 =item *
 
@@ -86,7 +86,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jan 21 00:04:49 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Sat Feb 22 00:05:08 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.026>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Feb 22 00:05:09 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.012>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Feb 22 00:05:10 2020: C<Module> L<YAML|YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.22.0@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Feb 22 00:05:16 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -108,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jan 21 00:04:49 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Sat Feb 22 00:05:17 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -122,7 +188,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.066>
+C<VERSION: 20180117>
 
 =item *
 
@@ -130,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Tue Jan 21 00:04:50 2020: C<Module> L<YAML|YAML>
+=head2 Sat Feb 22 00:05:17 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -144,7 +210,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.29>
+C<VERSION: 2.067>
 
 =item *
 
