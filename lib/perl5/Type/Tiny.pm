@@ -11,7 +11,7 @@ BEGIN {
 
 BEGIN {
 	$Type::Tiny::AUTHORITY   = 'cpan:TOBYINK';
-	$Type::Tiny::VERSION     = '1.008003';
+	$Type::Tiny::VERSION     = '1.010000';
 	$Type::Tiny::XS_VERSION  = '0.016';
 }
 
@@ -210,6 +210,10 @@ sub new
 {
 	my $class  = shift;
 	my %params = (@_==1) ? %{$_[0]} : @_;
+	
+	for (qw/ name display_name library /) {
+		$params{$_} = $params{$_}.'' if defined $params{$_};
+	}
 	
 	if (exists $params{parent}) {
 		$params{parent} = ref($params{parent}) =~ /^Type::Tiny\b/
@@ -847,7 +851,7 @@ sub inline_check
 			unless $self->has_parent;
 		$r[0] = $self->parent->inline_check(@_);
 	}
-	my $r = join " && " => map { /[;{}]/ && !/\Ado \{.+\}\z/ ? "do { $_ }" : "($_)" } @r;
+	my $r = join " && " => map { /[;{}]/ && !/\Ado \{.+\}\z/ ? "do { package Type::Tiny; $_ }" : "($_)" } @r;
 	return @r==1 ? $r : "($r)";
 }
 
@@ -891,8 +895,8 @@ sub inline_assert
 	}
 	
 	$do_wrapper
-		? qq[do { no warnings "void"; $inline_check or $inline_throw; $varname };]
-		: qq[     no warnings "void"; $inline_check or $inline_throw; $varname   ]
+		? qq[do { no warnings "void"; package Type::Tiny; $inline_check or $inline_throw; $varname };]
+		: qq[     no warnings "void"; package Type::Tiny; $inline_check or $inline_throw; $varname   ]
 }
 
 sub _failed_check {
@@ -1597,7 +1601,7 @@ a coercion.)
 
 =item C<< my_methods >>
 
-Experimenal hashref of additional methods that can be called on the type
+Experimental hashref of additional methods that can be called on the type
 constraint object.
 
 =back
