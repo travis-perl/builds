@@ -1,1 +1,1 @@
-{"version":"0.22","dist":"HTTP-Headers-Fast-0.22","provides":{"HTTP::Headers::Fast":{"version":"0.22","file":"lib/HTTP/Headers/Fast.pm"}},"name":"HTTP::Headers::Fast","pathname":"T/TO/TOKUHIROM/HTTP-Headers-Fast-0.22.tar.gz","target":"HTTP::Headers::Fast"}
+{"target":"HTTP::Headers::Fast","provides":{"HTTP::Headers::Fast":{"version":"0.22","file":"lib/HTTP/Headers/Fast.pm"}},"dist":"HTTP-Headers-Fast-0.22","name":"HTTP::Headers::Fast","pathname":"T/TO/TOKUHIROM/HTTP-Headers-Fast-0.22.tar.gz","version":"0.22"}
