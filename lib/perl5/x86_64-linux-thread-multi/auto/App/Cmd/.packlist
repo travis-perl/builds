@@ -1,0 +1,14 @@
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/ArgProcessor.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Command.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Command/commands.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Command/help.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Command/version.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Plugin.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Setup.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Simple.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Subdispatch.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Subdispatch/DashedStyle.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Tester.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Tester/CaptureExternal.pm
+/home/travis/.perlbrew/libs/5.24.4-thr@dzil/lib/perl5/App/Cmd/Tutorial.pod
