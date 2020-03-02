@@ -1,0 +1,1 @@
+{"dist":"Snowball-Swedish-1.2","pathname":"A/AS/ASKSH/Snowball-Swedish-1.2.tar.gz","version":"1.2","provides":{"Lingua::Stem::Snowball::Se":{"version":"1.2","file":"lib/Lingua/Stem/Snowball/Se.pm"}},"target":"Lingua::Stem::Snowball::Se","name":"Lingua::Stem::Snowball::Se"}
