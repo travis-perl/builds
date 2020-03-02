@@ -1,0 +1,1 @@
+{"pathname":"R/RU/RURBAN/Cpanel-JSON-XS-4.19.tar.gz","provides":{"Cpanel::JSON::XS::Type":{"file":"XS/Type.pm"},"Cpanel::JSON::XS":{"version":"4.19","file":"XS.pm"}},"name":"Cpanel::JSON::XS","version":"4.19","dist":"Cpanel-JSON-XS-4.19","target":"Cpanel::JSON::XS"}
