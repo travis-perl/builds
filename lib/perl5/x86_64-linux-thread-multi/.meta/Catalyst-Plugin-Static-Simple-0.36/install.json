@@ -1,0 +1,1 @@
+{"name":"Catalyst::Plugin::Static::Simple","pathname":"I/IL/ILMARI/Catalyst-Plugin-Static-Simple-0.36.tar.gz","target":"Catalyst::Plugin::Static::Simple","provides":{"Catalyst::Plugin::Static::Simple":{"file":"lib/Catalyst/Plugin/Static/Simple.pm","version":"0.36"}},"dist":"Catalyst-Plugin-Static-Simple-0.36","version":"0.36"}
