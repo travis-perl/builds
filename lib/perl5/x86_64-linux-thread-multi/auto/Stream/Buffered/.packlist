@@ -1,0 +1,4 @@
+/home/travis/.perlbrew/libs/5.26.1-thr@cat/lib/perl5/Stream/Buffered.pm
+/home/travis/.perlbrew/libs/5.26.1-thr@cat/lib/perl5/Stream/Buffered/Auto.pm
+/home/travis/.perlbrew/libs/5.26.1-thr@cat/lib/perl5/Stream/Buffered/File.pm
+/home/travis/.perlbrew/libs/5.26.1-thr@cat/lib/perl5/Stream/Buffered/PerlIO.pm
