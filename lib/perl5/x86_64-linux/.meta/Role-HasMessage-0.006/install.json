@@ -1,0 +1,1 @@
+{"name":"Role::HasMessage","pathname":"R/RJ/RJBS/Role-HasMessage-0.006.tar.gz","target":"Role::HasMessage","dist":"Role-HasMessage-0.006","version":"0.006","provides":{"Role::HasMessage":{"version":"0.006","file":"lib/Role/HasMessage.pm"},"Role::HasMessage::Errf":{"version":"0.006","file":"lib/Role/HasMessage/Errf.pm"}}}
