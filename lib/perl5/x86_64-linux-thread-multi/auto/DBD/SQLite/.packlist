@@ -1,0 +1,12 @@
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite.pm
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/Constants.pm
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/Cookbook.pod
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/Fulltext_search.pod
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/GetInfo.pm
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/VirtualTable.pm
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/VirtualTable/FileContent.pm
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/DBD/SQLite/VirtualTable/PerlData.pm
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/auto/DBD/SQLite/SQLite.so
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/auto/share/dist/DBD-SQLite/sqlite3.c
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/auto/share/dist/DBD-SQLite/sqlite3.h
+/home/travis/.perlbrew/libs/5.24.3@dbic/lib/perl5/x86_64-linux-thread-multi/auto/share/dist/DBD-SQLite/sqlite3ext.h
