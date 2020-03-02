@@ -1,4 +1,4 @@
-=head2 Mon Mar  2 03:37:58 2020: C<Module> L<Dist::CheckConflicts|Dist::CheckConflicts>
+=head2 Mon Mar  2 04:51:41 2020: C<Module> L<Dist::CheckConflicts|Dist::CheckConflicts>
 
 =over 4
 
@@ -20,161 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:00 2020: C<Module> L<Package::Stash::XS|Package::Stash::XS>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.29>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:01 2020: C<Module> L<Try::Tiny|Try::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.30>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:01 2020: C<Module> L<Module::Implementation|Module::Implementation>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.09>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:01 2020: C<Module> L<Package::Stash|Package::Stash>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.38>
-
-=item *
-
-C<EXE_FILES: bin/package-stash-conflicts>
-
-=back
-
-=head2 Mon Mar  2 03:38:02 2020: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.001013>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:02 2020: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.14>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:03 2020: C<Module> L<MRO::Compat|MRO::Compat>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:04 2020: C<Module> L<Sub::Install|Sub::Install>
+=head2 Mon Mar  2 04:51:42 2020: C<Module> L<Sub::Install|Sub::Install>
 
 =over 4
 
@@ -196,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:05 2020: C<Module> L<Params::Util|Params::Util>
+=head2 Mon Mar  2 04:51:44 2020: C<Module> L<Params::Util|Params::Util>
 
 =over 4
 
@@ -218,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:05 2020: C<Module> L<Data::OptList|Data::OptList>
+=head2 Mon Mar  2 04:51:44 2020: C<Module> L<Data::OptList|Data::OptList>
 
 =over 4
 
@@ -240,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:05 2020: C<Module> L<Sub::Exporter|Sub::Exporter>
+=head2 Mon Mar  2 04:51:44 2020: C<Module> L<Sub::Exporter|Sub::Exporter>
 
 =over 4
 
@@ -262,7 +108,117 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:06 2020: C<Module> L<Eval::Closure|Eval::Closure>
+=head2 Mon Mar  2 04:51:45 2020: C<Module> L<MRO::Compat|MRO::Compat>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:46 2020: C<Module> L<Package::Stash::XS|Package::Stash::XS>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.29>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:47 2020: C<Module> L<Try::Tiny|Try::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:48 2020: C<Module> L<Module::Implementation|Module::Implementation>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.09>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:48 2020: C<Module> L<Package::Stash|Package::Stash>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.38>
+
+=item *
+
+C<EXE_FILES: bin/package-stash-conflicts>
+
+=back
+
+=head2 Mon Mar  2 04:51:49 2020: C<Module> L<Sub::Identify|Sub::Identify>
 
 =over 4
 
@@ -284,73 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:07 2020: C<Module> L<Module::Runtime::Conflicts|Module::Runtime::Conflicts>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.003>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:07 2020: C<Module> L<Sub::Name|Sub::Name>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.26>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:08 2020: C<Module> L<Sub::Identify|Sub::Identify>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.14>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:09 2020: C<Module> L<Devel::OverloadInfo|Devel::OverloadInfo>
+=head2 Mon Mar  2 04:51:49 2020: C<Module> L<Devel::OverloadInfo|Devel::OverloadInfo>
 
 =over 4
 
@@ -372,7 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:10 2020: C<Module> L<Class::Load|Class::Load>
+=head2 Mon Mar  2 04:51:50 2020: C<Module> L<Class::Load|Class::Load>
 
 =over 4
 
@@ -394,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:10 2020: C<Module> L<Class::Load::XS|Class::Load::XS>
+=head2 Mon Mar  2 04:51:50 2020: C<Module> L<Class::Load::XS|Class::Load::XS>
 
 =over 4
 
@@ -416,7 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:11 2020: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Mon Mar  2 04:51:51 2020: C<Module> L<Module::Runtime::Conflicts|Module::Runtime::Conflicts>
 
 =over 4
 
@@ -430,7 +320,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.04>
+C<VERSION: 0.003>
 
 =item *
 
@@ -438,7 +328,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:11 2020: C<Module> L<Package::DeprecationManager|Package::DeprecationManager>
+=head2 Mon Mar  2 04:51:52 2020: C<Module> L<Eval::Closure|Eval::Closure>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:53 2020: C<Module> L<Sub::Name|Sub::Name>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.26>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:53 2020: C<Module> L<Package::DeprecationManager|Package::DeprecationManager>
 
 =over 4
 
@@ -460,7 +394,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:15 2020: C<Module> L<Moose|Moose>
+=head2 Mon Mar  2 04:51:54 2020: C<Module> L<Sub::Exporter::Progressive|Sub::Exporter::Progressive>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.001013>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:54 2020: C<Module> L<Devel::GlobalDestruction|Devel::GlobalDestruction>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:55 2020: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:51:58 2020: C<Module> L<Moose|Moose>
 
 =over 4
 
@@ -482,51 +482,7 @@ C<EXE_FILES: bin/moose-outdated>
 
 =back
 
-=head2 Mon Mar  2 03:38:16 2020: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:17 2020: C<Module> L<Role::Tiny|Role::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.001004>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:38:17 2020: C<Module> L<Sub::Quote|Sub::Quote>
+=head2 Mon Mar  2 04:51:59 2020: C<Module> L<Sub::Quote|Sub::Quote>
 
 =over 4
 
@@ -548,7 +504,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:38:17 2020: C<Module> L<Moo|Moo>
+=head2 Mon Mar  2 04:52:00 2020: C<Module> L<Role::Tiny|Role::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.001004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:52:00 2020: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@moose/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:52:01 2020: C<Module> L<Moo|Moo>
 
 =over 4
 
