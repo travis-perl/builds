@@ -1,0 +1,44 @@
+=head2 Mon Mar  2 04:24:40 2020: C<Module> L<Devel::Cover|Devel::Cover>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.26.1@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.33>
+
+=item *
+
+C<EXE_FILES: bin/cover bin/cpancover bin/gcov2perl>
+
+=back
+
+=head2 Mon Mar  2 04:24:41 2020: C<Module> L<YAML|YAML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.26.1@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.30>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
