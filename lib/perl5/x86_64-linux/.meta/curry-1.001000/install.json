@@ -1,0 +1,1 @@
+{"name":"curry","pathname":"M/MS/MSTROUT/curry-1.001000.tar.gz","target":"curry","version":"1.001000","provides":{"curry":{"version":"1.001000","file":"lib/curry.pm"},"curry::weak":{"version":"1.001000","file":"lib/curry.pm"}},"dist":"curry-1.001000"}
