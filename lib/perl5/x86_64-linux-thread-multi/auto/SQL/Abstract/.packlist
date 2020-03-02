@@ -1,0 +1,4 @@
+/home/travis/.perlbrew/libs/5.24.1-thr@dbic/lib/perl5/DBIx/Class/Storage/Debug/PrettyPrint.pm
+/home/travis/.perlbrew/libs/5.24.1-thr@dbic/lib/perl5/SQL/Abstract.pm
+/home/travis/.perlbrew/libs/5.24.1-thr@dbic/lib/perl5/SQL/Abstract/Test.pm
+/home/travis/.perlbrew/libs/5.24.1-thr@dbic/lib/perl5/SQL/Abstract/Tree.pm
