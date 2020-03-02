@@ -1,0 +1,1 @@
+{"pathname":"R/RJ/RJBS/Pod-Eventual-0.094001.tar.gz","target":"Pod::Eventual::Simple","name":"Pod::Eventual","provides":{"Pod::Eventual":{"version":"0.094001","file":"lib/Pod/Eventual.pm"},"Pod::Eventual::Simple":{"version":"0.094001","file":"lib/Pod/Eventual/Simple.pm"}},"dist":"Pod-Eventual-0.094001","version":"0.094001"}
