@@ -1,4 +1,4 @@
-=head2 Sat Feb 22 00:05:44 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Mon Mar  2 03:35:19 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:05:45 2020: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Mon Mar  2 03:35:20 2020: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:05:46 2020: C<Module> L<B::Debug|B::Debug>
+=head2 Mon Mar  2 03:35:20 2020: C<Module> L<B::Debug|B::Debug>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:05:47 2020: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Mon Mar  2 03:35:22 2020: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -86,29 +86,7 @@ C<EXE_FILES: bin/cover bin/cpancover bin/gcov2perl>
 
 =back
 
-=head2 Sat Feb 22 00:05:48 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.026>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sat Feb 22 00:05:49 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
+=head2 Mon Mar  2 03:35:23 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
 
 =over 4
 
@@ -130,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:05:49 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
+=head2 Mon Mar  2 03:35:23 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
 
 =over 4
 
@@ -152,7 +130,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:05:50 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Mon Mar  2 03:35:24 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.026>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:35:25 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -174,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:05:51 2020: C<Module> L<YAML|YAML>
+=head2 Mon Mar  2 03:35:25 2020: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -196,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:06:00 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Mon Mar  2 03:35:34 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -218,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Feb 22 00:06:00 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Mon Mar  2 03:35:35 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
