@@ -1,0 +1,1 @@
+{"pathname":"M/MI/MIYAGAWA/Plack-Middleware-MethodOverride-0.20.tar.gz","version":"0.20","provides":{"Plack::Middleware::MethodOverride":{"file":"lib/Plack/Middleware/MethodOverride.pm","version":"0.20"}},"name":"Plack::Middleware::MethodOverride","dist":"Plack-Middleware-MethodOverride-0.20","target":"Plack::Middleware::MethodOverride"}
