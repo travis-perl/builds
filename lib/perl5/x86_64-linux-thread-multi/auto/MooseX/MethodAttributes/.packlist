@@ -1,0 +1,13 @@
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Inheritable.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/AttrContainer.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/AttrContainer/Inheritable.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Class.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Map.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Method.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Method/MaybeWrapped.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Method/Wrapped.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Role.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Role/Application.pm
+/home/travis/.perlbrew/libs/5.26.0-thr@cat/lib/perl5/MooseX/MethodAttributes/Role/Meta/Role/Application/Summation.pm
