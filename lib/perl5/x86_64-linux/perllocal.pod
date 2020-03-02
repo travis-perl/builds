@@ -1,0 +1,176 @@
+=head2 Mon Mar  2 03:50:59 2020: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:51:00 2020: C<Module> L<JSON::PP|JSON::PP>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 4.04>
+
+=item *
+
+C<EXE_FILES: bin/json_pp>
+
+=back
+
+=head2 Mon Mar  2 03:51:00 2020: C<Module> L<CPAN::Meta|CPAN::Meta>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.150010>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:51:02 2020: C<Module> L<Sub::Quote|Sub::Quote>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.006006>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:51:02 2020: C<Module> L<Role::Tiny|Role::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.001004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:51:03 2020: C<Module> L<Moo|Moo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.003006>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:51:03 2020: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.002001>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 03:51:04 2020: C<Module> L<Type::Tiny|Type::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.20.2@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.010000>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
