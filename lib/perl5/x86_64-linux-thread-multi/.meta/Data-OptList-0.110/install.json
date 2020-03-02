@@ -1,1 +1,1 @@
-{"name":"Data::OptList","version":"0.110","provides":{"Data::OptList":{"version":"0.110","file":"lib/Data/OptList.pm"}},"pathname":"R/RJ/RJBS/Data-OptList-0.110.tar.gz","target":"Data::OptList","dist":"Data-OptList-0.110"}
+{"provides":{"Data::OptList":{"version":"0.110","file":"lib/Data/OptList.pm"}},"version":"0.110","pathname":"R/RJ/RJBS/Data-OptList-0.110.tar.gz","name":"Data::OptList","dist":"Data-OptList-0.110","target":"Data::OptList"}
