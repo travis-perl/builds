@@ -1,4 +1,4 @@
-=head2 Mon Mar  2 03:34:08 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
+=head2 Mon Mar  2 04:07:34 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:09 2020: C<Module> L<HTML::Parser|HTML::Parser>
+=head2 Mon Mar  2 04:07:35 2020: C<Module> L<HTML::Parser|HTML::Parser>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:10 2020: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Mon Mar  2 04:07:36 2020: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: bin/cover bin/gcov2perl bin/cpancover>
 
 =back
 
-=head2 Mon Mar  2 03:34:11 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
+=head2 Mon Mar  2 04:07:37 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:11 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
+=head2 Mon Mar  2 04:07:37 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:12 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
+=head2 Mon Mar  2 04:07:38 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
 
 =over 4
 
@@ -130,7 +130,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:21 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Mon Mar  2 04:07:39 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.24.0-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 20180117>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar  2 04:07:47 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -152,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:22 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+=head2 Mon Mar  2 04:07:48 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
 
 =over 4
 
@@ -174,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar  2 03:34:22 2020: C<Module> L<YAML|YAML>
+=head2 Mon Mar  2 04:07:48 2020: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -189,28 +211,6 @@ C<LINKTYPE: dynamic>
 =item *
 
 C<VERSION: 1.30>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Mar  2 03:34:23 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.24.0-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 20180117>
 
 =item *
 
