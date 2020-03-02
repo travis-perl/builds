@@ -1,0 +1,1 @@
+{"target":"Exporter::Tiny","name":"Exporter::Tiny","provides":{"Exporter::Shiny":{"file":"lib/Exporter/Shiny.pm","version":"1.002001"},"Exporter::Tiny":{"version":"1.002001","file":"lib/Exporter/Tiny.pm"}},"dist":"Exporter-Tiny-1.002001","pathname":"T/TO/TOBYINK/Exporter-Tiny-1.002001.tar.gz","version":"1.002001"}
