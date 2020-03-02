@@ -1,1 +1,1 @@
-{"pathname":"R/RS/RSCHUPP/Module-ScanDeps-1.27.tar.gz","provides":{"Module::ScanDeps":{"file":"lib/Module/ScanDeps.pm","version":"1.27"}},"version":"1.27","name":"Module::ScanDeps","target":"Module::ScanDeps","dist":"Module-ScanDeps-1.27"}
+{"dist":"Module-ScanDeps-1.27","version":"1.27","name":"Module::ScanDeps","pathname":"R/RS/RSCHUPP/Module-ScanDeps-1.27.tar.gz","target":"Module::ScanDeps","provides":{"Module::ScanDeps":{"file":"lib/Module/ScanDeps.pm","version":"1.27"}}}
