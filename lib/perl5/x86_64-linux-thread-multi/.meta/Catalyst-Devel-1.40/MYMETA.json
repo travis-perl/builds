@@ -1,0 +1,77 @@
+{
+   "abstract" : "Catalyst Development Tools",
+   "author" : [
+      "Catalyst Contributors, see Catalyst.pm"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Install version 1.19, CPAN::Meta::Converter version 2.150005",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Catalyst-Devel",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "share",
+         "t"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.36",
+            "Test::Fatal" : "0.003",
+            "Test::More" : "0.94"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Catalyst" : "5.90001",
+            "Catalyst::Action::RenderView" : "0.10",
+            "Catalyst::Plugin::ConfigLoader" : "0.30",
+            "Catalyst::Plugin::Static::Simple" : "0.28",
+            "Config::General" : "2.42",
+            "ExtUtils::MakeMaker" : "6.11",
+            "File::ChangeNotify" : "0.07",
+            "File::Copy::Recursive" : "0",
+            "File::ShareDir" : "0",
+            "Module::Install" : "1.02",
+            "Moose" : "0",
+            "MooseX::Daemonize" : "0",
+            "MooseX::Emulate::Class::Accessor::Fast" : "0",
+            "Path::Class" : "0.09",
+            "Starman" : "0",
+            "Template" : "2.14",
+            "Test::Fatal" : "0.003",
+            "Test::More" : "0.94",
+            "namespace::autoclean" : "0",
+            "namespace::clean" : "0"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "homepage" : "http://dev.catalyst.perl.org/",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "type" : "git",
+         "url" : "git://git.shadowcat.co.uk/catagits/Catalyst-Devel.git"
+      },
+      "x_IRC" : "irc://irc.perl.org/#catalyst",
+      "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/catalyst"
+   },
+   "version" : "1.40",
+   "x_authority" : "cpan:MSTROUT",
+   "x_serialization_backend" : "JSON::PP version 2.27300_01"
+}
