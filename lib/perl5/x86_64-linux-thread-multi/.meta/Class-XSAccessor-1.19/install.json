@@ -1,0 +1,1 @@
+{"target":"Class::XSAccessor","version":"1.19","pathname":"S/SM/SMUELLER/Class-XSAccessor-1.19.tar.gz","name":"Class::XSAccessor","provides":{"Class::XSAccessor":{"version":"1.19","file":"lib/Class/XSAccessor.pm"},"Class::XSAccessor::Array":{"version":"1.19","file":"lib/Class/XSAccessor/Array.pm"}},"dist":"Class-XSAccessor-1.19"}
