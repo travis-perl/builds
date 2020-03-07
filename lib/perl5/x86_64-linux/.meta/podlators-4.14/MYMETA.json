@@ -1,0 +1,81 @@
+{
+   "abstract" : "Convert POD data to various other formats",
+   "author" : [
+      "Russ Allbery <rra@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.143240",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "podlators",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Pod::Simple" : "3.06",
+            "perl" : "5.008"
+         }
+      }
+   },
+   "provides" : {
+      "Pod::Man" : {
+         "file" : "lib/Pod/Man.pm",
+         "version" : "4.14"
+      },
+      "Pod::ParseLink" : {
+         "file" : "lib/Pod/ParseLink.pm",
+         "version" : "4.14"
+      },
+      "Pod::Text" : {
+         "file" : "lib/Pod/Text.pm",
+         "version" : "4.14"
+      },
+      "Pod::Text::Color" : {
+         "file" : "lib/Pod/Text/Color.pm",
+         "version" : "4.14"
+      },
+      "Pod::Text::Overstrike" : {
+         "file" : "lib/Pod/Text/Overstrike.pm",
+         "version" : "4.14"
+      },
+      "Pod::Text::Termcap" : {
+         "file" : "lib/Pod/Text/Termcap.pm",
+         "version" : "4.14"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "mailto" : "bug-podlators@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Dist/Display.html?Name=podlators"
+      },
+      "homepage" : "https://www.eyrie.org/~eagle/software/podlators/",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/rra/podlators.git",
+         "web" : "https://github.com/rra/podlators"
+      }
+   },
+   "version" : "4.14",
+   "x_serialization_backend" : "JSON::PP version 4.02"
+}
