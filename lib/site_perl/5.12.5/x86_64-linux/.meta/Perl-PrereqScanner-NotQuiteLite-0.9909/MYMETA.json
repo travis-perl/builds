@@ -1,0 +1,73 @@
+{
+   "abstract" : "a tool to scan your Perl code for its prerequisites",
+   "author" : [
+      "Kenichi Ishigaki <ishigaki@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.143240",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Perl-PrereqScanner-NotQuiteLite",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker::CPANfile" : "0.09"
+         }
+      },
+      "develop" : {
+         "suggests" : {
+            "Perl::PrereqScanner::Lite" : "0",
+            "Test::Pod" : "1.18"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "CPAN::Meta::Prereqs" : "2.150010",
+            "CPAN::Meta::Requirements" : "2.140",
+            "Data::Dump" : "0",
+            "Exporter" : "5.57",
+            "Module::CPANfile" : "1.1004",
+            "Module::CoreList" : "3.11",
+            "Module::Find" : "0",
+            "Regexp::Trie" : "0",
+            "parent" : "0",
+            "perl" : "5.008001"
+         },
+         "suggests" : {
+            "CPAN::Common::Index" : "0",
+            "JSON::PP" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::FailWarnings" : "0",
+            "Test::More" : "0.98",
+            "Test::UseAllModules" : "0.17"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "url" : "https://github.com/charsbar/Perl-PrereqScanner-NotQuiteLite"
+      }
+   },
+   "version" : "0.9909",
+   "x_serialization_backend" : "JSON::PP version 4.00"
+}
