@@ -1,0 +1,9 @@
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/Fatal.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/Scope/Guard.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/Scope/GuardStack.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/Util.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/exception.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/exception/system.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/hints.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/5.8.9/autodie/skip.pm

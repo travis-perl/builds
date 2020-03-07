@@ -1,0 +1,5 @@
+/home/travis/perl5/perlbrew/perls/5.8/bin/pod_cover
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Pod/Coverage.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Pod/Coverage/CountParents.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Pod/Coverage/ExportOnly.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Pod/Coverage/Overloader.pm

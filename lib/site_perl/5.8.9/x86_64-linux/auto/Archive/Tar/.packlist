@@ -1,0 +1,6 @@
+/home/travis/perl5/perlbrew/perls/5.8/bin/ptar
+/home/travis/perl5/perlbrew/perls/5.8/bin/ptardiff
+/home/travis/perl5/perlbrew/perls/5.8/bin/ptargrep
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Archive/Tar.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Archive/Tar/Constant.pm
+/home/travis/perl5/perlbrew/perls/5.8/lib/site_perl/5.8.9/Archive/Tar/File.pm

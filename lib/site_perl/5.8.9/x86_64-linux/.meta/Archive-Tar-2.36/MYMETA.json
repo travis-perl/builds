@@ -1,0 +1,61 @@
+{
+   "abstract" : "Manipulates TAR archives",
+   "author" : [
+      "Jos Boumans <kane[at]cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "ExtUtils::MakeMaker version 7.44, CPAN::Meta::Converter version 2.150010, CPAN::Meta::Converter version 2.143240",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Archive-Tar",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "IO::Compress::Xz" : "0",
+            "IO::Uncompress::UnXz" : "0"
+         },
+         "requires" : {
+            "Compress::Zlib" : "2.015",
+            "File::Spec" : "0.82",
+            "IO::Compress::Base" : "2.015",
+            "IO::Compress::Bzip2" : "2.015",
+            "IO::Compress::Gzip" : "2.015",
+            "IO::Zlib" : "1.01",
+            "Test::Harness" : "2.26",
+            "Test::More" : "0",
+            "perl" : "5.00503"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/jib/archive-tar-new.git",
+         "web" : "https://github.com/jib/archive-tar-new"
+      }
+   },
+   "version" : "2.36",
+   "x_serialization_backend" : "JSON::PP version 4.04"
+}
