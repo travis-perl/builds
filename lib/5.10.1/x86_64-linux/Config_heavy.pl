@@ -14,9 +14,9 @@ use strict;
 #
 ## Package name      : perl5
 ## Source directory  : .
-## Configuration time: Sat Mar  7 20:40:09 UTC 2020
+## Configuration time: Sun Mar  8 00:01:02 UTC 2020
 ## Configured by     : travis
-## Target system     : linux travis-job-e150b0b8-5613-400e-9581-db3be1b69c20 4.15.0-1028-gcp #29~16.04.1-ubuntu smp tue feb 12 16:31:10 utc 2019 x86_64 x86_64 x86_64 gnulinux 
+## Target system     : linux travis-job-537652e0-4640-4e65-881a-8623a7a0feb3 4.15.0-1028-gcp #29~16.04.1-ubuntu smp tue feb 12 16:31:10 utc 2019 x86_64 x86_64 x86_64 gnulinux 
 #
 #: Configure command line arguments.
 #
@@ -139,8 +139,8 @@ ccname='gcc'
 ccsymbols=''
 ccversion=''
 cf_by='travis'
-cf_email='travis@travis-job-e150b0b8-5613-400e-9581-db3be1b69c20.(none)'
-cf_time='Sat Mar  7 20:40:09 UTC 2020'
+cf_email='travis@travis-job-537652e0-4640-4e65-881a-8623a7a0feb3.(none)'
+cf_time='Sun Mar  8 00:01:02 UTC 2020'
 chgrp=''
 chmod='chmod'
 chown=''
@@ -902,8 +902,8 @@ multiarch='undef'
 mv=''
 myarchname='x86_64-linux'
 mydomain='.(none)'
-myhostname='travis-job-e150b0b8-5613-400e-9581-db3be1b69c20'
-myuname='linux travis-job-e150b0b8-5613-400e-9581-db3be1b69c20 4.15.0-1028-gcp #29~16.04.1-ubuntu smp tue feb 12 16:31:10 utc 2019 x86_64 x86_64 x86_64 gnulinux '
+myhostname='travis-job-537652e0-4640-4e65-881a-8623a7a0feb3'
+myuname='linux travis-job-537652e0-4640-4e65-881a-8623a7a0feb3 4.15.0-1028-gcp #29~16.04.1-ubuntu smp tue feb 12 16:31:10 utc 2019 x86_64 x86_64 x86_64 gnulinux '
 n='-n'
 need_va_copy='define'
 netdb_hlen_type='size_t'
@@ -941,7 +941,7 @@ path_sep=':'
 perl5='/usr/bin/perl'
 perl=''
 perl_patchlevel=''
-perladmin='travis@travis-job-e150b0b8-5613-400e-9581-db3be1b69c20.(none)'
+perladmin='travis@travis-job-537652e0-4640-4e65-881a-8623a7a0feb3.(none)'
 perllibs='-lnsl -ldl -lm -lcrypt -lutil -lc'
 perlpath='/home/travis/perl5/perlbrew/perls/5.10/bin/perl'
 pg='pg'
