@@ -1,1 +1,1 @@
-{"provides":{"Net::SSLeay::Handle":{"version":"1.88","file":"lib/Net/SSLeay/Handle.pm"},"Net::SSLeay":{"version":"1.88","file":"lib/Net/SSLeay.pm"}},"version":"1.88","dist":"Net-SSLeay-1.88","target":"Net::SSLeay","pathname":"C/CH/CHRISN/Net-SSLeay-1.88.tar.gz","name":"Net::SSLeay"}
+{"dist":"Net-SSLeay-1.88","name":"Net::SSLeay","target":"Net::SSLeay","pathname":"C/CH/CHRISN/Net-SSLeay-1.88.tar.gz","provides":{"Net::SSLeay::Handle":{"file":"lib/Net/SSLeay/Handle.pm","version":"1.88"},"Net::SSLeay":{"file":"lib/Net/SSLeay.pm","version":"1.88"}},"version":"1.88"}
