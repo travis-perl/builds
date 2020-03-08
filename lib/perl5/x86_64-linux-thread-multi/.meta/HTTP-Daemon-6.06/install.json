@@ -1,1 +1,1 @@
-{"name":"HTTP::Daemon","dist":"HTTP-Daemon-6.06","version":"6.06","target":"HTTP::Daemon","pathname":"O/OA/OALDERS/HTTP-Daemon-6.06.tar.gz","provides":{"HTTP::Daemon":{"version":"6.06","file":"lib/HTTP/Daemon.pm"}}}
+{"provides":{"HTTP::Daemon":{"file":"lib/HTTP/Daemon.pm","version":"6.06"}},"target":"HTTP::Daemon","name":"HTTP::Daemon","version":"6.06","pathname":"O/OA/OALDERS/HTTP-Daemon-6.06.tar.gz","dist":"HTTP-Daemon-6.06"}
