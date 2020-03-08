@@ -1,1 +1,1 @@
-{"name":"Module::Find","version":"0.15","dist":"Module-Find-0.15","pathname":"C/CR/CRENZ/Module-Find-0.15.tar.gz","provides":{"Module::Find":{"version":"0.15","file":"Find.pm"}},"target":"Module::Find"}
+{"pathname":"C/CR/CRENZ/Module-Find-0.15.tar.gz","dist":"Module-Find-0.15","version":"0.15","target":"Module::Find","name":"Module::Find","provides":{"Module::Find":{"file":"Find.pm","version":"0.15"}}}
