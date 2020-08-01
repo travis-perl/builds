@@ -15,7 +15,7 @@ use LWP::Protocol ();
 use Scalar::Util qw(blessed);
 use Try::Tiny qw(try catch);
 
-our $VERSION = '6.43';
+our $VERSION = '6.46';
 
 sub new
 {
@@ -301,9 +301,11 @@ sub request {
     $response->previous($previous) if $previous;
 
     if ($response->redirects >= $self->{max_redirect}) {
-        $response->header("Client-Warning" =>
+        if ($response->header('Location')) {
+            $response->header("Client-Warning" =>
                 "Redirect loop detected (max_redirect = $self->{max_redirect})"
-        );
+            );
+        }
         return $response;
     }
 
@@ -1893,6 +1895,7 @@ forced to match that of the server.
 The return value is an L<HTTP::Response> object.
 
 =head2 patch
+
     # Any version of HTTP::Message works with this form:
     my $res = $ua->patch( $url, $field_name => $value, Content => $content );
 
