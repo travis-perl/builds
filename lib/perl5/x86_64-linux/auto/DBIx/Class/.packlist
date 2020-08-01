@@ -108,14 +108,13 @@
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLAHacks/OracleJoins.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLAHacks/SQLite.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker.pm
-/home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker.pod
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/ACCESS.pm
+/home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/ClassicExtensions.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/LimitDialects.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/MSSQL.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/MySQL.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/Oracle.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/OracleJoins.pm
-/home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/OracleJoins.pod
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/SQLMaker/SQLite.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Schema.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Schema/Versioned.pm
@@ -173,6 +172,7 @@
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Storage/DBI/UniqueIdentifier.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Storage/DBI/mysql.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Storage/DBIHacks.pm
+/home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Storage/Debug/PrettyTrace.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Storage/Statistics.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/Storage/TxnScopeGuard.pm
 /home/travis/.perlbrew/libs/5.31.9@dbic/lib/perl5/DBIx/Class/UTF8Columns.pm

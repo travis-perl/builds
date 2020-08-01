@@ -30,8 +30,7 @@
          "DBIx::Class::Storage::DBIHacks",
          "DBIx::Class::Storage::BlockRunner",
          "DBIx::Class::Carp",
-         "DBIx::Class::_Util",
-         "DBIx::Class::ResultSet::Pager"
+         "DBIx::Class::_Util"
       ]
    },
    "prereqs" : {
@@ -62,17 +61,15 @@
             "DBD::SQLite" : "1.29",
             "DBI" : "1.57",
             "Data::Dumper::Concise" : "2.020",
-            "Data::Page" : "2.00",
             "Devel::GlobalDestruction" : "0.09",
             "File::Temp" : "0.22",
             "Hash::Merge" : "0.12",
-            "List::Util" : "1.16",
             "MRO::Compat" : "0.12",
             "Module::Find" : "0.07",
             "Moo" : "2.000",
             "Package::Stash" : "0.28",
             "Path::Class" : "0.18",
-            "SQL::Abstract" : "1.81",
+            "SQL::Abstract::Classic" : "1.91",
             "Scope::Guard" : "0.03",
             "Sub::Name" : "0.04",
             "Test::Deep" : "0.101",
@@ -89,22 +86,21 @@
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=DBIx-Class"
+         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=DBIx-Class"
       },
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
          "url" : "https://github.com/Perl5/DBIx-Class"
-      },
-      "x_IRC" : "irc://irc.perl.org/#dbix-class",
-      "x_MailingList" : "http://lists.scsys.co.uk/cgi-bin/mailman/listinfo/dbix-class"
+      }
    },
-   "version" : "0.082841",
+   "version" : "0.082842",
    "x_authority" : "cpan:RIBASUSHI",
    "x_contributors" : [
       "abraxxa: Alexander Hartmaier <abraxxa@cpan.org>",
       "acca: Alexander Kuznetsov <acca@cpan.org>",
+      "acme: Leon Brocard <acme@astray.com>",
       "aherzog: Adam Herzog <adam@herzogdesigns.com>",
       "Alexander Keusch <cpan@keusch.at>",
       "alexrj: Alessandro Ranellucci <aar@cpan.org>",
@@ -306,6 +302,7 @@
       "willert: Sebastian Willert <willert@cpan.org>",
       "wintermute: Toby Corkindale <tjc@cpan.org>",
       "wreis: Wallace Reis <wreis@cpan.org>",
+      "x86-64 <x86mail@gmail.com>",
       "xenoterracide: Caleb Cushing <xenoterracide@gmail.com>",
       "xmikew: Mike Wisener <xmikew@32ths.com>",
       "yrlnry: Mark Jason Dominus <mjd@plover.com>",
