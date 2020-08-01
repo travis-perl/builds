@@ -1,18 +1,18 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "Mozilla's CA cert bundle in PEM format",
    "author" : [
-      "Graham Barr <gbarr@pobox.com>"
+      "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.44, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380, CPAN::Meta::Converter version 2.150010",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "TimeDate",
+   "name" : "Mozilla-CA",
    "no_index" : {
       "directory" : [
          "t",
@@ -22,24 +22,26 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Test" : "0"
          }
       },
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
          }
+      },
+      "runtime" : {
+         "requires" : {
+            "perl" : "5.006"
+         }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "bugtracker" : {
-         "web" : "https://github.com/atoomic/perl-TimeDate/issues"
-      },
       "repository" : {
-         "url" : "https://github.com/atoomic/perl-TimeDate"
+         "url" : "http://github.com/gisle/mozilla-ca"
       }
    },
-   "version" : "2.32",
+   "version" : "20200520",
    "x_serialization_backend" : "JSON::PP version 4.04"
 }
