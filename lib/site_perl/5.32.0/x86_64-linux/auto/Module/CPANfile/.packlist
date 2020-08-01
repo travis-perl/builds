@@ -1,0 +1,9 @@
+/home/travis/perl5/perlbrew/perls/5.32/bin/cpanfile-dump
+/home/travis/perl5/perlbrew/perls/5.32/bin/mymeta-cpanfile
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/Module/CPANfile.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/Module/CPANfile/Environment.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/Module/CPANfile/Prereq.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/Module/CPANfile/Prereqs.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/Module/CPANfile/Requirement.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/cpanfile-faq.pod
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/cpanfile.pod
