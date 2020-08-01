@@ -1,0 +1,1 @@
+{"pathname":"H/HA/HAARG/Catalyst-Plugin-ConfigLoader-0.35.tar.gz","version":"0.35","provides":{"Catalyst::Plugin::ConfigLoader":{"version":"0.35","file":"lib/Catalyst/Plugin/ConfigLoader.pm"}},"name":"Catalyst::Plugin::ConfigLoader","target":"Catalyst::Plugin::ConfigLoader","dist":"Catalyst-Plugin-ConfigLoader-0.35"}
