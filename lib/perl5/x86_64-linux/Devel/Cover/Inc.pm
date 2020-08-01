@@ -12,7 +12,7 @@ package Devel::Cover::Inc;
 use strict;
 use warnings;
 
-our $VERSION      = "1.33";
+our $VERSION      = "1.36";
 our $Perl_version = '5.031009';
 our @Inc          = @{ [
   '.',

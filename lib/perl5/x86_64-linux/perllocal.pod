@@ -1,48 +1,4 @@
-=head2 Sun Mar  8 00:05:25 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.20>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Mar  8 00:05:26 2020: C<Module> L<HTML::Parser|HTML::Parser>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.72>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Mar  8 00:05:27 2020: C<Module> L<B::Debug|B::Debug>
+=head2 Sat Aug  1 01:26:30 2020: C<Module> L<B::Debug|B::Debug>
 
 =over 4
 
@@ -64,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Mar  8 00:05:28 2020: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Sat Aug  1 01:26:30 2020: C<Module> L<HTML::Tagset|HTML::Tagset>
 
 =over 4
 
@@ -78,29 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.33>
-
-=item *
-
-C<EXE_FILES: bin/cover bin/cpancover bin/gcov2perl>
-
-=back
-
-=head2 Sun Mar  8 00:05:29 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.026>
+C<VERSION: 3.20>
 
 =item *
 
@@ -108,7 +42,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Mar  8 00:05:30 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
+=head2 Sat Aug  1 01:26:31 2020: C<Module> L<HTML::Parser|HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.72>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Aug  1 01:26:33 2020: C<Module> L<Devel::Cover|Devel::Cover>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.36>
+
+=item *
+
+C<EXE_FILES: bin/cover bin/cpancover bin/gcov2perl>
+
+=back
+
+=head2 Sat Aug  1 01:26:34 2020: C<Module> L<ExtUtils::Config|ExtUtils::Config>
 
 =over 4
 
@@ -130,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Mar  8 00:05:30 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
+=head2 Sat Aug  1 01:26:34 2020: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
 
 =over 4
 
@@ -152,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Mar  8 00:05:37 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Sat Aug  1 01:26:35 2020: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
 
 =over 4
 
@@ -166,7 +144,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.88>
+C<VERSION: 0.026>
 
 =item *
 
@@ -174,29 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Mar  8 00:05:38 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.067>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Mar  8 00:05:38 2020: C<Module> L<YAML|YAML>
+=head2 Sat Aug  1 01:26:36 2020: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -218,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Mar  8 00:05:39 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Sat Aug  1 01:26:43 2020: C<Module> L<Net::SSLeay|Net::SSLeay>
 
 =over 4
 
@@ -232,7 +188,51 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 20180117>
+C<VERSION: 1.88>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Aug  1 01:26:43 2020: C<Module> L<Mozilla::CA|Mozilla::CA>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 20200520>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Aug  1 01:26:44 2020: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.31.9@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.068>
 
 =item *
 
