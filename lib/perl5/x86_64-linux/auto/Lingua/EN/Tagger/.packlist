@@ -1,0 +1,6 @@
+/home/travis/.perlbrew/libs/5.30@dbic/lib/perl5/Lingua/EN/Tagger.pm
+/home/travis/.perlbrew/libs/5.30@dbic/lib/perl5/Lingua/EN/Tagger/pos_tags.hash
+/home/travis/.perlbrew/libs/5.30@dbic/lib/perl5/Lingua/EN/Tagger/pos_words.hash
+/home/travis/.perlbrew/libs/5.30@dbic/lib/perl5/Lingua/EN/Tagger/tags.yml
+/home/travis/.perlbrew/libs/5.30@dbic/lib/perl5/Lingua/EN/Tagger/unknown.yml
+/home/travis/.perlbrew/libs/5.30@dbic/lib/perl5/Lingua/EN/Tagger/words.yml
