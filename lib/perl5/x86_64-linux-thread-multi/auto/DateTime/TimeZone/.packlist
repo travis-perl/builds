@@ -67,7 +67,6 @@
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Fort_Nelson.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Fortaleza.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Glace_Bay.pm
-/home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Godthab.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Goose_Bay.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Grand_Turk.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Guatemala.pm
@@ -115,6 +114,7 @@
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/North_Dakota/Beulah.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/North_Dakota/Center.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/North_Dakota/New_Salem.pm
+/home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Nuuk.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Ojinaga.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Panama.pm
 /home/travis/.perlbrew/libs/5.31.9-thr@dzil/lib/perl5/DateTime/TimeZone/America/Pangnirtung.pm

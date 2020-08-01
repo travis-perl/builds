@@ -12,7 +12,7 @@ BEGIN {
 
 BEGIN {
 	$Types::Standard::AUTHORITY = 'cpan:TOBYINK';
-	$Types::Standard::VERSION   = '1.010000';
+	$Types::Standard::VERSION   = '1.010002';
 }
 
 $Types::Standard::VERSION =~ tr/_//d;
@@ -235,8 +235,12 @@ my $_str = $meta->$add_core_type({
 my $_laxnum = $meta->add_type({
 	name       => "LaxNum",
 	parent     => $_str,
-	constraint => sub { looks_like_number $_ },
-	inlined    => sub { "defined($_[1]) && !ref($_[1]) && Scalar::Util::looks_like_number($_[1])" },
+	constraint => sub { looks_like_number($_) and ref(\$_) ne 'GLOB' },
+	inlined    => sub {
+		'Scalar::Util'->VERSION('1.18') # RT 132426
+			? "defined($_[1]) && !ref($_[1]) && Scalar::Util::looks_like_number($_[1])"
+			: "defined($_[1]) && !ref($_[1]) && Scalar::Util::looks_like_number($_[1]) && ref(\\($_[1])) ne 'GLOB'"
+	},
 });
 
 my $_strictnum = $meta->add_type({
@@ -1156,7 +1160,7 @@ This module also exports a C<slurpy> function, which can be used as
 follows.
 
 It can cause additional trailing values in a B<Tuple> to be slurped
-into a structure and validated. For example, slurping into an arrayfef:
+into a structure and validated. For example, slurping into an arrayref:
 
    my $type = Tuple[Str, slurpy ArrayRef[Int]];
    
