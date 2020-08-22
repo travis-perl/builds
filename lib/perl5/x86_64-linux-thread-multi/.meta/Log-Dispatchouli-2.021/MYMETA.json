@@ -1,5 +1,5 @@
 {
-   "abstract" : "upload things to the CPAN",
+   "abstract" : "a simple wrapper around Log::Dispatch",
    "author" : [
       "Ricardo SIGNES <rjbs@cpan.org>"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "CPAN-Uploader",
+   "name" : "Log-Dispatchouli",
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -22,6 +22,9 @@
       "configure" : {
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
+         },
+         "suggests" : {
+            "JSON::PP" : "2.27300"
          }
       },
       "develop" : {
@@ -34,17 +37,20 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
-            "Data::Dumper" : "0",
-            "Digest::MD5" : "0",
-            "File::Basename" : "0",
-            "File::HomeDir" : "0",
             "File::Spec" : "0",
-            "Getopt::Long::Descriptive" : "0.084",
-            "HTTP::Request::Common" : "0",
-            "HTTP::Status" : "0",
-            "LWP::Protocol::https" : "1",
-            "LWP::UserAgent" : "0",
-            "Term::ReadKey" : "0",
+            "Log::Dispatch" : "0",
+            "Log::Dispatch::Array" : "0",
+            "Log::Dispatch::File" : "0",
+            "Log::Dispatch::Screen" : "0",
+            "Log::Dispatch::Syslog" : "0",
+            "Params::Util" : "0",
+            "Scalar::Util" : "0",
+            "String::Flogger" : "0",
+            "Sub::Exporter" : "0",
+            "Sub::Exporter::GlobExporter" : "0.002",
+            "Sys::Syslog" : "0.16",
+            "Try::Tiny" : "0.04",
+            "overload" : "0",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -56,26 +62,32 @@
          "requires" : {
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
-            "Test::More" : "0.96"
+            "File::Spec::Functions" : "0",
+            "File::Temp" : "0",
+            "Test::Deep" : "0",
+            "Test::Fatal" : "0",
+            "Test::More" : "0.96",
+            "base" : "0",
+            "lib" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/rjbs/CPAN-Uploader/issues"
+         "web" : "https://github.com/rjbs/Log-Dispatchouli/issues"
       },
-      "homepage" : "https://github.com/rjbs/CPAN-Uploader",
+      "homepage" : "https://github.com/rjbs/Log-Dispatchouli",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/rjbs/CPAN-Uploader.git",
-         "web" : "https://github.com/rjbs/CPAN-Uploader"
+         "url" : "https://github.com/rjbs/Log-Dispatchouli.git",
+         "web" : "https://github.com/rjbs/Log-Dispatchouli"
       }
    },
-   "version" : "0.103014",
+   "version" : "2.021",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.030002"
+         "version" : "5.032000"
       },
       "plugins" : [
          {
@@ -444,7 +456,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.103014",
+                  "tag" : "2.021",
                   "tag_format" : "%v",
                   "tag_message" : "v%V"
                },
@@ -500,18 +512,6 @@
                }
             },
             "name" : "Prereqs",
-            "version" : "6.015"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::RemovePrereqs",
-            "config" : {
-               "Dist::Zilla::Plugin::RemovePrereqs" : {
-                  "modules_to_remove" : [
-                     "Config::Identity"
-                  ]
-               }
-            },
-            "name" : "RemovePrereqs",
             "version" : "6.015"
          },
          {
@@ -574,24 +574,18 @@
       }
    },
    "x_contributors" : [
-      "Barbie <barbie@missbarbell.co.uk>",
-      "Christian Walde <walde.christian@googlemail.com>",
-      "David Caldwell <david@porkrind.org>",
-      "David Golden <dagolden@cpan.org>",
-      "fREW Schmidt <frioux@gmail.com>",
-      "Gabor Szabo <szabgab@gmail.com>",
-      "Graham Knop <haarg@haarg.org>",
-      "Kent Fredric <kentfredric@gmail.com>",
-      "Mark Fowler <mark@twoshortplanks.com>",
-      "Mike Doherty <doherty@cs.dal.ca>",
-      "perlancar (@netbook-zenbook-ux305) <perlancar@gmail.com>",
+      "Christopher J. Madsen <perl@cjmweb.net>",
+      "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>",
+      "Dan Book <grinnz@gmail.com>",
+      "George Hartzell <hartzell@alerce.com>",
+      "Jon Stuart <jon@fastmailteam.com>",
+      "Matt Phillips <mattp@cpan.org>",
+      "Olivier Mengué <dolmen@cpan.org>",
+      "Randy Stauner <randy@magnificent-tears.com>",
       "Ricardo Signes <rjbs@semiotic.systems>",
-      "Steven Haryanto (on Asus Zenbook) <stevenharyanto@gmail.com>",
-      "sungo <sungo@sungo.us>",
-      "Torsten Raudssus <github@raudssus.de>",
-      "Vincent Pit <perl@profvince.com>"
+      "Sawyer X <xsawyerx@cpan.org>"
    ],
-   "x_generated_by_perl" : "v5.30.2",
+   "x_generated_by_perl" : "v5.32.0",
    "x_serialization_backend" : "JSON::PP version 4.02",
    "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later"
 }

@@ -1,1 +1,1 @@
-{"dist":"String-Truncate-1.100602","pathname":"R/RJ/RJBS/String-Truncate-1.100602.tar.gz","target":"String::Truncate","name":"String::Truncate","version":"1.100602","provides":{"String::Truncate":{"file":"lib/String/Truncate.pm","version":"1.100602"}}}
+{"version":"1.100602","provides":{"String::Truncate":{"version":"1.100602","file":"lib/String/Truncate.pm"}},"target":"String::Truncate","name":"String::Truncate","pathname":"R/RJ/RJBS/String-Truncate-1.100602.tar.gz","dist":"String-Truncate-1.100602"}
