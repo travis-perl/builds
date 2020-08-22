@@ -1,4 +1,4 @@
-=head2 Sat Aug  1 01:16:32 2020: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Sat Aug 22 00:02:59 2020: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
@@ -12,7 +12,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.010002>
+C<VERSION: 1.010004>
 
 =item *
 
