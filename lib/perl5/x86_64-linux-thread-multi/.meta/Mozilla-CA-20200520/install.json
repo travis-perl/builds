@@ -1,0 +1,1 @@
+{"pathname":"A/AB/ABH/Mozilla-CA-20200520.tar.gz","provides":{"Mozilla::CA":{"version":"20200520","file":"lib/Mozilla/CA.pm"}},"target":"Mozilla::CA","name":"Mozilla::CA","dist":"Mozilla-CA-20200520","version":"20200520"}
