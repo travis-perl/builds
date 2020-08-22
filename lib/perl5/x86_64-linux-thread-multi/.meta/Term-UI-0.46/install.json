@@ -1,1 +1,1 @@
-{"dist":"Term-UI-0.46","target":"Term::UI","name":"Term::UI","version":"0.46","provides":{"Term::UI":{"file":"lib/Term/UI.pm","version":"0.46"},"Term::UI::History":{"file":"lib/Term/UI/History.pm","version":"0.46"}},"pathname":"B/BI/BINGOS/Term-UI-0.46.tar.gz"}
+{"target":"Term::UI","version":"0.46","dist":"Term-UI-0.46","provides":{"Term::UI::History":{"file":"lib/Term/UI/History.pm","version":"0.46"},"Term::UI":{"version":"0.46","file":"lib/Term/UI.pm"}},"name":"Term::UI","pathname":"B/BI/BINGOS/Term-UI-0.46.tar.gz"}
