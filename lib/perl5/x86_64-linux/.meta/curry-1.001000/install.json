@@ -1,1 +1,1 @@
-{"version":"1.001000","dist":"curry-1.001000","pathname":"M/MS/MSTROUT/curry-1.001000.tar.gz","provides":{"curry":{"file":"lib/curry.pm","version":"1.001000"},"curry::weak":{"version":"1.001000","file":"lib/curry.pm"}},"target":"curry","name":"curry"}
+{"dist":"curry-1.001000","name":"curry","pathname":"M/MS/MSTROUT/curry-1.001000.tar.gz","provides":{"curry::weak":{"version":"1.001000","file":"lib/curry.pm"},"curry":{"version":"1.001000","file":"lib/curry.pm"}},"target":"curry","version":"1.001000"}
