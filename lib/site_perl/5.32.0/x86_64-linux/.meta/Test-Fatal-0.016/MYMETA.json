@@ -1,7 +1,7 @@
 {
-   "abstract" : "upload things to the CPAN",
+   "abstract" : "incredibly simple helpers for testing code with exceptions",
    "author" : [
-      "Ricardo SIGNES <rjbs@cpan.org>"
+      "Ricardo Signes <rjbs@cpan.org>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Dist::Zilla version 6.015, CPAN::Meta::Converter version 2.150010",
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "CPAN-Uploader",
+   "name" : "Test-Fatal",
    "prereqs" : {
       "build" : {
          "requires" : {
@@ -27,24 +27,15 @@
       "develop" : {
          "requires" : {
             "Encode" : "0",
-            "Test::More" : "0",
             "Test::Pod" : "1.41"
          }
       },
       "runtime" : {
          "requires" : {
             "Carp" : "0",
-            "Data::Dumper" : "0",
-            "Digest::MD5" : "0",
-            "File::Basename" : "0",
-            "File::HomeDir" : "0",
-            "File::Spec" : "0",
-            "Getopt::Long::Descriptive" : "0.084",
-            "HTTP::Request::Common" : "0",
-            "HTTP::Status" : "0",
-            "LWP::Protocol::https" : "1",
-            "LWP::UserAgent" : "0",
-            "Term::ReadKey" : "0",
+            "Exporter" : "5.57",
+            "Test::Builder" : "0",
+            "Try::Tiny" : "0.07",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -56,26 +47,28 @@
          "requires" : {
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
-            "Test::More" : "0.96"
+            "Test::Builder::Tester" : "0",
+            "Test::More" : "0.65",
+            "overload" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/rjbs/CPAN-Uploader/issues"
+         "web" : "https://github.com/rjbs/Test-Fatal/issues"
       },
-      "homepage" : "https://github.com/rjbs/CPAN-Uploader",
+      "homepage" : "https://github.com/rjbs/Test-Fatal",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/rjbs/CPAN-Uploader.git",
-         "web" : "https://github.com/rjbs/CPAN-Uploader"
+         "url" : "https://github.com/rjbs/Test-Fatal.git",
+         "web" : "https://github.com/rjbs/Test-Fatal"
       }
    },
-   "version" : "0.103014",
+   "version" : "0.016",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.030002"
+         "version" : "5.032000"
       },
       "plugins" : [
          {
@@ -444,7 +437,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "0.103014",
+                  "tag" : "0.016",
                   "tag_format" : "%v",
                   "tag_message" : "v%V"
                },
@@ -492,26 +485,26 @@
             "version" : "0.035"
          },
          {
-            "class" : "Dist::Zilla::Plugin::Prereqs",
-            "config" : {
-               "Dist::Zilla::Plugin::Prereqs" : {
-                  "phase" : "runtime",
-                  "type" : "requires"
-               }
-            },
-            "name" : "Prereqs",
-            "version" : "6.015"
-         },
-         {
             "class" : "Dist::Zilla::Plugin::RemovePrereqs",
             "config" : {
                "Dist::Zilla::Plugin::RemovePrereqs" : {
                   "modules_to_remove" : [
-                     "Config::Identity"
+                     "Test::More"
                   ]
                }
             },
             "name" : "RemovePrereqs",
+            "version" : "6.015"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Prereqs",
+            "config" : {
+               "Dist::Zilla::Plugin::Prereqs" : {
+                  "phase" : "test",
+                  "type" : "requires"
+               }
+            },
+            "name" : "TestRequires",
             "version" : "6.015"
          },
          {
@@ -574,24 +567,13 @@
       }
    },
    "x_contributors" : [
-      "Barbie <barbie@missbarbell.co.uk>",
-      "Christian Walde <walde.christian@googlemail.com>",
-      "David Caldwell <david@porkrind.org>",
       "David Golden <dagolden@cpan.org>",
-      "fREW Schmidt <frioux@gmail.com>",
-      "Gabor Szabo <szabgab@gmail.com>",
       "Graham Knop <haarg@haarg.org>",
-      "Kent Fredric <kentfredric@gmail.com>",
-      "Mark Fowler <mark@twoshortplanks.com>",
-      "Mike Doherty <doherty@cs.dal.ca>",
-      "perlancar (@netbook-zenbook-ux305) <perlancar@gmail.com>",
-      "Ricardo Signes <rjbs@semiotic.systems>",
-      "Steven Haryanto (on Asus Zenbook) <stevenharyanto@gmail.com>",
-      "sungo <sungo@sungo.us>",
-      "Torsten Raudssus <github@raudssus.de>",
-      "Vincent Pit <perl@profvince.com>"
+      "Jesse Luehrs <doy@tozt.net>",
+      "Joel Bernstein <joel@fysh.org>",
+      "Karen Etheridge <ether@cpan.org>"
    ],
-   "x_generated_by_perl" : "v5.30.2",
+   "x_generated_by_perl" : "v5.32.0",
    "x_serialization_backend" : "JSON::PP version 4.04",
    "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later"
 }
