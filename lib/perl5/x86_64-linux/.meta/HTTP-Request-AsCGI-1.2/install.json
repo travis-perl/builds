@@ -1,1 +1,1 @@
-{"provides":{"HTTP::Request::AsCGI":{"file":"lib/HTTP/Request/AsCGI.pm","version":"1.2"}},"target":"HTTP::Request::AsCGI","pathname":"F/FL/FLORA/HTTP-Request-AsCGI-1.2.tar.gz","dist":"HTTP-Request-AsCGI-1.2","version":"1.2","name":"HTTP::Request::AsCGI"}
+{"target":"HTTP::Request::AsCGI","provides":{"HTTP::Request::AsCGI":{"version":"1.2","file":"lib/HTTP/Request/AsCGI.pm"}},"version":"1.2","pathname":"F/FL/FLORA/HTTP-Request-AsCGI-1.2.tar.gz","dist":"HTTP-Request-AsCGI-1.2","name":"HTTP::Request::AsCGI"}
