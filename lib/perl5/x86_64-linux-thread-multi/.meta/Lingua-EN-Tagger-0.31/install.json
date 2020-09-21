@@ -1,1 +1,1 @@
-{"pathname":"A/AC/ACOBURN/Lingua-EN-Tagger-0.31.tar.gz","provides":{"Lingua::EN::Tagger":{"version":"0.31","file":"Tagger.pm"}},"target":"Lingua::EN::Tagger","dist":"Lingua-EN-Tagger-0.31","name":"Lingua::EN::Tagger","version":"0.31"}
+{"name":"Lingua::EN::Tagger","target":"Lingua::EN::Tagger","provides":{"Lingua::EN::Tagger":{"version":"0.31","file":"Tagger.pm"}},"pathname":"A/AC/ACOBURN/Lingua-EN-Tagger-0.31.tar.gz","version":"0.31","dist":"Lingua-EN-Tagger-0.31"}
