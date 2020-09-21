@@ -1,10 +1,10 @@
 {
-   "abstract" : "HTML parser class",
+   "abstract" : "Determine the locale encoding",
    "author" : [
       "Gisle Aas <gisle@activestate.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "ExtUtils::MakeMaker version 7.0401, CPAN::Meta::Converter version 2.150001, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "HTML-Parser",
+   "name" : "Encode-Locale",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,22 +32,26 @@
       },
       "runtime" : {
          "recommends" : {
-            "HTTP::Headers" : "0"
+            "I18N::Langinfo" : "0"
          },
          "requires" : {
-            "HTML::Tagset" : "3",
-            "XSLoader" : "0",
+            "Encode" : "2",
+            "Encode::Alias" : "0",
             "perl" : "5.008"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Test::More" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "repository" : {
-         "url" : "http://github.com/gisle/html-parser"
-      },
-      "x_MailingList" : "mailto:libwww@perl.org"
+         "url" : "http://github.com/gisle/encode-locale"
+      }
    },
-   "version" : "3.72",
+   "version" : "1.05",
    "x_serialization_backend" : "JSON::PP version 4.04"
 }
