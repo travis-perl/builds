@@ -1,1 +1,1 @@
-{"target":"Data::Binary","version":"0.01","dist":"Data-Binary-0.01","provides":{"Data::Binary":{"version":"0.01","file":"lib/Data/Binary.pm"}},"name":"Data::Binary","pathname":"S/SN/SNKWATT/Data-Binary-0.01.tar.gz"}
+{"pathname":"S/SN/SNKWATT/Data-Binary-0.01.tar.gz","version":"0.01","provides":{"Data::Binary":{"version":"0.01","file":"lib/Data/Binary.pm"}},"dist":"Data-Binary-0.01","target":"Data::Binary","name":"Data::Binary"}
