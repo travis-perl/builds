@@ -1,1 +1,1 @@
-{"target":"Mozilla::CA","version":"20200520","dist":"Mozilla-CA-20200520","name":"Mozilla::CA","provides":{"Mozilla::CA":{"version":"20200520","file":"lib/Mozilla/CA.pm"}},"pathname":"A/AB/ABH/Mozilla-CA-20200520.tar.gz"}
+{"provides":{"Mozilla::CA":{"version":"20200520","file":"lib/Mozilla/CA.pm"}},"name":"Mozilla::CA","target":"Mozilla::CA","version":"20200520","dist":"Mozilla-CA-20200520","pathname":"A/AB/ABH/Mozilla-CA-20200520.tar.gz"}
