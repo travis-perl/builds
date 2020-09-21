@@ -1,10 +1,10 @@
 {
-   "abstract" : "HTML parser class",
+   "abstract" : "unknown",
    "author" : [
-      "Gisle Aas <gisle@activestate.com>"
+      "Graham Barr <gbarr@pobox.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "ExtUtils::MakeMaker version 7.44, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "HTML-Parser",
+   "name" : "TimeDate",
    "no_index" : {
       "directory" : [
          "t",
@@ -29,25 +29,17 @@
          "requires" : {
             "ExtUtils::MakeMaker" : "0"
          }
-      },
-      "runtime" : {
-         "recommends" : {
-            "HTTP::Headers" : "0"
-         },
-         "requires" : {
-            "HTML::Tagset" : "3",
-            "XSLoader" : "0",
-            "perl" : "5.008"
-         }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "repository" : {
-         "url" : "http://github.com/gisle/html-parser"
+      "bugtracker" : {
+         "web" : "https://github.com/atoomic/perl-TimeDate/issues"
       },
-      "x_MailingList" : "mailto:libwww@perl.org"
+      "repository" : {
+         "url" : "https://github.com/atoomic/perl-TimeDate"
+      }
    },
-   "version" : "3.72",
+   "version" : "2.33",
    "x_serialization_backend" : "JSON::PP version 4.02"
 }
