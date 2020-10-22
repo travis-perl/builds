@@ -1,0 +1,1 @@
+{"pathname":"R/RI/RIBASUSHI/SQL-Abstract-Classic-1.91.tar.gz","provides":{"SQL::Abstract::Util":{"file":"lib/SQL/Abstract/Util.pm"},"SQL::Abstract::Classic":{"version":"1.91","file":"lib/SQL/Abstract/Classic.pm"}},"name":"SQL::Abstract::Classic","version":"1.91","target":"SQL::Abstract::Classic","dist":"SQL-Abstract-Classic-1.91"}
