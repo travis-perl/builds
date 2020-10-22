@@ -1,4 +1,4 @@
-=head2 Mon Sep 21 00:09:47 2020: C<Module> L<Test::Deep|Test::Deep>
+=head2 Thu Oct 22 00:10:25 2020: C<Module> L<Test::Deep|Test::Deep>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:48 2020: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+=head2 Thu Oct 22 00:10:26 2020: C<Module> L<Algorithm::Diff|Algorithm::Diff>
 
 =over 4
 
@@ -34,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.2800>
+C<VERSION: 1.200>
 
 =item *
 
@@ -42,73 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:48 2020: C<Module> L<Test::Exception|Test::Exception>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3-thr@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.43>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Sep 21 00:09:49 2020: C<Module> L<Test::Warn|Test::Warn>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3-thr@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.36>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Sep 21 00:09:50 2020: C<Module> L<Algorithm::Diff|Algorithm::Diff>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3-thr@test/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.1903>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Mon Sep 21 00:09:50 2020: C<Module> L<Text::Diff|Text::Diff>
+=head2 Thu Oct 22 00:10:26 2020: C<Module> L<Text::Diff|Text::Diff>
 
 =over 4
 
@@ -130,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:51 2020: C<Module> L<Capture::Tiny|Capture::Tiny>
+=head2 Thu Oct 22 00:10:27 2020: C<Module> L<Capture::Tiny|Capture::Tiny>
 
 =over 4
 
@@ -152,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:51 2020: C<Module> L<Test::Differences|Test::Differences>
+=head2 Thu Oct 22 00:10:27 2020: C<Module> L<Test::Differences|Test::Differences>
 
 =over 4
 
@@ -174,7 +108,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:52 2020: C<Module> L<Devel::StackTrace|Devel::StackTrace>
+=head2 Thu Oct 22 00:10:28 2020: C<Module> L<Sub::Uplevel|Sub::Uplevel>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.2800>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:10:28 2020: C<Module> L<Test::Exception|Test::Exception>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.43>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:10:29 2020: C<Module> L<Devel::StackTrace|Devel::StackTrace>
 
 =over 4
 
@@ -196,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:52 2020: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
+=head2 Thu Oct 22 00:10:29 2020: C<Module> L<Class::Data::Inheritable|Class::Data::Inheritable>
 
 =over 4
 
@@ -218,7 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:53 2020: C<Module> L<Exception::Class|Exception::Class>
+=head2 Thu Oct 22 00:10:30 2020: C<Module> L<Exception::Class|Exception::Class>
 
 =over 4
 
@@ -240,7 +218,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Sep 21 00:09:53 2020: C<Module> L<Test::Most|Test::Most>
+=head2 Thu Oct 22 00:10:30 2020: C<Module> L<Test::Warn|Test::Warn>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3-thr@test/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.36>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Thu Oct 22 00:10:31 2020: C<Module> L<Test::Most|Test::Most>
 
 =over 4
 
