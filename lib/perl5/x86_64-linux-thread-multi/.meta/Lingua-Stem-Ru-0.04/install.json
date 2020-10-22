@@ -1,1 +1,1 @@
-{"pathname":"N/NE/NEILB/Lingua-Stem-Ru-0.04.tar.gz","target":"Lingua::Stem::Ru","provides":{"Lingua::Stem::Ru":{"version":"0.04","file":"lib/Lingua/Stem/Ru.pm"}},"name":"Lingua::Stem::Ru","version":"0.04","dist":"Lingua-Stem-Ru-0.04"}
+{"name":"Lingua::Stem::Ru","dist":"Lingua-Stem-Ru-0.04","provides":{"Lingua::Stem::Ru":{"file":"lib/Lingua/Stem/Ru.pm","version":"0.04"}},"version":"0.04","pathname":"N/NE/NEILB/Lingua-Stem-Ru-0.04.tar.gz","target":"Lingua::Stem::Ru"}
