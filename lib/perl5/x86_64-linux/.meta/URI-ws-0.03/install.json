@@ -1,0 +1,1 @@
+{"pathname":"P/PL/PLICEASE/URI-ws-0.03.tar.gz","target":"URI::ws","version":"0.03","provides":{"URI::wss":{"version":"0.03","file":"lib/URI/wss.pm"},"URI::ws":{"version":"0.03","file":"lib/URI/ws.pm"}},"dist":"URI-ws-0.03","name":"URI::ws"}
