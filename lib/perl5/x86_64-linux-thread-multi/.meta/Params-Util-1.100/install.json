@@ -1,0 +1,1 @@
+{"version":"1.100","target":"Params::Util","name":"Params::Util","dist":"Params-Util-1.100","pathname":"R/RE/REHSACK/Params-Util-1.100.tar.gz","provides":{"Params::Util::PP":{"version":"1.100","file":"lib/Params/Util/PP.pm"},"Params::Util":{"version":"1.100","file":"lib/Params/Util.pm"}}}
