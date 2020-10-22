@@ -1,0 +1,1 @@
+{"dist":"Algorithm-Diff-1.200","name":"Algorithm::Diff","target":"Algorithm::Diff","pathname":"R/RJ/RJBS/Algorithm-Diff-1.200.tar.gz","version":"1.200","provides":{"Algorithm::Diff::_impl":{"version":"1.200","file":"lib/Algorithm/Diff.pm"},"Algorithm::Diff":{"file":"lib/Algorithm/Diff.pm","version":"1.200"}}}
