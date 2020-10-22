@@ -1,1 +1,1 @@
-{"target":"Tie::ToObject","name":"Tie::ToObject","dist":"Tie-ToObject-0.03","pathname":"N/NU/NUFFIN/Tie-ToObject-0.03.tar.gz","provides":{"Tie::ToObject":{"file":"lib/Tie/ToObject.pm","version":"0.03"}},"version":"0.03"}
+{"target":"Tie::ToObject","provides":{"Tie::ToObject":{"version":"0.03","file":"lib/Tie/ToObject.pm"}},"version":"0.03","pathname":"N/NU/NUFFIN/Tie-ToObject-0.03.tar.gz","dist":"Tie-ToObject-0.03","name":"Tie::ToObject"}
