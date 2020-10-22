@@ -1,1 +1,1 @@
-{"dist":"HTML-Tagset-3.20","version":"3.20","target":"HTML::Tagset","pathname":"P/PE/PETDANCE/HTML-Tagset-3.20.tar.gz","provides":{"HTML::Tagset":{"version":"3.20","file":"Tagset.pm"}},"name":"HTML::Tagset"}
+{"dist":"HTML-Tagset-3.20","target":"HTML::Tagset","pathname":"P/PE/PETDANCE/HTML-Tagset-3.20.tar.gz","name":"HTML::Tagset","version":"3.20","provides":{"HTML::Tagset":{"file":"Tagset.pm","version":"3.20"}}}

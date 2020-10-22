@@ -1,1 +1,1 @@
-{"pathname":"L/LE/LEONT/PerlIO-utf8_strict-0.008.tar.gz","target":"PerlIO::utf8_strict","version":"0.008","dist":"PerlIO-utf8_strict-0.008","name":"PerlIO::utf8_strict","provides":{"PerlIO::utf8_strict":{"file":"lib/PerlIO/utf8_strict.pm","version":"0.008"}}}
+{"dist":"PerlIO-utf8_strict-0.008","target":"PerlIO::utf8_strict","name":"PerlIO::utf8_strict","pathname":"L/LE/LEONT/PerlIO-utf8_strict-0.008.tar.gz","version":"0.008","provides":{"PerlIO::utf8_strict":{"file":"lib/PerlIO/utf8_strict.pm","version":"0.008"}}}
