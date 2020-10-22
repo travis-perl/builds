@@ -1,0 +1,1 @@
+{"target":"Lingua::Stem::Snowball::No","pathname":"A/AS/ASKSH/Snowball-Norwegian-1.2.tar.gz","provides":{"Lingua::Stem::Snowball::No":{"version":"1.2","file":"lib/Lingua/Stem/Snowball/No.pm"}},"name":"Lingua::Stem::Snowball::No","version":"1.2","dist":"Snowball-Norwegian-1.2"}
