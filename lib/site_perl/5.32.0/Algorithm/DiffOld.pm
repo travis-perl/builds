@@ -12,7 +12,7 @@ require Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw();
 @EXPORT_OK = qw(LCS diff traverse_sequences);
-$VERSION = 1.10;	# manually tracking Algorithm::Diff
+$VERSION = '1.200';	# manually tracking Algorithm::Diff
 
 # McIlroy-Hunt diff algorithm
 # Adapted from the Smalltalk code of Mario I. Wolczko, <mario@wolczko.com>

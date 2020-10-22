@@ -1,1 +1,1 @@
-{"target":"Regexp::Trie","dist":"Regexp-Trie-0.02","name":"Regexp::Trie","provides":{"Regexp::Trie":{"version":"0.02","file":"lib/Regexp/Trie.pm"}},"pathname":"D/DA/DANKOGAI/Regexp-Trie-0.02.tar.gz","version":"0.02"}
+{"pathname":"D/DA/DANKOGAI/Regexp-Trie-0.02.tar.gz","version":"0.02","provides":{"Regexp::Trie":{"version":"0.02","file":"lib/Regexp/Trie.pm"}},"dist":"Regexp-Trie-0.02","target":"Regexp::Trie","name":"Regexp::Trie"}

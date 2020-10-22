@@ -5,10 +5,8 @@ use strict;
 use integer;    # see below in _replaceNextLargerWith() for mod to make
                 # if you don't use this
 use vars qw( $VERSION @EXPORT_OK );
-$VERSION = 1.19_03;
-#          ^ ^^ ^^-- Incremented at will
-#          | \+----- Incremented for non-trivial changes to features
-#          \-------- Incremented for fundamental changes
+$VERSION = '1.200';
+
 require Exporter;
 *import    = \&Exporter::import;
 @EXPORT_OK = qw(
@@ -1479,7 +1477,7 @@ this module (the new OO interface is more powerful and much easier to
 use).
 
 Imagine that there are two arrows.  Arrow A points to an element of
-sequence A, and arrow B points to an element of the sequence B. 
+sequence A, and arrow B points to an element of the sequence B.
 Initially, the arrows point to the first elements of the respective
 sequences.  C<traverse_sequences> will advance the arrows through the
 sequences one element at a time, calling an appropriate user-specified
@@ -1521,9 +1519,9 @@ corresponding index in A or B.
 If arrow A reaches the end of its sequence, before arrow B does,
 C<traverse_sequences> will call the C<A_FINISHED> callback when it
 advances arrow B, if there is such a function; if not it will call
-C<DISCARD_B> instead.  Similarly if arrow B finishes first. 
+C<DISCARD_B> instead.  Similarly if arrow B finishes first.
 C<traverse_sequences> returns when both arrows are at the ends of their
-respective sequences.  It returns true on success and false on failure. 
+respective sequences.  It returns true on success and false on failure.
 At present there is no way to fail.
 
 C<traverse_sequences> may be passed an optional fourth parameter; this
@@ -1582,8 +1580,8 @@ with different order of events.
 C<traverse_balanced> might be a bit slower than C<traverse_sequences>,
 noticeable only while processing huge amounts of data.
 
-The C<sdiff> function of this module 
-is implemented as call to C<traverse_balanced>.
+The C<sdiff> function of this module is implemented as call to
+C<traverse_balanced>.
 
 C<traverse_balanced> does not have a useful return value; you are expected to
 plug in the appropriate behavior with the callback functions.
