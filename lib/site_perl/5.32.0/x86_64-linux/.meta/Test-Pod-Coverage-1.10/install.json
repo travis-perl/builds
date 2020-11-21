@@ -1,1 +1,1 @@
-{"name":"Test::Pod::Coverage","version":"1.10","target":"Test::Pod::Coverage","pathname":"N/NE/NEILB/Test-Pod-Coverage-1.10.tar.gz","provides":{"Test::Pod::Coverage":{"version":"1.10","file":"lib/Test/Pod/Coverage.pm"}},"dist":"Test-Pod-Coverage-1.10"}
+{"dist":"Test-Pod-Coverage-1.10","version":"1.10","target":"Test::Pod::Coverage","pathname":"N/NE/NEILB/Test-Pod-Coverage-1.10.tar.gz","name":"Test::Pod::Coverage","provides":{"Test::Pod::Coverage":{"version":"1.10","file":"lib/Test/Pod/Coverage.pm"}}}
