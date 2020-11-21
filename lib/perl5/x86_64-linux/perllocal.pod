@@ -1,26 +1,4 @@
-=head2 Thu Oct 22 00:02:32 2020: C<Module> L<String::Truncate|String::Truncate>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.100602>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Thu Oct 22 00:02:33 2020: C<Module> L<Pod::Eventual|Pod::Eventual>
+=head2 Sat Nov 21 01:40:33 2020: C<Module> L<Pod::Eventual|Pod::Eventual>
 
 =over 4
 
@@ -42,7 +20,29 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:33 2020: C<Module> L<Pod::Elemental|Pod::Elemental>
+=head2 Sat Nov 21 01:40:33 2020: C<Module> L<String::Truncate|String::Truncate>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.100602>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Nov 21 01:40:33 2020: C<Module> L<Pod::Elemental|Pod::Elemental>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:33 2020: C<Module> L<Pod::Weaver|Pod::Weaver>
+=head2 Sat Nov 21 01:40:34 2020: C<Module> L<Pod::Weaver|Pod::Weaver>
 
 =over 4
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:34 2020: C<Module> L<Pod::Elemental::PerlMunger|Pod::Elemental::PerlMunger>
+=head2 Sat Nov 21 01:40:35 2020: C<Module> L<Pod::Elemental::PerlMunger|Pod::Elemental::PerlMunger>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:35 2020: C<Module> L<Dist::Zilla::Plugin::PodWeaver|Dist::Zilla::Plugin::PodWeaver>
+=head2 Sat Nov 21 01:40:35 2020: C<Module> L<Dist::Zilla::Plugin::PodWeaver|Dist::Zilla::Plugin::PodWeaver>
 
 =over 4
 
@@ -130,7 +130,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:36 2020: C<Module> L<Version::Next|Version::Next>
+=head2 Sat Nov 21 01:40:36 2020: C<Module> L<Version::Next|Version::Next>
 
 =over 4
 
@@ -152,29 +152,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:37 2020: C<Module> L<File::chdir|File::chdir>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.1010>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Thu Oct 22 00:02:37 2020: C<Module> L<MooseX::Has::Sugar|MooseX::Has::Sugar>
+=head2 Sat Nov 21 01:40:37 2020: C<Module> L<MooseX::Has::Sugar|MooseX::Has::Sugar>
 
 =over 4
 
@@ -196,7 +174,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:38 2020: C<Module> L<IPC::System::Simple|IPC::System::Simple>
+=head2 Sat Nov 21 01:40:38 2020: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
@@ -210,7 +188,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.30>
+C<VERSION: 1.012000>
 
 =item *
 
@@ -218,29 +196,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:39 2020: C<Module> L<Type::Tiny|Type::Tiny>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.010006>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Thu Oct 22 00:02:39 2020: C<Module> L<Types::Path::Tiny|Types::Path::Tiny>
+=head2 Sat Nov 21 01:40:38 2020: C<Module> L<Types::Path::Tiny|Types::Path::Tiny>
 
 =over 4
 
@@ -262,7 +218,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:40 2020: C<Module> L<Devel::CheckBin|Devel::CheckBin>
+=head2 Sat Nov 21 01:40:39 2020: C<Module> L<File::chdir|File::chdir>
 
 =over 4
 
@@ -276,7 +232,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 0.04>
+C<VERSION: 0.1010>
 
 =item *
 
@@ -284,7 +240,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:40 2020: C<Module> L<Sort::Versions|Sort::Versions>
+=head2 Sat Nov 21 01:40:39 2020: C<Module> L<IPC::System::Simple|IPC::System::Simple>
 
 =over 4
 
@@ -298,7 +254,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.62>
+C<VERSION: 1.30>
 
 =item *
 
@@ -306,29 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:41 2020: C<Module> L<Git::Wrapper|Git::Wrapper>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.048>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Thu Oct 22 00:02:41 2020: C<Module> L<Dist::Zilla::Plugin::Config::Git|Dist::Zilla::Plugin::Config::Git>
+=head2 Sat Nov 21 01:40:40 2020: C<Module> L<Dist::Zilla::Plugin::Config::Git|Dist::Zilla::Plugin::Config::Git>
 
 =over 4
 
@@ -350,7 +284,73 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:41 2020: C<Module> L<Dist::Zilla::Plugin::Git|Dist::Zilla::Plugin::Git>
+=head2 Sat Nov 21 01:40:40 2020: C<Module> L<Devel::CheckBin|Devel::CheckBin>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Nov 21 01:40:41 2020: C<Module> L<Sort::Versions|Sort::Versions>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.62>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Nov 21 01:40:41 2020: C<Module> L<Git::Wrapper|Git::Wrapper>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.3@dzil/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.048>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Sat Nov 21 01:40:42 2020: C<Module> L<Dist::Zilla::Plugin::Git|Dist::Zilla::Plugin::Git>
 
 =over 4
 
@@ -372,7 +372,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Thu Oct 22 00:02:42 2020: C<Module> L<Pod::Elemental::Transformer::List|Pod::Elemental::Transformer::List>
+=head2 Sat Nov 21 01:40:43 2020: C<Module> L<Pod::Elemental::Transformer::List|Pod::Elemental::Transformer::List>
 
 =over 4
 
