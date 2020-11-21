@@ -1,1 +1,1 @@
-{"target":"Scope::Guard","dist":"Scope-Guard-0.21","version":"0.21","name":"Scope::Guard","provides":{"Scope::Guard":{"file":"lib/Scope/Guard.pm","version":"0.21"}},"pathname":"C/CH/CHOCOLATE/Scope-Guard-0.21.tar.gz"}
+{"pathname":"C/CH/CHOCOLATE/Scope-Guard-0.21.tar.gz","target":"Scope::Guard","name":"Scope::Guard","provides":{"Scope::Guard":{"version":"0.21","file":"lib/Scope/Guard.pm"}},"version":"0.21","dist":"Scope-Guard-0.21"}
