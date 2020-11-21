@@ -1,1 +1,1 @@
-{"dist":"URI-ws-0.03","provides":{"URI::wss":{"version":"0.03","file":"lib/URI/wss.pm"},"URI::ws":{"file":"lib/URI/ws.pm","version":"0.03"}},"version":"0.03","pathname":"P/PL/PLICEASE/URI-ws-0.03.tar.gz","target":"URI::ws","name":"URI::ws"}
+{"name":"URI::ws","target":"URI::ws","provides":{"URI::wss":{"version":"0.03","file":"lib/URI/wss.pm"},"URI::ws":{"version":"0.03","file":"lib/URI/ws.pm"}},"version":"0.03","dist":"URI-ws-0.03","pathname":"P/PL/PLICEASE/URI-ws-0.03.tar.gz"}
