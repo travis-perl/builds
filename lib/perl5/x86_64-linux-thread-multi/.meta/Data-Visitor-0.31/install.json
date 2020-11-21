@@ -1,0 +1,1 @@
+{"pathname":"E/ET/ETHER/Data-Visitor-0.31.tar.gz","dist":"Data-Visitor-0.31","version":"0.31","target":"Data::Visitor","name":"Data::Visitor","provides":{"Data::Visitor::Callback":{"version":"0.31","file":"lib/Data/Visitor/Callback.pm"},"Data::Visitor":{"file":"lib/Data/Visitor.pm","version":"0.31"}}}
