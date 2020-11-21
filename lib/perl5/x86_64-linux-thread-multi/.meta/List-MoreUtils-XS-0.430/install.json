@@ -1,1 +1,1 @@
-{"provides":{"List::MoreUtils::XS":{"version":"0.430","file":"lib/List/MoreUtils/XS.pm"}},"pathname":"R/RE/REHSACK/List-MoreUtils-XS-0.430.tar.gz","name":"List::MoreUtils::XS","version":"0.430","target":"List::MoreUtils::XS","dist":"List-MoreUtils-XS-0.430"}
+{"pathname":"R/RE/REHSACK/List-MoreUtils-XS-0.430.tar.gz","target":"List::MoreUtils::XS","dist":"List-MoreUtils-XS-0.430","provides":{"List::MoreUtils::XS":{"version":"0.430","file":"lib/List/MoreUtils/XS.pm"}},"name":"List::MoreUtils::XS","version":"0.430"}
