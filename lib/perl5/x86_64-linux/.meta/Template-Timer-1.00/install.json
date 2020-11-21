@@ -1,1 +1,1 @@
-{"target":"Template::Timer","name":"Template::Timer","provides":{"Template::Timer":{"version":"1.00","file":"Timer.pm"}},"pathname":"P/PE/PETDANCE/Template-Timer-1.00.tar.gz","version":"1.00","dist":"Template-Timer-1.00"}
+{"version":"1.00","provides":{"Template::Timer":{"file":"Timer.pm","version":"1.00"}},"pathname":"P/PE/PETDANCE/Template-Timer-1.00.tar.gz","target":"Template::Timer","dist":"Template-Timer-1.00","name":"Template::Timer"}
