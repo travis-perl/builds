@@ -1,0 +1,1 @@
+{"target":"Plack::Middleware::ReverseProxy","pathname":"M/MI/MIYAGAWA/Plack-Middleware-ReverseProxy-0.16.tar.gz","version":"0.16","dist":"Plack-Middleware-ReverseProxy-0.16","name":"Plack::Middleware::ReverseProxy","provides":{"Plack::Middleware::ReverseProxy":{"file":"lib/Plack/Middleware/ReverseProxy.pm","version":"0.16"}}}
