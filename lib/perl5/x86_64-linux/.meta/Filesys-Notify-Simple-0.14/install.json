@@ -1,1 +1,1 @@
-{"dist":"Filesys-Notify-Simple-0.14","version":"0.14","provides":{"Filesys::Notify::Simple":{"file":"lib/Filesys/Notify/Simple.pm","version":"0.14"}},"target":"Filesys::Notify::Simple","pathname":"M/MI/MIYAGAWA/Filesys-Notify-Simple-0.14.tar.gz","name":"Filesys::Notify::Simple"}
+{"pathname":"M/MI/MIYAGAWA/Filesys-Notify-Simple-0.14.tar.gz","name":"Filesys::Notify::Simple","provides":{"Filesys::Notify::Simple":{"version":"0.14","file":"lib/Filesys/Notify/Simple.pm"}},"dist":"Filesys-Notify-Simple-0.14","version":"0.14","target":"Filesys::Notify::Simple"}
