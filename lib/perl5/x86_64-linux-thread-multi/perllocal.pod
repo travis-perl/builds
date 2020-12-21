@@ -1,48 +1,4 @@
-=head2 Sat Nov 21 01:47:47 2020: C<Module> L<Sub::Quote|Sub::Quote>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.006006>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sat Nov 21 01:47:48 2020: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@moo/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.13>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sat Nov 21 01:47:49 2020: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Mon Dec 21 00:09:31 2020: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -64,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Nov 21 01:47:49 2020: C<Module> L<Moo|Moo>
+=head2 Mon Dec 21 00:09:32 2020: C<Module> L<Sub::Quote|Sub::Quote>
 
 =over 4
 
@@ -78,7 +34,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.004002>
+C<VERSION: 2.006006>
 
 =item *
 
@@ -86,7 +42,51 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Nov 21 01:47:50 2020: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Mon Dec 21 00:09:33 2020: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Dec 21 00:09:33 2020: C<Module> L<Moo|Moo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.004004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Dec 21 00:09:34 2020: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sat Nov 21 01:47:50 2020: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Mon Dec 21 00:09:34 2020: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
