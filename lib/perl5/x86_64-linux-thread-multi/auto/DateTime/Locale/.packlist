@@ -103,8 +103,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/ckb_IR.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/cs.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/cs_CZ.pod
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/cu.pod
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/cu_RU.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/cy.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/cy_GB.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/da.pod
@@ -122,6 +120,8 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/de_LU.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/dje.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/dje_NE.pod
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/doi.pod
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/doi_IN.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/dsb.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/dsb_DE.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/dua.pod
@@ -592,8 +592,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/pcm_NG.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/pl.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/pl_PL.pod
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/prg.pod
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/prg_001.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/ps.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/ps_AF.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/ps_PK.pod
@@ -635,6 +633,8 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/rw_RW.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/rwk.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/rwk_TZ.pod
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/sa.pod
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/sa_IN.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/sah.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/sah_RU.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/saq.pod
@@ -757,8 +757,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vai_Vaii_LR.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vi.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vi_VN.pod
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vo.pod
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vo_001.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vun.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/vun_TZ.pod
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/Locale/wae.pod
@@ -892,8 +890,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ckb.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/cs-CZ.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/cs.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/cu-RU.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/cu.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/cy-GB.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/cy.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/da-DK.pl
@@ -911,6 +907,8 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/de.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/dje-NE.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/dje.pl
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/doi-IN.pl
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/doi.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/dsb-DE.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/dsb.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/dua-CM.pl
@@ -1083,8 +1081,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Adlm-SL.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Adlm-SN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Adlm.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-CM.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-GN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Latn-BF.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Latn-CM.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Latn-GH.pl
@@ -1098,8 +1094,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Latn-SL.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Latn-SN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-Latn.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-MR.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff-SN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ff.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/fi-FI.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/fi.pl
@@ -1248,7 +1242,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/kok.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ks-Arab-IN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ks-Arab.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ks-IN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ks.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ksb-TZ.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ksb.pl
@@ -1379,8 +1372,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/pcm.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/pl-PL.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/pl.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/prg-001.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/prg.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ps-AF.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ps-PK.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/ps.pl
@@ -1421,6 +1412,8 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/rw.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/rwk-TZ.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/rwk.pl
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sa-IN.pl
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sa.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sah-RU.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sah.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/saq-KE.pl
@@ -1434,7 +1427,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sd-Arab.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sd-Deva-IN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sd-Deva.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sd-PK.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/sd.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/se-FI.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/se-NO.pl
@@ -1544,8 +1536,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vai.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vi-VN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vi.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vo-001.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vo.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vun-TZ.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/vun.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/wae-CH.pl
@@ -1563,7 +1553,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yo-BJ.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yo-NG.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yo.pl
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yue-HK.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yue-Hans-CN.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yue-Hans.pl
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/auto/share/dist/DateTime-Locale/yue-Hant-HK.pl
