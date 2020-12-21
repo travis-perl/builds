@@ -1,1 +1,1 @@
-{"target":"XString","provides":{"XString":{"file":"lib/XString.pm","version":"0.005"}},"dist":"XString-0.005","name":"XString","pathname":"A/AT/ATOOMIC/XString-0.005.tar.gz","version":"0.005"}
+{"name":"XString","target":"XString","provides":{"XString":{"version":"0.005","file":"lib/XString.pm"}},"pathname":"A/AT/ATOOMIC/XString-0.005.tar.gz","version":"0.005","dist":"XString-0.005"}

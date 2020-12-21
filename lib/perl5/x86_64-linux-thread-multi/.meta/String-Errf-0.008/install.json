@@ -1,1 +1,1 @@
-{"version":"0.008","name":"String::Errf","pathname":"R/RJ/RJBS/String-Errf-0.008.tar.gz","dist":"String-Errf-0.008","provides":{"String::Errf":{"version":"0.008","file":"lib/String/Errf.pm"}},"target":"String::Errf"}
+{"version":"0.008","pathname":"R/RJ/RJBS/String-Errf-0.008.tar.gz","dist":"String-Errf-0.008","target":"String::Errf","name":"String::Errf","provides":{"String::Errf":{"file":"lib/String/Errf.pm","version":"0.008"}}}
