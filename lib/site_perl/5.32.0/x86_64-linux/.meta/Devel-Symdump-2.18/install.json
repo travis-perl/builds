@@ -1,1 +1,1 @@
-{"dist":"Devel-Symdump-2.18","version":"2.18","target":"Devel::Symdump","pathname":"A/AN/ANDK/Devel-Symdump-2.18.tar.gz","name":"Devel::Symdump","provides":{"Devel::Symdump::Export":{"file":"lib/Devel/Symdump/Export.pm"},"Devel::Symdump":{"version":"2.18","file":"lib/Devel/Symdump.pm"}}}
+{"version":"2.18","name":"Devel::Symdump","dist":"Devel-Symdump-2.18","target":"Devel::Symdump","pathname":"A/AN/ANDK/Devel-Symdump-2.18.tar.gz","provides":{"Devel::Symdump":{"version":"2.18","file":"lib/Devel/Symdump.pm"},"Devel::Symdump::Export":{"file":"lib/Devel/Symdump/Export.pm"}}}

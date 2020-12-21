@@ -1,1 +1,1 @@
-{"pathname":"E/ET/ETHER/Test-Pod-1.52.tar.gz","provides":{"Test::Pod":{"version":"1.52","file":"lib/Test/Pod.pm"}},"name":"Test::Pod","dist":"Test-Pod-1.52","version":"1.52","target":"Test::Pod"}
+{"provides":{"Test::Pod":{"file":"lib/Test/Pod.pm","version":"1.52"}},"version":"1.52","pathname":"E/ET/ETHER/Test-Pod-1.52.tar.gz","target":"Test::Pod","dist":"Test-Pod-1.52","name":"Test::Pod"}

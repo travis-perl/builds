@@ -1,1 +1,1 @@
-{"provides":{"Test::Kwalitee":{"version":"1.28","file":"lib/Test/Kwalitee.pm"}},"target":"Test::Kwalitee","pathname":"E/ET/ETHER/Test-Kwalitee-1.28.tar.gz","dist":"Test-Kwalitee-1.28","version":"1.28","name":"Test::Kwalitee"}
+{"dist":"Test-Kwalitee-1.28","provides":{"Test::Kwalitee":{"version":"1.28","file":"lib/Test/Kwalitee.pm"}},"target":"Test::Kwalitee","pathname":"E/ET/ETHER/Test-Kwalitee-1.28.tar.gz","version":"1.28","name":"Test::Kwalitee"}
