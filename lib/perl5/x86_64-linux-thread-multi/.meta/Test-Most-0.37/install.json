@@ -1,1 +1,1 @@
-{"target":"Test::Most","dist":"Test-Most-0.37","version":"0.37","provides":{"Test::Most::Exception":{"file":"lib/Test/Most/Exception.pm","version":"0.37"},"Test::Most":{"version":"0.37","file":"lib/Test/Most.pm"}},"pathname":"O/OV/OVID/Test-Most-0.37.tar.gz","name":"Test::Most"}
+{"target":"Test::Most","name":"Test::Most","dist":"Test-Most-0.37","version":"0.37","pathname":"O/OV/OVID/Test-Most-0.37.tar.gz","provides":{"Test::Most":{"version":"0.37","file":"lib/Test/Most.pm"},"Test::Most::Exception":{"file":"lib/Test/Most/Exception.pm","version":"0.37"}}}
