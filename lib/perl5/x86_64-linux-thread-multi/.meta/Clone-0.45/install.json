@@ -1,1 +1,1 @@
-{"target":"Clone","name":"Clone","provides":{"Clone":{"version":"0.45","file":"Clone.pm"}},"version":"0.45","pathname":"A/AT/ATOOMIC/Clone-0.45.tar.gz","dist":"Clone-0.45"}
+{"name":"Clone","provides":{"Clone":{"file":"Clone.pm","version":"0.45"}},"target":"Clone","version":"0.45","pathname":"A/AT/ATOOMIC/Clone-0.45.tar.gz","dist":"Clone-0.45"}
