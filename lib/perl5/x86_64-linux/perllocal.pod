@@ -1,0 +1,132 @@
+=head2 Fri Jan 22 03:57:58 2021: C<Module> L<Sub::Quote|Sub::Quote>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.33.6@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.006006>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 03:57:59 2021: C<Module> L<Role::Tiny|Role::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.33.6@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.002003>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 03:57:59 2021: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.33.6@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.13>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 03:58:00 2021: C<Module> L<Moo|Moo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.33.6@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.004004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 03:58:01 2021: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.33.6@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.002002>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Fri Jan 22 03:58:01 2021: C<Module> L<Type::Tiny|Type::Tiny>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.33.6@moo/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.012001>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
