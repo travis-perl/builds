@@ -1,4 +1,4 @@
-#!/home/travis/perl5/perlbrew/perls/5.30.0/bin/perl 
+#!/home/travis/perl5/perlbrew/perls/5.30.3/bin/perl 
 # $Id: stemmer.pl,v 1.1 2007/05/07 11:35:25 ask Exp $
 # $Source: /opt/CVS/NoSnowball/examples/stemmer.pl,v $
 # $Author: ask $
