@@ -1,1 +1,1 @@
-{"provides":{"Lingua::EN::Words2Nums":{"file":"Words2Nums.pm"}},"dist":"Lingua-EN-Words2Nums-0.18","target":"Lingua::EN::Words2Nums","version":"0.18","pathname":"J/JO/JOEY/Lingua-EN-Words2Nums-0.18.tar.gz","name":"Lingua::EN::Words2Nums"}
+{"target":"Lingua::EN::Words2Nums","name":"Lingua::EN::Words2Nums","pathname":"J/JO/JOEY/Lingua-EN-Words2Nums-0.18.tar.gz","provides":{"Lingua::EN::Words2Nums":{"file":"Words2Nums.pm"}},"dist":"Lingua-EN-Words2Nums-0.18","version":"0.18"}
