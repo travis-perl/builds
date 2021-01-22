@@ -4,7 +4,7 @@
       "Nathan Wiger <nate@wiger.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.36, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -58,6 +58,7 @@
       },
       "test" : {
          "requires" : {
+            "Data::Dumper::Concise" : "0",
             "Storable" : "0",
             "Test::Exception" : "0.31",
             "Test::More" : "0.88",
@@ -81,6 +82,6 @@
       },
       "x_IRC" : "irc://irc.perl.org/#dbix-class"
    },
-   "version" : "1.87",
+   "version" : "2.000000",
    "x_serialization_backend" : "JSON::PP version 4.04"
 }
