@@ -1,1 +1,1 @@
-{"target":"Context::Preserve","provides":{"Context::Preserve":{"version":"0.03","file":"lib/Context/Preserve.pm"}},"dist":"Context-Preserve-0.03","pathname":"E/ET/ETHER/Context-Preserve-0.03.tar.gz","name":"Context::Preserve","version":"0.03"}
+{"provides":{"Context::Preserve":{"version":"0.03","file":"lib/Context/Preserve.pm"}},"pathname":"E/ET/ETHER/Context-Preserve-0.03.tar.gz","version":"0.03","dist":"Context-Preserve-0.03","target":"Context::Preserve","name":"Context::Preserve"}
