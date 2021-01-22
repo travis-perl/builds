@@ -248,7 +248,6 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Adelaide.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Brisbane.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Broken_Hill.pm
-/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Currie.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Darwin.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Eucla.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/DateTime/TimeZone/Australia/Hobart.pm

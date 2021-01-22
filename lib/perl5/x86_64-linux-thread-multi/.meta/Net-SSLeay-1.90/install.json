@@ -1,0 +1,1 @@
+{"pathname":"C/CH/CHRISN/Net-SSLeay-1.90.tar.gz","target":"Net::SSLeay","dist":"Net-SSLeay-1.90","version":"1.90","name":"Net::SSLeay","provides":{"Net::SSLeay":{"version":"1.90","file":"lib/Net/SSLeay.pm"},"Net::SSLeay::Handle":{"version":"1.90","file":"lib/Net/SSLeay/Handle.pm"}}}
