@@ -1,1 +1,1 @@
-{"version":"1.905","target":"Lingua::EN::Inflect","pathname":"D/DC/DCONWAY/Lingua-EN-Inflect-1.905.tar.gz","name":"Lingua::EN::Inflect","dist":"Lingua-EN-Inflect-1.905","provides":{"Lingua::EN::Inflect":{"file":"lib/Lingua/EN/Inflect.pm","version":"1.905"}}}
+{"version":"1.905","name":"Lingua::EN::Inflect","dist":"Lingua-EN-Inflect-1.905","target":"Lingua::EN::Inflect","provides":{"Lingua::EN::Inflect":{"version":"1.905","file":"lib/Lingua/EN/Inflect.pm"}},"pathname":"D/DC/DCONWAY/Lingua-EN-Inflect-1.905.tar.gz"}
