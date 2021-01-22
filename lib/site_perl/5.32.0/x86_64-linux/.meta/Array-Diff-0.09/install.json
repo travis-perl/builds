@@ -1,1 +1,1 @@
-{"name":"Array::Diff","version":"0.09","pathname":"N/NE/NEILB/Array-Diff-0.09.tar.gz","target":"Array::Diff","provides":{"Array::Diff":{"file":"lib/Array/Diff.pm","version":"0.09"}},"dist":"Array-Diff-0.09"}
+{"name":"Array::Diff","pathname":"N/NE/NEILB/Array-Diff-0.09.tar.gz","version":"0.09","provides":{"Array::Diff":{"file":"lib/Array/Diff.pm","version":"0.09"}},"dist":"Array-Diff-0.09","target":"Array::Diff"}
