@@ -1,10 +1,10 @@
 {
-   "abstract" : "A simple tree object",
+   "abstract" : "A factory object for dispensing Visitor objects",
    "author" : [
       "Stevan Little <stevan@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "ExtUtils::MakeMaker version 7.22, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150010",
+   "generated_by" : "ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "Tree-Simple",
+   "name" : "Tree-Simple-VisitorFactory",
    "no_index" : {
       "directory" : [
          "t",
@@ -32,8 +32,11 @@
       },
       "runtime" : {
          "requires" : {
-            "Scalar::Util" : "1.18",
-            "constant" : "0",
+            "File::Spec" : "0.6",
+            "Scalar::Util" : "1.1",
+            "Tree::Simple" : "1.12",
+            "Tree::Simple::Visitor" : "1.22",
+            "base" : "0",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -41,24 +44,24 @@
       "test" : {
          "requires" : {
             "Test::Exception" : "0.15",
-            "Test::More" : "1.001002"
+            "Test::More" : "1.001014"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Tree-Simple"
+         "web" : "https://github.com/ronsavage/Tree-Simple-VisitorFactory/issues"
       },
       "license" : [
          "http://dev.perl.org/licenses/"
       ],
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/ronsavage/Tree-Simple.git",
-         "web" : "https://github.com/ronsavage/Tree-Simple"
+         "url" : "https://github.com/ronsavage/Tree-Simple-VisitorFactory.git",
+         "web" : "https://github.com/ronsavage/Tree-Simple-VisitorFactory"
       }
    },
-   "version" : "1.33",
+   "version" : "0.16",
    "x_serialization_backend" : "JSON::PP version 4.02"
 }
