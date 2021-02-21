@@ -13,14 +13,14 @@ use strict;
 use warnings;
 
 our $VERSION      = "1.36";
-our $Perl_version = '5.032000';
+our $Perl_version = '5.032001';
 our @Inc          = @{ [
   '.',
   '/home/travis/.perlbrew/libs/5.32@cover/lib/perl5',
-  '/home/travis/perl5/perlbrew/perls/5.32/lib/5.32.0',
-  '/home/travis/perl5/perlbrew/perls/5.32/lib/5.32.0/x86_64-linux',
-  '/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0',
-  '/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.0/x86_64-linux'
+  '/home/travis/perl5/perlbrew/perls/5.32/lib/5.32.1',
+  '/home/travis/perl5/perlbrew/perls/5.32/lib/5.32.1/x86_64-linux',
+  '/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1',
+  '/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/x86_64-linux'
 ] };
 chomp (our $Perl  = <<'EOV');  # Careful with \\ in the path
 /home/travis/perl5/perlbrew/perls/5.32/bin/perl
