@@ -1,1 +1,1 @@
-{"provides":{"B::Debug":{"file":"Debug.pm","version":"1.26"}},"name":"B::Debug","version":"1.26","dist":"B-Debug-1.26","pathname":"R/RU/RURBAN/B-Debug-1.26.tar.gz","target":"B::Debug"}
+{"version":"1.26","pathname":"R/RU/RURBAN/B-Debug-1.26.tar.gz","name":"B::Debug","target":"B::Debug","provides":{"B::Debug":{"version":"1.26","file":"Debug.pm"}},"dist":"B-Debug-1.26"}
