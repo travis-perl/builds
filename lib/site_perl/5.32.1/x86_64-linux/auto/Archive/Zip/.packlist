@@ -1,0 +1,14 @@
+/home/travis/perl5/perlbrew/perls/5.32/bin/crc32
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/Archive.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/BufferedFileHandle.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/DirectoryMember.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/FAQ.pod
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/FileMember.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/Member.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/MemberRead.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/MockFileHandle.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/NewFileMember.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/StringMember.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/Tree.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/Archive/Zip/ZipFileMember.pm

@@ -1,0 +1,5 @@
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/B/Hooks/EndOfScope.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/B/Hooks/EndOfScope/PP.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/B/Hooks/EndOfScope/PP/FieldHash.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/B/Hooks/EndOfScope/PP/HintHash.pm
+/home/travis/perl5/perlbrew/perls/5.32/lib/site_perl/5.32.1/B/Hooks/EndOfScope/XS.pm

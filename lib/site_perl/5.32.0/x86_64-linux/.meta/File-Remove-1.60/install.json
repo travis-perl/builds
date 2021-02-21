@@ -1,1 +1,0 @@
-{"pathname":"S/SH/SHLOMIF/File-Remove-1.60.tar.gz","dist":"File-Remove-1.60","target":"File::Remove","name":"File::Remove","version":"1.60","provides":{"File::Remove":{"version":"1.60","file":"lib/File/Remove.pm"}}}
