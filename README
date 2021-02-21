@@ -1,10 +1,10 @@
 local::lib cat for Perl 5.32 built by Travis Helpers: heads/master-0-gaeee6f5
 ------------------------------------------------------------------------------
 
-This is perl 5, version 32, subversion 0 (v5.32.0) built for x86_64-linux
+This is perl 5, version 32, subversion 1 (v5.32.1) built for x86_64-linux
 (with 1 registered patch, see perl -V for more detail)
 
-Copyright 1987-2020, Larry Wall
+Copyright 1987-2021, Larry Wall
 
 Perl may be copied only under the terms of either the Artistic License or the
 GNU General Public License, which may be found in the Perl 5 source kit.
