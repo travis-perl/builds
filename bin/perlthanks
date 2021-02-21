@@ -2,9 +2,9 @@
     eval 'exec /home/travis/perl5/perlbrew/perls/5.30.2-thr/bin/perl -S $0 ${1+"$@"}'
 	if $running_under_some_shell;
 
-my $config_tag1 = '5.30.2 - Fri Jan 22 01:28:20 UTC 2021';
+my $config_tag1 = '5.30.2 - Sun Feb 21 00:01:33 UTC 2021';
 
-my $patchlevel_date = 1611278899;
+my $patchlevel_date = 1613865693;
 my @patches = Config::local_patches();
 my $patch_tags = join "", map /(\S+)/ ? "+$1 " : (), @patches;
 
