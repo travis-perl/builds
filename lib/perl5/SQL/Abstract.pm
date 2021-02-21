@@ -2,7 +2,6 @@ package SQL::Abstract; # see doc at end of file
 
 use strict;
 use warnings;
-use Module::Runtime ();
 use Carp ();
 use List::Util ();
 use Scalar::Util ();
@@ -28,7 +27,7 @@ BEGIN {
 # GLOBALS
 #======================================================================
 
-our $VERSION  = '2.000000';
+our $VERSION  = '2.000001';
 
 # This would confuse some packagers
 $VERSION = eval $VERSION if $VERSION =~ /_/; # numify for warning-free dev releases
@@ -352,8 +351,8 @@ sub new {
   }
 
   if ($opt{lazy_join_sql_parts}) {
-    my $mod = Module::Runtime::use_module('SQL::Abstract::Parts');
-    $opt{join_sql_parts} ||= sub { $mod->new(@_) };
+    require SQL::Abstract::Parts;
+    $opt{join_sql_parts} ||= sub { SQL::Abstract::Parts->new(@_) };
   }
 
   $opt{join_sql_parts} ||= sub { join $_[0], @_[1..$#_] };
