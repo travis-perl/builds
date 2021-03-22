@@ -9,7 +9,5 @@
 /home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/Moo/Object.pm
 /home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/Moo/Role.pm
 /home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/Moo/_Utils.pm
-/home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/Moo/_mro.pm
-/home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/Moo/_strictures.pm
 /home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/Moo/sification.pm
 /home/travis/.perlbrew/libs/5.32.0-thr@cat/lib/perl5/oo.pm
