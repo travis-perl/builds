@@ -1,1 +1,1 @@
-{"target":"Text::SimpleTable","pathname":"M/MR/MRAMBERG/Text-SimpleTable-2.07.tar.gz","name":"Text::SimpleTable","version":"2.07","dist":"Text-SimpleTable-2.07","provides":{"Text::SimpleTable":{"version":"2.07","file":"lib/Text/SimpleTable.pm"}}}
+{"pathname":"M/MR/MRAMBERG/Text-SimpleTable-2.07.tar.gz","provides":{"Text::SimpleTable":{"version":"2.07","file":"lib/Text/SimpleTable.pm"}},"target":"Text::SimpleTable","version":"2.07","name":"Text::SimpleTable","dist":"Text-SimpleTable-2.07"}
