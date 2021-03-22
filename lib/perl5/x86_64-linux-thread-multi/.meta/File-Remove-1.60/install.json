@@ -1,1 +1,1 @@
-{"provides":{"File::Remove":{"version":"1.60","file":"lib/File/Remove.pm"}},"name":"File::Remove","dist":"File-Remove-1.60","version":"1.60","pathname":"S/SH/SHLOMIF/File-Remove-1.60.tar.gz","target":"File::Remove"}
+{"target":"File::Remove","pathname":"S/SH/SHLOMIF/File-Remove-1.60.tar.gz","name":"File::Remove","version":"1.60","dist":"File-Remove-1.60","provides":{"File::Remove":{"file":"lib/File/Remove.pm","version":"1.60"}}}

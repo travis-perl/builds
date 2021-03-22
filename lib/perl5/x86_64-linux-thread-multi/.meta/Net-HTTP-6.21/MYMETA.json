@@ -1,5 +1,5 @@
 {
-   "abstract" : "HTTP style message (base class)",
+   "abstract" : "Low-level HTTP connection (client)",
    "author" : [
       "Gisle Aas <gisle@activestate.com>"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "HTTP-Message",
+   "name" : "Net-HTTP",
    "no_index" : {
       "directory" : [
          "examples",
@@ -36,46 +36,34 @@
       },
       "develop" : {
          "requires" : {
-            "Clone" : "0",
-            "File::Spec" : "0",
-            "IO::Handle" : "0",
-            "IPC::Open3" : "0",
-            "Test::CPAN::Changes" : "0.19",
+            "Pod::Coverage::TrustPod" : "0",
+            "Test::EOL" : "0",
             "Test::Mojibake" : "0",
-            "Test::More" : "0.96",
+            "Test::More" : "0.88",
             "Test::Pod" : "1.41",
+            "Test::Pod::Coverage" : "1.08",
             "Test::Portability::Files" : "0",
-            "Test::Version" : "1",
-            "perl" : "5.006"
+            "Test::Version" : "1"
          }
       },
       "runtime" : {
          "requires" : {
             "Carp" : "0",
             "Compress::Raw::Zlib" : "0",
-            "Encode" : "3.01",
-            "Encode::Locale" : "1",
-            "Exporter" : "5.57",
-            "HTTP::Date" : "6",
-            "IO::Compress::Bzip2" : "2.021",
-            "IO::Compress::Deflate" : "0",
-            "IO::Compress::Gzip" : "0",
-            "IO::HTML" : "0",
-            "IO::Uncompress::Bunzip2" : "2.021",
+            "IO::Socket::INET" : "0",
             "IO::Uncompress::Gunzip" : "0",
-            "IO::Uncompress::Inflate" : "0",
-            "IO::Uncompress::RawInflate" : "0",
-            "LWP::MediaTypes" : "6",
-            "MIME::Base64" : "2.1",
-            "MIME::QuotedPrint" : "0",
-            "URI" : "1.10",
+            "URI" : "0",
             "base" : "0",
-            "perl" : "5.008001",
+            "perl" : "5.006002",
             "strict" : "0",
             "warnings" : "0"
          },
          "suggests" : {
-            "Clone" : "0"
+            "IO::Socket" : "0",
+            "IO::Socket::INET6" : "0",
+            "IO::Socket::IP" : "0",
+            "IO::Socket::SSL" : "2.012",
+            "Symbol" : "0"
          }
       },
       "test" : {
@@ -83,35 +71,33 @@
             "CPAN::Meta" : "2.120900"
          },
          "requires" : {
+            "Data::Dumper" : "0",
             "ExtUtils::MakeMaker" : "0",
             "File::Spec" : "0",
-            "PerlIO::encoding" : "0",
-            "Test::More" : "0.88",
-            "Time::Local" : "0",
-            "Try::Tiny" : "0",
-            "lib" : "0",
-            "overload" : "0"
+            "IO::Select" : "0",
+            "Socket" : "0",
+            "Test::More" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/libwww-perl/HTTP-Message/issues"
+         "web" : "https://github.com/libwww-perl/Net-HTTP/issues"
       },
-      "homepage" : "https://github.com/libwww-perl/HTTP-Message",
+      "homepage" : "https://github.com/libwww-perl/Net-HTTP",
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/libwww-perl/HTTP-Message.git",
-         "web" : "https://github.com/libwww-perl/HTTP-Message"
+         "url" : "https://github.com/libwww-perl/Net-HTTP.git",
+         "web" : "https://github.com/libwww-perl/Net-HTTP"
       },
       "x_IRC" : "irc://irc.perl.org/#lwp",
       "x_MailingList" : "mailto:libwww@perl.org"
    },
-   "version" : "6.28",
+   "version" : "6.21",
    "x_Dist_Zilla" : {
       "perl" : {
-         "version" : "5.030003"
+         "version" : "5.030002"
       },
       "plugins" : [
          {
@@ -166,16 +152,6 @@
             "class" : "Dist::Zilla::Plugin::OALDERS::TidyAll",
             "name" : "@Author::OALDERS/OALDERS::TidyAll",
             "version" : "0.000029"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::AutoPrereqs",
-            "name" : "@Author::OALDERS/AutoPrereqs",
-            "version" : "6.017"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::CheckChangesHasContent",
-            "name" : "@Author::OALDERS/CheckChangesHasContent",
-            "version" : "0.011"
          },
          {
             "class" : "Dist::Zilla::Plugin::MakeMaker",
@@ -259,14 +235,20 @@
             "version" : "6.017"
          },
          {
-            "class" : "Dist::Zilla::Plugin::Test::CPAN::Changes",
+            "class" : "Dist::Zilla::Plugin::Test::EOL",
             "config" : {
-               "Dist::Zilla::Plugin::Test::CPAN::Changes" : {
-                  "changelog" : "Changes"
+               "Dist::Zilla::Plugin::Test::EOL" : {
+                  "filename" : "xt/author/eol.t",
+                  "finder" : [
+                     ":ExecFiles",
+                     ":InstallModules",
+                     ":TestFiles"
+                  ],
+                  "trailing_whitespace" : 1
                }
             },
-            "name" : "@Author::OALDERS/Test::CPAN::Changes",
-            "version" : "0.012"
+            "name" : "@Author::OALDERS/Test::EOL",
+            "version" : "0.19"
          },
          {
             "class" : "Dist::Zilla::Plugin::Test::Portability",
@@ -302,11 +284,6 @@
             },
             "name" : "@Author::OALDERS/RunExtraTests",
             "version" : "0.029"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::MinimumPerl",
-            "name" : "@Author::OALDERS/MinimumPerl",
-            "version" : "1.006"
          },
          {
             "class" : "Dist::Zilla::Plugin::PodWeaver",
@@ -510,17 +487,6 @@
             "version" : "0.163250"
          },
          {
-            "class" : "Dist::Zilla::Plugin::StaticInstall",
-            "config" : {
-               "Dist::Zilla::Plugin::StaticInstall" : {
-                  "dry_run" : 0,
-                  "mode" : "on"
-               }
-            },
-            "name" : "@Author::OALDERS/StaticInstall",
-            "version" : "0.012"
-         },
-         {
             "class" : "Dist::Zilla::Plugin::ShareDir",
             "name" : "@Author::OALDERS/ShareDir",
             "version" : "6.017"
@@ -615,7 +581,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "v6.28",
+                  "tag" : "v6.21",
                   "tag_format" : "v%V",
                   "tag_message" : "v%V"
                },
@@ -699,14 +665,37 @@
             "version" : "2.047"
          },
          {
+            "class" : "Dist::Zilla::Plugin::Test::Pod::Coverage::Configurable",
+            "name" : "Test::Pod::Coverage::Configurable",
+            "version" : "0.07"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::AutoPrereqs",
+            "name" : "AutoPrereqs",
+            "version" : "6.017"
+         },
+         {
+            "class" : "Dist::Zilla::Plugin::Prereqs",
+            "config" : {
+               "Dist::Zilla::Plugin::Prereqs" : {
+                  "phase" : "runtime",
+                  "type" : "suggests"
+               }
+            },
+            "name" : "RuntimeSuggests",
+            "version" : "6.017"
+         },
+         {
             "class" : "Dist::Zilla::Plugin::Prereqs::Soften",
             "config" : {
                "Dist::Zilla::Plugin::Prereqs::Soften" : {
-                  "copy_to" : [
-                     "develop.requires"
-                  ],
+                  "copy_to" : [],
                   "modules" : [
-                     "Clone"
+                     "IO::Socket",
+                     "IO::Socket::INET6",
+                     "IO::Socket::IP",
+                     "IO::Socket::SSL",
+                     "Symbol"
                   ],
                   "modules_from_features" : null,
                   "to_relationship" : "suggests"
@@ -716,37 +705,15 @@
             "version" : "0.006003"
          },
          {
-            "class" : "Dist::Zilla::Plugin::Test::Compile",
+            "class" : "Dist::Zilla::Plugin::StaticInstall",
             "config" : {
-               "Dist::Zilla::Plugin::Test::Compile" : {
-                  "bail_out_on_fail" : "1",
-                  "fail_on_warning" : "author",
-                  "fake_home" : 0,
-                  "filename" : "xt/author/00-compile.t",
-                  "module_finder" : [
-                     ":InstallModules"
-                  ],
-                  "needs_display" : 0,
-                  "phase" : "develop",
-                  "script_finder" : [
-                     ":PerlExecFiles"
-                  ],
-                  "skips" : [],
-                  "switch" : []
+               "Dist::Zilla::Plugin::StaticInstall" : {
+                  "dry_run" : 0,
+                  "mode" : "on"
                }
             },
-            "name" : "Test::Compile",
-            "version" : "2.058"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::Test::ChangesHasContent",
-            "name" : "Test::ChangesHasContent",
-            "version" : "0.011"
-         },
-         {
-            "class" : "Dist::Zilla::Plugin::Substitute",
-            "name" : "Substitute",
-            "version" : "0.006"
+            "name" : "StaticInstall",
+            "version" : "0.012"
          },
          {
             "class" : "Dist::Zilla::Plugin::FinderCode",
@@ -814,80 +781,73 @@
       "Alex Kapranoff <ka@nadoby.ru>",
       "amire80 <amir.aharoni@gmail.com>",
       "Andreas J. Koenig <andreas.koenig@anima.de>",
+      "Andy Grundman <andyg@activestate.com>",
       "Bill Mann <wfmann@alum.mit.edu>",
-      "Brendan Byrd <GitHub@ResonatorSoft.org>",
       "Bron Gondwana <brong@fastmail.fm>",
-      "Chase Whitener <capoeirab@cpan.org>",
-      "Christopher J. Madsen <cjm@cpan.org>",
-      "chromatic <chromatic@wgz.org>",
-      "Dan Book <grinnz@grinnz.com>",
+      "Chase Whitener <cwhitener@gmail.com>",
+      "Dagfinn Ilmari Mannsåker <ilmari@ilmari.org>",
       "Daniel Hedlund <Daniel.Hedlund@eprize.com>",
+      "Dave Rolsky <autarch@urth.org>",
       "David E. Wheeler <david@justatheory.com>",
       "DAVIDRW <davidrw@cpan.org>",
-      "David Steinbrunner <dsteinbrunner@MountainBook-Pro.local>",
-      "Dorian Taylor <dorian.taylor.lists@gmail.com>",
+      "David Steinbrunner <dsteinbrunner@pobox.com>",
+      "Eric Wong <normalperson@yhbt.net>",
       "Father Chrysostomos <sprout@cpan.org>",
-      "Felipe Gasper <felipe@felipegasper.com>",
       "FWILES <FWILES@cpan.org>",
       "Gavin Peters <gpeters@deepsky.com>",
+      "Gisle Aas <aas@oslonett.no>",
+      "Gisle Aas <gisle.aas@it.uib.no>",
       "Gisle Aas <gisle@aas.no>",
+      "Gisle Aas <gisle@baux-2.lan>",
       "Graeme Thompson <Graeme.Thompson@mobilecohesion.com>",
-      "Graham Knop <haarg@haarg.org>",
       "Hans-H. Froehlich <hfroehlich@co-de-co.de>",
       "Ian Kilgore <iank@cpan.org>",
       "Jacob J <waif@chaos2.org>",
-      "Jakub Wilk <jwilk@jwilk.net>",
+      "James Raspass <jraspass@gmail.com>",
+      "Jason A Fesler <jfesler@badamount-lm.corp.yahoo.com>",
+      "Jay Hannah <jay.hannah@iinteractive.com>",
+      "Jean-Louis Martineau <martineau@zmanda.com>",
       "jefflee <shaohua@gmail.com>",
-      "Jerome Eteve <jerome@broadbean.com>",
+      "Jesse Luehrs <doy@tozt.net>",
       "john9art <john9art@yahoo.com>",
-      "jonasbn <jonasbn@gmail.com>",
       "Karen Etheridge <ether@cpan.org>",
-      "Lars Dɪᴇᴄᴋᴏᴡ 迪拉斯 <daxim@cpan.org>",
-      "Mark Overmeer <mark@overmeer.net>",
+      "Kent Fredric <kentfredric@gmail.com>",
+      "Lasse Makholm <lasse@unity3d.com>",
+      "Marinos Yannikos <mjy@geizhals.at>",
+      "Mark Overmeer <MARKOV@cpan.org>",
       "Mark Stosberg <mark@stosberg.com>",
-      "Martin H. Sluka <fany@cpan.org>",
-      "Matthew Chae <mschae@cpan.org>",
-      "Michael Schout <mschout@gkg.net>",
-      "Mickey Nasriachi <mickey@cpan.org>",
-      "Mike Schilli <github@perlmeister.com>",
+      "Mark Stosberg <MARKSTOS@cpan.org>",
+      "Mark Stosberg <mark@summersault.com>",
+      "Mike Schilli <mschilli@yahoo-inc.com>",
+      "Mohammad S Anwar <mohammad.anwar@yahoo.com>",
+      "mschilli <github@perlmeister.com>",
       "murphy <murphy@genome.chop.edu>",
       "Olaf Alders <olaf@wundersolutions.com>",
-      "Olivier Mengué <dolmen@cpan.org>",
       "Ondrej Hanak <ondrej.hanak@ubs.com>",
-      "openstrike <git@openstrike.co.uk>",
       "Peter Rabbitson <ribasushi@cpan.org>",
       "phrstbrn <phrstbrn@gmail.com>",
-      "Robert Rothenberg <robrwo+github@gmail.com>",
-      "Robert Rothenberg <rrwo@cpan.org>",
       "Robert Stone <talby@trap.mtview.ca.us>",
       "Rolf Grossmann <rg@progtech.net>",
       "ruff <ruff@ukrpost.net>",
       "sasao <sasao@yugen.org>",
-      "Saturday Walkers Club <swc@walkingclub.org.uk>",
       "Sean M. Burke <sburke@cpan.org>",
-      "simbabque <simbabque@cpan.org>",
+      "Shoichi Kaji <skaji@cpan.org>",
       "Slaven Rezic <slaven@rezic.de>",
+      "Slaven Rezic <srezic@iconmobile.com>",
       "Spiros Denaxas <s.denaxas@gmail.com>",
+      "Steffen Ullrich <Steffen_Ullrich@genua.de>",
       "Steve Hay <SteveHay@planit.com>",
-      "Tatsuhiko Miyagawa <miyagawa@bulknews.net>",
-      "Tatsuhiko Miyagawa <miyagawa@gmail.com>",
-      "Theo van Hoesel <Th.J.v.Hoesel@THEMA-MEDIA.nl>",
-      "Tigran <tigrankhachikyan@gmail.com>",
-      "Tobias Leich <email@froggs.de>",
       "Todd Lipcon <todd@amiestreet.com>",
-      "tokuhirom <tokuhirom@gmail.com>",
       "Tom Hukins <tom@eborcom.com>",
+      "Tom Wyant <wyant@cpan.org>",
       "Tony Finch <dot@dotat.at>",
       "Toru Yamaguchi <zigorou@cpan.org>",
       "uid39246 <uid39246>",
       "Ville Skyttä <ville.skytta@iki.fi>",
-      "Vít Strádal <vit.stradal@gooddata.com>",
-      "William Storey <wstorey@maxmind.com>",
       "Yuri Karaban <tech@askold.net>",
-      "Zakariyya Mughal <zaki.mughal@gmail.com>",
       "Zefram <zefram@fysh.org>"
    ],
-   "x_generated_by_perl" : "v5.30.3",
+   "x_generated_by_perl" : "v5.30.2",
    "x_serialization_backend" : "JSON::PP version 4.02",
    "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later",
    "x_static_install" : 1
