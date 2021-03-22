@@ -1,1 +1,1 @@
-{"pathname":"R/RJ/RJBS/MooseX-OneArgNew-0.005.tar.gz","dist":"MooseX-OneArgNew-0.005","provides":{"MooseX::OneArgNew":{"version":"0.005","file":"lib/MooseX/OneArgNew.pm"}},"target":"MooseX::OneArgNew","version":"0.005","name":"MooseX::OneArgNew"}
+{"pathname":"R/RJ/RJBS/MooseX-OneArgNew-0.005.tar.gz","provides":{"MooseX::OneArgNew":{"file":"lib/MooseX/OneArgNew.pm","version":"0.005"}},"target":"MooseX::OneArgNew","name":"MooseX::OneArgNew","dist":"MooseX-OneArgNew-0.005","version":"0.005"}
