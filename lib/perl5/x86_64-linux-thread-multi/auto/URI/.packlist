@@ -36,6 +36,7 @@
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/mms.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/news.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/nntp.pm
+/home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/nntps.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/pop.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/rlogin.pm
 /home/travis/.perlbrew/libs/5.30.2-thr@dzil/lib/perl5/URI/rsync.pm
