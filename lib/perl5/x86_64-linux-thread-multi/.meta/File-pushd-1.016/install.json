@@ -1,1 +1,1 @@
-{"target":"File::pushd","name":"File::pushd","dist":"File-pushd-1.016","pathname":"D/DA/DAGOLDEN/File-pushd-1.016.tar.gz","version":"1.016","provides":{"File::pushd":{"version":"1.016","file":"lib/File/pushd.pm"}}}
+{"version":"1.016","name":"File::pushd","target":"File::pushd","pathname":"D/DA/DAGOLDEN/File-pushd-1.016.tar.gz","dist":"File-pushd-1.016","provides":{"File::pushd":{"file":"lib/File/pushd.pm","version":"1.016"}}}
