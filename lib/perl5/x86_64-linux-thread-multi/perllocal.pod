@@ -1,202 +1,4 @@
-=head2 Sun Feb 21 00:05:34 2021: C<Module> L<HTML::Tagset|HTML::Tagset>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.20>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:35 2021: C<Module> L<URI|URI>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 5.07>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:36 2021: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 6.04>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:37 2021: C<Module> L<Date::Parse|Date::Parse>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.33>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:37 2021: C<Module> L<HTTP::Date|HTTP::Date>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 6.05>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:38 2021: C<Module> L<IO::HTML|IO::HTML>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.004>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:38 2021: C<Module> L<Encode::Locale|Encode::Locale>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 1.05>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:39 2021: C<Module> L<HTTP::Message|HTTP::Message>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 6.28>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:40 2021: C<Module> L<HTML::Parser|HTML::Parser>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 3.75>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:40 2021: C<Module> L<B::Debug|B::Debug>
+=head2 Mon Mar 22 00:05:28 2021: C<Module> L<B::Debug|B::Debug>
 
 =over 4
 
@@ -218,7 +20,205 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Feb 21 00:05:41 2021: C<Module> L<Devel::Cover|Devel::Cover>
+=head2 Mon Mar 22 00:05:29 2021: C<Module> L<URI|URI>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 5.09>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:30 2021: C<Module> L<IO::HTML|IO::HTML>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:30 2021: C<Module> L<LWP::MediaTypes|LWP::MediaTypes>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.04>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:31 2021: C<Module> L<Encode::Locale|Encode::Locale>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.05>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:32 2021: C<Module> L<Date::Parse|Date::Parse>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.33>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:32 2021: C<Module> L<HTTP::Date|HTTP::Date>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.05>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:32 2021: C<Module> L<HTTP::Message|HTTP::Message>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 6.29>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:33 2021: C<Module> L<HTML::Tagset|HTML::Tagset>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.20>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:34 2021: C<Module> L<HTML::Parser|HTML::Parser>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 3.76>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:35 2021: C<Module> L<Devel::Cover|Devel::Cover>
 
 =over 4
 
@@ -240,7 +240,7 @@ C<EXE_FILES: bin/cover bin/cpancover bin/gcov2perl>
 
 =back
 
-=head2 Sun Feb 21 00:05:42 2021: C<Module> L<ExtUtils::Config|ExtUtils::Config>
+=head2 Mon Mar 22 00:05:36 2021: C<Module> L<ExtUtils::Config|ExtUtils::Config>
 
 =over 4
 
@@ -262,29 +262,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Feb 21 00:05:43 2021: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 0.012>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:43 2021: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
+=head2 Mon Mar 22 00:05:36 2021: C<Module> L<ExtUtils::Helpers|ExtUtils::Helpers>
 
 =over 4
 
@@ -306,7 +284,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Feb 21 00:05:52 2021: C<Module> L<Net::SSLeay|Net::SSLeay>
+=head2 Mon Mar 22 00:05:37 2021: C<Module> L<ExtUtils::InstallPaths|ExtUtils::InstallPaths>
 
 =over 4
 
@@ -320,7 +298,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 1.90>
+C<VERSION: 0.012>
 
 =item *
 
@@ -328,29 +306,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Feb 21 00:05:53 2021: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
-
-=over 4
-
-=item *
-
-C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
-
-=item *
-
-C<LINKTYPE: dynamic>
-
-=item *
-
-C<VERSION: 2.069>
-
-=item *
-
-C<EXE_FILES: >
-
-=back
-
-=head2 Sun Feb 21 00:05:53 2021: C<Module> L<YAML|YAML>
+=head2 Mon Mar 22 00:05:38 2021: C<Module> L<YAML|YAML>
 
 =over 4
 
@@ -372,7 +328,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Sun Feb 21 00:05:54 2021: C<Module> L<Mozilla::CA|Mozilla::CA>
+=head2 Mon Mar 22 00:05:38 2021: C<Module> L<Mozilla::CA|Mozilla::CA>
 
 =over 4
 
@@ -387,6 +343,50 @@ C<LINKTYPE: dynamic>
 =item *
 
 C<VERSION: 20200520>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:47 2021: C<Module> L<Net::SSLeay|Net::SSLeay>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.90>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Mar 22 00:05:47 2021: C<Module> L<IO::Socket::SSL|IO::Socket::SSL>
+
+=over 4
+
+=item *
+
+C<installed into: /home/travis/.perlbrew/libs/5.30.2-thr@cover/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.070>
 
 =item *
 
