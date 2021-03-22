@@ -1,0 +1,73 @@
+{
+   "abstract" : "Stemming of words",
+   "author" : [
+      "Jerilyn Franz <cpan@jerilyn.info>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.4231",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "Lingua-Stem",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
+   "prereqs" : {
+      "runtime" : {
+         "requires" : {
+            "Carp" : 0,
+            "Lingua::GL::Stemmer" : 0,
+            "Lingua::PT::Stemmer" : 0,
+            "Lingua::Stem::Fr" : "0.02",
+            "Lingua::Stem::It" : 0,
+            "Lingua::Stem::Ru" : 0,
+            "Lingua::Stem::Snowball::Da" : "1.01",
+            "Lingua::Stem::Snowball::No" : "1.00",
+            "Lingua::Stem::Snowball::Se" : "1.01",
+            "Text::German" : 0,
+            "perl" : "5.006",
+            "warnings" : 0
+         }
+      },
+      "test" : {
+         "requires" : {
+            "Carp" : 0,
+            "Lingua::GL::Stemmer" : 0,
+            "Lingua::PT::Stemmer" : 0,
+            "Lingua::Stem::Fr" : "0.02",
+            "Lingua::Stem::It" : 0,
+            "Lingua::Stem::Ru" : 0,
+            "Lingua::Stem::Snowball::Da" : "1.01",
+            "Lingua::Stem::Snowball::No" : "1.00",
+            "Lingua::Stem::Snowball::Se" : "1.01",
+            "Text::German" : 0,
+            "perl" : "5.006",
+            "warnings" : 0
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/JerilynFranz/perl-Lingua-Stem/issues"
+      },
+      "homepage" : "https://github.com/JerilynFranz/perl-Lingua-Stem",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/JerilynFranz/perl-Lingua-Stem.git",
+         "web" : "https://github.com/JerilynFranz/perl-Lingua-Stem"
+      }
+   },
+   "version" : "2.31",
+   "x_serialization_backend" : "JSON::PP version 4.06"
+}
