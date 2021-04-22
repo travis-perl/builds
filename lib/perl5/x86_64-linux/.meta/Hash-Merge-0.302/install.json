@@ -1,1 +1,1 @@
-{"pathname":"H/HE/HERMES/Hash-Merge-0.302.tar.gz","name":"Hash::Merge","provides":{"Hash::Merge":{"version":"0.302","file":"lib/Hash/Merge.pm"}},"version":"0.302","dist":"Hash-Merge-0.302","target":"Hash::Merge"}
+{"name":"Hash::Merge","pathname":"H/HE/HERMES/Hash-Merge-0.302.tar.gz","target":"Hash::Merge","provides":{"Hash::Merge":{"version":"0.302","file":"lib/Hash/Merge.pm"}},"dist":"Hash-Merge-0.302","version":"0.302"}
