@@ -18,6 +18,7 @@
 /home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/Authors.pm
 /home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/Bugs.pm
 /home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/Collect.pm
+/home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/GenerateSection.pm
 /home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/Generic.pm
 /home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/Leftovers.pm
 /home/travis/.perlbrew/libs/5.30.2@dzil/lib/perl5/Pod/Weaver/Section/Legal.pm
