@@ -1,1 +1,1 @@
-{"version":"1.01","dist":"Lingua-Stem-Snowball-Da-1.01","provides":{"Lingua::Stem::Snowball::Da":{"version":"1.01","file":"Da.pm"}},"target":"Lingua::Stem::Snowball::Da","pathname":"C/CI/CINE/Lingua-Stem-Snowball-Da-1.01.tar.gz","name":"Lingua::Stem::Snowball::Da"}
+{"provides":{"Lingua::Stem::Snowball::Da":{"version":"1.01","file":"Da.pm"}},"dist":"Lingua-Stem-Snowball-Da-1.01","pathname":"C/CI/CINE/Lingua-Stem-Snowball-Da-1.01.tar.gz","name":"Lingua::Stem::Snowball::Da","target":"Lingua::Stem::Snowball::Da","version":"1.01"}
