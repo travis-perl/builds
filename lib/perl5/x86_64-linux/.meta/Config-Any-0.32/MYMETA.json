@@ -40,7 +40,6 @@
       },
       "runtime" : {
          "requires" : {
-            "Config::General" : "2.47",
             "Module::Pluggable::Object" : "3.6"
          },
          "suggests" : {
