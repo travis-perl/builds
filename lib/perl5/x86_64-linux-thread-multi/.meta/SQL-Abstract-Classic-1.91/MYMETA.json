@@ -1,0 +1,67 @@
+{
+   "abstract" : "Generate SQL from Perl data structures",
+   "author" : [
+      "Peter Rabbitson <ribasushi@leporine.io>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Install version 1.19, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "SQL-Abstract-Classic",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "t",
+         "xt"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59",
+            "Storable" : "0",
+            "Test::Deep" : "0.101",
+            "Test::Exception" : "0.31",
+            "Test::More" : "0.88",
+            "Test::Warn" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Exporter" : "5.57",
+            "List::Util" : "0",
+            "MRO::Compat" : "0.12",
+            "SQL::Abstract" : "1.79",
+            "Scalar::Util" : "0",
+            "Storable" : "0",
+            "Test::Deep" : "0.101",
+            "Test::Exception" : "0.31",
+            "Test::More" : "0.88",
+            "Test::Warn" : "0",
+            "Text::Balanced" : "2.00",
+            "perl" : "5.006"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "http://rt.cpan.org/NoAuth/Bugs.html?Dist=SQL-Abstract-Classic"
+      },
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "1.91",
+   "x_serialization_backend" : "JSON::PP version 4.06"
+}
