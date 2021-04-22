@@ -1,1 +1,1 @@
-{"version":"0.11","provides":{"List::UtilsBy":{"version":"0.11","file":"lib/List/UtilsBy.pm"}},"name":"List::UtilsBy","dist":"List-UtilsBy-0.11","target":"List::UtilsBy","pathname":"P/PE/PEVANS/List-UtilsBy-0.11.tar.gz"}
+{"provides":{"List::UtilsBy":{"file":"lib/List/UtilsBy.pm","version":"0.11"}},"dist":"List-UtilsBy-0.11","name":"List::UtilsBy","version":"0.11","target":"List::UtilsBy","pathname":"P/PE/PEVANS/List-UtilsBy-0.11.tar.gz"}

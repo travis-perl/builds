@@ -1,1 +1,1 @@
-{"dist":"Number-Compare-0.03","provides":{"Number::Compare":{"version":"0.03","file":"lib/Number/Compare.pm"}},"name":"Number::Compare","version":"0.03","pathname":"R/RC/RCLAMP/Number-Compare-0.03.tar.gz","target":"Number::Compare"}
+{"dist":"Number-Compare-0.03","pathname":"R/RC/RCLAMP/Number-Compare-0.03.tar.gz","version":"0.03","name":"Number::Compare","target":"Number::Compare","provides":{"Number::Compare":{"file":"lib/Number/Compare.pm","version":"0.03"}}}

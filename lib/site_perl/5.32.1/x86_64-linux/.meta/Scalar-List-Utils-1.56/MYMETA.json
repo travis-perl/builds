@@ -1,7 +1,7 @@
 {
-   "abstract" : "Recursively scan Perl code for dependencies",
+   "abstract" : "Common Scalar and List utility subroutines",
    "author" : [
-      "Audrey Tang <cpan@audreyt.org>"
+      "Graham Barr <gbarr@cpan.org>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "ExtUtils::MakeMaker version 7.44, CPAN::Meta::Converter version 2.150010",
@@ -12,15 +12,11 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "Module-ScanDeps",
+   "name" : "Scalar-List-Utils",
    "no_index" : {
       "directory" : [
          "t",
          "inc"
-      ],
-      "package" : [
-         "Module::ScanDeps::Cache",
-         "Module::ScanDeps::DataFeed"
       ]
    },
    "prereqs" : {
@@ -36,34 +32,27 @@
       },
       "runtime" : {
          "requires" : {
-            "File::Spec" : "0",
-            "File::Temp" : "0",
-            "Getopt::Long" : "0",
-            "Module::Metadata" : "0",
-            "Text::ParseWords" : "0",
-            "perl" : "5.008001",
-            "version" : "0"
+            "perl" : "5.006"
          }
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0",
-            "Test::Requires" : "0"
+            "Test::More" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/rschupp/Module-ScanDeps/issues"
+         "mailto" : "bug-Scalar-List-Utils@rt.cpan.org",
+         "web" : "https://rt.cpan.org/Public/Dist/Display.html?Name=Scalar-List-Utils"
       },
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/rschupp/Module-ScanDeps.git",
-         "web" : "https://github.com/rschupp/Module-ScanDeps"
-      },
-      "x_MailingList" : "mailto:par@perl.org"
+         "url" : "https://github.com/Scalar-List-Utils/Scalar-List-Utils.git",
+         "web" : "https://github.com/Scalar-List-Utils/Scalar-List-Utils"
+      }
    },
-   "version" : "1.30",
+   "version" : "1.56",
    "x_serialization_backend" : "JSON::PP version 4.04"
 }

@@ -1,1 +1,1 @@
-{"dist":"Class-Singleton-1.6","name":"Class::Singleton","provides":{"Class::Singleton":{"version":"1.6","file":"lib/Class/Singleton.pm"}},"version":"1.6","pathname":"S/SH/SHAY/Class-Singleton-1.6.tar.gz","target":"Class::Singleton"}
+{"provides":{"Class::Singleton":{"version":"1.6","file":"lib/Class/Singleton.pm"}},"name":"Class::Singleton","target":"Class::Singleton","version":"1.6","dist":"Class-Singleton-1.6","pathname":"S/SH/SHAY/Class-Singleton-1.6.tar.gz"}
