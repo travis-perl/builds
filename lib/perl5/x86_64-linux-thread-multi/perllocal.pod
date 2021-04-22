@@ -1,4 +1,4 @@
-=head2 Mon Mar 22 00:09:21 2021: C<Module> L<Sub::Quote|Sub::Quote>
+=head2 Thu Apr 22 00:09:13 2021: C<Module> L<Sub::Quote|Sub::Quote>
 
 =over 4
 
@@ -20,7 +20,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar 22 00:09:22 2021: C<Module> L<Role::Tiny|Role::Tiny>
+=head2 Thu Apr 22 00:09:13 2021: C<Module> L<Role::Tiny|Role::Tiny>
 
 =over 4
 
@@ -42,7 +42,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar 22 00:09:22 2021: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
+=head2 Thu Apr 22 00:09:14 2021: C<Module> L<Class::Method::Modifiers|Class::Method::Modifiers>
 
 =over 4
 
@@ -64,7 +64,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar 22 00:09:23 2021: C<Module> L<Moo|Moo>
+=head2 Thu Apr 22 00:09:14 2021: C<Module> L<Moo|Moo>
 
 =over 4
 
@@ -78,7 +78,7 @@ C<LINKTYPE: dynamic>
 
 =item *
 
-C<VERSION: 2.005003>
+C<VERSION: 2.005004>
 
 =item *
 
@@ -86,7 +86,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar 22 00:09:24 2021: C<Module> L<Exporter::Tiny|Exporter::Tiny>
+=head2 Thu Apr 22 00:09:15 2021: C<Module> L<Exporter::Tiny|Exporter::Tiny>
 
 =over 4
 
@@ -108,7 +108,7 @@ C<EXE_FILES: >
 
 =back
 
-=head2 Mon Mar 22 00:09:24 2021: C<Module> L<Type::Tiny|Type::Tiny>
+=head2 Thu Apr 22 00:09:15 2021: C<Module> L<Type::Tiny|Type::Tiny>
 
 =over 4
 
